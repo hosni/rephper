@@ -98,3 +98,13 @@ function opaqueForms(string $text, array $items, int $index): void
     echo $text . $text;
     sort($items);
 }
+
+function calledValue(string $text, int $n): int
+{
+    return strlen(strtolower($text)) + $n;
+}
+
+function calledSideEffect(string $text, int $n): void
+{
+    echo strtolower($text . $n);
+}

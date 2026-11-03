@@ -313,6 +313,87 @@ final class ReconstructorTest extends TestCase
         $this->assertSame('sort', $kept->op2->resolved->value);
     }
 
+    public function testACallFeedsStrlenAndTheAdditionKeepsItsArgument(): void
+    {
+        $result = $this->reconstruct('calledValue');
+        $expressions = $result->blockStartingAt(0)?->expressions;
+        $this->assertNotNull($expressions);
+        $init = $this->opaqueNamed($expressions, 'INIT_FCALL', 0);
+        $send = $this->opaqueNamed($expressions, 'SEND_VAR', 0);
+        $return = $expressions[array_key_last($expressions)];
+
+        $this->assertSame('unused', $init->result->kind);
+        $this->assertNull($init->result->resolved);
+        $this->assertSame(1, $init->extendedValue);
+        $this->assertInstanceOf(Literal::class, $init->op2->resolved);
+        $this->assertSame('strtolower', $init->op2->resolved->value);
+        $this->assertSame('unused', $send->result->kind);
+        $this->assertNull($send->result->resolved);
+        $this->assertInstanceOf(VariableRead::class, $send->op1->resolved);
+        $this->assertSame('text', $send->op1->resolved->name);
+        $this->assertInstanceOf(ReturnValue::class, $return);
+        $this->assertInstanceOf(Binary::class, $return->value);
+        $this->assertSame('+', $return->value->operator);
+        $this->assertVariable($return->value->right, 'n');
+        $strlen = $return->value->left;
+        $this->assertInstanceOf(Opaque::class, $strlen);
+        $this->assertSame('STRLEN', $strlen->opcode);
+        $this->assertSame('var', $strlen->op1->kind);
+        $this->assertSame(0, $strlen->op1->index);
+        $call = $strlen->op1->resolved;
+        $this->assertInstanceOf(Opaque::class, $call);
+        $this->assertSame('DO_ICALL', $call->opcode);
+        $this->assertSame('var', $call->result->kind);
+        $this->assertSame(0, $call->result->index);
+        $this->assertNull($call->result->resolved);
+        $this->assertLessThan($send->opline, $init->opline);
+        $this->assertLessThan($call->opline, $send->opline);
+        $this->assertLessThan($strlen->opline, $call->opline);
+        $this->assertLessThan($return->value->opline, $strlen->opline);
+        $this->assertLessThan($return->opline, $return->value->opline);
+        foreach ($expressions as $expression) {
+            $this->assertNotSame($call, $expression);
+            $this->assertNotSame($strlen, $expression);
+        }
+    }
+
+    public function testASideEffectingCallKeepsTheArgumentAndTheEcho(): void
+    {
+        $expressions = $this->reconstruct('calledSideEffect')->blockStartingAt(0)?->expressions;
+        $this->assertNotNull($expressions);
+        $init = $this->opaqueNamed($expressions, 'INIT_FCALL', 0);
+        $send = $this->opaqueNamed($expressions, 'SEND_VAL', 0);
+        $echo = $this->opaqueNamed($expressions, 'ECHO', 0);
+        $concat = $send->op1->resolved;
+        $call = $echo->op1->resolved;
+
+        $this->assertSame('unused', $init->result->kind);
+        $this->assertNull($init->result->resolved);
+        $this->assertSame('tmp', $send->op1->kind);
+        $this->assertSame(0, $send->op1->index);
+        $this->assertSame('unused', $send->result->kind);
+        $this->assertInstanceOf(Binary::class, $concat);
+        $this->assertSame('.', $concat->operator);
+        $this->assertVariable($concat->left, 'text');
+        $this->assertVariable($concat->right, 'n');
+        $this->assertSame('var', $echo->op1->kind);
+        $this->assertSame(1, $echo->op1->index);
+        $this->assertSame('unused', $echo->result->kind);
+        $this->assertNull($echo->result->resolved);
+        $this->assertInstanceOf(Opaque::class, $call);
+        $this->assertSame('DO_ICALL', $call->opcode);
+        $this->assertSame('var', $call->result->kind);
+        $this->assertSame(1, $call->result->index);
+        $this->assertLessThan($concat->opline, $init->opline);
+        $this->assertLessThan($send->opline, $concat->opline);
+        $this->assertLessThan($call->opline, $send->opline);
+        $this->assertLessThan($echo->opline, $call->opline);
+        foreach ($expressions as $expression) {
+            $this->assertNotSame($concat, $expression);
+            $this->assertNotSame($call, $expression);
+        }
+    }
+
     public function testATemporaryUsedTwiceIsTheSameExpression(): void
     {
         $document = $this->mutated(function (array $document): array {

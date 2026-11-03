@@ -396,7 +396,19 @@ These compiled forms are easy to misread as source syntax:
 - `$a >= $b` is `IS_SMALLER_OR_EQUAL` with the operands swapped, so the tree is `$b <= $a`.
 - `$a && $b` and `$a || $b` are `JMPZ_EX` or `JMPNZ_EX` plus `BOOL` in later blocks. Those blocks are not joined into `&&` or `||`.
 
-`strlen($text) + $n` keeps `STRLEN` as the left operand of `+`. The call is not dropped and not reordered ahead of `$n`.
+`strlen($text) + $n` keeps the operation, the argument, the addition, and the following operand. `STRLEN` is the left side of `+`, and its operand is the compiled variable `text`. `$n` is the right side. The `STRLEN` opline is earlier than the `ADD` opline.
+
+```text
+return strlen($text) + $n
+
+ReturnValue
+    Binary +
+        Opaque STRLEN
+            op1 cv text -> VariableRead text
+        VariableRead n
+```
+
+`return strlen(strtolower($text)) + $n` is not rewritten as one call expression. `INIT_FCALL` and `SEND_VAR` stay as earlier expressions because they have no result slot. `DO_ICALL` writes a `var` slot, and `STRLEN` uses that same object. `echo strtolower($text . $n)` keeps the concatenation as the `SEND_VAL` operand and the `DO_ICALL` as the `ECHO` operand.
 
 ```text
 $result = $a + $b * $c
@@ -510,7 +522,7 @@ Linting one file does not compile files it would include at runtime, and it does
 ## Roadmap
 
 - Statement reconstruction from the control-flow graph and the expression trees, then PHP source generation.
-- Expression reconstruction across basic blocks, including `&&` and `||`, and function-call reconstruction. `STRLEN` is kept as an opaque operand today.
+- Expression reconstruction across basic blocks, including `&&` and `||`. Function-call opcodes stay separate opaque instructions; they are not combined into one call expression.
 - More PHP versions, each with its own compatibility directory and expected dumps.
 - More operating systems, as extra `os` matrix entries once the build has been verified there.
 - Inspecting a directory of source files without executing the application.

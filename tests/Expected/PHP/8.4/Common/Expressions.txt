@@ -502,6 +502,85 @@ Opcodes:
 
 Rephper: Compiled op array
 File: tests/Fixtures/Common/Expressions.php
+Function: calledValue
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 11
+Arguments: 2
+Required arguments: 2
+Compiled variables: 2
+Temporary variables: 3
+Literals: 2
+Return type: int
+Lines: 102-105
+
+Compiled variables:
+0 $text
+1 $n
+
+Literals:
+0 string("strtolower")
+1 null
+
+Argument details:
+0 $text string
+1 $n int
+
+Opcodes:
+0 RECV line=102 op1=UNUSED(1) op2=UNUSED(64) result=CV(0:$text) ext=-
+1 RECV line=102 op1=UNUSED(2) op2=UNUSED(16) result=CV(1:$n) ext=-
+2 INIT_FCALL line=104 op1=UNUSED(96) op2=CONST(string("strtolower")) result=UNUSED ext=1
+3 SEND_VAR line=104 op1=CV(0:$text) op2=UNUSED(1) result=UNUSED(80) ext=-
+4 DO_ICALL line=104 op1=UNUSED op2=UNUSED result=VAR(0) ext=-
+5 STRLEN line=104 op1=VAR(0) op2=UNUSED result=TMP(1) ext=-
+6 ADD line=104 op1=TMP(1) op2=CV(1:$n) result=TMP(2) ext=-
+7 VERIFY_RETURN_TYPE line=104 op1=TMP(2) op2=UNUSED result=UNUSED ext=-
+8 RETURN line=104 op1=TMP(2) op2=UNUSED result=UNUSED ext=-
+9 VERIFY_RETURN_TYPE line=105 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+10 RETURN line=105 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Expressions.php
+Function: calledSideEffect
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 8
+Arguments: 2
+Required arguments: 2
+Compiled variables: 2
+Temporary variables: 2
+Literals: 2
+Return type: void
+Lines: 107-110
+
+Compiled variables:
+0 $text
+1 $n
+
+Literals:
+0 string("strtolower")
+1 null
+
+Argument details:
+0 $text string
+1 $n int
+
+Opcodes:
+0 RECV line=107 op1=UNUSED(1) op2=UNUSED(64) result=CV(0:$text) ext=-
+1 RECV line=107 op1=UNUSED(2) op2=UNUSED(16) result=CV(1:$n) ext=-
+2 INIT_FCALL line=109 op1=UNUSED(96) op2=CONST(string("strtolower")) result=UNUSED ext=1
+3 CONCAT line=109 op1=CV(0:$text) op2=CV(1:$n) result=TMP(0) ext=-
+4 SEND_VAL line=109 op1=TMP(0) op2=UNUSED(1) result=UNUSED(80) ext=-
+5 DO_ICALL line=109 op1=UNUSED op2=UNUSED result=VAR(1) ext=-
+6 ECHO line=109 op1=VAR(1) op2=UNUSED result=UNUSED ext=-
+7 RETURN line=110 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Expressions.php
 Function: <main>
 Class: -
 Kind: main
@@ -514,7 +593,7 @@ Compiled variables: 0
 Temporary variables: 0
 Literals: 1
 Return type: -
-Lines: 1-101
+Lines: 1-111
 
 Compiled variables:
 (none)
@@ -526,5 +605,5 @@ Argument details:
 (none)
 
 Opcodes:
-0 RETURN line=101 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+0 RETURN line=111 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
 
