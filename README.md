@@ -1,6 +1,6 @@
 # Rephper
 
-Rephper inspects PHP source after the Zend Engine has compiled it. A PHP 8.4 Zend extension prints compiled op arrays and writes them as versioned JSON. A separate PHP program reads that JSON, validates it, and builds a control-flow graph for each op array. Reconstructing PHP source from the graph is a later milestone. The decompiler is not part of this tree.
+Rephper inspects PHP source after the Zend Engine has compiled it. A PHP 8.4 Zend extension prints compiled op arrays and writes them as versioned JSON. A separate PHP program reads that JSON and prints a control-flow graph for each op array. `Rephper\Expr\Reconstructor` turns the instructions inside one basic block into expression trees. Statement reconstruction and PHP source generation are later milestones.
 
 ## Objectives
 
@@ -9,7 +9,8 @@ Rephper inspects PHP source after the Zend Engine has compiled it. A PHP 8.4 Zen
 3. Read the compiled opcodes and their metadata from Zend structures.
 4. Serialize that representation as IR JSON.
 5. Read the JSON without loading the Zend extension, and build a control-flow graph for each op array.
-6. Reconstruct readable PHP from the graph. Not implemented yet.
+6. Reconstruct expression trees from the instructions inside each basic block.
+7. Reconstruct statements and PHP source from those trees. Later milestone.
 
 The extension does not parse another tool's text output. It reads `zend_op_array` and `zend_op` directly.
 
@@ -52,7 +53,7 @@ extension/src/Compatibility/php84/
          future statement reconstructor
 ```
 
-The reader, the IR model, the CFG builder, and `php bin/rephper graph` do not load the extension and do not use Zend C structures. Opcode control-flow rules for this stage live in `src/Cfg/Php84/Semantics.php`.
+The reader, the IR model, the CFG builder, the expression reconstructor, and `php bin/rephper graph` do not load the extension and do not use Zend C structures. Opcode control-flow rules for this stage live in `src/Cfg/Php84/Semantics.php`. Expression folding lives in `src/Expr/Reconstructor.php`.
 
 `extension/rephper.c` is the Zend extension entry point. It registers `op_array_handler`. PHP 8.4 declares that callback as:
 
@@ -156,7 +157,7 @@ Rephper is a Zend extension, so it is loaded with `zend_extension`, not `extensi
 php8.4 -n -d zend_extension=$PWD/extension/modules/rephper.so -l path/to/file.php
 ```
 
-`-n` skips `php.ini`. In particular it skips OPcache. OPcache changes compiler flags, so the opcode dump is not comparable with OPcache enabled. The tests always pass `-n`.
+`-n` skips `php.ini`, including OPcache. OPcache changes compiler flags, so a dump made with OPcache enabled does not match the checked-in files. The integration tests pass `-n` to every `php` process that loads the extension. PHPUnit itself runs with the extensions it needs, including `dom` and `mbstring`.
 
 `-l` is PHP's lint mode. It compiles the file and does not execute it. The dump is written to stderr. Stdout is PHP's `No syntax errors detected` line.
 
@@ -164,7 +165,7 @@ Loading the extension makes every subsequent compilation print op arrays to stde
 
 ## Intermediate representation
 
-The IR is the boundary between the Zend Engine and a future decompiler. The decompiler is meant to read the JSON file. It does not load the extension and it does not see `zend_op` or `zval` pointers.
+The IR is the boundary between the Zend Engine and the PHP tools that read it. The reader, the CFG builder, and the expression reconstructor take the JSON file as input. They do not see `zend_op` or `zval` pointers.
 
 `ir_version` is the schema version. It is `1`. `php.version` is the PHP build that compiled the source. Those versions are independent: a new PHP release can keep emitting IR 1, and a schema change bumps `ir_version` without implying a new PHP version.
 
@@ -372,7 +373,7 @@ An out-of-range jump is invalid IR for the CFG and uses `CfgException` directly.
 $reconstruction = (new Rephper\Expr\Reconstructor())->reconstruct($opArray, $graph);
 ```
 
-Each block has an ordered list of expressions. A temporary result is folded into the later instruction that uses it, and both uses of the same slot share one expression object. The `opline` on each node is the instruction that created it, so the original evaluation order remains visible. Instructions that are not expressions stay in that list as opaque nodes.
+Each block has an ordered list of expressions. Value opcodes such as `ADD` and the comparisons are stored in their `tmp` or `var` result slot and folded into the later instruction in that same block that uses the slot. Both uses of one slot share one expression object. Assignments and returns stay in the list. A later use of an assignment's own result slot is unresolved. The `opline` on each node is the instruction that created it, so the original evaluation order remains visible. The compiler epilogue stays too: after a user's `return`, a following block can still hold `VERIFY_RETURN_TYPE` and another `RETURN` of null. Instructions this pass does not fold stay in the list as opaque nodes.
 
 | Node | What it records |
 | --- | --- |
@@ -387,7 +388,7 @@ Each block has an ordered list of expressions. A temporary result is folded into
 
 `RECV` and `VERIFY_RETURN_TYPE` are opaque and do not produce a diagnostic. Any other opcode that this pass does not fold, including `STRLEN`, `JMPZ_EX`, and `JMPNZ_EX`, is opaque and adds an `unsupported` diagnostic. The diagnostic names the opcode, opline, source line, block, and reason. A const index that is not in the literal table is invalid IR and throws `ExpressionException`.
 
-Two compiled forms are easy to misread as source syntax:
+These compiled forms are easy to misread as source syntax:
 
 - `-$a` and `+$a` are `MUL` by the literals `-1` and `1`. The tree is a multiplication.
 - `$a >= $b` is `IS_SMALLER_OR_EQUAL` with the operands swapped, so the tree is `$b <= $a`.
@@ -422,7 +423,7 @@ php8.4 bin/rephper help graph
 
 `graph` reads one IR JSON file and prints one block list per op array. `--op-array` limits the output. `main` selects the script body, whose JSON name is null. Validation errors go to stderr and the process exits 1. That includes a missing file, invalid JSON, an IR version other than 1, a jump the builder cannot accept, an unsupported opcode, and an unknown op-array name. A missing `file` argument also exits 1.
 
-There is no `inspect` or `export` command. Inspection and export still go through `php -l` and `REPHPER_IR`.
+There is no `inspect` or `export` command. Inspection and export still go through `php -l` and `REPHPER_IR`. There is no command that prints expression trees. Reconstruction is the `Rephper\Expr\Reconstructor` library call, and it needs the op array together with the graph the builder produced for that same op array.
 
 ## Tests
 
@@ -506,7 +507,8 @@ Linting one file does not compile files it would include at runtime, and it does
 
 ## Roadmap
 
-- A PHP decompiler that reads the IR and the control-flow graph and does not link against the Zend extension.
+- Statement reconstruction from the control-flow graph and the expression trees, then PHP source generation.
+- Expression reconstruction across basic blocks, including `&&` and `||`, and function-call reconstruction. `STRLEN` is kept as an opaque operand today.
 - More PHP versions, each with its own compatibility directory and expected dumps.
 - More operating systems, as extra `os` matrix entries once the build has been verified there.
 - Inspecting a directory of source files without executing the application.
