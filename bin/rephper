@@ -11,4 +11,10 @@ if (!is_file($autoload)) {
 
 require $autoload;
 
-exit((new Rephper\Cli\GraphCommand())->run($argv));
+use Rephper\Command\GraphCommand;
+use Symfony\Component\Console\Application;
+
+$application = new Application('rephper');
+$application->addCommand(new GraphCommand);
+
+exit($application->run());
