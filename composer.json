@@ -1,8 +1,16 @@
 {
     "name": "rephper/rephper",
-    "description": "Inspect compiled PHP opcodes and export them as versioned IR JSON. A later milestone reconstructs source from that IR.",
+    "description": "Inspect compiled PHP opcodes, export versioned IR JSON, and build control-flow graphs from that IR.",
     "type": "project",
     "require": {
         "php": "^8.4"
-    }
+    },
+    "autoload": {
+        "psr-4": {
+            "Rephper\\": "src/"
+        }
+    },
+    "bin": [
+        "bin/rephper"
+    ]
 }
