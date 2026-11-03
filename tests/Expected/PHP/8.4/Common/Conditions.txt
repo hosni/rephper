@@ -1,0 +1,65 @@
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Conditions.php
+Function: classify
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 7
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 1
+Literals: 4
+Return type: string
+Lines: 3-10
+
+Compiled variables:
+0 $value
+
+Literals:
+0 int(100)
+1 string("high")
+2 string("low")
+3 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=3 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 IS_SMALLER line=5 op1=CONST(int(100)) op2=CV(0:$value) result=TMP(0)|SMART_JMPZ ext=-
+2 JMPZ line=5 op1=TMP(0) op2=JMP(4) result=UNUSED ext=-
+3 RETURN line=6 op1=CONST(string("high")) op2=UNUSED result=UNUSED ext=-
+4 RETURN line=9 op1=CONST(string("low")) op2=UNUSED result=UNUSED ext=-
+5 VERIFY_RETURN_TYPE line=10 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+6 RETURN line=10 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Conditions.php
+Function: <main>
+Class: -
+Kind: main
+Property: -
+Hook: -
+Opcodes: 1
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 1
+Return type: -
+Lines: 1-11
+
+Compiled variables:
+(none)
+
+Literals:
+0 int(1)
+
+Argument details:
+(none)
+
+Opcodes:
+0 RETURN line=11 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+

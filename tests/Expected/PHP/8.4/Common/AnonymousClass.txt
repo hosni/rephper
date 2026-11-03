@@ -1,0 +1,64 @@
+Rephper: Compiled op array
+File: tests/Fixtures/Common/AnonymousClass.php
+Function: id
+Class: class@anonymous\0tests/Fixtures/Common/AnonymousClass.php:3$0
+Kind: method
+Property: -
+Hook: -
+Opcodes: 3
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 2
+Return type: int
+Lines: 4-7
+
+Compiled variables:
+(none)
+
+Literals:
+0 int(1)
+1 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 RETURN line=6 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+1 VERIFY_RETURN_TYPE line=7 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+2 RETURN line=7 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/AnonymousClass.php
+Function: <main>
+Class: -
+Kind: main
+Property: -
+Hook: -
+Opcodes: 5
+Arguments: 0
+Required arguments: 0
+Compiled variables: 1
+Temporary variables: 4
+Literals: 2
+Return type: -
+Lines: 1-9
+
+Compiled variables:
+0 $object
+
+Literals:
+0 string("class@anonymous\0tests/fixtures/common/anonymousclass.php:3$0")
+1 int(1)
+
+Argument details:
+(none)
+
+Opcodes:
+0 DECLARE_ANON_CLASS line=3 op1=CONST(string("class@anonymous\0tests/fixtures/common/anonymousclass.php:3$0")) op2=UNUSED result=VAR(0) ext=-
+1 NEW line=3 op1=VAR(0) op2=UNUSED result=VAR(1) ext=-
+2 DO_FCALL line=3 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+3 ASSIGN line=3 op1=CV(0:$object) op2=VAR(1) result=UNUSED ext=-
+4 RETURN line=9 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+

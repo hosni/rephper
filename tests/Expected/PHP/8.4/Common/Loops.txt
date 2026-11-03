@@ -1,0 +1,69 @@
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Loops.php
+Function: calculateTotal
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 11
+Arguments: 1
+Required arguments: 1
+Compiled variables: 3
+Temporary variables: 3
+Literals: 2
+Return type: int
+Lines: 3-12
+
+Compiled variables:
+0 $values
+1 $total
+2 $value
+
+Literals:
+0 int(0)
+1 null
+
+Argument details:
+0 $values array
+
+Opcodes:
+0 RECV line=3 op1=UNUSED(1) op2=UNUSED(128) result=CV(0:$values) ext=-
+1 ASSIGN line=5 op1=CV(1:$total) op2=CONST(int(0)) result=UNUSED ext=-
+2 FE_RESET_R line=7 op1=CV(0:$values) op2=JMP(6) result=VAR(1) ext=-
+3 FE_FETCH_R line=7 op1=VAR(1) op2=CV(2:$value) result=UNUSED ext=jmp:6
+4 ASSIGN_OP line=8 op1=CV(1:$total) op2=CV(2:$value) result=UNUSED ext=1
+5 JMP line=7 op1=JMP(3) op2=UNUSED result=UNUSED ext=-
+6 FE_FREE line=7 op1=VAR(1) op2=UNUSED result=UNUSED ext=-
+7 VERIFY_RETURN_TYPE line=11 op1=CV(1:$total) op2=UNUSED result=UNUSED ext=-
+8 RETURN line=11 op1=CV(1:$total) op2=UNUSED result=UNUSED ext=-
+9 VERIFY_RETURN_TYPE line=12 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+10 RETURN line=12 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Loops.php
+Function: <main>
+Class: -
+Kind: main
+Property: -
+Hook: -
+Opcodes: 1
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 1
+Return type: -
+Lines: 1-13
+
+Compiled variables:
+(none)
+
+Literals:
+0 int(1)
+
+Argument details:
+(none)
+
+Opcodes:
+0 RETURN line=13 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+

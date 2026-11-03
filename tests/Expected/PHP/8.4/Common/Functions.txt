@@ -1,0 +1,68 @@
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Functions.php
+Function: greet
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 6
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 1
+Literals: 2
+Return type: string
+Lines: 3-6
+
+Compiled variables:
+0 $name
+
+Literals:
+0 string("Hello, ")
+1 null
+
+Argument details:
+0 $name string
+
+Opcodes:
+0 RECV line=3 op1=UNUSED(1) op2=UNUSED(64) result=CV(0:$name) ext=-
+1 CONCAT line=5 op1=CONST(string("Hello, ")) op2=CV(0:$name) result=TMP(0) ext=-
+2 VERIFY_RETURN_TYPE line=5 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+3 RETURN line=5 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+4 VERIFY_RETURN_TYPE line=6 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+5 RETURN line=6 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Functions.php
+Function: <main>
+Class: -
+Kind: main
+Property: -
+Hook: -
+Opcodes: 5
+Arguments: 0
+Required arguments: 0
+Compiled variables: 1
+Temporary variables: 2
+Literals: 3
+Return type: -
+Lines: 1-9
+
+Compiled variables:
+0 $message
+
+Literals:
+0 string("greet")
+1 string("Rephper")
+2 int(1)
+
+Argument details:
+(none)
+
+Opcodes:
+0 INIT_FCALL line=8 op1=UNUSED(112) op2=CONST(string("greet")) result=UNUSED ext=1
+1 SEND_VAL line=8 op1=CONST(string("Rephper")) op2=UNUSED(1) result=UNUSED(80) ext=-
+2 DO_UCALL line=8 op1=UNUSED op2=UNUSED result=VAR(0) ext=-
+3 ASSIGN line=8 op1=CV(0:$message) op2=VAR(0) result=UNUSED ext=-
+4 RETURN line=9 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+

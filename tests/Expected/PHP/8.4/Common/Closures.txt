@@ -1,0 +1,64 @@
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Closures.php
+Function: {closure:tests/Fixtures/Common/Closures.php:3}
+Class: -
+Kind: closure
+Property: -
+Hook: -
+Opcodes: 6
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 1
+Literals: 2
+Return type: string
+Lines: 3-5
+
+Compiled variables:
+0 $name
+
+Literals:
+0 string("Hello, ")
+1 null
+
+Argument details:
+0 $name string
+
+Opcodes:
+0 RECV line=3 op1=UNUSED(1) op2=UNUSED(64) result=CV(0:$name) ext=-
+1 CONCAT line=4 op1=CONST(string("Hello, ")) op2=CV(0:$name) result=TMP(0) ext=-
+2 VERIFY_RETURN_TYPE line=4 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+3 RETURN line=4 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+4 VERIFY_RETURN_TYPE line=5 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+5 RETURN line=5 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Closures.php
+Function: <main>
+Class: -
+Kind: main
+Property: -
+Hook: -
+Opcodes: 3
+Arguments: 0
+Required arguments: 0
+Compiled variables: 1
+Temporary variables: 2
+Literals: 1
+Return type: -
+Lines: 1-6
+
+Compiled variables:
+0 $greet
+
+Literals:
+0 int(1)
+
+Argument details:
+(none)
+
+Opcodes:
+0 DECLARE_LAMBDA_FUNCTION line=3 op1=UNUSED op2=UNUSED result=TMP(0) ext=-
+1 ASSIGN line=3 op1=CV(0:$greet) op2=TMP(0) result=UNUSED ext=-
+2 RETURN line=6 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+
