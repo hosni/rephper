@@ -92,8 +92,38 @@ function run_process(array $command): array
         return ['exit' => 1, 'stdout' => '', 'stderr' => 'failed to start process'];
     }
 
-    $stdout = stream_get_contents($pipes[1]);
-    $stderr = stream_get_contents($pipes[2]);
+    stream_set_blocking($pipes[1], false);
+    stream_set_blocking($pipes[2], false);
+    $stdout = '';
+    $stderr = '';
+    while (!feof($pipes[1]) || !feof($pipes[2])) {
+        $read = [];
+        if (!feof($pipes[1])) {
+            $read[] = $pipes[1];
+        }
+        if (!feof($pipes[2])) {
+            $read[] = $pipes[2];
+        }
+        if ($read === []) {
+            break;
+        }
+        $write = null;
+        $except = null;
+        if (stream_select($read, $write, $except, 1) === false) {
+            break;
+        }
+        foreach ($read as $pipe) {
+            $chunk = fread($pipe, 65536);
+            if ($chunk === false || $chunk === '') {
+                continue;
+            }
+            if ($pipe === $pipes[1]) {
+                $stdout .= $chunk;
+            } else {
+                $stderr .= $chunk;
+            }
+        }
+    }
     fclose($pipes[1]);
     fclose($pipes[2]);
 
