@@ -1,0 +1,83 @@
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Exceptions.php
+Function: guard
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 19
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 5
+Literals: 9
+Return type: int
+Lines: 3-16
+
+Compiled variables:
+0 $value
+1 $exception
+
+Literals:
+0 int(0)
+1 string("Exception")
+2 string("exception")
+3 string("negative")
+4 string("Exception")
+5 string("exception")
+6 int(0)
+7 int(1)
+8 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=3 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 IS_SMALLER line=6 op1=CV(0:$value) op2=CONST(int(0)) result=TMP(1)|SMART_JMPZ ext=-
+2 JMPZ line=6 op1=TMP(1) op2=JMP(7) result=UNUSED ext=-
+3 NEW line=7 op1=CONST(string("Exception")) op2=UNUSED result=VAR(2) ext=1
+4 SEND_VAL_EX line=7 op1=CONST(string("negative")) op2=UNUSED(1) result=UNUSED(80) ext=-
+5 DO_FCALL line=7 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+6 THROW line=7 op1=VAR(2) op2=UNUSED result=UNUSED ext=-
+7 JMP line=7 op1=JMP(11) op2=UNUSED result=UNUSED ext=-
+8 CATCH line=9 op1=CONST(string("Exception")) op2=UNUSED result=CV(1:$exception) ext=9
+9 FAST_CALL line=10 op1=TRY_CATCH(0) op2=UNUSED result=TMP(0) ext=-
+10 RETURN line=10 op1=CONST(int(0)) op2=UNUSED result=UNUSED ext=-
+11 FAST_CALL line=11 op1=TRY_CATCH(0) op2=UNUSED result=TMP(0) ext=-
+12 JMP line=11 op1=JMP(15) op2=UNUSED result=UNUSED ext=-
+13 ASSIGN line=12 op1=CV(0:$value) op2=CONST(int(1)) result=UNUSED ext=-
+14 FAST_RET line=12 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+15 VERIFY_RETURN_TYPE line=15 op1=CV(0:$value) op2=UNUSED result=UNUSED ext=-
+16 RETURN line=15 op1=CV(0:$value) op2=UNUSED result=UNUSED ext=-
+17 VERIFY_RETURN_TYPE line=16 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+18 RETURN line=16 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Exceptions.php
+Function: <main>
+Class: -
+Kind: main
+Property: -
+Hook: -
+Opcodes: 1
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 1
+Return type: -
+Lines: 1-17
+
+Compiled variables:
+(none)
+
+Literals:
+0 int(1)
+
+Argument details:
+(none)
+
+Opcodes:
+0 RETURN line=17 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+

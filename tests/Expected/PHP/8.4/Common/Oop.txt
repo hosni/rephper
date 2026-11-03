@@ -1,0 +1,158 @@
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Oop.php
+Function: name
+Class: Named
+Kind: method
+Property: -
+Hook: -
+Opcodes: 2
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 1
+Return type: string
+Lines: 5-5
+
+Compiled variables:
+(none)
+
+Literals:
+0 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 VERIFY_RETURN_TYPE line=5 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+1 RETURN line=5 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Oop.php
+Function: label
+Class: Label
+Kind: method
+Property: -
+Hook: -
+Opcodes: 3
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 2
+Return type: string
+Lines: 10-13
+
+Compiled variables:
+(none)
+
+Literals:
+0 string("label")
+1 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 RETURN line=12 op1=CONST(string("label")) op2=UNUSED result=UNUSED ext=-
+1 VERIFY_RETURN_TYPE line=13 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+2 RETURN line=13 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Oop.php
+Function: id
+Class: Base
+Kind: method
+Property: -
+Hook: -
+Opcodes: 5
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 1
+Literals: 2
+Return type: int
+Lines: 20-23
+
+Compiled variables:
+(none)
+
+Literals:
+0 string("id")
+1 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 FETCH_OBJ_R line=22 op1=THIS op2=CONST(string("id")) result=TMP(0) ext=-
+1 VERIFY_RETURN_TYPE line=22 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+2 RETURN line=22 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+3 VERIFY_RETURN_TYPE line=23 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 RETURN line=23 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Oop.php
+Function: name
+Class: Item
+Kind: method
+Property: -
+Hook: -
+Opcodes: 5
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 1
+Literals: 2
+Return type: string
+Lines: 32-35
+
+Compiled variables:
+(none)
+
+Literals:
+0 string("title")
+1 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 FETCH_OBJ_R line=34 op1=THIS op2=CONST(string("title")) result=TMP(0) ext=-
+1 VERIFY_RETURN_TYPE line=34 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+2 RETURN line=34 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+3 VERIFY_RETURN_TYPE line=35 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 RETURN line=35 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Oop.php
+Function: <main>
+Class: -
+Kind: main
+Property: -
+Hook: -
+Opcodes: 2
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 4
+Return type: -
+Lines: 1-37
+
+Compiled variables:
+(none)
+
+Literals:
+0 string("base")
+1 string("item")
+2 string("\0itemtests/Fixtures/Common/Oop.php:26$0")
+3 int(1)
+
+Argument details:
+(none)
+
+Opcodes:
+0 DECLARE_CLASS line=26 op1=CONST(string("item")) op2=CONST(string("base")) result=UNUSED ext=-
+1 RETURN line=37 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+

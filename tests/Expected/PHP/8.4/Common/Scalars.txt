@@ -1,0 +1,81 @@
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Scalars.php
+Function: scale
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 7
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 2
+Literals: 3
+Return type: float
+Lines: 3-8
+
+Compiled variables:
+0 $value
+
+Literals:
+0 float(0.5)
+1 float(2)
+2 null
+
+Argument details:
+0 $value float
+
+Opcodes:
+0 RECV line=3 op1=UNUSED(1) op2=UNUSED(32) result=CV(0:$value) ext=-
+1 ASSIGN_OP line=5 op1=CV(0:$value) op2=CONST(float(0.5)) result=UNUSED ext=1
+2 MUL line=7 op1=CV(0:$value) op2=CONST(float(2)) result=TMP(1) ext=-
+3 VERIFY_RETURN_TYPE line=7 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+4 RETURN line=7 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+5 VERIFY_RETURN_TYPE line=8 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+6 RETURN line=8 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Scalars.php
+Function: <main>
+Class: -
+Kind: main
+Property: -
+Hook: -
+Opcodes: 7
+Arguments: 0
+Required arguments: 0
+Compiled variables: 6
+Temporary variables: 6
+Literals: 7
+Return type: -
+Lines: 1-16
+
+Compiled variables:
+0 $flags
+1 $label
+2 $binary
+3 $embedded
+4 $negativeZero
+5 $special
+
+Literals:
+0 array(4: [0=>null, 1=>true, 2=>false, 3=>array(1: ["inner"=>array(2)])])
+1 string("ab")
+2 string("ÿ")
+3 string("a\0b")
+4 float(-0)
+5 array(2: [0=>float(nan), 1=>float(inf)])
+6 int(1)
+
+Argument details:
+(none)
+
+Opcodes:
+0 ASSIGN line=10 op1=CV(0:$flags) op2=CONST(array(4: [0=>null, 1=>true, 2=>false, 3=>array(1: ["inner"=>array(2)])])) result=UNUSED ext=-
+1 ASSIGN line=11 op1=CV(1:$label) op2=CONST(string("ab")) result=UNUSED ext=-
+2 ASSIGN line=12 op1=CV(2:$binary) op2=CONST(string("ÿ")) result=UNUSED ext=-
+3 ASSIGN line=13 op1=CV(3:$embedded) op2=CONST(string("a\0b")) result=UNUSED ext=-
+4 ASSIGN line=14 op1=CV(4:$negativeZero) op2=CONST(float(-0)) result=UNUSED ext=-
+5 ASSIGN line=15 op1=CV(5:$special) op2=CONST(array(2: [0=>float(nan), 1=>float(inf)])) result=UNUSED ext=-
+6 RETURN line=16 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+

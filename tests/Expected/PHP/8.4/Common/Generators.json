@@ -1,0 +1,306 @@
+{
+  "ir_version": 1,
+  "php": {
+    "version": "PHP_VERSION",
+    "version_id": 0,
+    "api": 20240924,
+    "zend_module_api": 20240924,
+    "zend_extension_api": 420240924,
+    "zts": false,
+    "debug": false
+  },
+  "compilation": {
+    "stage": "pre_pass_two",
+    "jumps": "absolute_opline"
+  },
+  "op_arrays": [
+    {
+      "id": 0,
+      "kind": "function",
+      "name": "sequence",
+      "filename": "tests/Fixtures/Common/Generators.php",
+      "line_start": 3,
+      "line_end": 8,
+      "scope": null,
+      "property_hook": null,
+      "flags": [
+        "has_type_hints",
+        "top_level",
+        "has_return_type",
+        "generator"
+      ],
+      "num_args": 1,
+      "required_num_args": 1,
+      "return_type": {
+        "display": "Generator",
+        "nullable": false,
+        "kind": "name",
+        "name": "Generator"
+      },
+      "arguments": [
+        {
+          "name": "limit",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        }
+      ],
+      "variables": [
+        "limit",
+        "i"
+      ],
+      "temporary_variables": 4,
+      "literals": [
+        {
+          "type": "int",
+          "value": 0
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [
+        {
+          "start": -1,
+          "continue": 5,
+          "break": 8,
+          "parent": -1,
+          "switch": false
+        }
+      ],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 3,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "limit"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "GENERATOR_CREATE",
+          "opcode_number": 139,
+          "line": 3,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 5,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "JMP",
+          "opcode_number": 42,
+          "line": 5,
+          "op1": {
+            "kind": "jump",
+            "target": 6
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 4,
+          "opcode": "YIELD",
+          "opcode_number": 160,
+          "line": 6,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 5,
+          "opcode": "PRE_INC",
+          "opcode_number": 34,
+          "line": 5,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 6,
+          "opcode": "IS_SMALLER",
+          "opcode_number": 20,
+          "line": 5,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 0,
+            "name": "limit"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 3,
+            "smart_branch": [
+              "jmpnz"
+            ]
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 7,
+          "opcode": "JMPNZ",
+          "opcode_number": 44,
+          "line": 5,
+          "op1": {
+            "kind": "tmp",
+            "index": 3
+          },
+          "op2": {
+            "kind": "jump",
+            "target": 4
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 8,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 8,
+          "op1": {
+            "kind": "const",
+            "index": 1
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "kind": "main",
+      "name": null,
+      "filename": "tests/Fixtures/Common/Generators.php",
+      "line_start": 1,
+      "line_end": 9,
+      "scope": null,
+      "property_hook": null,
+      "flags": [],
+      "num_args": 0,
+      "required_num_args": 0,
+      "return_type": null,
+      "arguments": [],
+      "variables": [],
+      "temporary_variables": 0,
+      "literals": [
+        {
+          "type": "int",
+          "value": 1
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 9,
+          "op1": {
+            "kind": "const",
+            "index": 0
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    }
+  ],
+  "classes": []
+}

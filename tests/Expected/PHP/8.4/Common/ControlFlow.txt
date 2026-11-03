@@ -1,0 +1,112 @@
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ControlFlow.php
+Function: walk
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 40
+Arguments: 2
+Required arguments: 2
+Compiled variables: 7
+Temporary variables: 18
+Literals: 11
+Return type: int
+Lines: 3-35
+
+Compiled variables:
+0 $n
+1 $items
+2 $total
+3 $label
+4 $i
+5 $j
+6 $item
+
+Literals:
+0 int(0)
+1 int(0)
+2 int(0)
+3 int(10)
+4 string("high")
+5 string("low")
+6 int(0)
+7 int(2)
+8 int(4)
+9 int(0)
+10 null
+
+Argument details:
+0 $n int
+1 $items array
+
+Opcodes:
+0 RECV line=3 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 RECV line=3 op1=UNUSED(2) op2=UNUSED(128) result=CV(1:$items) ext=-
+2 ASSIGN line=5 op1=CV(2:$total) op2=CONST(int(0)) result=UNUSED ext=-
+3 IS_SMALLER line=7 op1=CONST(int(0)) op2=CV(0:$n) result=TMP(1)|SMART_JMPZ ext=-
+4 JMPZ line=7 op1=TMP(1) op2=JMP(7) result=UNUSED ext=-
+5 ASSIGN line=8 op1=CV(2:$total) op2=CV(0:$n) result=UNUSED ext=-
+6 JMP line=7 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+7 ASSIGN line=10 op1=CV(2:$total) op2=CONST(int(0)) result=UNUSED ext=-
+8 IS_SMALLER line=13 op1=CONST(int(10)) op2=CV(0:$n) result=TMP(4)|SMART_JMPZ ext=-
+9 JMPZ line=13 op1=TMP(4) op2=JMP(12) result=UNUSED ext=-
+10 QM_ASSIGN line=13 op1=CONST(string("high")) op2=UNUSED result=TMP(5) ext=-
+11 JMP line=13 op1=JMP(13) op2=UNUSED result=UNUSED ext=-
+12 QM_ASSIGN line=13 op1=CONST(string("low")) op2=UNUSED result=TMP(5) ext=-
+13 ASSIGN line=13 op1=CV(3:$label) op2=TMP(5) result=UNUSED ext=-
+14 ASSIGN line=15 op1=CV(4:$i) op2=CONST(int(0)) result=UNUSED ext=-
+15 JMP line=15 op1=JMP(24) op2=UNUSED result=UNUSED ext=-
+16 IS_IDENTICAL line=16 op1=CV(4:$i) op2=CONST(int(2)) result=TMP(8)|SMART_JMPZ ext=-
+17 JMPZ line=16 op1=TMP(8) op2=JMP(19) result=UNUSED ext=-
+18 CONT line=17 op1=LEVEL(0) op2=UNUSED(1) result=UNUSED ext=-
+19 IS_IDENTICAL line=19 op1=CV(4:$i) op2=CONST(int(4)) result=TMP(9)|SMART_JMPZ ext=-
+20 JMPZ line=19 op1=TMP(9) op2=JMP(22) result=UNUSED ext=-
+21 BRK line=20 op1=LEVEL(0) op2=UNUSED(1) result=UNUSED ext=-
+22 ASSIGN_OP line=22 op1=CV(2:$total) op2=CV(4:$i) result=UNUSED ext=1
+23 PRE_INC line=15 op1=CV(4:$i) op2=UNUSED result=UNUSED ext=-
+24 IS_SMALLER line=15 op1=CV(4:$i) op2=CV(0:$n) result=TMP(12)|SMART_JMPNZ ext=-
+25 JMPNZ line=15 op1=TMP(12) op2=JMP(16) result=UNUSED ext=-
+26 ASSIGN line=25 op1=CV(5:$j) op2=CONST(int(0)) result=UNUSED ext=-
+27 JMP line=26 op1=JMP(29) op2=UNUSED result=UNUSED ext=-
+28 PRE_INC line=27 op1=CV(5:$j) op2=UNUSED result=UNUSED ext=-
+29 IS_SMALLER line=26 op1=CV(5:$j) op2=CV(0:$n) result=TMP(15)|SMART_JMPNZ ext=-
+30 JMPNZ line=26 op1=TMP(15) op2=JMP(28) result=UNUSED ext=-
+31 FE_RESET_R line=30 op1=CV(1:$items) op2=JMP(35) result=VAR(16) ext=-
+32 FE_FETCH_R line=30 op1=VAR(16) op2=CV(6:$item) result=UNUSED ext=jmp:35
+33 ASSIGN_OP line=31 op1=CV(2:$total) op2=CV(6:$item) result=UNUSED ext=1
+34 JMP line=30 op1=JMP(32) op2=UNUSED result=UNUSED ext=-
+35 FE_FREE line=30 op1=VAR(16) op2=UNUSED result=UNUSED ext=-
+36 VERIFY_RETURN_TYPE line=34 op1=CV(2:$total) op2=UNUSED result=UNUSED ext=-
+37 RETURN line=34 op1=CV(2:$total) op2=UNUSED result=UNUSED ext=-
+38 VERIFY_RETURN_TYPE line=35 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+39 RETURN line=35 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ControlFlow.php
+Function: <main>
+Class: -
+Kind: main
+Property: -
+Hook: -
+Opcodes: 1
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 1
+Return type: -
+Lines: 1-36
+
+Compiled variables:
+(none)
+
+Literals:
+0 int(1)
+
+Argument details:
+(none)
+
+Opcodes:
+0 RETURN line=36 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+

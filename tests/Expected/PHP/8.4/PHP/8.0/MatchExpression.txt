@@ -1,0 +1,71 @@
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.0/MatchExpression.php
+Function: classify
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 12
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 2
+Literals: 5
+Return type: string
+Lines: 3-10
+
+Compiled variables:
+0 $value
+
+Literals:
+0 array(3: [0=>int(2), 1=>int(4), 2=>int(4)])
+1 string("zero")
+2 string("small")
+3 string("other")
+4 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=3 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 MATCH line=5 op1=CV(0:$value) op2=CONST(array(3: [0=>int(2), 1=>int(4), 2=>int(4)])) result=UNUSED ext=jmp:6
+2 QM_ASSIGN line=6 op1=CONST(string("zero")) op2=UNUSED result=TMP(1) ext=-
+3 JMP line=6 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+4 QM_ASSIGN line=7 op1=CONST(string("small")) op2=UNUSED result=TMP(1) ext=-
+5 JMP line=7 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+6 QM_ASSIGN line=8 op1=CONST(string("other")) op2=UNUSED result=TMP(1) ext=-
+7 JMP line=8 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+8 VERIFY_RETURN_TYPE line=8 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+9 RETURN line=8 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+10 VERIFY_RETURN_TYPE line=10 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+11 RETURN line=10 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.0/MatchExpression.php
+Function: <main>
+Class: -
+Kind: main
+Property: -
+Hook: -
+Opcodes: 1
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 1
+Return type: -
+Lines: 1-11
+
+Compiled variables:
+(none)
+
+Literals:
+0 int(1)
+
+Argument details:
+(none)
+
+Opcodes:
+0 RETURN line=11 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+

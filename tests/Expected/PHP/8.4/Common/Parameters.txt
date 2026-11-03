@@ -1,0 +1,66 @@
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Parameters.php
+Function: build
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 7
+Arguments: 2
+Required arguments: 1
+Compiled variables: 3
+Temporary variables: 0
+Literals: 2
+Return type: string
+Lines: 3-6
+
+Compiled variables:
+0 $name
+1 $times
+2 $parts
+
+Literals:
+0 int(2)
+1 null
+
+Argument details:
+0 $name string
+1 $times int
+
+Opcodes:
+0 RECV line=3 op1=UNUSED(1) op2=UNUSED(64) result=CV(0:$name) ext=-
+1 RECV_INIT line=3 op1=UNUSED(2) op2=CONST(int(2)) result=CV(1:$times) ext=-
+2 RECV_VARIADIC line=3 op1=UNUSED(3) op2=UNUSED(2) result=CV(2:$parts) ext=-
+3 VERIFY_RETURN_TYPE line=5 op1=CV(0:$name) op2=UNUSED result=UNUSED ext=-
+4 RETURN line=5 op1=CV(0:$name) op2=UNUSED result=UNUSED ext=-
+5 VERIFY_RETURN_TYPE line=6 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+6 RETURN line=6 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Parameters.php
+Function: <main>
+Class: -
+Kind: main
+Property: -
+Hook: -
+Opcodes: 1
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 1
+Return type: -
+Lines: 1-7
+
+Compiled variables:
+(none)
+
+Literals:
+0 int(1)
+
+Argument details:
+(none)
+
+Opcodes:
+0 RETURN line=7 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+
