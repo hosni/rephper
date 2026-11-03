@@ -383,10 +383,12 @@ Each block has an ordered list of expressions. Value opcodes such as `ADD` and t
 | `Unary` | `!` for `BOOL_NOT`, `~` for `BW_NOT`, and `bool` for `BOOL`. |
 | `Assignment` | A write to a compiled variable. `operator` is null for `=`. `+` means `+=`, from `ASSIGN_OP`'s `extended_value`. |
 | `ReturnValue` | The returned value. A `return;` is a return of the null literal the compiler emitted. |
-| `Opaque` | An instruction kept in place because it is not one of those expressions. |
+| `Opaque` | An instruction kept in place. It records the opcode, opcode number, extended value, jump target, unknown instruction fields, and all three operands. |
 | `Unresolved` | A `tmp` or `var` used in a block that does not define it. |
 
-`RECV` and `VERIFY_RETURN_TYPE` are opaque and do not produce a diagnostic. Any other opcode that this pass does not fold, including `STRLEN`, `JMPZ_EX`, and `JMPNZ_EX`, is opaque and adds an `unsupported` diagnostic. The diagnostic names the opcode, opline, source line, block, and reason. A const index that is not in the literal table is invalid IR and throws `ExpressionException`.
+`RECV` and `VERIFY_RETURN_TYPE` are opaque and do not produce a diagnostic. Any other opcode that this pass does not fold, including `STRLEN`, `ECHO`, `FETCH_DIM_R`, `INIT_FCALL`, `JMPZ_EX`, and `JMPNZ_EX`, is opaque and adds an `unsupported` diagnostic. The diagnostic names the opcode, opline, source line, block, and reason. A const index that is not in the literal table is invalid IR and throws `ExpressionException`.
+
+An opaque operand keeps the IR kind and its fields. A `const`, compiled variable, `tmp`, or `var` also points at the expression it uses, and a temporary points at the same object stored for that slot. `unused`, `jump`, `this`, and the other non-value kinds stay as IR data. The result operand records the written slot and does not point back at the opaque node. `echo $text` keeps the compiled variable. `echo strlen($text)` keeps the `STRLEN` node as the operand of `ECHO`. `sort($items)` keeps `INIT_FCALL`'s argument count, the unused operand number, and the function-name literal.
 
 These compiled forms are easy to misread as source syntax:
 
@@ -483,7 +485,7 @@ Linting one file does not compile files it would include at runtime, and it does
 
 ## GitHub Actions
 
-`.github/workflows/build.yml` runs on pushes and pull requests. The operating system and the PHP version are separate matrix axes. The active matrix is Ubuntu 24.04 and PHP 8.4. The job installs that PHP version, its development tools, and Composer, installs the locked dependencies with `composer install`, then runs `make info`, `make test-unit`, `make test-integration`, and a separate check that the extension loads with no startup output. Unit tests run before the extension is built. The integration target builds it and runs the exporter suite.
+`.github/workflows/build.yml` runs on pushes and pull requests. The operating system and the PHP version are separate matrix axes. The active matrix is Ubuntu 24.04 and PHP 8.4. The job installs that PHP version, its development tools, and Composer, installs the locked dependencies with `composer install --no-interaction --no-progress --prefer-dist`, then runs `make info`, `make test-unit`, `make test-integration`, and a separate check that the extension loads with no startup output. Unit tests run before the extension is built. The integration target builds it and runs the exporter suite.
 
 ## Current limitations
 

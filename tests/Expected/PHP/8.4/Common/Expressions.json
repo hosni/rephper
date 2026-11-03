@@ -2956,11 +2956,357 @@
     },
     {
       "id": 11,
+      "kind": "function",
+      "name": "opaqueForms",
+      "filename": "tests/Fixtures/Common/Expressions.php",
+      "line_start": 93,
+      "line_end": 100,
+      "scope": null,
+      "property_hook": null,
+      "flags": [
+        "has_type_hints",
+        "top_level",
+        "has_return_type"
+      ],
+      "num_args": 3,
+      "required_num_args": 3,
+      "return_type": {
+        "display": "void",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [
+        {
+          "name": "text",
+          "type": {
+            "display": "string",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        },
+        {
+          "name": "items",
+          "type": {
+            "display": "array",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        },
+        {
+          "name": "index",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        }
+      ],
+      "variables": [
+        "text",
+        "items",
+        "index"
+      ],
+      "temporary_variables": 4,
+      "literals": [
+        {
+          "type": "string",
+          "value": "sort"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 93,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 64
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "text"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 93,
+          "op1": {
+            "kind": "unused",
+            "value": 2
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 128
+          },
+          "result": {
+            "kind": "cv",
+            "index": 1,
+            "name": "items"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 93,
+          "op1": {
+            "kind": "unused",
+            "value": 3
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 2,
+            "name": "index"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "ECHO",
+          "opcode_number": 136,
+          "line": 95,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "text"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 4,
+          "opcode": "FETCH_DIM_R",
+          "opcode_number": 81,
+          "line": 96,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "items"
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 2,
+            "name": "index"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 0
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 5,
+          "opcode": "ECHO",
+          "opcode_number": 136,
+          "line": 96,
+          "op1": {
+            "kind": "tmp",
+            "index": 0
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 6,
+          "opcode": "STRLEN",
+          "opcode_number": 121,
+          "line": 97,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "text"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 1
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 7,
+          "opcode": "ECHO",
+          "opcode_number": 136,
+          "line": 97,
+          "op1": {
+            "kind": "tmp",
+            "index": 1
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 8,
+          "opcode": "CONCAT",
+          "opcode_number": 8,
+          "line": 98,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "text"
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 0,
+            "name": "text"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 2
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 9,
+          "opcode": "ECHO",
+          "opcode_number": 136,
+          "line": 98,
+          "op1": {
+            "kind": "tmp",
+            "index": 2
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 10,
+          "opcode": "INIT_FCALL",
+          "opcode_number": 61,
+          "line": 99,
+          "op1": {
+            "kind": "unused",
+            "value": 96
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 1
+        },
+        {
+          "index": 11,
+          "opcode": "SEND_REF",
+          "opcode_number": 67,
+          "line": 99,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "items"
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 1
+          },
+          "result": {
+            "kind": "unused",
+            "value": 80
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 12,
+          "opcode": "DO_ICALL",
+          "opcode_number": 129,
+          "line": 99,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 13,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 100,
+          "op1": {
+            "kind": "const",
+            "index": 1
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 12,
       "kind": "main",
       "name": null,
       "filename": "tests/Fixtures/Common/Expressions.php",
       "line_start": 1,
-      "line_end": 92,
+      "line_end": 101,
       "scope": null,
       "property_hook": null,
       "flags": [],
@@ -2989,7 +3335,7 @@
           "index": 0,
           "opcode": "RETURN",
           "opcode_number": 62,
-          "line": 92,
+          "line": 101,
           "op1": {
             "kind": "const",
             "index": 0

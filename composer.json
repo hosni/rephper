@@ -1,6 +1,7 @@
 {
     "name": "rephper/rephper",
     "description": "Inspect compiled PHP opcodes, export versioned IR JSON, build control-flow graphs, and reconstruct expressions inside a basic block.",
+    "license": "proprietary",
     "type": "project",
     "require": {
         "php": "^8.4",

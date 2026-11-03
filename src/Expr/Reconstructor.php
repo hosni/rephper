@@ -138,14 +138,14 @@ final class Reconstructor
                 $instruction->line,
                 $this->value($opArray, $instruction, $instruction->op1),
             ),
-            default => $this->opaque($instruction),
+            default => $this->opaque($opArray, $instruction),
         };
     }
 
     private function assign(OpArray $opArray, Instruction $instruction, ?string $operator): void
     {
         if ($instruction->op1->kind !== 'cv' || $instruction->op1->name === null) {
-            $this->opaque($instruction, 'assignment target is not a compiled variable');
+            $this->opaque($opArray, $instruction, 'assignment target is not a compiled variable');
 
             return;
         }
@@ -164,6 +164,7 @@ final class Reconstructor
         $operator = self::COMPOUND[$instruction->extendedValue] ?? null;
         if ($operator === null) {
             $this->opaque(
+                $opArray,
                 $instruction,
                 'ASSIGN_OP extended_value ' . $instruction->extendedValue . ' is not a supported compound operator'
             );
@@ -246,13 +247,25 @@ final class Reconstructor
         );
     }
 
-    private function opaque(Instruction $instruction, ?string $reason = null): void
+    private function opaque(OpArray $opArray, Instruction $instruction, ?string $reason = null): void
     {
         $recorded = in_array($instruction->opcode, self::RECORDED, true);
         $reason ??= $recorded
             ? 'recorded because it is not an expression'
             : 'opcode is not reconstructed as an expression';
-        $expression = new Opaque($instruction->index, $instruction->line, $instruction->opcode, $reason);
+        $expression = new Opaque(
+            $instruction->index,
+            $instruction->line,
+            $instruction->opcode,
+            $instruction->opcodeNumber,
+            $instruction->extendedValue,
+            $instruction->jumpTarget,
+            $this->operand($opArray, $instruction, $instruction->op1, true),
+            $this->operand($opArray, $instruction, $instruction->op2, true),
+            $this->operand($opArray, $instruction, $instruction->result, false),
+            $instruction->extra,
+            $reason,
+        );
         if (!$recorded) {
             $this->diagnostics[] = new Diagnostic(
                 'unsupported',
@@ -270,6 +283,29 @@ final class Reconstructor
             return;
         }
         $this->roots[] = $expression;
+    }
+
+    private function operand(OpArray $opArray, Instruction $instruction, Operand $operand, bool $resolve): OperandUse
+    {
+        $resolved = null;
+        if ($resolve && in_array($operand->kind, ['const', 'cv', 'tmp', 'var'], true)) {
+            $resolved = $this->value($opArray, $instruction, $operand);
+        }
+
+        return new OperandUse(
+            $operand->kind,
+            $operand->index,
+            $operand->name,
+            $operand->target,
+            $operand->value,
+            $operand->id,
+            $operand->jumpTable,
+            $operand->smartBranch,
+            $operand->encoded,
+            $operand->typeCode,
+            $operand->extra,
+            $resolved,
+        );
     }
 
     private function slot(Operand $operand): ?string

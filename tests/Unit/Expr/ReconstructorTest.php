@@ -154,6 +154,15 @@ final class ReconstructorTest extends TestCase
         $this->assertSame('+', $return->value->operator);
         $this->assertInstanceOf(Opaque::class, $return->value->left);
         $this->assertSame('STRLEN', $return->value->left->opcode);
+        $this->assertSame('cv', $return->value->left->op1->kind);
+        $this->assertSame('text', $return->value->left->op1->name);
+        $this->assertInstanceOf(VariableRead::class, $return->value->left->op1->resolved);
+        $this->assertSame('text', $return->value->left->op1->resolved->name);
+        $this->assertSame('unused', $return->value->left->op2->kind);
+        $this->assertNull($return->value->left->op2->resolved);
+        $this->assertSame('tmp', $return->value->left->result->kind);
+        $this->assertSame(0, $return->value->left->result->index);
+        $this->assertNull($return->value->left->result->resolved);
         $this->assertVariable($return->value->right, 'n');
         $this->assertLessThan($return->value->opline, $return->value->left->opline);
         $this->assertSame('unsupported', $result->diagnostics[0]->kind);
@@ -171,6 +180,137 @@ final class ReconstructorTest extends TestCase
         $this->assertInstanceOf(Unary::class, $bits);
         $this->assertSame('~', $bits->operator);
         $this->assertVariable($bits->operand, 'a');
+    }
+
+    public function testAnUnsupportedOpcodeKeepsItsOneOperand(): void
+    {
+        $echo = $this->opaqueNamed($this->opaqueForms(), 'ECHO', 0);
+
+        $this->assertSame(3, $echo->opline);
+        $this->assertSame(136, $echo->opcodeNumber);
+        $this->assertSame('cv', $echo->op1->kind);
+        $this->assertSame(0, $echo->op1->index);
+        $this->assertSame('text', $echo->op1->name);
+        $this->assertInstanceOf(VariableRead::class, $echo->op1->resolved);
+        $this->assertSame('text', $echo->op1->resolved->name);
+        $this->assertSame(0, $echo->op1->resolved->index);
+        $this->assertSame('unused', $echo->op2->kind);
+        $this->assertNull($echo->op2->resolved);
+        $this->assertSame('unused', $echo->result->kind);
+        $this->assertNull($echo->result->resolved);
+    }
+
+    public function testAnUnsupportedOpcodeKeepsBothOperands(): void
+    {
+        $echo = $this->opaqueNamed($this->opaqueForms(), 'ECHO', 1);
+        $fetch = $echo->op1->resolved;
+        $this->assertInstanceOf(Opaque::class, $fetch);
+        $this->assertSame('FETCH_DIM_R', $fetch->opcode);
+        $this->assertSame(81, $fetch->opcodeNumber);
+        $this->assertSame('cv', $fetch->op1->kind);
+        $this->assertSame('items', $fetch->op1->name);
+        $this->assertInstanceOf(VariableRead::class, $fetch->op1->resolved);
+        $this->assertSame('items', $fetch->op1->resolved->name);
+        $this->assertSame('cv', $fetch->op2->kind);
+        $this->assertSame('index', $fetch->op2->name);
+        $this->assertInstanceOf(VariableRead::class, $fetch->op2->resolved);
+        $this->assertSame('index', $fetch->op2->resolved->name);
+        $this->assertSame('tmp', $fetch->result->kind);
+        $this->assertSame(0, $fetch->result->index);
+        $this->assertNull($fetch->result->resolved);
+    }
+
+    public function testAnUnsupportedOpcodeConsumesATemporary(): void
+    {
+        $expressions = $this->opaqueForms();
+        $echo = $this->opaqueNamed($expressions, 'ECHO', 3);
+        $concat = $echo->op1->resolved;
+
+        $this->assertSame('tmp', $echo->op1->kind);
+        $this->assertSame(2, $echo->op1->index);
+        $this->assertNull($echo->op1->name);
+        $this->assertInstanceOf(Binary::class, $concat);
+        $this->assertSame('.', $concat->operator);
+        $this->assertVariable($concat->left, 'text');
+        $this->assertVariable($concat->right, 'text');
+        $this->assertNotSame($concat->left, $concat->right);
+        foreach ($expressions as $expression) {
+            $this->assertNotSame($concat, $expression);
+        }
+    }
+
+    public function testAnUnsupportedOpcodeConsumesAnOpaqueOperand(): void
+    {
+        $expressions = $this->opaqueForms();
+        $echo = $this->opaqueNamed($expressions, 'ECHO', 2);
+        $strlen = $echo->op1->resolved;
+
+        $this->assertSame('tmp', $echo->op1->kind);
+        $this->assertSame(1, $echo->op1->index);
+        $this->assertInstanceOf(Opaque::class, $strlen);
+        $this->assertSame('STRLEN', $strlen->opcode);
+        $this->assertSame(121, $strlen->opcodeNumber);
+        $this->assertSame('cv', $strlen->op1->kind);
+        $this->assertSame('text', $strlen->op1->name);
+        $this->assertInstanceOf(VariableRead::class, $strlen->op1->resolved);
+        $this->assertSame('text', $strlen->op1->resolved->name);
+        $this->assertLessThan($echo->opline, $strlen->opline);
+        foreach ($expressions as $expression) {
+            $this->assertNotSame($strlen, $expression);
+        }
+    }
+
+    public function testAnUnsupportedOpcodeKeepsInstructionMetadata(): void
+    {
+        $expressions = $this->opaqueForms();
+        $init = $this->opaqueNamed($expressions, 'INIT_FCALL', 0);
+        $send = $this->opaqueNamed($expressions, 'SEND_REF', 0);
+
+        $this->assertSame(61, $init->opcodeNumber);
+        $this->assertSame(1, $init->extendedValue);
+        $this->assertNull($init->jumpTarget);
+        $this->assertSame([], $init->extra);
+        $this->assertSame('unused', $init->op1->kind);
+        $this->assertSame(96, $init->op1->value);
+        $this->assertNull($init->op1->resolved);
+        $this->assertSame('const', $init->op2->kind);
+        $this->assertSame(0, $init->op2->index);
+        $this->assertInstanceOf(Literal::class, $init->op2->resolved);
+        $this->assertSame('string', $init->op2->resolved->type);
+        $this->assertSame('sort', $init->op2->resolved->value);
+        $this->assertSame('unused', $send->op2->kind);
+        $this->assertSame(1, $send->op2->value);
+        $this->assertSame('unused', $send->result->kind);
+        $this->assertSame(80, $send->result->value);
+        $this->assertInstanceOf(VariableRead::class, $send->op1->resolved);
+        $this->assertSame('items', $send->op1->resolved->name);
+
+        $document = $this->mutated(function (array $document): array {
+            foreach ($document['op_arrays'] as &$opArray) {
+                if (($opArray['name'] ?? null) !== 'opaqueForms') {
+                    continue;
+                }
+                foreach ($opArray['instructions'] as &$instruction) {
+                    if ($instruction['opcode'] === 'INIT_FCALL') {
+                        $instruction['jump_target'] = 12;
+                        $instruction['trace'] = ['kept' => true];
+                        $instruction['op2']['note'] = 'function-name';
+                    }
+                }
+            }
+
+            return $document;
+        });
+        $kept = $this->opaqueNamed(
+            $this->reconstruct('opaqueForms', $document)->blockStartingAt(0)?->expressions ?? [],
+            'INIT_FCALL',
+            0,
+        );
+        $this->assertSame(12, $kept->jumpTarget);
+        $this->assertSame(['kept' => true], $kept->extra['trace'] ?? null);
+        $this->assertSame('function-name', $kept->op2->extra['note'] ?? null);
+        $this->assertInstanceOf(Literal::class, $kept->op2->resolved);
+        $this->assertSame('sort', $kept->op2->resolved->value);
     }
 
     public function testATemporaryUsedTwiceIsTheSameExpression(): void
@@ -290,6 +430,35 @@ final class ReconstructorTest extends TestCase
         $this->fail('Missing assignment to ' . $name);
 
         return new Assignment(0, 0, '', new Literal(0, 0, 'null', null), null);
+    }
+
+    /**
+     * @return list<\Rephper\Expr\Expression>
+     */
+    private function opaqueForms(): array
+    {
+        $expressions = $this->reconstruct('opaqueForms')->blockStartingAt(0)?->expressions;
+        $this->assertNotNull($expressions);
+
+        return $expressions;
+    }
+
+    /**
+     * @param list<\Rephper\Expr\Expression> $expressions
+     */
+    private function opaqueNamed(array $expressions, string $opcode, int $occurrence): Opaque
+    {
+        $seen = 0;
+        foreach ($expressions as $expression) {
+            if ($expression instanceof Opaque && $expression->opcode === $opcode) {
+                if ($seen === $occurrence) {
+                    return $expression;
+                }
+                $seen++;
+            }
+        }
+
+        $this->fail('Missing opaque ' . $opcode);
     }
 
     private function assertLiteral(mixed $expression, string $type, mixed $value): void

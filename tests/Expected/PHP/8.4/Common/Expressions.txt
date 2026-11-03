@@ -456,6 +456,52 @@ Opcodes:
 
 Rephper: Compiled op array
 File: tests/Fixtures/Common/Expressions.php
+Function: opaqueForms
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 14
+Arguments: 3
+Required arguments: 3
+Compiled variables: 3
+Temporary variables: 4
+Literals: 2
+Return type: void
+Lines: 93-100
+
+Compiled variables:
+0 $text
+1 $items
+2 $index
+
+Literals:
+0 string("sort")
+1 null
+
+Argument details:
+0 $text string
+1 $items array
+2 $index int
+
+Opcodes:
+0 RECV line=93 op1=UNUSED(1) op2=UNUSED(64) result=CV(0:$text) ext=-
+1 RECV line=93 op1=UNUSED(2) op2=UNUSED(128) result=CV(1:$items) ext=-
+2 RECV line=93 op1=UNUSED(3) op2=UNUSED(16) result=CV(2:$index) ext=-
+3 ECHO line=95 op1=CV(0:$text) op2=UNUSED result=UNUSED ext=-
+4 FETCH_DIM_R line=96 op1=CV(1:$items) op2=CV(2:$index) result=TMP(0) ext=-
+5 ECHO line=96 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+6 STRLEN line=97 op1=CV(0:$text) op2=UNUSED result=TMP(1) ext=-
+7 ECHO line=97 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+8 CONCAT line=98 op1=CV(0:$text) op2=CV(0:$text) result=TMP(2) ext=-
+9 ECHO line=98 op1=TMP(2) op2=UNUSED result=UNUSED ext=-
+10 INIT_FCALL line=99 op1=UNUSED(96) op2=CONST(string("sort")) result=UNUSED ext=1
+11 SEND_REF line=99 op1=CV(1:$items) op2=UNUSED(1) result=UNUSED(80) ext=-
+12 DO_ICALL line=99 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+13 RETURN line=100 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Expressions.php
 Function: <main>
 Class: -
 Kind: main
@@ -468,7 +514,7 @@ Compiled variables: 0
 Temporary variables: 0
 Literals: 1
 Return type: -
-Lines: 1-92
+Lines: 1-101
 
 Compiled variables:
 (none)
@@ -480,5 +526,5 @@ Argument details:
 (none)
 
 Opcodes:
-0 RETURN line=92 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+0 RETURN line=101 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
 

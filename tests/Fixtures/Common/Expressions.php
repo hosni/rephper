@@ -89,3 +89,12 @@ function signs(int $a): int
 
     return $bits;
 }
+
+function opaqueForms(string $text, array $items, int $index): void
+{
+    echo $text;
+    echo $items[$index];
+    echo strlen($text);
+    echo $text . $text;
+    sort($items);
+}
