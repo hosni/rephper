@@ -136,9 +136,9 @@ make build PHP_VERSION=8.4 PHP=php8.4 PHPIZE=phpize8.4 PHP_CONFIG=php-config8.4
 | --- | --- |
 | `make info` | Prints the selected version, the binary version, the PHP API, the Zend module API, the Zend extension API, `phpize`, `php-config`, and the extension directory. Exits with an error if they disagree. |
 | `make build` | Checks the toolchain, then builds the extension. |
-| `make test` | Builds the extension, then runs PHPUnit. |
-| `make test-unit` | Runs the unit suite. It does not build or load the extension. |
-| `make test-integration` | Builds the extension, then runs the exporter suite. |
+| `make test` | Builds the extension, then runs `composer test`. |
+| `make test-unit` | Runs `composer test:unit`. It does not build or load the extension. |
+| `make test-integration` | Builds the extension, then runs `composer test:integration`. |
 | `make clean` | Removes `phpize` output. Source files and fixtures stay. |
 | `make install` | Installs `rephper.so` into the extension directory reported by the selected `php-config`. The path is not hardcoded. Writing there usually needs root. `INSTALL_ROOT` prefixes that path, which is how the install rule can be checked without root. |
 
@@ -432,7 +432,7 @@ Linting one file does not compile files it would include at runtime, and it does
 
 ## GitHub Actions
 
-`.github/workflows/build.yml` runs on pushes and pull requests. The operating system and the PHP version are separate matrix axes. The active matrix is Ubuntu 24.04 and PHP 8.4. The job installs that PHP version, its development tools, and Composer, installs the runtime and development dependencies, then runs `make info`, `make test-unit`, `make test-integration`, and a separate check that the extension loads with no startup output. Unit tests run before the extension is built. The integration target builds it and runs the exporter suite.
+`.github/workflows/build.yml` runs on pushes and pull requests. The operating system and the PHP version are separate matrix axes. The active matrix is Ubuntu 24.04 and PHP 8.4. The job installs that PHP version, its development tools, and Composer, installs the locked dependencies with `composer install`, then runs `make info`, `make test-unit`, `make test-integration`, and a separate check that the extension loads with no startup output. Unit tests run before the extension is built. The integration target builds it and runs the exporter suite.
 
 ## Current limitations
 
@@ -446,7 +446,7 @@ Linting one file does not compile files it would include at runtime, and it does
 - `BRK` op1 is a `breaks` index and `GOTO` op1 is an unwind count. The CFG uses the `breaks` and `labels` tables. The JSON field names are unchanged.
 - OPcache must be off for a stable dump and a stable IR file.
 - Included and required files are not compiled with the file that names them.
-- The extension has no directory walker. One process writes one IR file for the compilations in that request. The test runner passes one file at a time.
+- The extension has no directory walker. One process writes one IR file for the compilations in that request. The integration tests pass one file at a time.
 - Jump targets are absolute opline numbers from before `pass_two()`, not the runtime offsets.
 - `BRK`, `CONT`, and `GOTO` are still the compile-time pseudo-opcodes. `GOTO` targets are in `labels`, not in the `GOTO` operand.
 - `arg_info.default_value` is uninitialized at this hook. A default is `default_literal`, an index into `literals` taken from `RECV_INIT`.

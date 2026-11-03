@@ -19,6 +19,7 @@ endif
 PHP ?= php$(PHP_VERSION)
 PHPIZE ?= phpize$(PHP_VERSION)
 PHP_CONFIG ?= php-config$(PHP_VERSION)
+COMPOSER ?= composer
 
 ROOT := $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
 EXT_DIR := $(ROOT)/extension
@@ -55,14 +56,14 @@ build: check-php
 
 test: build
 	REPHPER_PHP='$(PHP)' REPHPER_EXTENSION='$(EXTENSION)' \
-		'$(PHP)' '$(ROOT)/vendor/bin/phpunit' --configuration '$(ROOT)/phpunit.xml.dist'
+		'$(COMPOSER)' test --no-interaction
 
 test-unit:
-	'$(PHP)' '$(ROOT)/vendor/bin/phpunit' --configuration '$(ROOT)/phpunit.xml.dist' --testsuite unit
+	'$(COMPOSER)' test:unit --no-interaction
 
 test-integration: build
 	REPHPER_PHP='$(PHP)' REPHPER_EXTENSION='$(EXTENSION)' \
-		'$(PHP)' '$(ROOT)/vendor/bin/phpunit' --configuration '$(ROOT)/phpunit.xml.dist' --testsuite integration
+		'$(COMPOSER)' test:integration --no-interaction
 
 clean:
 	@if [ -f '$(EXT_DIR)/Makefile' ]; then $(MAKE) -C '$(EXT_DIR)' clean; fi
