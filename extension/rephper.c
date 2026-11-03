@@ -48,6 +48,16 @@
 
 ZEND_EXTENSION();
 
+static void rephper_activate(void)
+{
+	rephper_export_reset();
+}
+
+static void rephper_deactivate(void)
+{
+	rephper_export_finish();
+}
+
 static void rephper_op_array_handler(zend_op_array *op_array)
 {
 	if (op_array == NULL) {
@@ -55,18 +65,19 @@ static void rephper_op_array_handler(zend_op_array *op_array)
 	}
 
 	rephper_inspect_op_array(op_array);
+	rephper_export_op_array(op_array);
 }
 
 ZEND_EXT_API zend_extension zend_extension_entry = {
 	"Rephper",
-	"0.1.0",
+	"0.2.0",
 	"Rephper",
 	"",
 	"Copyright (c) Rephper",
 	NULL, /* startup */
 	NULL, /* shutdown */
-	NULL, /* activate */
-	NULL, /* deactivate */
+	rephper_activate,
+	rephper_deactivate,
 	NULL, /* message_handler */
 	rephper_op_array_handler,
 	NULL, /* statement_handler */

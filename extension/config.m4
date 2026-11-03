@@ -61,5 +61,5 @@ if test "$PHP_REPHPER" != "no"; then
 
   dnl PHP_NEW_EXTENSION records source names while configure is generated, so
   dnl the list is literal. The case above rejects every other API.
-  PHP_NEW_EXTENSION([rephper], [rephper.c src/Compatibility/php84/inspect.c], [$ext_shared])
+  PHP_NEW_EXTENSION([rephper], [rephper.c src/Common/json.c src/Compatibility/php84/inspect.c src/Compatibility/php84/export.c], [$ext_shared])
 fi

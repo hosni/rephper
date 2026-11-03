@@ -10,5 +10,8 @@ typedef struct _zend_op_array zend_op_array;
 #endif
 
 void rephper_inspect_op_array(zend_op_array *op_array);
+void rephper_export_reset(void);
+void rephper_export_op_array(zend_op_array *op_array);
+void rephper_export_finish(void);
 
 #endif
