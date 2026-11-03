@@ -1,0 +1,14 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+$autoload = dirname(__DIR__) . '/vendor/autoload.php';
+if (!is_file($autoload)) {
+    fwrite(STDERR, "Missing vendor/autoload.php. Run composer install from the repository root.\n");
+    exit(1);
+}
+
+require $autoload;
+
+exit((new Rephper\Cli\GraphCommand())->run($argv));

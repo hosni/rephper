@@ -56,6 +56,7 @@ build: check-php
 test: build
 	REPHPER_PHP='$(PHP)' REPHPER_EXTENSION='$(EXTENSION)' \
 		'$(PHP)' -n '$(ROOT)/tests/run.php'
+	'$(PHP)' -n '$(ROOT)/tests/cfg/run.php'
 
 clean:
 	@if [ -f '$(EXT_DIR)/Makefile' ]; then $(MAKE) -C '$(EXT_DIR)' clean; fi
