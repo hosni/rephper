@@ -43,7 +43,13 @@ extension/src/Compatibility/php84/
          control-flow graph
               |
               v
-         future PHP decompiler
+         src/Expr/Reconstructor.php
+              |
+              v
+         expression trees for one basic block
+              |
+              v
+         future statement reconstructor
 ```
 
 The reader, the IR model, the CFG builder, and `php bin/rephper graph` do not load the extension and do not use Zend C structures. Opcode control-flow rules for this stage live in `src/Cfg/Php84/Semantics.php`.
@@ -358,6 +364,50 @@ Three failures are different:
 
 An out-of-range jump is invalid IR for the CFG and uses `CfgException` directly.
 
+## Expression reconstruction
+
+`src/Expr/Reconstructor.php` reads one op array and the CFG already built for it. It does not change the IR or the graph, and it does not load the extension. Reconstruction stays inside a single basic block. A temporary defined on another path is not copied in.
+
+```php
+$reconstruction = (new Rephper\Expr\Reconstructor())->reconstruct($opArray, $graph);
+```
+
+Each block has an ordered list of expressions. A temporary result is folded into the later instruction that uses it, and both uses of the same slot share one expression object. The `opline` on each node is the instruction that created it, so the original evaluation order remains visible. Instructions that are not expressions stay in that list as opaque nodes.
+
+| Node | What it records |
+| --- | --- |
+| `Literal` | The IR literal type and value. Numbers, strings, booleans, and null stay distinct. |
+| `VariableRead` | A compiled variable name. Temporary slot numbers are not variable names. |
+| `Binary` | `+`, `-`, `*`, `/`, `%`, `.`, `===`, `!==`, `==`, `!=`, `<`, `<=`, with the operands in the order the opcode uses. |
+| `Unary` | `!` for `BOOL_NOT`, `~` for `BW_NOT`, and `bool` for `BOOL`. |
+| `Assignment` | A write to a compiled variable. `operator` is null for `=`. `+` means `+=`, from `ASSIGN_OP`'s `extended_value`. |
+| `ReturnValue` | The returned value. A `return;` is a return of the null literal the compiler emitted. |
+| `Opaque` | An instruction kept in place because it is not one of those expressions. |
+| `Unresolved` | A `tmp` or `var` used in a block that does not define it. |
+
+`RECV` and `VERIFY_RETURN_TYPE` are opaque and do not produce a diagnostic. Any other opcode that this pass does not fold, including `STRLEN`, `JMPZ_EX`, and `JMPNZ_EX`, is opaque and adds an `unsupported` diagnostic. The diagnostic names the opcode, opline, source line, block, and reason. A const index that is not in the literal table is invalid IR and throws `ExpressionException`.
+
+Two compiled forms are easy to misread as source syntax:
+
+- `-$a` and `+$a` are `MUL` by the literals `-1` and `1`. The tree is a multiplication.
+- `$a >= $b` is `IS_SMALLER_OR_EQUAL` with the operands swapped, so the tree is `$b <= $a`.
+- `$a && $b` and `$a || $b` are `JMPZ_EX` or `JMPNZ_EX` plus `BOOL` in later blocks. Those blocks are not joined into `&&` or `||`.
+
+`strlen($text) + $n` keeps `STRLEN` as the left operand of `+`. The call is not dropped and not reordered ahead of `$n`.
+
+```text
+$result = $a + $b * $c
+
+Assignment result
+    Binary +
+        VariableRead a
+        Binary *
+            VariableRead b
+            VariableRead c
+```
+
+Statement reconstruction, function-call reconstruction, and PHP source generation are not part of this pass.
+
 ## Commands
 
 `bin/rephper` is a Symfony Console application. It loads Composer’s autoload and does not load the Zend extension. With no command it prints the command list and exits 0.
@@ -385,7 +435,7 @@ make test-integration
 
 `composer test`, `composer test:unit`, and `composer test:integration` run the same PHPUnit suites. `make test` and `make test-integration` build the extension first and pass it to PHPUnit through `REPHPER_PHP` and `REPHPER_EXTENSION`. The unit suite does not load the extension. Run PHPUnit with the normal PHP extensions enabled. The spawned `php -l` processes still use `-n`, so OPcache stays out of the opcode dump.
 
-`tests/Unit/` covers the reader, control-flow edges, exception edges, invalid IR, and the `graph` command through Symfony’s `CommandTester`. One unit test also runs `bin/rephper` so the executable bootstrap is checked. Version selection still treats `8.10` as newer than `8.9`, and PHP 8.4 remains the only supported compiler.
+`tests/Unit/` covers the reader, control-flow edges, exception edges, expression trees, invalid IR, and the `graph` command through Symfony’s `CommandTester`. One unit test also runs `bin/rephper` so the executable bootstrap is checked. Version selection still treats `8.10` as newer than `8.9`, and PHP 8.4 remains the only supported compiler.
 
 `tests/Integration/ExporterTest.php` compiles every fixture with the extension when `extension/modules/rephper.so` exists. Without that file the integration tests are skipped. For each fixture it checks:
 
@@ -438,7 +488,7 @@ Linting one file does not compile files it would include at runtime, and it does
 
 - PHP 8.4 only.
 - Ubuntu is the only operating system that has been targeted. It has been built and tested locally on Linux with PHP 8.4.27.
-- There is no decompiler and no source generator. The CFG describes execution structure. It does not recover expressions, statements, or variable names.
+- There is no statement reconstructor and no PHP source generator. Expression reconstruction covers values, arithmetic, comparisons, concatenation, boolean not, bitwise not, assignment, compound assignment for `+ - * / % .`, and return values inside one basic block.
 - CFG semantics are implemented for PHP 8.4, `pre_pass_two`, and absolute opline jumps only. `src/Cfg/Php84/Semantics.php` is the only opcode switch. Another PHP version needs its own semantics class.
 - `HANDLE_EXCEPTION`, `USER_OPCODE`, and `CALL_TRAMPOLINE` are rejected. The builder does not guess their successors.
 - `BIND_INIT_STATIC_OR_JMP` and `JMP_FRAMELESS` follow the PHP 8.4 handlers. The current fixtures do not emit them; the CFG tests cover them by editing a real instruction.

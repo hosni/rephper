@@ -122,6 +122,7 @@ final class FixtureSets
             'Common/StructuredFlow.php' => ['Function: nested', ' GOTO ', ' SWITCH_', ' BRK '],
             'Common/TryForms.php' => ['Function: caught', ' CATCH ', ' FAST_RET '],
             'Common/Minimal.php' => ['Kind: main', ' RETURN'],
+            'Common/Expressions.php' => ['Function: precedence', ' CONCAT ', ' BOOL_NOT ', ' ASSIGN_OP ', ' BW_NOT ', ' STRLEN '],
         ];
     }
 }

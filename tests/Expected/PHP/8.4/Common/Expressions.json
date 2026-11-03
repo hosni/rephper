@@ -1,0 +1,3009 @@
+{
+  "ir_version": 1,
+  "php": {
+    "version": "PHP_VERSION",
+    "version_id": 0,
+    "api": 20240924,
+    "zend_module_api": 20240924,
+    "zend_extension_api": 420240924,
+    "zts": false,
+    "debug": false
+  },
+  "compilation": {
+    "stage": "pre_pass_two",
+    "jumps": "absolute_opline"
+  },
+  "op_arrays": [
+    {
+      "id": 0,
+      "kind": "function",
+      "name": "values",
+      "filename": "tests/Fixtures/Common/Expressions.php",
+      "line_start": 3,
+      "line_end": 9,
+      "scope": null,
+      "property_hook": null,
+      "flags": [
+        "top_level",
+        "has_return_type"
+      ],
+      "num_args": 0,
+      "required_num_args": 0,
+      "return_type": {
+        "display": "void",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [],
+      "variables": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ],
+      "temporary_variables": 4,
+      "literals": [
+        {
+          "type": "int",
+          "value": 10
+        },
+        {
+          "type": "int",
+          "value": 20
+        },
+        {
+          "type": "null"
+        },
+        {
+          "type": "bool",
+          "value": true
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 5,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "a"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 6,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "b"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 1
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 7,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "c"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 2
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 8,
+          "op1": {
+            "kind": "cv",
+            "index": 3,
+            "name": "d"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 3
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 4,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 9,
+          "op1": {
+            "kind": "const",
+            "index": 4
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "kind": "function",
+      "name": "arithmetic",
+      "filename": "tests/Fixtures/Common/Expressions.php",
+      "line_start": 11,
+      "line_end": 21,
+      "scope": null,
+      "property_hook": null,
+      "flags": [
+        "has_type_hints",
+        "top_level",
+        "has_return_type"
+      ],
+      "num_args": 2,
+      "required_num_args": 2,
+      "return_type": {
+        "display": "int",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [
+        {
+          "name": "a",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        },
+        {
+          "name": "b",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        }
+      ],
+      "variables": [
+        "a",
+        "b",
+        "result"
+      ],
+      "temporary_variables": 12,
+      "literals": [
+        {
+          "type": "int",
+          "value": -1
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 11,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "a"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 11,
+          "op1": {
+            "kind": "unused",
+            "value": 2
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 1,
+            "name": "b"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "ADD",
+          "opcode_number": 1,
+          "line": 13,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "a"
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 1,
+            "name": "b"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 0
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 13,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "result"
+          },
+          "op2": {
+            "kind": "tmp",
+            "index": 0
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 4,
+          "opcode": "SUB",
+          "opcode_number": 2,
+          "line": 14,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "a"
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 1,
+            "name": "b"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 2
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 5,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 14,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "result"
+          },
+          "op2": {
+            "kind": "tmp",
+            "index": 2
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 6,
+          "opcode": "MUL",
+          "opcode_number": 3,
+          "line": 15,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "a"
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 1,
+            "name": "b"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 4
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 7,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 15,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "result"
+          },
+          "op2": {
+            "kind": "tmp",
+            "index": 4
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 8,
+          "opcode": "DIV",
+          "opcode_number": 4,
+          "line": 16,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "a"
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 1,
+            "name": "b"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 6
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 9,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 16,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "result"
+          },
+          "op2": {
+            "kind": "tmp",
+            "index": 6
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 10,
+          "opcode": "MOD",
+          "opcode_number": 5,
+          "line": 17,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "a"
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 1,
+            "name": "b"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 8
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 11,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 17,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "result"
+          },
+          "op2": {
+            "kind": "tmp",
+            "index": 8
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 12,
+          "opcode": "MUL",
+          "opcode_number": 3,
+          "line": 18,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "a"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 10
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 13,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 18,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "result"
+          },
+          "op2": {
+            "kind": "tmp",
+            "index": 10
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 14,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 20,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "result"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 15,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 20,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "result"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 16,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 21,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 17,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 21,
+          "op1": {
+            "kind": "const",
+            "index": 1
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "kind": "function",
+      "name": "precedence",
+      "filename": "tests/Fixtures/Common/Expressions.php",
+      "line_start": 23,
+      "line_end": 29,
+      "scope": null,
+      "property_hook": null,
+      "flags": [
+        "has_type_hints",
+        "top_level",
+        "has_return_type"
+      ],
+      "num_args": 3,
+      "required_num_args": 3,
+      "return_type": {
+        "display": "int",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [
+        {
+          "name": "a",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        },
+        {
+          "name": "b",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        },
+        {
+          "name": "c",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        }
+      ],
+      "variables": [
+        "a",
+        "b",
+        "c",
+        "result"
+      ],
+      "temporary_variables": 6,
+      "literals": [
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 23,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "a"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 23,
+          "op1": {
+            "kind": "unused",
+            "value": 2
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 1,
+            "name": "b"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 23,
+          "op1": {
+            "kind": "unused",
+            "value": 3
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 2,
+            "name": "c"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "MUL",
+          "opcode_number": 3,
+          "line": 25,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "b"
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 2,
+            "name": "c"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 0
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 4,
+          "opcode": "ADD",
+          "opcode_number": 1,
+          "line": 25,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "a"
+          },
+          "op2": {
+            "kind": "tmp",
+            "index": 0
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 1
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 5,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 25,
+          "op1": {
+            "kind": "cv",
+            "index": 3,
+            "name": "result"
+          },
+          "op2": {
+            "kind": "tmp",
+            "index": 1
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 6,
+          "opcode": "ADD",
+          "opcode_number": 1,
+          "line": 26,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "a"
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 1,
+            "name": "b"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 3
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 7,
+          "opcode": "MUL",
+          "opcode_number": 3,
+          "line": 26,
+          "op1": {
+            "kind": "tmp",
+            "index": 3
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 2,
+            "name": "c"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 4
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 8,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 26,
+          "op1": {
+            "kind": "cv",
+            "index": 3,
+            "name": "result"
+          },
+          "op2": {
+            "kind": "tmp",
+            "index": 4
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 9,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 28,
+          "op1": {
+            "kind": "cv",
+            "index": 3,
+            "name": "result"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 10,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 28,
+          "op1": {
+            "kind": "cv",
+            "index": 3,
+            "name": "result"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 11,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 29,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 12,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 29,
+          "op1": {
+            "kind": "const",
+            "index": 0
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "kind": "function",
+      "name": "strings",
+      "filename": "tests/Fixtures/Common/Expressions.php",
+      "line_start": 31,
+      "line_end": 37,
+      "scope": null,
+      "property_hook": null,
+      "flags": [
+        "has_type_hints",
+        "top_level",
+        "has_return_type"
+      ],
+      "num_args": 1,
+      "required_num_args": 1,
+      "return_type": {
+        "display": "string",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [
+        {
+          "name": "name",
+          "type": {
+            "display": "string",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        }
+      ],
+      "variables": [
+        "name",
+        "message"
+      ],
+      "temporary_variables": 3,
+      "literals": [
+        {
+          "type": "string",
+          "value": "John"
+        },
+        {
+          "type": "string",
+          "value": "Hello "
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 31,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 64
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "name"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 33,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "name"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "CONCAT",
+          "opcode_number": 8,
+          "line": 34,
+          "op1": {
+            "kind": "const",
+            "index": 1
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 0,
+            "name": "name"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 1
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 34,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "message"
+          },
+          "op2": {
+            "kind": "tmp",
+            "index": 1
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 4,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 36,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "message"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 5,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 36,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "message"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 6,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 37,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 7,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 37,
+          "op1": {
+            "kind": "const",
+            "index": 2
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "kind": "function",
+      "name": "comparisons",
+      "filename": "tests/Fixtures/Common/Expressions.php",
+      "line_start": 39,
+      "line_end": 49,
+      "scope": null,
+      "property_hook": null,
+      "flags": [
+        "has_type_hints",
+        "top_level",
+        "has_return_type"
+      ],
+      "num_args": 2,
+      "required_num_args": 2,
+      "return_type": {
+        "display": "bool",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [
+        {
+          "name": "a",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        },
+        {
+          "name": "b",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        }
+      ],
+      "variables": [
+        "a",
+        "b",
+        "result"
+      ],
+      "temporary_variables": 12,
+      "literals": [
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 39,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "a"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 39,
+          "op1": {
+            "kind": "unused",
+            "value": 2
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 1,
+            "name": "b"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "IS_IDENTICAL",
+          "opcode_number": 16,
+          "line": 41,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "a"
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 1,
+            "name": "b"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 0
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 41,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "result"
+          },
+          "op2": {
+            "kind": "tmp",
+            "index": 0
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 4,
+          "opcode": "IS_NOT_IDENTICAL",
+          "opcode_number": 17,
+          "line": 42,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "a"
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 1,
+            "name": "b"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 2
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 5,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 42,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "result"
+          },
+          "op2": {
+            "kind": "tmp",
+            "index": 2
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 6,
+          "opcode": "IS_EQUAL",
+          "opcode_number": 18,
+          "line": 43,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "a"
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 1,
+            "name": "b"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 4
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 7,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 43,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "result"
+          },
+          "op2": {
+            "kind": "tmp",
+            "index": 4
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 8,
+          "opcode": "IS_NOT_EQUAL",
+          "opcode_number": 19,
+          "line": 44,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "a"
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 1,
+            "name": "b"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 6
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 9,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 44,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "result"
+          },
+          "op2": {
+            "kind": "tmp",
+            "index": 6
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 10,
+          "opcode": "IS_SMALLER",
+          "opcode_number": 20,
+          "line": 45,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "a"
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 1,
+            "name": "b"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 8
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 11,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 45,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "result"
+          },
+          "op2": {
+            "kind": "tmp",
+            "index": 8
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 12,
+          "opcode": "IS_SMALLER_OR_EQUAL",
+          "opcode_number": 21,
+          "line": 46,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "b"
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 0,
+            "name": "a"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 10
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 13,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 46,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "result"
+          },
+          "op2": {
+            "kind": "tmp",
+            "index": 10
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 14,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 48,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "result"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 15,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 48,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "result"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 16,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 49,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 17,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 49,
+          "op1": {
+            "kind": "const",
+            "index": 0
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "kind": "function",
+      "name": "booleans",
+      "filename": "tests/Fixtures/Common/Expressions.php",
+      "line_start": 51,
+      "line_end": 58,
+      "scope": null,
+      "property_hook": null,
+      "flags": [
+        "has_type_hints",
+        "top_level",
+        "has_return_type"
+      ],
+      "num_args": 2,
+      "required_num_args": 2,
+      "return_type": {
+        "display": "bool",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [
+        {
+          "name": "a",
+          "type": {
+            "display": "bool",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        },
+        {
+          "name": "b",
+          "type": {
+            "display": "bool",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        }
+      ],
+      "variables": [
+        "a",
+        "b",
+        "result"
+      ],
+      "temporary_variables": 6,
+      "literals": [
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 51,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 12
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "a"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 51,
+          "op1": {
+            "kind": "unused",
+            "value": 2
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 12
+          },
+          "result": {
+            "kind": "cv",
+            "index": 1,
+            "name": "b"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "BOOL_NOT",
+          "opcode_number": 14,
+          "line": 53,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "a"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 0
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 53,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "result"
+          },
+          "op2": {
+            "kind": "tmp",
+            "index": 0
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 4,
+          "opcode": "JMPZ_EX",
+          "opcode_number": 46,
+          "line": 54,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "a"
+          },
+          "op2": {
+            "kind": "jump",
+            "target": 6
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 2
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 5,
+          "opcode": "BOOL",
+          "opcode_number": 52,
+          "line": 54,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "b"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 2
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 6,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 54,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "result"
+          },
+          "op2": {
+            "kind": "tmp",
+            "index": 2
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 7,
+          "opcode": "JMPNZ_EX",
+          "opcode_number": 47,
+          "line": 55,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "a"
+          },
+          "op2": {
+            "kind": "jump",
+            "target": 9
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 4
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 8,
+          "opcode": "BOOL",
+          "opcode_number": 52,
+          "line": 55,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "b"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 4
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 9,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 55,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "result"
+          },
+          "op2": {
+            "kind": "tmp",
+            "index": 4
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 10,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 57,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "result"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 11,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 57,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "result"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 12,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 58,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 13,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 58,
+          "op1": {
+            "kind": "const",
+            "index": 0
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "kind": "function",
+      "name": "assignments",
+      "filename": "tests/Fixtures/Common/Expressions.php",
+      "line_start": 60,
+      "line_end": 67,
+      "scope": null,
+      "property_hook": null,
+      "flags": [
+        "has_type_hints",
+        "top_level",
+        "has_return_type"
+      ],
+      "num_args": 3,
+      "required_num_args": 3,
+      "return_type": {
+        "display": "int",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [
+        {
+          "name": "price",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        },
+        {
+          "name": "quantity",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        },
+        {
+          "name": "tax",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        }
+      ],
+      "variables": [
+        "price",
+        "quantity",
+        "tax",
+        "total",
+        "count"
+      ],
+      "temporary_variables": 5,
+      "literals": [
+        {
+          "type": "int",
+          "value": 0
+        },
+        {
+          "type": "int",
+          "value": 1
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 60,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "price"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 60,
+          "op1": {
+            "kind": "unused",
+            "value": 2
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 1,
+            "name": "quantity"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 60,
+          "op1": {
+            "kind": "unused",
+            "value": 3
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 2,
+            "name": "tax"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "MUL",
+          "opcode_number": 3,
+          "line": 62,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "price"
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 1,
+            "name": "quantity"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 0
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 4,
+          "opcode": "ADD",
+          "opcode_number": 1,
+          "line": 62,
+          "op1": {
+            "kind": "tmp",
+            "index": 0
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 2,
+            "name": "tax"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 1
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 5,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 62,
+          "op1": {
+            "kind": "cv",
+            "index": 3,
+            "name": "total"
+          },
+          "op2": {
+            "kind": "tmp",
+            "index": 1
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 6,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 63,
+          "op1": {
+            "kind": "cv",
+            "index": 4,
+            "name": "count"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 7,
+          "opcode": "ASSIGN_OP",
+          "opcode_number": 26,
+          "line": 64,
+          "op1": {
+            "kind": "cv",
+            "index": 4,
+            "name": "count"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 1
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 1
+        },
+        {
+          "index": 8,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 66,
+          "op1": {
+            "kind": "cv",
+            "index": 3,
+            "name": "total"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 9,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 66,
+          "op1": {
+            "kind": "cv",
+            "index": 3,
+            "name": "total"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 10,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 67,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 11,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 67,
+          "op1": {
+            "kind": "const",
+            "index": 2
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "kind": "function",
+      "name": "returnsValue",
+      "filename": "tests/Fixtures/Common/Expressions.php",
+      "line_start": 69,
+      "line_end": 72,
+      "scope": null,
+      "property_hook": null,
+      "flags": [
+        "has_type_hints",
+        "top_level",
+        "has_return_type"
+      ],
+      "num_args": 2,
+      "required_num_args": 2,
+      "return_type": {
+        "display": "int",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [
+        {
+          "name": "price",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        },
+        {
+          "name": "quantity",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        }
+      ],
+      "variables": [
+        "price",
+        "quantity"
+      ],
+      "temporary_variables": 1,
+      "literals": [
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 69,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "price"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 69,
+          "op1": {
+            "kind": "unused",
+            "value": 2
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 1,
+            "name": "quantity"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "MUL",
+          "opcode_number": 3,
+          "line": 71,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "price"
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 1,
+            "name": "quantity"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 0
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 71,
+          "op1": {
+            "kind": "tmp",
+            "index": 0
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 4,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 71,
+          "op1": {
+            "kind": "tmp",
+            "index": 0
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 5,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 72,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 6,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 72,
+          "op1": {
+            "kind": "const",
+            "index": 0
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "kind": "function",
+      "name": "returnsNothing",
+      "filename": "tests/Fixtures/Common/Expressions.php",
+      "line_start": 74,
+      "line_end": 77,
+      "scope": null,
+      "property_hook": null,
+      "flags": [
+        "top_level",
+        "has_return_type"
+      ],
+      "num_args": 0,
+      "required_num_args": 0,
+      "return_type": {
+        "display": "void",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [],
+      "variables": [],
+      "temporary_variables": 0,
+      "literals": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 76,
+          "op1": {
+            "kind": "const",
+            "index": 0
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 77,
+          "op1": {
+            "kind": "const",
+            "index": 1
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "kind": "function",
+      "name": "callThenAdd",
+      "filename": "tests/Fixtures/Common/Expressions.php",
+      "line_start": 79,
+      "line_end": 82,
+      "scope": null,
+      "property_hook": null,
+      "flags": [
+        "has_type_hints",
+        "top_level",
+        "has_return_type"
+      ],
+      "num_args": 2,
+      "required_num_args": 2,
+      "return_type": {
+        "display": "int",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [
+        {
+          "name": "n",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        },
+        {
+          "name": "text",
+          "type": {
+            "display": "string",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        }
+      ],
+      "variables": [
+        "n",
+        "text"
+      ],
+      "temporary_variables": 2,
+      "literals": [
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 79,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 79,
+          "op1": {
+            "kind": "unused",
+            "value": 2
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 64
+          },
+          "result": {
+            "kind": "cv",
+            "index": 1,
+            "name": "text"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "STRLEN",
+          "opcode_number": 121,
+          "line": 81,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "text"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 0
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "ADD",
+          "opcode_number": 1,
+          "line": 81,
+          "op1": {
+            "kind": "tmp",
+            "index": 0
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 1
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 4,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 81,
+          "op1": {
+            "kind": "tmp",
+            "index": 1
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 5,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 81,
+          "op1": {
+            "kind": "tmp",
+            "index": 1
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 6,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 82,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 7,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 82,
+          "op1": {
+            "kind": "const",
+            "index": 0
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "kind": "function",
+      "name": "signs",
+      "filename": "tests/Fixtures/Common/Expressions.php",
+      "line_start": 84,
+      "line_end": 91,
+      "scope": null,
+      "property_hook": null,
+      "flags": [
+        "has_type_hints",
+        "top_level",
+        "has_return_type"
+      ],
+      "num_args": 1,
+      "required_num_args": 1,
+      "return_type": {
+        "display": "int",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [
+        {
+          "name": "a",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        }
+      ],
+      "variables": [
+        "a",
+        "minus",
+        "plus",
+        "bits"
+      ],
+      "temporary_variables": 6,
+      "literals": [
+        {
+          "type": "int",
+          "value": -1
+        },
+        {
+          "type": "int",
+          "value": 1
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 84,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "a"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "MUL",
+          "opcode_number": 3,
+          "line": 86,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "a"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 0
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 86,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "minus"
+          },
+          "op2": {
+            "kind": "tmp",
+            "index": 0
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "MUL",
+          "opcode_number": 3,
+          "line": 87,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "a"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 1
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 2
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 4,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 87,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "plus"
+          },
+          "op2": {
+            "kind": "tmp",
+            "index": 2
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 5,
+          "opcode": "BW_NOT",
+          "opcode_number": 13,
+          "line": 88,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "a"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 4
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 6,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 88,
+          "op1": {
+            "kind": "cv",
+            "index": 3,
+            "name": "bits"
+          },
+          "op2": {
+            "kind": "tmp",
+            "index": 4
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 7,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 90,
+          "op1": {
+            "kind": "cv",
+            "index": 3,
+            "name": "bits"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 8,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 90,
+          "op1": {
+            "kind": "cv",
+            "index": 3,
+            "name": "bits"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 9,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 91,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 10,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 91,
+          "op1": {
+            "kind": "const",
+            "index": 2
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "kind": "main",
+      "name": null,
+      "filename": "tests/Fixtures/Common/Expressions.php",
+      "line_start": 1,
+      "line_end": 92,
+      "scope": null,
+      "property_hook": null,
+      "flags": [],
+      "num_args": 0,
+      "required_num_args": 0,
+      "return_type": null,
+      "arguments": [],
+      "variables": [],
+      "temporary_variables": 0,
+      "literals": [
+        {
+          "type": "int",
+          "value": 1
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 92,
+          "op1": {
+            "kind": "const",
+            "index": 0
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    }
+  ],
+  "classes": []
+}
