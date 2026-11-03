@@ -123,6 +123,7 @@ final class FixtureSets
             'Common/TryForms.php' => ['Function: caught', ' CATCH ', ' FAST_RET '],
             'Common/Minimal.php' => ['Kind: main', ' RETURN'],
             'Common/Expressions.php' => ['Function: precedence', ' CONCAT ', ' BOOL_NOT ', ' ASSIGN_OP ', ' BW_NOT ', ' STRLEN ', ' ECHO ', ' FETCH_DIM_R ', ' INIT_FCALL ', ' SEND_VAR ', ' DO_ICALL '],
+            'Common/Statements.php' => ['Function: assignSequence', 'Function: throwLiteral', ' THROW ', ' DO_ICALL ', ' ECHO '],
         ];
     }
 }

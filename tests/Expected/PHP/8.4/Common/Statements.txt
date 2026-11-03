@@ -1,0 +1,391 @@
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Statements.php
+Function: assignLiteral
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 2
+Arguments: 0
+Required arguments: 0
+Compiled variables: 1
+Temporary variables: 1
+Literals: 2
+Return type: void
+Lines: 3-6
+
+Compiled variables:
+0 $a
+
+Literals:
+0 int(10)
+1 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 ASSIGN line=5 op1=CV(0:$a) op2=CONST(int(10)) result=UNUSED ext=-
+1 RETURN line=6 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Statements.php
+Function: assignSequence
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 4
+Arguments: 0
+Required arguments: 0
+Compiled variables: 3
+Temporary variables: 3
+Literals: 4
+Return type: void
+Lines: 8-13
+
+Compiled variables:
+0 $a
+1 $b
+2 $c
+
+Literals:
+0 int(10)
+1 int(20)
+2 null
+3 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 ASSIGN line=10 op1=CV(0:$a) op2=CONST(int(10)) result=UNUSED ext=-
+1 ASSIGN line=11 op1=CV(1:$b) op2=CONST(int(20)) result=UNUSED ext=-
+2 ASSIGN line=12 op1=CV(2:$c) op2=CONST(null) result=UNUSED ext=-
+3 RETURN line=13 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Statements.php
+Function: assignArithmetic
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 5
+Arguments: 2
+Required arguments: 2
+Compiled variables: 3
+Temporary variables: 2
+Literals: 1
+Return type: void
+Lines: 15-18
+
+Compiled variables:
+0 $a
+1 $b
+2 $result
+
+Literals:
+0 null
+
+Argument details:
+0 $a int
+1 $b int
+
+Opcodes:
+0 RECV line=15 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$a) ext=-
+1 RECV line=15 op1=UNUSED(2) op2=UNUSED(16) result=CV(1:$b) ext=-
+2 ADD line=17 op1=CV(0:$a) op2=CV(1:$b) result=TMP(0) ext=-
+3 ASSIGN line=17 op1=CV(2:$result) op2=TMP(0) result=UNUSED ext=-
+4 RETURN line=18 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Statements.php
+Function: assignCall
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 6
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 2
+Literals: 2
+Return type: void
+Lines: 20-23
+
+Compiled variables:
+0 $text
+1 $result
+
+Literals:
+0 string("strtolower")
+1 null
+
+Argument details:
+0 $text string
+
+Opcodes:
+0 RECV line=20 op1=UNUSED(1) op2=UNUSED(64) result=CV(0:$text) ext=-
+1 INIT_FCALL line=22 op1=UNUSED(96) op2=CONST(string("strtolower")) result=UNUSED ext=1
+2 SEND_VAR line=22 op1=CV(0:$text) op2=UNUSED(1) result=UNUSED(80) ext=-
+3 DO_ICALL line=22 op1=UNUSED op2=UNUSED result=VAR(0) ext=-
+4 ASSIGN line=22 op1=CV(1:$result) op2=VAR(0) result=UNUSED ext=-
+5 RETURN line=23 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Statements.php
+Function: callSideEffect
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 5
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 1
+Literals: 2
+Return type: void
+Lines: 25-28
+
+Compiled variables:
+0 $text
+
+Literals:
+0 string("strtolower")
+1 null
+
+Argument details:
+0 $text string
+
+Opcodes:
+0 RECV line=25 op1=UNUSED(1) op2=UNUSED(64) result=CV(0:$text) ext=-
+1 INIT_FCALL line=27 op1=UNUSED(96) op2=CONST(string("strtolower")) result=UNUSED ext=1
+2 SEND_VAR line=27 op1=CV(0:$text) op2=UNUSED(1) result=UNUSED(80) ext=-
+3 DO_ICALL line=27 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 RETURN line=28 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Statements.php
+Function: returnLiteral
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 3
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 2
+Return type: int
+Lines: 30-33
+
+Compiled variables:
+(none)
+
+Literals:
+0 int(7)
+1 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 RETURN line=32 op1=CONST(int(7)) op2=UNUSED result=UNUSED ext=-
+1 VERIFY_RETURN_TYPE line=33 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+2 RETURN line=33 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Statements.php
+Function: returnVariable
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 5
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 0
+Literals: 1
+Return type: int
+Lines: 35-38
+
+Compiled variables:
+0 $value
+
+Literals:
+0 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=35 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 VERIFY_RETURN_TYPE line=37 op1=CV(0:$value) op2=UNUSED result=UNUSED ext=-
+2 RETURN line=37 op1=CV(0:$value) op2=UNUSED result=UNUSED ext=-
+3 VERIFY_RETURN_TYPE line=38 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 RETURN line=38 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Statements.php
+Function: returnExpression
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 7
+Arguments: 2
+Required arguments: 2
+Compiled variables: 2
+Temporary variables: 1
+Literals: 1
+Return type: int
+Lines: 40-43
+
+Compiled variables:
+0 $price
+1 $quantity
+
+Literals:
+0 null
+
+Argument details:
+0 $price int
+1 $quantity int
+
+Opcodes:
+0 RECV line=40 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$price) ext=-
+1 RECV line=40 op1=UNUSED(2) op2=UNUSED(16) result=CV(1:$quantity) ext=-
+2 MUL line=42 op1=CV(0:$price) op2=CV(1:$quantity) result=TMP(0) ext=-
+3 VERIFY_RETURN_TYPE line=42 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+4 RETURN line=42 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+5 VERIFY_RETURN_TYPE line=43 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+6 RETURN line=43 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Statements.php
+Function: returnNothing
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 2
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 2
+Return type: void
+Lines: 45-48
+
+Compiled variables:
+(none)
+
+Literals:
+0 null
+1 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 RETURN line=47 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+1 RETURN line=48 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Statements.php
+Function: throwLiteral
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 5
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 2
+Literals: 4
+Return type: void
+Lines: 50-53
+
+Compiled variables:
+(none)
+
+Literals:
+0 string("Exception")
+1 string("exception")
+2 string("bad")
+3 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 NEW line=52 op1=CONST(string("Exception")) op2=UNUSED result=VAR(0) ext=1
+1 SEND_VAL_EX line=52 op1=CONST(string("bad")) op2=UNUSED(1) result=UNUSED(80) ext=-
+2 DO_FCALL line=52 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+3 THROW line=52 op1=VAR(0) op2=UNUSED result=UNUSED ext=-
+4 RETURN line=53 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Statements.php
+Function: echoValue
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 3
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 0
+Literals: 1
+Return type: void
+Lines: 55-58
+
+Compiled variables:
+0 $text
+
+Literals:
+0 null
+
+Argument details:
+0 $text string
+
+Opcodes:
+0 RECV line=55 op1=UNUSED(1) op2=UNUSED(64) result=CV(0:$text) ext=-
+1 ECHO line=57 op1=CV(0:$text) op2=UNUSED result=UNUSED ext=-
+2 RETURN line=58 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Statements.php
+Function: <main>
+Class: -
+Kind: main
+Property: -
+Hook: -
+Opcodes: 1
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 1
+Return type: -
+Lines: 1-59
+
+Compiled variables:
+(none)
+
+Literals:
+0 int(1)
+
+Argument details:
+(none)
+
+Opcodes:
+0 RETURN line=59 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+

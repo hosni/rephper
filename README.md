@@ -1,6 +1,6 @@
 # Rephper
 
-Rephper inspects PHP source after the Zend Engine has compiled it. A PHP 8.4 Zend extension prints compiled op arrays and writes them as versioned JSON. A separate PHP program reads that JSON and prints a control-flow graph for each op array. `Rephper\Expr\Reconstructor` turns the instructions inside one basic block into expression trees. Statement reconstruction and PHP source generation are later milestones.
+Rephper inspects PHP source after the Zend Engine has compiled it. A PHP 8.4 Zend extension prints compiled op arrays and writes them as versioned JSON. A separate PHP program reads that JSON and prints a control-flow graph for each op array. `Rephper\Expr\Reconstructor` turns the instructions inside one basic block into expression trees. `Rephper\Stmt\Reconstructor` turns those trees into straight-line statements, still one basic block at a time. Structured control flow and PHP source generation are later milestones.
 
 ## Objectives
 
@@ -10,7 +10,8 @@ Rephper inspects PHP source after the Zend Engine has compiled it. A PHP 8.4 Zen
 4. Serialize that representation as IR JSON.
 5. Read the JSON without loading the Zend extension, and build a control-flow graph for each op array.
 6. Reconstruct expression trees from the instructions inside each basic block.
-7. Reconstruct statements and PHP source from those trees. Later milestone.
+7. Reconstruct straight-line statements from those trees, still grouped by basic block.
+8. Reconstruct structured control flow and PHP source. Later milestone.
 
 The extension does not parse another tool's text output. It reads `zend_op_array` and `zend_op` directly.
 
@@ -50,10 +51,16 @@ extension/src/Compatibility/php84/
          expression trees for one basic block
               |
               v
-         future statement reconstructor
+         src/Stmt/Reconstructor.php
+              |
+              v
+         statements for one basic block
+              |
+              v
+         future control-flow structuring and source generation
 ```
 
-The reader, the IR model, the CFG builder, the expression reconstructor, and `php bin/rephper graph` do not load the extension and do not use Zend C structures. Opcode control-flow rules for this stage live in `src/Cfg/Php84/Semantics.php`. Expression folding lives in `src/Expr/Reconstructor.php`.
+The reader, the IR model, the CFG builder, the expression reconstructor, the statement reconstructor, and `php bin/rephper graph` do not load the extension and do not use Zend C structures. Opcode control-flow rules for this stage live in `src/Cfg/Php84/Semantics.php`. Expression folding lives in `src/Expr/Reconstructor.php`. Statement grouping lives in `src/Stmt/Reconstructor.php`.
 
 `extension/rephper.c` is the Zend extension entry point. It registers `op_array_handler`. PHP 8.4 declares that callback as:
 
@@ -421,7 +428,42 @@ Assignment result
             VariableRead c
 ```
 
-Statement reconstruction, function-call reconstruction, and PHP source generation are not part of this pass.
+Function-call opcodes stay separate. PHP source generation is not part of this pass.
+
+## Statement reconstruction
+
+`src/Stmt/Reconstructor.php` takes an op array, the CFG for that op array, and the expression reconstruction already produced for it. It does not fold expressions again and it does not load the extension. Each basic block gets its own ordered statement list. Blocks are not merged into `if`, loops, `switch`, `match`, or `try`.
+
+```php
+$statements = (new Rephper\Stmt\Reconstructor())->reconstruct(
+    $opArray,
+    $controlFlowGraph,
+    $expressions,
+);
+```
+
+| Statement | What it records |
+| --- | --- |
+| `ExpressionStatement` | An assignment. The statement holds the same `Assignment` object the expression pass produced. |
+| `ReturnStatement` | The returned expression. `return;` is a return of the null literal the compiler emitted for that instruction. |
+| `ThrowStatement` | The thrown value. `throw new Exception('bad')` keeps `NEW` as that value. The constructor argument and `DO_FCALL` stay as earlier statements. |
+| `OpaqueStatement` | A side-effecting instruction that is not one of those statements. It holds the same `Opaque` expression, including the opcode and its operands. `echo $text` is an `ECHO` statement. `strtolower($text);` is `INIT_FCALL`, `SEND_VAR`, then `DO_ICALL`. |
+
+A temporary that was folded into a later expression does not become its own statement. `$result = $a + $b` is one assignment whose value is the addition. `return $price * $quantity` is one return whose value is the multiplication. `RECV`, `VERIFY_RETURN_TYPE`, and the compiler's trailing return (`extended_value` 4294967295) produce no statement. A bare `JMP` produces no statement; the CFG already records that edge. A branch that still carries a value, such as `JMPZ`, stays an opaque statement so the condition is not dropped.
+
+An opaque statement adds an `unsupported` diagnostic with the opcode, opline, source line, block, and reason. A `THROW` whose exception value is present does not.
+
+```text
+$a = 10;
+$b = 20;
+
+ExpressionStatement   opline 0
+    Assignment a = Literal int 10
+ExpressionStatement   opline 1
+    Assignment b = Literal int 20
+```
+
+Structured control flow and PHP source generation are not part of this pass.
 
 ## Commands
 
@@ -450,7 +492,7 @@ make test-integration
 
 `composer test`, `composer test:unit`, and `composer test:integration` run the same PHPUnit suites. `make test` and `make test-integration` build the extension first and pass it to PHPUnit through `REPHPER_PHP` and `REPHPER_EXTENSION`. The unit suite does not load the extension. Run PHPUnit with the normal PHP extensions enabled. The spawned `php -l` processes still use `-n`, so OPcache stays out of the opcode dump.
 
-`tests/Unit/` covers the reader, control-flow edges, exception edges, expression trees, invalid IR, and the `graph` command through Symfony’s `CommandTester`. One unit test also runs `bin/rephper` so the executable bootstrap is checked. Version selection still treats `8.10` as newer than `8.9`, and PHP 8.4 remains the only supported compiler.
+`tests/Unit/` covers the reader, control-flow edges, exception edges, expression trees, straight-line statements, invalid IR, and the `graph` command through Symfony’s `CommandTester`. One unit test also runs `bin/rephper` so the executable bootstrap is checked. Version selection still treats `8.10` as newer than `8.9`, and PHP 8.4 remains the only supported compiler.
 
 `tests/Integration/ExporterTest.php` compiles every fixture with the extension when `extension/modules/rephper.so` exists. Without that file the integration tests are skipped. For each fixture it checks:
 
@@ -503,7 +545,7 @@ Linting one file does not compile files it would include at runtime, and it does
 
 - PHP 8.4 only.
 - Ubuntu is the only operating system that has been targeted. It has been built and tested locally on Linux with PHP 8.4.27.
-- There is no statement reconstructor and no PHP source generator. Expression reconstruction covers values, arithmetic, comparisons, concatenation, boolean not, bitwise not, assignment, compound assignment for `+ - * / % .`, and return values inside one basic block.
+- There is no PHP source generator and no control-flow structuring. Straight-line statements cover assignments, returns, throws, and opaque side effects inside one basic block. `if`, loops, `switch`, `match`, and `try` stay as separate blocks.
 - CFG semantics are implemented for PHP 8.4, `pre_pass_two`, and absolute opline jumps only. `src/Cfg/Php84/Semantics.php` is the only opcode switch. Another PHP version needs its own semantics class.
 - `HANDLE_EXCEPTION`, `USER_OPCODE`, and `CALL_TRAMPOLINE` are rejected. The builder does not guess their successors.
 - `BIND_INIT_STATIC_OR_JMP` and `JMP_FRAMELESS` follow the PHP 8.4 handlers. The current fixtures do not emit them; the CFG tests cover them by editing a real instruction.
@@ -521,8 +563,8 @@ Linting one file does not compile files it would include at runtime, and it does
 
 ## Roadmap
 
-- Statement reconstruction from the control-flow graph and the expression trees, then PHP source generation.
-- Expression reconstruction across basic blocks, including `&&` and `||`. Function-call opcodes stay separate opaque instructions; they are not combined into one call expression.
+- Structured control flow, then PHP source generation. Straight-line statements are already grouped by basic block.
+- Expression reconstruction across basic blocks, including `&&` and `||`. Function-call opcodes stay separate instructions; they are not combined into one call expression.
 - More PHP versions, each with its own compatibility directory and expected dumps.
 - More operating systems, as extra `os` matrix entries once the build has been verified there.
 - Inspecting a directory of source files without executing the application.
