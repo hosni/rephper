@@ -28,7 +28,7 @@ EXTRA_CFLAGS := -Wall -Wextra -DREPHPER_EXPECTED_PHP_API=$(PHP_API) \
 	-DREPHPER_EXPECTED_ZEND_MODULE_API=$(ZEND_MODULE_API) \
 	-DREPHPER_EXPECTED_ZEND_EXTENSION_API=$(ZEND_EXTENSION_API)
 
-.PHONY: info check-php build test clean install
+.PHONY: info check-php build test test-unit test-integration clean install
 
 info: check-php
 
@@ -55,8 +55,14 @@ build: check-php
 
 test: build
 	REPHPER_PHP='$(PHP)' REPHPER_EXTENSION='$(EXTENSION)' \
-		'$(PHP)' -n '$(ROOT)/tests/run.php'
-	'$(PHP)' -n '$(ROOT)/tests/cfg/run.php'
+		'$(PHP)' '$(ROOT)/vendor/bin/phpunit' --configuration '$(ROOT)/phpunit.xml.dist'
+
+test-unit:
+	'$(PHP)' '$(ROOT)/vendor/bin/phpunit' --configuration '$(ROOT)/phpunit.xml.dist' --testsuite unit
+
+test-integration: build
+	REPHPER_PHP='$(PHP)' REPHPER_EXTENSION='$(EXTENSION)' \
+		'$(PHP)' '$(ROOT)/vendor/bin/phpunit' --configuration '$(ROOT)/phpunit.xml.dist' --testsuite integration
 
 clean:
 	@if [ -f '$(EXT_DIR)/Makefile' ]; then $(MAKE) -C '$(EXT_DIR)' clean; fi
