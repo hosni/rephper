@@ -99,13 +99,16 @@ The first target is Ubuntu 24.04. The build uses `phpize`, which is the portable
 ## Requirements
 
 - PHP 8.4 CLI, `phpize8.4`, and `php-config8.4`
+- PHP extensions used by PHPUnit: `dom`, `mbstring`, `tokenizer`, `xml`, and `xmlwriter`
 - A C compiler, make, and autoconf
-- Composer, for the IR reader and the CFG command
+- Composer
+
+Composer installs `symfony/console` for the `graph` command and `phpunit/phpunit` for development.
 
 On Ubuntu:
 
 ```bash
-sudo apt-get install php8.4-cli php8.4-dev build-essential autoconf pkg-config
+sudo apt-get install php8.4-cli php8.4-dev php8.4-mbstring php8.4-xml build-essential autoconf pkg-config
 ```
 
 ## Build
@@ -133,7 +136,9 @@ make build PHP_VERSION=8.4 PHP=php8.4 PHPIZE=phpize8.4 PHP_CONFIG=php-config8.4
 | --- | --- |
 | `make info` | Prints the selected version, the binary version, the PHP API, the Zend module API, the Zend extension API, `phpize`, `php-config`, and the extension directory. Exits with an error if they disagree. |
 | `make build` | Checks the toolchain, then builds the extension. |
-| `make test` | Builds, runs `tests/run.php` with the extension, then runs `tests/cfg/run.php` with `php -n` and without the extension. |
+| `make test` | Builds the extension, then runs PHPUnit. |
+| `make test-unit` | Runs the unit suite. It does not build or load the extension. |
+| `make test-integration` | Builds the extension, then runs the exporter suite. |
 | `make clean` | Removes `phpize` output. Source files and fixtures stay. |
 | `make install` | Installs `rephper.so` into the extension directory reported by the selected `php-config`. The path is not hardcoded. Writing there usually needs root. `INSTALL_ROOT` prefixes that path, which is how the install rule can be checked without root. |
 
@@ -249,13 +254,7 @@ The checked-in files under `tests/Expected/PHP/8.4/` replace the patch version w
 
 The reader is `src/Ir/Reader.php`. It loads one JSON document from a file or a string. `json_decode` uses `JSON_THROW_ON_ERROR`. A missing field, a field of the wrong type, an instruction whose `index` is not its position, or an operand kind outside the eleven kinds the exporter writes is `Rephper\Ir\IrException`. `ir_version` other than `1` is `UnsupportedIrVersionException`. Invalid values are not replaced with defaults. Keys the reader does not model are kept on an `extra` array so a later field is not discarded.
 
-```bash
-composer install
-php8.4 -n bin/rephper graph out.json
-php8.4 -n bin/rephper graph out.json --op-array=calculate
-```
-
-`main` selects the script body, whose JSON name is null. The command prints to stdout and writes validation errors to stderr. It exits with status 1 on invalid IR, an unsupported PHP version or compilation stage, or an op-array name that is not in the file.
+`php bin/rephper graph` is the command that reads a file and prints its graphs. The command class only wires the reader, the builder, and the printer.
 
 The model follows the JSON document:
 
@@ -359,28 +358,47 @@ Three failures are different:
 
 An out-of-range jump is invalid IR for the CFG and uses `CfgException` directly.
 
+## Commands
+
+`bin/rephper` is a Symfony Console application. It loads Composer’s autoload and does not load the Zend extension. With no command it prints the command list and exits 0.
+
+```bash
+php8.4 bin/rephper
+php8.4 bin/rephper graph out.json
+php8.4 bin/rephper graph out.json --op-array=calculate
+php8.4 bin/rephper graph out.json --op-array=main
+php8.4 bin/rephper help graph
+```
+
+`graph` reads one IR JSON file and prints one block list per op array. `--op-array` limits the output. `main` selects the script body, whose JSON name is null. Validation errors go to stderr and the process exits 1. That includes a missing file, invalid JSON, an IR version other than 1, a jump the builder cannot accept, an unsupported opcode, and an unknown op-array name. A missing `file` argument also exits 1.
+
+There is no `inspect` or `export` command. Inspection and export still go through `php -l` and `REPHPER_IR`.
+
 ## Tests
 
 ```bash
+composer install
 make test
+make test-unit
+make test-integration
 ```
 
-`tests/run.php`:
+`composer test`, `composer test:unit`, and `composer test:integration` run the same PHPUnit suites. `make test` and `make test-integration` build the extension first and pass it to PHPUnit through `REPHPER_PHP` and `REPHPER_EXTENSION`. The unit suite does not load the extension. Run PHPUnit with the normal PHP extensions enabled. The spawned `php -l` processes still use `-n`, so OPcache stays out of the opcode dump.
 
-1. Checks semantic version selection. `8.10` is newer than `8.9`.
-2. Refuses a PHP version that is not in the supported list. That list is currently `8.4`.
-3. Loads the extension and requires a clean startup, with `Rephper` listed by `php -m`.
-4. Runs every fixture compatible with the active PHP version through `php -l`.
-5. Requires a successful compile, a dump header, and opcode lines.
-6. Compares the dump with `tests/Expected/PHP/<version>/*.txt`.
-7. Writes IR JSON for the same compile, checks that it is valid JSON, checks operand and literal types, and checks feature-specific values.
-8. Compiles the fixture a second time and requires the same JSON.
-9. Compares the normalized JSON with `tests/Expected/PHP/<version>/*.json`.
-10. Checks that `REPHPER_IR` pointed at a directory does not remove that directory.
+`tests/Unit/` covers the reader, control-flow edges, exception edges, invalid IR, and the `graph` command through Symfony’s `CommandTester`. One unit test also runs `bin/rephper` so the executable bootstrap is checked. Version selection still treats `8.10` as newer than `8.9`, and PHP 8.4 remains the only supported compiler.
 
-`tests/cfg/run.php` does not load the extension. It reads the expected IR files, restores a real `8.4` version string, and checks block ranges, instruction coverage, successor kinds, predecessor links, switch cases, loop back-edges, and exception edges. It also checks malformed documents, an out-of-range jump, an unknown opcode, `USER_OPCODE`, a missing `breaks` table, and a catch opline outside the op array. `BIND_INIT_STATIC_OR_JMP` and `JMP_FRAMELESS` are checked by rewriting a real instruction, because the fixtures compiled here do not emit those two opcodes.
+`tests/Integration/ExporterTest.php` compiles every fixture with the extension when `extension/modules/rephper.so` exists. Without that file the integration tests are skipped. For each fixture it checks:
 
-`Fixtures/Common/` is syntax every supported PHP version can compile. `Fixtures/PHP/X.Y/` is syntax introduced in that version. The runner selects every such directory whose version is less than or equal to the active PHP. PHP 8.4 therefore runs `Common/`, `PHP/8.0/`, `PHP/8.1/`, `PHP/8.2/`, and `PHP/8.4/`. The engine implementation is still only 8.4, so the expected opcodes and IR are stored under `Expected/PHP/8.4/`.
+1. The extension loads with no startup output and `php -m` lists `Rephper`.
+2. `php -l` succeeds and the dump contains an op array and opcode lines.
+3. Feature snippets are present, such as `JMPZ`, `MATCH`, `CATCH`, and `FAST_RET`.
+4. The normalized text dump matches `tests/Expected/PHP/<version>/*.txt`.
+5. The IR is valid JSON with the expected operand and literal types, and feature-specific values are present.
+6. A second compile writes the same JSON.
+7. `REPHPER_IR` pointed at a directory does not remove that directory.
+8. Lint does not execute the file and does not compile a file it would `require`.
+
+`Fixtures/Common/` is syntax every supported PHP version can compile. `Fixtures/PHP/X.Y/` is syntax introduced in that version. PHP 8.4 runs `Common/`, `PHP/8.0/`, `PHP/8.1/`, `PHP/8.2/`, and `PHP/8.4/`. The engine implementation is still only 8.4, so the expected opcodes and IR are stored under `Expected/PHP/8.4/`.
 
 Expected dumps are per PHP version. The same source is not assumed to produce the same opcodes on another version.
 
@@ -391,7 +409,7 @@ make build
 REPHPER_PHP=php8.4 \
 REPHPER_EXTENSION=$PWD/extension/modules/rephper.so \
 REPHPER_UPDATE_EXPECTED=1 \
-php8.4 -n tests/run.php
+php8.4 vendor/bin/phpunit --testsuite integration --filter testFixture
 ```
 
 Paths inside the dump are rewritten to repository-relative paths before comparison, including the lowercased filename stored in an anonymous class runtime key.
@@ -414,7 +432,7 @@ Linting one file does not compile files it would include at runtime, and it does
 
 ## GitHub Actions
 
-`.github/workflows/build.yml` runs on pushes and pull requests. The operating system and the PHP version are separate matrix axes. The active matrix is Ubuntu 24.04 and PHP 8.4. The job installs that PHP version, its development tools, and Composer, installs the PHP dependencies, then runs `make info`, `make build`, `make test`, and a separate check that the extension loads with no startup output.
+`.github/workflows/build.yml` runs on pushes and pull requests. The operating system and the PHP version are separate matrix axes. The active matrix is Ubuntu 24.04 and PHP 8.4. The job installs that PHP version, its development tools, and Composer, installs the runtime and development dependencies, then runs `make info`, `make test-unit`, `make test-integration`, and a separate check that the extension loads with no startup output. Unit tests run before the extension is built. The integration target builds it and runs the exporter suite.
 
 ## Current limitations
 
