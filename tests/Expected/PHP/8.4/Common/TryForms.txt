@@ -1,0 +1,194 @@
+Rephper: Compiled op array
+File: tests/Fixtures/Common/TryForms.php
+Function: caught
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 16
+Arguments: 1
+Required arguments: 1
+Compiled variables: 3
+Temporary variables: 3
+Literals: 12
+Return type: int
+Lines: 3-16
+
+Compiled variables:
+0 $n
+1 $runtime
+2 $exception
+
+Literals:
+0 int(0)
+1 string("RuntimeException")
+2 string("runtimeexception")
+3 string("bad")
+4 string("RuntimeException")
+5 string("runtimeexception")
+6 int(1)
+7 string("Exception")
+8 string("exception")
+9 int(2)
+10 int(0)
+11 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=3 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 IS_SMALLER line=6 op1=CV(0:$n) op2=CONST(int(0)) result=TMP(0)|SMART_JMPZ ext=-
+2 JMPZ line=6 op1=TMP(0) op2=JMP(7) result=UNUSED ext=-
+3 NEW line=7 op1=CONST(string("RuntimeException")) op2=UNUSED result=VAR(1) ext=1
+4 SEND_VAL_EX line=7 op1=CONST(string("bad")) op2=UNUSED(1) result=UNUSED(80) ext=-
+5 DO_FCALL line=7 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+6 THROW line=7 op1=VAR(1) op2=UNUSED result=UNUSED ext=-
+7 JMP line=7 op1=JMP(13) op2=UNUSED result=UNUSED ext=-
+8 CATCH line=9 op1=CONST(string("RuntimeException")) op2=JMP(11) result=CV(1:$runtime) ext=8
+9 RETURN line=10 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+10 JMP line=10 op1=JMP(13) op2=UNUSED result=UNUSED ext=-
+11 CATCH line=11 op1=CONST(string("Exception")) op2=UNUSED result=CV(2:$exception) ext=17
+12 RETURN line=12 op1=CONST(int(2)) op2=UNUSED result=UNUSED ext=-
+13 RETURN line=15 op1=CONST(int(0)) op2=UNUSED result=UNUSED ext=-
+14 VERIFY_RETURN_TYPE line=16 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+15 RETURN line=16 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/TryForms.php
+Function: finalized
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 17
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 6
+Literals: 6
+Return type: int
+Lines: 18-29
+
+Compiled variables:
+0 $n
+
+Literals:
+0 int(0)
+1 string("Exception")
+2 string("exception")
+3 string("bad")
+4 int(1)
+5 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=18 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 IS_SMALLER line=21 op1=CV(0:$n) op2=CONST(int(0)) result=TMP(1)|SMART_JMPZ ext=-
+2 JMPZ line=21 op1=TMP(1) op2=JMP(7) result=UNUSED ext=-
+3 NEW line=22 op1=CONST(string("Exception")) op2=UNUSED result=VAR(2) ext=1
+4 SEND_VAL_EX line=22 op1=CONST(string("bad")) op2=UNUSED(1) result=UNUSED(80) ext=-
+5 DO_FCALL line=22 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+6 THROW line=22 op1=VAR(2) op2=UNUSED result=UNUSED ext=-
+7 QM_ASSIGN line=25 op1=CV(0:$n) op2=UNUSED result=TMP(4) ext=-
+8 VERIFY_RETURN_TYPE line=25 op1=TMP(4) op2=UNUSED result=UNUSED ext=-
+9 FAST_CALL line=25 op1=TRY_CATCH(0) op2=TMP(4) result=TMP(0) ext=-
+10 RETURN line=25 op1=TMP(4) op2=UNUSED result=UNUSED ext=-
+11 FAST_CALL line=26 op1=TRY_CATCH(0) op2=UNUSED result=TMP(0) ext=-
+12 JMP line=26 op1=JMP(15) op2=UNUSED result=UNUSED ext=-
+13 ASSIGN line=27 op1=CV(0:$n) op2=CONST(int(1)) result=UNUSED ext=-
+14 FAST_RET line=27 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+15 VERIFY_RETURN_TYPE line=29 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+16 RETURN line=29 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/TryForms.php
+Function: wrapped
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 19
+Arguments: 1
+Required arguments: 1
+Compiled variables: 3
+Temporary variables: 5
+Literals: 14
+Return type: int
+Lines: 31-46
+
+Compiled variables:
+0 $n
+1 $inner
+2 $outer
+
+Literals:
+0 int(0)
+1 string("RuntimeException")
+2 string("runtimeexception")
+3 string("bad")
+4 string("RuntimeException")
+5 string("runtimeexception")
+6 string("LogicException")
+7 string("logicexception")
+8 string("wrapped")
+9 string("LogicException")
+10 string("logicexception")
+11 int(1)
+12 int(0)
+13 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=31 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 IS_SMALLER line=35 op1=CV(0:$n) op2=CONST(int(0)) result=TMP(0)|SMART_JMPZ ext=-
+2 JMPZ line=35 op1=TMP(0) op2=JMP(7) result=UNUSED ext=-
+3 NEW line=36 op1=CONST(string("RuntimeException")) op2=UNUSED result=VAR(1) ext=1
+4 SEND_VAL_EX line=36 op1=CONST(string("bad")) op2=UNUSED(1) result=UNUSED(80) ext=-
+5 DO_FCALL line=36 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+6 THROW line=36 op1=VAR(1) op2=UNUSED result=UNUSED ext=-
+7 JMP line=36 op1=JMP(13) op2=UNUSED result=UNUSED ext=-
+8 CATCH line=38 op1=CONST(string("RuntimeException")) op2=UNUSED result=CV(1:$inner) ext=9
+9 NEW line=39 op1=CONST(string("LogicException")) op2=UNUSED(16) result=VAR(3) ext=1
+10 SEND_VAL_EX line=39 op1=CONST(string("wrapped")) op2=UNUSED(1) result=UNUSED(80) ext=-
+11 DO_FCALL line=39 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+12 THROW line=39 op1=VAR(3) op2=UNUSED result=UNUSED ext=-
+13 JMP line=39 op1=JMP(16) op2=UNUSED result=UNUSED ext=-
+14 CATCH line=41 op1=CONST(string("LogicException")) op2=UNUSED result=CV(2:$outer) ext=25
+15 RETURN line=42 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+16 RETURN line=45 op1=CONST(int(0)) op2=UNUSED result=UNUSED ext=-
+17 VERIFY_RETURN_TYPE line=46 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+18 RETURN line=46 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/TryForms.php
+Function: <main>
+Class: -
+Kind: main
+Property: -
+Hook: -
+Opcodes: 1
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 1
+Return type: -
+Lines: 1-47
+
+Compiled variables:
+(none)
+
+Literals:
+0 int(1)
+
+Argument details:
+(none)
+
+Opcodes:
+0 RETURN line=47 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+

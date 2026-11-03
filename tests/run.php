@@ -276,6 +276,9 @@ function required_snippets(): array
         'PHP/8.0/MatchExpression.php' => [' MATCH '],
         'PHP/8.1/Enums.php' => ['Class: Status'],
         'PHP/8.2/Readonly.php' => ['Class: Point', 'Function: __construct'],
+        'Common/StructuredFlow.php' => ['Function: nested', ' GOTO ', ' SWITCH_', ' BRK '],
+        'Common/TryForms.php' => ['Function: caught', ' CATCH ', ' FAST_RET '],
+        'Common/Minimal.php' => ['Kind: main', ' RETURN'],
     ];
 }
 

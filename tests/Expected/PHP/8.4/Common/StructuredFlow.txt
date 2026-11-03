@@ -1,0 +1,389 @@
+Rephper: Compiled op array
+File: tests/Fixtures/Common/StructuredFlow.php
+Function: nested
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 11
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 2
+Literals: 5
+Return type: int
+Lines: 3-14
+
+Compiled variables:
+0 $n
+
+Literals:
+0 int(0)
+1 int(10)
+2 int(1)
+3 int(0)
+4 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=3 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 IS_SMALLER line=5 op1=CONST(int(0)) op2=CV(0:$n) result=TMP(0)|SMART_JMPZ ext=-
+2 JMPZ line=5 op1=TMP(0) op2=JMP(8) result=UNUSED ext=-
+3 IS_SMALLER line=6 op1=CONST(int(10)) op2=CV(0:$n) result=TMP(1)|SMART_JMPZ ext=-
+4 JMPZ line=6 op1=TMP(1) op2=JMP(7) result=UNUSED ext=-
+5 VERIFY_RETURN_TYPE line=7 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+6 RETURN line=7 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+7 RETURN line=10 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+8 RETURN line=13 op1=CONST(int(0)) op2=UNUSED result=UNUSED ext=-
+9 VERIFY_RETURN_TYPE line=14 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+10 RETURN line=14 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/StructuredFlow.php
+Function: dowhile
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 9
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 3
+Literals: 2
+Return type: int
+Lines: 16-24
+
+Compiled variables:
+0 $n
+1 $i
+
+Literals:
+0 int(0)
+1 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=16 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 ASSIGN line=18 op1=CV(1:$i) op2=CONST(int(0)) result=UNUSED ext=-
+2 PRE_INC line=20 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+3 IS_SMALLER line=21 op1=CV(1:$i) op2=CV(0:$n) result=TMP(2)|SMART_JMPNZ ext=-
+4 JMPNZ line=21 op1=TMP(2) op2=JMP(2) result=UNUSED ext=-
+5 VERIFY_RETURN_TYPE line=23 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+6 RETURN line=23 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+7 VERIFY_RETURN_TYPE line=24 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+8 RETURN line=24 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/StructuredFlow.php
+Function: nestedLoops
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 20
+Arguments: 1
+Required arguments: 1
+Compiled variables: 4
+Temporary variables: 9
+Literals: 5
+Return type: int
+Lines: 26-41
+
+Compiled variables:
+0 $n
+1 $total
+2 $i
+3 $j
+
+Literals:
+0 int(0)
+1 int(0)
+2 int(0)
+3 int(1)
+4 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=26 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 ASSIGN line=28 op1=CV(1:$total) op2=CONST(int(0)) result=UNUSED ext=-
+2 ASSIGN line=29 op1=CV(2:$i) op2=CONST(int(0)) result=UNUSED ext=-
+3 JMP line=29 op1=JMP(14) op2=UNUSED result=UNUSED ext=-
+4 ASSIGN line=30 op1=CV(3:$j) op2=CONST(int(0)) result=UNUSED ext=-
+5 JMP line=31 op1=JMP(11) op2=UNUSED result=UNUSED ext=-
+6 IS_IDENTICAL line=32 op1=CV(3:$j) op2=CONST(int(1)) result=TMP(3)|SMART_JMPZ ext=-
+7 JMPZ line=32 op1=TMP(3) op2=JMP(9) result=UNUSED ext=-
+8 BRK line=33 op1=LEVEL(1) op2=UNUSED(2) result=UNUSED ext=-
+9 PRE_INC line=35 op1=CV(3:$j) op2=UNUSED result=UNUSED ext=-
+10 PRE_INC line=36 op1=CV(1:$total) op2=UNUSED result=UNUSED ext=-
+11 IS_SMALLER line=31 op1=CV(3:$j) op2=CV(2:$i) result=TMP(6)|SMART_JMPNZ ext=-
+12 JMPNZ line=31 op1=TMP(6) op2=JMP(6) result=UNUSED ext=-
+13 PRE_INC line=29 op1=CV(2:$i) op2=UNUSED result=UNUSED ext=-
+14 IS_SMALLER line=29 op1=CV(2:$i) op2=CV(0:$n) result=TMP(8)|SMART_JMPNZ ext=-
+15 JMPNZ line=29 op1=TMP(8) op2=JMP(4) result=UNUSED ext=-
+16 VERIFY_RETURN_TYPE line=40 op1=CV(1:$total) op2=UNUSED result=UNUSED ext=-
+17 RETURN line=40 op1=CV(1:$total) op2=UNUSED result=UNUSED ext=-
+18 VERIFY_RETURN_TYPE line=41 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+19 RETURN line=41 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/StructuredFlow.php
+Function: choose
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 14
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 1
+Literals: 8
+Return type: string
+Lines: 43-54
+
+Compiled variables:
+0 $n
+
+Literals:
+0 array(3: ["a"=>int(9), "b"=>int(10), "c"=>int(10)])
+1 string("a")
+2 string("b")
+3 string("c")
+4 string("one")
+5 string("few")
+6 string("other")
+7 null
+
+Argument details:
+0 $n string
+
+Opcodes:
+0 RECV line=43 op1=UNUSED(1) op2=UNUSED(64) result=CV(0:$n) ext=-
+1 SWITCH_STRING line=45 op1=CV(0:$n) op2=CONST(array(3: ["a"=>int(9), "b"=>int(10), "c"=>int(10)])) result=UNUSED ext=jmp:11
+2 IS_EQUAL line=46 op1=CV(0:$n) op2=CONST(string("a")) result=TMP(0)|SMART_JMPNZ ext=-
+3 JMPNZ line=46 op1=TMP(0) op2=JMP(9) result=UNUSED ext=-
+4 IS_EQUAL line=48 op1=CV(0:$n) op2=CONST(string("b")) result=TMP(0)|SMART_JMPNZ ext=-
+5 JMPNZ line=48 op1=TMP(0) op2=JMP(10) result=UNUSED ext=-
+6 IS_EQUAL line=49 op1=CV(0:$n) op2=CONST(string("c")) result=TMP(0)|SMART_JMPNZ ext=-
+7 JMPNZ line=49 op1=TMP(0) op2=JMP(10) result=UNUSED ext=-
+8 JMP line=49 op1=JMP(11) op2=UNUSED result=UNUSED ext=-
+9 RETURN line=47 op1=CONST(string("one")) op2=UNUSED result=UNUSED ext=-
+10 RETURN line=50 op1=CONST(string("few")) op2=UNUSED result=UNUSED ext=-
+11 RETURN line=52 op1=CONST(string("other")) op2=UNUSED result=UNUSED ext=-
+12 VERIFY_RETURN_TYPE line=54 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+13 RETURN line=54 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/StructuredFlow.php
+Function: jump
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 9
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 2
+Literals: 4
+Return type: int
+Lines: 56-64
+
+Compiled variables:
+0 $n
+
+Literals:
+0 int(0)
+1 string("done")
+2 int(1)
+3 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=56 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 IS_SMALLER line=58 op1=CV(0:$n) op2=CONST(int(0)) result=TMP(0)|SMART_JMPZ ext=-
+2 JMPZ line=58 op1=TMP(0) op2=JMP(4) result=UNUSED ext=-
+3 GOTO line=59 op1=LABEL(0) op2=CONST(string("done")) result=UNUSED ext=-
+4 ASSIGN line=61 op1=CV(0:$n) op2=CONST(int(1)) result=UNUSED ext=-
+5 VERIFY_RETURN_TYPE line=63 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+6 RETURN line=63 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+7 VERIFY_RETURN_TYPE line=64 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+8 RETURN line=64 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/StructuredFlow.php
+Function: early
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 11
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 2
+Literals: 5
+Return type: int
+Lines: 66-76
+
+Compiled variables:
+0 $n
+
+Literals:
+0 int(0)
+1 int(0)
+2 int(1)
+3 int(1)
+4 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=66 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 IS_IDENTICAL line=68 op1=CV(0:$n) op2=CONST(int(0)) result=TMP(0)|SMART_JMPZ ext=-
+2 JMPZ line=68 op1=TMP(0) op2=JMP(4) result=UNUSED ext=-
+3 RETURN line=69 op1=CONST(int(0)) op2=UNUSED result=UNUSED ext=-
+4 IS_IDENTICAL line=71 op1=CV(0:$n) op2=CONST(int(1)) result=TMP(1)|SMART_JMPZ ext=-
+5 JMPZ line=71 op1=TMP(1) op2=JMP(7) result=UNUSED ext=-
+6 RETURN line=72 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+7 VERIFY_RETURN_TYPE line=75 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+8 RETURN line=75 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+9 VERIFY_RETURN_TYPE line=76 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+10 RETURN line=76 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/StructuredFlow.php
+Function: fail
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 11
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 3
+Literals: 5
+Return type: int
+Lines: 78-85
+
+Compiled variables:
+0 $n
+
+Literals:
+0 int(0)
+1 string("Exception")
+2 string("exception")
+3 string("bad")
+4 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=78 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 IS_SMALLER line=80 op1=CV(0:$n) op2=CONST(int(0)) result=TMP(0)|SMART_JMPZ ext=-
+2 JMPZ line=80 op1=TMP(0) op2=JMP(7) result=UNUSED ext=-
+3 NEW line=81 op1=CONST(string("Exception")) op2=UNUSED result=VAR(1) ext=1
+4 SEND_VAL_EX line=81 op1=CONST(string("bad")) op2=UNUSED(1) result=UNUSED(80) ext=-
+5 DO_FCALL line=81 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+6 THROW line=81 op1=VAR(1) op2=UNUSED result=UNUSED ext=-
+7 VERIFY_RETURN_TYPE line=84 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+8 RETURN line=84 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+9 VERIFY_RETURN_TYPE line=85 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+10 RETURN line=85 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/StructuredFlow.php
+Function: fallback
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 21
+Arguments: 1
+Required arguments: 1
+Compiled variables: 4
+Temporary variables: 9
+Literals: 6
+Return type: int
+Lines: 87-96
+
+Compiled variables:
+0 $n
+1 $value
+2 $other
+3 $count
+
+Literals:
+0 int(0)
+1 int(1)
+2 string("assert")
+3 int(2)
+4 string("assert($n !== 2)")
+5 null
+
+Argument details:
+0 $n ?int
+
+Opcodes:
+0 RECV line=87 op1=UNUSED(1) op2=UNUSED(18) result=CV(0:$n) ext=-
+1 COALESCE line=89 op1=CV(0:$n) op2=JMP(3) result=TMP(0) ext=-
+2 QM_ASSIGN line=89 op1=CONST(int(0)) op2=UNUSED result=TMP(0) ext=-
+3 ASSIGN line=89 op1=CV(1:$value) op2=TMP(0) result=UNUSED ext=-
+4 JMP_SET line=90 op1=CV(0:$n) op2=JMP(6) result=TMP(2) ext=-
+5 QM_ASSIGN line=90 op1=CONST(int(1)) op2=UNUSED result=TMP(2) ext=-
+6 ASSIGN line=90 op1=CV(2:$other) op2=TMP(2) result=UNUSED ext=-
+7 BIND_STATIC line=91 op1=CV(3:$count) op2=UNUSED result=UNUSED ext=1
+8 PRE_INC line=92 op1=CV(3:$count) op2=UNUSED result=UNUSED ext=-
+9 ASSERT_CHECK line=93 op1=UNUSED op2=JMP(15) result=VAR(6) ext=-
+10 INIT_FCALL line=93 op1=UNUSED(112) op2=CONST(string("assert")) result=UNUSED ext=2
+11 IS_NOT_IDENTICAL line=93 op1=CV(0:$n) op2=CONST(int(2)) result=TMP(5) ext=-
+12 SEND_VAL line=93 op1=TMP(5) op2=UNUSED(1) result=UNUSED(80) ext=-
+13 SEND_VAL line=93 op1=CONST(string("assert($n !== 2)")) op2=UNUSED(2) result=UNUSED(96) ext=-
+14 DO_ICALL line=93 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+15 ADD line=95 op1=CV(1:$value) op2=CV(2:$other) result=TMP(7) ext=-
+16 ADD line=95 op1=TMP(7) op2=CV(3:$count) result=TMP(8) ext=-
+17 VERIFY_RETURN_TYPE line=95 op1=TMP(8) op2=UNUSED result=UNUSED ext=-
+18 RETURN line=95 op1=TMP(8) op2=UNUSED result=UNUSED ext=-
+19 VERIFY_RETURN_TYPE line=96 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+20 RETURN line=96 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/StructuredFlow.php
+Function: <main>
+Class: -
+Kind: main
+Property: -
+Hook: -
+Opcodes: 1
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 1
+Return type: -
+Lines: 1-97
+
+Compiled variables:
+(none)
+
+Literals:
+0 int(1)
+
+Argument details:
+(none)
+
+Opcodes:
+0 RETURN line=97 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+
