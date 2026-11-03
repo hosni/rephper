@@ -1,13 +1,13 @@
 # Rephper
 
-Rephper inspects PHP source after the Zend Engine has compiled it. The current milestone is a PHP 8.4 Zend extension that prints compiled op arrays. Later milestones will serialize that representation and reconstruct readable PHP.
+Rephper inspects PHP source after the Zend Engine has compiled it. The current milestone is a PHP 8.4 Zend extension that prints compiled op arrays and writes them as versioned JSON. A later milestone will reconstruct readable PHP from that JSON. The decompiler is not part of this tree.
 
 ## Objectives
 
 1. Accept PHP source.
 2. Compile it with the Zend Engine.
 3. Read the compiled opcodes and their metadata from Zend structures.
-4. Serialize that representation. Not implemented yet.
+4. Serialize that representation as IR JSON.
 5. Reconstruct readable PHP from the serialized form. Not implemented yet.
 
 The extension does not parse another tool's text output. It reads `zend_op_array` and `zend_op` directly.
@@ -23,10 +23,14 @@ Zend Engine pass_two()
     |
     |  op_array_handler(zend_op_array *)
     v
-extension/src/Compatibility/php84/inspect.c
+extension/src/Compatibility/php84/
     |
-    v
-human-readable dump on stderr
+    +--> inspect.c     human-readable dump on stderr
+    |
+    +--> export.c      IR JSON, when REPHPER_IR is set
+              |
+              v
+         future PHP decompiler
 ```
 
 `extension/rephper.c` is the Zend extension entry point. It registers `op_array_handler`. PHP 8.4 declares that callback as:
@@ -46,7 +50,7 @@ typedef void (*op_array_handler_func_t)(zend_op_array *op_array);
 
 `zend_get_opcode_name()` returns the C constant, including the `ZEND_` prefix. The dump strips that prefix.
 
-Version-specific C code lives in `extension/src/Compatibility/php84/`. `extension/src/Common/` is reserved for code that is genuinely shared by more than one PHP version. It is not present yet. There is nothing shared to put there, and an empty directory would not be a useful abstraction.
+Version-specific C code lives in `extension/src/Compatibility/php84/`. `extension/src/Common/json.c` writes JSON. It does not know about Zend types, so a later PHP version can reuse it. Operand classification shared by the text dump and the exporter lives in `extension/src/Compatibility/php84/opcodes.h`.
 
 ## Compatibility
 
@@ -130,6 +134,94 @@ php8.4 -n -d zend_extension=$PWD/extension/modules/rephper.so -l path/to/file.ph
 
 Loading the extension makes every subsequent compilation print op arrays to stderr. Load it for inspection. Do not enable it globally in `php.ini` until the dump is optional.
 
+## Intermediate representation
+
+The IR is the boundary between the Zend Engine and a future decompiler. The decompiler is meant to read the JSON file. It does not load the extension and it does not see `zend_op` or `zval` pointers.
+
+`ir_version` is the schema version. It is `1`. `php.version` is the PHP build that compiled the source. Those versions are independent: a new PHP release can keep emitting IR 1, and a schema change bumps `ir_version` without implying a new PHP version.
+
+`compilation.stage` is `pre_pass_two`. Jump targets are absolute opline indexes from before `pass_two()` rewrites them. `compilation.jumps` is `absolute_opline`.
+
+The document shape is:
+
+```text
+ir_version
+php                  compiler version, version id, API numbers, zts, debug
+compilation          stage and jump encoding
+op_arrays[]          one object per compiled function, method, closure, hook, or main script
+classes[]            user classes, interfaces, traits, and enums from the main file
+```
+
+Each op array records its kind, name, filename, lines, scope name, flags, arguments, compiled variable names, literals, static variables, try/catch rows, live ranges, break/continue rows, labels, attributes, and instructions. Names of compiled variables and parameters do not include `$`. A `const` operand is an index into that op array's `literals` array, not a copy of the value. `dynamic_functions` holds ids of nested op arrays that appear earlier in the same document.
+
+An instruction has `opcode`, `opcode_number`, `line`, `op1`, `op2`, `result`, and `extended_value`. Operand `kind` is one of `unused`, `this`, `const`, `tmp`, `var`, `cv`, `jump`, `try_catch`, `level`, `label`, or `unknown`. A `jump` operand's `target` is an opline index. `tmp` and `var` indexes are still the compiler's raw numbers. `cv` indexes match `variables`. For `$this->prop`, op1 is `this` because the compiler leaves that znode number uninitialized. `BRK` and `CONT` keep a `level`. `GOTO` keeps an unresolved `label` id; the `labels` array maps names to oplines. `FE_FETCH_*`, `SWITCH_*`, and `MATCH` also set `jump_target` from `extended_value`. A switch or match literal used as the jump table is marked `jump_table: true`, and the integers inside that array are opline targets.
+
+Literals keep their PHP types. They are not all strings.
+
+| PHP value | JSON |
+| --- | --- |
+| `null` | `{"type":"null"}` |
+| `true` / `false` | `{"type":"bool","value":true}` |
+| integer inside ±(2^53−1) | `{"type":"int","value":10}` |
+| integer outside that range | `{"type":"int","value":"9223372036854775807"}` |
+| finite float other than `-0.0` | `{"type":"float","value":0.5}` |
+| `-0.0`, `NAN`, `INF` | `{"type":"float","value":"-0"}`, `"NaN"`, `"Infinity"`, or `"-Infinity"` |
+| UTF-8 string | `{"type":"string","value":"..."}` with JSON escapes |
+| non-UTF-8 string | the same, plus `"binary":true`. Every byte is a `\u00XX` code unit. Recover the original byte from the low 8 bits. |
+| array | `{"type":"array","elements":[{"key":...,"value":...}]}` so key order and int-versus-string keys survive |
+
+A constant expression that is still an AST is `{"type":"constant_ast","ast":...}`. Enum case values are often still `CONST_ENUM_INIT` nodes at this stage. The backing value is one of the AST children.
+
+Generate a file with `php -l` so the source is compiled and not executed:
+
+```bash
+REPHPER_IR=out.json php8.4 -n -d zend_extension=$PWD/extension/modules/rephper.so -l path/to/file.php
+```
+
+`REPHPER_IR` is an environment variable. Rephper is a Zend extension and does not register a PHP module, so there is no `php.ini` setting for the path. The named path is created or replaced when it is a regular file. A directory, symlink, or other non-regular path is left untouched and an error is written to stderr. The text dump is still written to stderr.
+
+This is the `ADD` inside `calculate()` from `tests/Fixtures/Common/Arithmetic.php`, with the surrounding document fields abbreviated:
+
+```json
+{
+  "ir_version": 1,
+  "php": {
+    "version": "8.4.27",
+    "version_id": 80427,
+    "api": 20240924,
+    "zend_module_api": 20240924,
+    "zend_extension_api": 420240924,
+    "zts": false,
+    "debug": false
+  },
+  "compilation": {
+    "stage": "pre_pass_two",
+    "jumps": "absolute_opline"
+  },
+  "op_arrays": [
+    {
+      "id": 0,
+      "kind": "function",
+      "name": "calculate",
+      "instructions": [
+        {
+          "index": 2,
+          "opcode": "ADD",
+          "opcode_number": 1,
+          "line": 5,
+          "op1": {"kind": "cv", "index": 0, "name": "a"},
+          "op2": {"kind": "cv", "index": 1, "name": "b"},
+          "result": {"kind": "tmp", "index": 0},
+          "extended_value": 0
+        }
+      ]
+    }
+  ]
+}
+```
+
+The checked-in files under `tests/Expected/PHP/8.4/` replace the patch version with `PHP_VERSION` and `version_id` with `0`, and they use repository-relative filenames. A real export keeps the compiler's exact version and the path PHP compiled.
+
 ## Tests
 
 ```bash
@@ -143,13 +235,17 @@ make test
 3. Loads the extension and requires a clean startup, with `Rephper` listed by `php -m`.
 4. Runs every fixture compatible with the active PHP version through `php -l`.
 5. Requires a successful compile, a dump header, and opcode lines.
-6. Compares the dump with `tests/Expected/PHP/<version>/`.
+6. Compares the dump with `tests/Expected/PHP/<version>/*.txt`.
+7. Writes IR JSON for the same compile, checks that it is valid JSON, checks operand and literal types, and checks feature-specific values.
+8. Compiles the fixture a second time and requires the same JSON.
+9. Compares the normalized JSON with `tests/Expected/PHP/<version>/*.json`.
+10. Checks that `REPHPER_IR` pointed at a directory does not remove that directory.
 
-`Fixtures/Common/` is syntax every supported PHP version can compile. `Fixtures/PHP/X.Y/` is syntax introduced in that version. A fixture runs on X.Y and every later supported version. PHP 8.4 currently runs `Common/` and `PHP/8.4/` only, because earlier versions are not implemented and their fixture directories are not created empty.
+`Fixtures/Common/` is syntax every supported PHP version can compile. `Fixtures/PHP/X.Y/` is syntax introduced in that version. The runner selects every such directory whose version is less than or equal to the active PHP. PHP 8.4 therefore runs `Common/`, `PHP/8.0/`, `PHP/8.1/`, `PHP/8.2/`, and `PHP/8.4/`. The engine implementation is still only 8.4, so the expected opcodes and IR are stored under `Expected/PHP/8.4/`.
 
 Expected dumps are per PHP version. The same source is not assumed to produce the same opcodes on another version.
 
-Regenerate the 8.4 dumps after an intentional compiler-output change:
+Regenerate the 8.4 text dumps and IR files after an intentional compiler-output change:
 
 ```bash
 make build
@@ -185,17 +281,20 @@ Linting one file does not compile files it would include at runtime, and it does
 
 - PHP 8.4 only.
 - Ubuntu is the only operating system that has been targeted. It has been built and tested locally on Linux with PHP 8.4.27.
-- The dump is text on stderr. There is no JSON serializer and no decompiler.
-- OPcache must be off for a stable dump.
+- There is no decompiler, control-flow graph, or source generator. The IR keeps jumps, break/continue rows, try/catch rows, and labels so a later pass can reconstruct that syntax.
+- OPcache must be off for a stable dump and a stable IR file.
 - Included and required files are not compiled with the file that names them.
-- The extension has no directory walker. The test runner passes one file at a time.
+- The extension has no directory walker. One process writes one IR file for the compilations in that request. The test runner passes one file at a time.
 - Jump targets are absolute opline numbers from before `pass_two()`, not the runtime offsets.
-- `BRK`, `CONT`, and `GOTO` are still the compile-time pseudo-opcodes.
+- `BRK`, `CONT`, and `GOTO` are still the compile-time pseudo-opcodes. `GOTO` targets are in `labels`, not in the `GOTO` operand.
+- `arg_info.default_value` is uninitialized at this hook. A default is `default_literal`, an index into `literals` taken from `RECV_INIT`.
+- Class rows are captured when the main script reaches `pass_two()`. Properties and constants declared on another class are not copied in. A class may not be marked `linked` yet. Enum cases can still be `CONST_ENUM_INIT` AST nodes.
+- Expected IR files were produced with a non-ZTS, non-debug PHP 8.4. `php.zts` and `php.debug` record the compiler that produced the file.
+- The exporter keeps its document in process-global memory. That matches the CLI lint process used here. ZTS was not tested.
 
 ## Roadmap
 
-- A stable serialized form of the op array.
-- A PHP decompiler that reads that form.
+- A PHP decompiler that reads IR JSON and does not link against the Zend extension.
 - More PHP versions, each with its own compatibility directory and expected dumps.
 - More operating systems, as extra `os` matrix entries once the build has been verified there.
 - Inspecting a directory of source files without executing the application.

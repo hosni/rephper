@@ -1,6 +1,6 @@
 {
     "name": "rephper/rephper",
-    "description": "Inspect compiled PHP opcodes with a Zend extension. A later milestone reconstructs source from that representation.",
+    "description": "Inspect compiled PHP opcodes and export them as versioned IR JSON. A later milestone reconstructs source from that IR.",
     "type": "project",
     "require": {
         "php": "^8.4"
