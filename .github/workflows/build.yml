@@ -1,0 +1,60 @@
+# OS and PHP version are independent matrix axes.
+# Adding an OS is a new entry under `os`.
+# Adding a PHP version is a new entry under `php-version`, plus build metadata
+# in the Makefile, a case in extension/config.m4, and a C implementation under
+# extension/src/Compatibility. Do not add a version the extension cannot build.
+
+name: Build
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: PHP ${{ matrix.php-version }} / ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-24.04
+        php-version:
+          - '8.4'
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Install PHP ${{ matrix.php-version }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          coverage: none
+          tools: none
+
+      - name: Install build dependencies
+        run: sudo apt-get update && sudo apt-get install -y build-essential autoconf pkg-config
+
+      - name: Show toolchain
+        run: make info PHP_VERSION=${{ matrix.php-version }}
+
+      - name: Build the extension
+        run: make build PHP_VERSION=${{ matrix.php-version }}
+
+      - name: Run tests
+        run: make test PHP_VERSION=${{ matrix.php-version }}
+
+      - name: Verify the extension loads
+        run: |
+          set -eu
+          php="php${{ matrix.php-version }}"
+          ext="$PWD/extension/modules/rephper.so"
+          "$php" -n -d "zend_extension=${ext}" -m > modules.txt
+          grep -qx 'Rephper' modules.txt
+          "$php" -n -d "zend_extension=${ext}" -r 'echo "ok";' > stdout.txt 2> stderr.txt
+          test ! -s stderr.txt
+          grep -qx 'ok' stdout.txt
