@@ -28,7 +28,9 @@ final class Builder
      */
     public function buildDocument(Document $document): array
     {
-        if (!preg_match('/^8\.4(\.|$)/', $document->php->version) || $document->php->api !== 20240924) {
+        $fixture = $document->php->version === 'PHP_VERSION' && $document->php->versionId === 0;
+        $php84 = preg_match('/^8\.4(\.|$)/', $document->php->version) === 1;
+        if ((!$php84 && !$fixture) || $document->php->api !== 20240924) {
             throw new UnsupportedSemanticsException(
                 'CFG semantics are implemented for PHP 8.4 API 20240924. This IR was compiled by '
                 . $document->php->version . ' API ' . $document->php->api

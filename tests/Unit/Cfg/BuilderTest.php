@@ -245,6 +245,28 @@ final class BuilderTest extends TestCase
         }
     }
 
+    public function testExpectedPlaceholderBuilds(): void
+    {
+        $json = (string) file_get_contents(dirname(__DIR__, 3) . '/tests/Expected/PHP/8.4/Common/Oop.json');
+        $graphs = (new Builder())->buildDocument($this->reader->readString($json));
+
+        $this->assertNotEmpty($graphs);
+        $this->assertSame('name', $graphs[0]->name);
+    }
+
+    public function testPlaceholderWithARealVersionIdIsRejected(): void
+    {
+        $document = $this->mutated('Common/Oop.json', function (array $document): array {
+            $document['php']['version'] = 'PHP_VERSION';
+            $document['php']['version_id'] = 80427;
+
+            return $document;
+        });
+
+        $this->expectException(UnsupportedSemanticsException::class);
+        (new Builder())->buildDocument($document);
+    }
+
     public function testUnknownOpcodeIsUnsupported(): void
     {
         $document = $this->mutated('Common/Conditions.json', function (array $document): array {

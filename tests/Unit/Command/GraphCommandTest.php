@@ -147,6 +147,18 @@ final class GraphCommandTest extends TestCase
         unlink($file);
     }
 
+    public function testExpectedJsonPrintsWithoutRewritingTheVersion(): void
+    {
+        $tester = $this->tester();
+        $status = $tester->execute([
+            'file' => dirname(__DIR__, 3) . '/tests/Expected/PHP/8.4/Common/Oop.json',
+            '--op-array' => 'name',
+        ]);
+
+        $this->assertSame(0, $status, $tester->getDisplay());
+        $this->assertStringContainsString('OpArray #0 name (method)', $tester->getDisplay());
+    }
+
     public function testExecutablePrintsClassify(): void
     {
         $file = $this->classifyFile();

@@ -346,7 +346,7 @@ Block B3 [5, 7)
         (none)
 ```
 
-`B3` is the unreachable epilogue. Checked-in expected JSON uses `"version": "PHP_VERSION"`, and the builder rejects that placeholder. Point the command at a file written by `REPHPER_IR`, or put the real version string back before loading an expected file.
+`B3` is the unreachable epilogue. Checked-in expected JSON uses `"version": "PHP_VERSION"` and `"version_id": 0`. The builder accepts that pair when the API is still 20240924, so `php bin/rephper graph` can read those files directly. A real export keeps the compiler's exact version string.
 
 Three failures are different:
 
