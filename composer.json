@@ -1,0 +1,8 @@
+{
+    "name": "rephper/rephper",
+    "description": "Inspect compiled PHP opcodes with a Zend extension. A later milestone reconstructs source from that representation.",
+    "type": "project",
+    "require": {
+        "php": "^8.4"
+    }
+}
