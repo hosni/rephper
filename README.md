@@ -1,6 +1,6 @@
 # Rephper
 
-Rephper inspects PHP source after the Zend Engine has compiled it. The current milestone is a PHP 8.4 Zend extension that prints compiled op arrays and writes them as versioned JSON. A later milestone will reconstruct readable PHP from that JSON. The decompiler is not part of this tree.
+Rephper inspects PHP source after the Zend Engine has compiled it. A PHP 8.4 Zend extension prints compiled op arrays and writes them as versioned JSON. A separate PHP program reads that JSON, validates it, and builds a control-flow graph for each op array. Reconstructing PHP source from the graph is a later milestone. The decompiler is not part of this tree.
 
 ## Objectives
 
@@ -8,7 +8,8 @@ Rephper inspects PHP source after the Zend Engine has compiled it. The current m
 2. Compile it with the Zend Engine.
 3. Read the compiled opcodes and their metadata from Zend structures.
 4. Serialize that representation as IR JSON.
-5. Reconstruct readable PHP from the serialized form. Not implemented yet.
+5. Read the JSON without loading the Zend extension, and build a control-flow graph for each op array.
+6. Reconstruct readable PHP from the graph. Not implemented yet.
 
 The extension does not parse another tool's text output. It reads `zend_op_array` and `zend_op` directly.
 
@@ -30,8 +31,22 @@ extension/src/Compatibility/php84/
     +--> export.c      IR JSON, when REPHPER_IR is set
               |
               v
+         src/Ir/Reader.php          validates IR JSON
+              |
+              v
+         IR model (src/Ir/)
+              |
+              v
+         src/Cfg/Builder.php        one graph per op array
+              |
+              v
+         control-flow graph
+              |
+              v
          future PHP decompiler
 ```
+
+The reader, the IR model, the CFG builder, and `php bin/rephper graph` do not load the extension and do not use Zend C structures. Opcode control-flow rules for this stage live in `src/Cfg/Php84/Semantics.php`.
 
 `extension/rephper.c` is the Zend extension entry point. It registers `op_array_handler`. PHP 8.4 declares that callback as:
 
@@ -85,6 +100,7 @@ The first target is Ubuntu 24.04. The build uses `phpize`, which is the portable
 
 - PHP 8.4 CLI, `phpize8.4`, and `php-config8.4`
 - A C compiler, make, and autoconf
+- Composer, for the IR reader and the CFG command
 
 On Ubuntu:
 
@@ -94,9 +110,10 @@ sudo apt-get install php8.4-cli php8.4-dev build-essential autoconf pkg-config
 
 ## Build
 
-From the repository root:
+From the repository root, install the PHP classes, then build and test the extension:
 
 ```bash
+composer install
 make info
 make build
 make test
@@ -116,7 +133,7 @@ make build PHP_VERSION=8.4 PHP=php8.4 PHPIZE=phpize8.4 PHP_CONFIG=php-config8.4
 | --- | --- |
 | `make info` | Prints the selected version, the binary version, the PHP API, the Zend module API, the Zend extension API, `phpize`, `php-config`, and the extension directory. Exits with an error if they disagree. |
 | `make build` | Checks the toolchain, then builds the extension. |
-| `make test` | Builds, then runs `tests/run.php` with the selected PHP binary. |
+| `make test` | Builds, runs `tests/run.php` with the extension, then runs `tests/cfg/run.php` with `php -n` and without the extension. |
 | `make clean` | Removes `phpize` output. Source files and fixtures stay. |
 | `make install` | Installs `rephper.so` into the extension directory reported by the selected `php-config`. The path is not hardcoded. Writing there usually needs root. `INSTALL_ROOT` prefixes that path, which is how the install rule can be checked without root. |
 
@@ -154,7 +171,13 @@ classes[]            user classes, interfaces, traits, and enums from the main f
 
 Each op array records its kind, name, filename, lines, scope name, flags, arguments, compiled variable names, literals, static variables, try/catch rows, live ranges, break/continue rows, labels, attributes, and instructions. Names of compiled variables and parameters do not include `$`. A `const` operand is an index into that op array's `literals` array, not a copy of the value. `dynamic_functions` holds ids of nested op arrays that appear earlier in the same document.
 
-An instruction has `opcode`, `opcode_number`, `line`, `op1`, `op2`, `result`, and `extended_value`. Operand `kind` is one of `unused`, `this`, `const`, `tmp`, `var`, `cv`, `jump`, `try_catch`, `level`, `label`, or `unknown`. A `jump` operand's `target` is an opline index. `tmp` and `var` indexes are still the compiler's raw numbers. `cv` indexes match `variables`. For `$this->prop`, op1 is `this` because the compiler leaves that znode number uninitialized. `BRK` and `CONT` keep a `level`. `GOTO` keeps an unresolved `label` id; the `labels` array maps names to oplines. `FE_FETCH_*`, `SWITCH_*`, and `MATCH` also set `jump_target` from `extended_value`. A switch or match literal used as the jump table is marked `jump_table: true`, and the integers inside that array are opline targets.
+An instruction has `opcode`, `opcode_number`, `line`, `op1`, `op2`, `result`, and `extended_value`. Operand `kind` is one of `unused`, `this`, `const`, `tmp`, `var`, `cv`, `jump`, `try_catch`, `level`, `label`, or `unknown`. A `jump` operand's `target` is an opline index. `tmp` and `var` indexes are still the compiler's raw numbers. `cv` indexes match `variables`. For `$this->prop`, op1 is `this` because the compiler leaves that znode number uninitialized. `FE_FETCH_*`, `SWITCH_*`, and `MATCH` also set `jump_target` from `extended_value`. A switch or match literal used as the jump table is marked `jump_table: true`, and the integers inside that array are opline targets.
+
+Three exported fields keep the compiler's encoding, and the names are easy to misread:
+
+- `BRK` and `CONT` export op1 as `{"kind":"level","value":N}`. `N` is an index into this op array's `breaks` array (`CG(context).current_brk_cont`), not the `break 2` depth. The depth is the unused op2 number. `break 2` walks `parent` once, then uses that row's `break` or `continue` opline. A null `breaks` array means this op array was not the compiler context, so the rows were not available.
+- `GOTO` exports op1 as `{"kind":"label","id":N}`. `N` is an unwind count, not an index into `labels`. The label name is the op2 constant. `labels` maps that name to an opline. A null `labels` array means the names were not available.
+- A try/catch row stores `catch`, `finally`, or `finally_end` as `0` when that handler was not emitted. The VM treats `0` as "no handler" because an opline is never `< 0`. The JSON uses `null` only for the `(uint32_t)-1` sentinel. A row with neither a real catch nor a real finally is invalid. `finally_end` is the `FAST_RET` opline. `FAST_CALL` op1 is a `try_catch` index, and its target is that row's `finally`.
 
 Literals keep their PHP types. They are not all strings.
 
@@ -222,6 +245,120 @@ This is the `ADD` inside `calculate()` from `tests/Fixtures/Common/Arithmetic.ph
 
 The checked-in files under `tests/Expected/PHP/8.4/` replace the patch version with `PHP_VERSION` and `version_id` with `0`, and they use repository-relative filenames. A real export keeps the compiler's exact version and the path PHP compiled.
 
+## IR reader
+
+The reader is `src/Ir/Reader.php`. It loads one JSON document from a file or a string. `json_decode` uses `JSON_THROW_ON_ERROR`. A missing field, a field of the wrong type, an instruction whose `index` is not its position, or an operand kind outside the eleven kinds the exporter writes is `Rephper\Ir\IrException`. `ir_version` other than `1` is `UnsupportedIrVersionException`. Invalid values are not replaced with defaults. Keys the reader does not model are kept on an `extra` array so a later field is not discarded.
+
+```bash
+composer install
+php8.4 -n bin/rephper graph out.json
+php8.4 -n bin/rephper graph out.json --op-array=calculate
+```
+
+`main` selects the script body, whose JSON name is null. The command prints to stdout and writes validation errors to stderr. It exits with status 1 on invalid IR, an unsupported PHP version or compilation stage, or an op-array name that is not in the file.
+
+The model follows the JSON document:
+
+```text
+Document
+├── PhpBuild
+├── Compilation
+└── OpArray
+    ├── Instruction
+    │   └── Operand
+    ├── Literal
+    ├── TryCatch
+    ├── BreakContinue
+    └── Label
+```
+
+Nested functions, methods, closures, and property hooks are separate op arrays in the same document. `dynamic_functions` holds their ids. Each op array gets its own graph. Class rows stay as arrays; the CFG does not use them.
+
+## Control-flow graph
+
+A basic block is a run of instructions with one entry and no branch inside it. The builder finds leaders, then cuts the op array into half-open ranges `[start, end)`. The original opline indexes stay on the instructions. Block ids are `B0`, `B1`, … in start-opline order. A range is easier to compare than a pair of inclusive ends: the next block starts where this one ends.
+
+An opline is a leader when it is any of these:
+
+1. Instruction 0.
+2. The target of a jump, a switch or match case, a `break`, a `continue`, a `goto`, a `foreach` exit, a `finally` call or return, or any other explicit successor.
+3. The instruction immediately after an instruction that is not a single fallthrough to the next opline. A conditional branch, an unconditional jump, a `return`, a `throw`, and a `switch` all do this. A plain `ADD` does not, so the next instruction stays in the same block.
+4. A real `try`, `catch`, or `finally` opline. A stored `0` is not a handler, so it is not a leader.
+5. A label opline.
+
+Edges are taken from the last instruction of the block. The target must be a block start. A jump past the end of the op array, a jump to an opline that is not a leader, a duplicate label, or a try range that does not match the instructions is `Rephper\Cfg\CfgException`. The builder does not invent a destination.
+
+| Kind | Meaning |
+| --- | --- |
+| `fallthrough` | The next opline. Also the type-mismatch path after `SWITCH_LONG` and `SWITCH_STRING`. |
+| `jump` | `JMP`. |
+| `true`, `false` | `JMPZ` / `JMPNZ` and the value-bearing forms `JMPZ_EX`, `JMPNZ_EX`, and `JMP_SET`. For `JMPZ`, true is the next opline and false is op2. |
+| `null`, `not_null` | `COALESCE` and `JMP_NULL`. `JMP_NULL`'s `extended_value` is flags, not a target. |
+| `switch`, `default` | One `switch` edge per jump-table entry, then `default` from `extended_value`. `MATCH` has no fallthrough. `SWITCH_*` keeps the fallthrough into the following comparison chain. |
+| `foreach_exit` | `FE_RESET_*` op2, and `FE_FETCH_*` `jump_target`. The array path also falls through, including an empty array. |
+| `break`, `continue` | The opline from the `breaks` row after walking `parent` for the depth. |
+| `goto` | The opline of the label named by the `GOTO` constant. |
+| `finally_call`, `finally_return` | `FAST_CALL` enters `finally`. `FAST_RET` returns to the opline after each `FAST_CALL` for that try/catch row. |
+| `catch_next` | A `CATCH` that is not the last one also jumps to the next catch type. The last catch only falls through. |
+| `assert_skip`, `initialized`, `frameless` | Assertions disabled, a static variable already initialized, and a frameless call that hits. Each also falls through on the other path. |
+| `catch`, `finally` | Exception edges. These are not successors. |
+
+`RETURN`, `RETURN_BY_REF`, `GENERATOR_RETURN`, `THROW`, and `MATCH_ERROR` end a block and have no successor. PHP 8.4 has no `EXIT` opcode. `YIELD` and `YIELD_FROM` stay inside the block: suspension is not a separate edge. A comparison's `smart_branch` flag is kept on the operand and ignored here, because the following `JMPZ` or `JMPNZ` is still its own instruction.
+
+Exception edges follow the VM's try/catch/finally dispatch for one thrown exception. The innermost `try_catch` row that contains the block start is used. An opline before `catch` goes to the catch block. An opline before `finally` goes to the finally block. An opline inside the finally body walks to an outer row. A `THROW` with no enclosing handler has no exception edge. The graph does not add an "uncaught" block.
+
+Unreachable compiler epilogues, usually `VERIFY_RETURN_TYPE` plus `RETURN` after an earlier return, stay in the graph. They have no predecessors. The builder does not delete them.
+
+`classify()` in `tests/Fixtures/Common/Conditions.php` compiles to this graph:
+
+```text
+OpArray #0 classify (function)
+
+Block B0 [0, 3)
+    0: RECV
+    1: IS_SMALLER
+    2: JMPZ
+
+    Successors:
+        B1 (true)
+        B2 (false)
+
+Block B1 [3, 4)
+    3: RETURN
+
+    Successors:
+        (none)
+    Predecessors:
+        B0
+
+Block B2 [4, 5)
+    4: RETURN
+
+    Successors:
+        (none)
+    Predecessors:
+        B0
+
+Block B3 [5, 7)
+    5: VERIFY_RETURN_TYPE
+    6: RETURN
+
+    Successors:
+        (none)
+```
+
+`B3` is the unreachable epilogue. Checked-in expected JSON uses `"version": "PHP_VERSION"`, and the builder rejects that placeholder. Point the command at a file written by `REPHPER_IR`, or put the real version string back before loading an expected file.
+
+Three failures are different:
+
+| Failure | Exception | Example |
+| --- | --- | --- |
+| The document is not IR 1, or a field has the wrong type | `Rephper\Ir\IrException` | truncated JSON, `ir_version` 2 |
+| The IR is valid and the opcode is not modeled | `Rephper\Cfg\UnsupportedSemanticsException` | `USER_OPCODE`, PHP 8.3, a stage other than `pre_pass_two` |
+| The IR is valid and an optional table is missing | `Rephper\Cfg\IncompleteMetadataException` | `breaks` or `labels` is null on an op array that uses them |
+
+An out-of-range jump is invalid IR for the CFG and uses `CfgException` directly.
+
 ## Tests
 
 ```bash
@@ -240,6 +377,8 @@ make test
 8. Compiles the fixture a second time and requires the same JSON.
 9. Compares the normalized JSON with `tests/Expected/PHP/<version>/*.json`.
 10. Checks that `REPHPER_IR` pointed at a directory does not remove that directory.
+
+`tests/cfg/run.php` does not load the extension. It reads the expected IR files, restores a real `8.4` version string, and checks block ranges, instruction coverage, successor kinds, predecessor links, switch cases, loop back-edges, and exception edges. It also checks malformed documents, an out-of-range jump, an unknown opcode, `USER_OPCODE`, a missing `breaks` table, and a catch opline outside the op array. `BIND_INIT_STATIC_OR_JMP` and `JMP_FRAMELESS` are checked by rewriting a real instruction, because the fixtures compiled here do not emit those two opcodes.
 
 `Fixtures/Common/` is syntax every supported PHP version can compile. `Fixtures/PHP/X.Y/` is syntax introduced in that version. The runner selects every such directory whose version is less than or equal to the active PHP. PHP 8.4 therefore runs `Common/`, `PHP/8.0/`, `PHP/8.1/`, `PHP/8.2/`, and `PHP/8.4/`. The engine implementation is still only 8.4, so the expected opcodes and IR are stored under `Expected/PHP/8.4/`.
 
@@ -275,13 +414,18 @@ Linting one file does not compile files it would include at runtime, and it does
 
 ## GitHub Actions
 
-`.github/workflows/build.yml` runs on pushes and pull requests. The operating system and the PHP version are separate matrix axes. The active matrix is Ubuntu 24.04 and PHP 8.4. The job installs that PHP version and its development tools, then runs `make info`, `make build`, `make test`, and a separate check that the extension loads with no startup output.
+`.github/workflows/build.yml` runs on pushes and pull requests. The operating system and the PHP version are separate matrix axes. The active matrix is Ubuntu 24.04 and PHP 8.4. The job installs that PHP version, its development tools, and Composer, installs the PHP dependencies, then runs `make info`, `make build`, `make test`, and a separate check that the extension loads with no startup output.
 
 ## Current limitations
 
 - PHP 8.4 only.
 - Ubuntu is the only operating system that has been targeted. It has been built and tested locally on Linux with PHP 8.4.27.
-- There is no decompiler, control-flow graph, or source generator. The IR keeps jumps, break/continue rows, try/catch rows, and labels so a later pass can reconstruct that syntax.
+- There is no decompiler and no source generator. The CFG describes execution structure. It does not recover expressions, statements, or variable names.
+- CFG semantics are implemented for PHP 8.4, `pre_pass_two`, and absolute opline jumps only. `src/Cfg/Php84/Semantics.php` is the only opcode switch. Another PHP version needs its own semantics class.
+- `HANDLE_EXCEPTION`, `USER_OPCODE`, and `CALL_TRAMPOLINE` are rejected. The builder does not guess their successors.
+- `BIND_INIT_STATIC_OR_JMP` and `JMP_FRAMELESS` follow the PHP 8.4 handlers. The current fixtures do not emit them; the CFG tests cover them by editing a real instruction.
+- Exception edges are one per block, from `try_catch` ranges. The IR does not name the exception class a `THROW` can reach, so the edge is the VM's handler boundary, not a typed catch match.
+- `BRK` op1 is a `breaks` index and `GOTO` op1 is an unwind count. The CFG uses the `breaks` and `labels` tables. The JSON field names are unchanged.
 - OPcache must be off for a stable dump and a stable IR file.
 - Included and required files are not compiled with the file that names them.
 - The extension has no directory walker. One process writes one IR file for the compilations in that request. The test runner passes one file at a time.
@@ -294,7 +438,7 @@ Linting one file does not compile files it would include at runtime, and it does
 
 ## Roadmap
 
-- A PHP decompiler that reads IR JSON and does not link against the Zend extension.
+- A PHP decompiler that reads the IR and the control-flow graph and does not link against the Zend extension.
 - More PHP versions, each with its own compatibility directory and expected dumps.
 - More operating systems, as extra `os` matrix entries once the build has been verified there.
 - Inspecting a directory of source files without executing the application.
