@@ -1,0 +1,1031 @@
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Conditionals.php
+Function: plainIf
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 8
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 2
+Literals: 3
+Return type: int
+Lines: 3-11
+
+Compiled variables:
+0 $a
+1 $x
+
+Literals:
+0 int(0)
+1 int(1)
+2 null
+
+Argument details:
+0 $a int
+
+Opcodes:
+0 RECV line=3 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$a) ext=-
+1 ASSIGN line=5 op1=CV(1:$x) op2=CONST(int(0)) result=UNUSED ext=-
+2 JMPZ line=6 op1=CV(0:$a) op2=JMP(4) result=UNUSED ext=-
+3 ASSIGN line=7 op1=CV(1:$x) op2=CONST(int(1)) result=UNUSED ext=-
+4 VERIFY_RETURN_TYPE line=10 op1=CV(1:$x) op2=UNUSED result=UNUSED ext=-
+5 RETURN line=10 op1=CV(1:$x) op2=UNUSED result=UNUSED ext=-
+6 VERIFY_RETURN_TYPE line=11 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+7 RETURN line=11 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Conditionals.php
+Function: ifElse
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 9
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 2
+Literals: 3
+Return type: int
+Lines: 13-22
+
+Compiled variables:
+0 $a
+1 $x
+
+Literals:
+0 int(1)
+1 int(2)
+2 null
+
+Argument details:
+0 $a int
+
+Opcodes:
+0 RECV line=13 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$a) ext=-
+1 JMPZ line=15 op1=CV(0:$a) op2=JMP(4) result=UNUSED ext=-
+2 ASSIGN line=16 op1=CV(1:$x) op2=CONST(int(1)) result=UNUSED ext=-
+3 JMP line=15 op1=JMP(5) op2=UNUSED result=UNUSED ext=-
+4 ASSIGN line=18 op1=CV(1:$x) op2=CONST(int(2)) result=UNUSED ext=-
+5 VERIFY_RETURN_TYPE line=21 op1=CV(1:$x) op2=UNUSED result=UNUSED ext=-
+6 RETURN line=21 op1=CV(1:$x) op2=UNUSED result=UNUSED ext=-
+7 VERIFY_RETURN_TYPE line=22 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+8 RETURN line=22 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Conditionals.php
+Function: ifElseIf
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 14
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 5
+Literals: 6
+Return type: int
+Lines: 24-35
+
+Compiled variables:
+0 $a
+1 $x
+
+Literals:
+0 int(1)
+1 int(1)
+2 int(2)
+3 int(2)
+4 int(3)
+5 null
+
+Argument details:
+0 $a int
+
+Opcodes:
+0 RECV line=24 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$a) ext=-
+1 IS_IDENTICAL line=26 op1=CV(0:$a) op2=CONST(int(1)) result=TMP(0)|SMART_JMPZ ext=-
+2 JMPZ line=26 op1=TMP(0) op2=JMP(5) result=UNUSED ext=-
+3 ASSIGN line=27 op1=CV(1:$x) op2=CONST(int(1)) result=UNUSED ext=-
+4 JMP line=26 op1=JMP(10) op2=UNUSED result=UNUSED ext=-
+5 IS_IDENTICAL line=28 op1=CV(0:$a) op2=CONST(int(2)) result=TMP(2)|SMART_JMPZ ext=-
+6 JMPZ line=28 op1=TMP(2) op2=JMP(9) result=UNUSED ext=-
+7 ASSIGN line=29 op1=CV(1:$x) op2=CONST(int(2)) result=UNUSED ext=-
+8 JMP line=28 op1=JMP(10) op2=UNUSED result=UNUSED ext=-
+9 ASSIGN line=31 op1=CV(1:$x) op2=CONST(int(3)) result=UNUSED ext=-
+10 VERIFY_RETURN_TYPE line=34 op1=CV(1:$x) op2=UNUSED result=UNUSED ext=-
+11 RETURN line=34 op1=CV(1:$x) op2=UNUSED result=UNUSED ext=-
+12 VERIFY_RETURN_TYPE line=35 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+13 RETURN line=35 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Conditionals.php
+Function: manyElseIf
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 18
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 7
+Literals: 8
+Return type: int
+Lines: 37-50
+
+Compiled variables:
+0 $a
+1 $x
+
+Literals:
+0 int(1)
+1 int(1)
+2 int(2)
+3 int(2)
+4 int(3)
+5 int(3)
+6 int(4)
+7 null
+
+Argument details:
+0 $a int
+
+Opcodes:
+0 RECV line=37 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$a) ext=-
+1 IS_IDENTICAL line=39 op1=CV(0:$a) op2=CONST(int(1)) result=TMP(0)|SMART_JMPZ ext=-
+2 JMPZ line=39 op1=TMP(0) op2=JMP(5) result=UNUSED ext=-
+3 ASSIGN line=40 op1=CV(1:$x) op2=CONST(int(1)) result=UNUSED ext=-
+4 JMP line=39 op1=JMP(14) op2=UNUSED result=UNUSED ext=-
+5 IS_IDENTICAL line=41 op1=CV(0:$a) op2=CONST(int(2)) result=TMP(2)|SMART_JMPZ ext=-
+6 JMPZ line=41 op1=TMP(2) op2=JMP(9) result=UNUSED ext=-
+7 ASSIGN line=42 op1=CV(1:$x) op2=CONST(int(2)) result=UNUSED ext=-
+8 JMP line=41 op1=JMP(14) op2=UNUSED result=UNUSED ext=-
+9 IS_IDENTICAL line=43 op1=CV(0:$a) op2=CONST(int(3)) result=TMP(4)|SMART_JMPZ ext=-
+10 JMPZ line=43 op1=TMP(4) op2=JMP(13) result=UNUSED ext=-
+11 ASSIGN line=44 op1=CV(1:$x) op2=CONST(int(3)) result=UNUSED ext=-
+12 JMP line=43 op1=JMP(14) op2=UNUSED result=UNUSED ext=-
+13 ASSIGN line=46 op1=CV(1:$x) op2=CONST(int(4)) result=UNUSED ext=-
+14 VERIFY_RETURN_TYPE line=49 op1=CV(1:$x) op2=UNUSED result=UNUSED ext=-
+15 RETURN line=49 op1=CV(1:$x) op2=UNUSED result=UNUSED ext=-
+16 VERIFY_RETURN_TYPE line=50 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+17 RETURN line=50 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Conditionals.php
+Function: nestedIf
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 13
+Arguments: 2
+Required arguments: 2
+Compiled variables: 3
+Temporary variables: 3
+Literals: 4
+Return type: int
+Lines: 52-65
+
+Compiled variables:
+0 $a
+1 $b
+2 $x
+
+Literals:
+0 int(1)
+1 int(2)
+2 int(3)
+3 null
+
+Argument details:
+0 $a int
+1 $b int
+
+Opcodes:
+0 RECV line=52 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$a) ext=-
+1 RECV line=52 op1=UNUSED(2) op2=UNUSED(16) result=CV(1:$b) ext=-
+2 JMPZ line=54 op1=CV(0:$a) op2=JMP(8) result=UNUSED ext=-
+3 JMPZ line=55 op1=CV(1:$b) op2=JMP(6) result=UNUSED ext=-
+4 ASSIGN line=56 op1=CV(2:$x) op2=CONST(int(1)) result=UNUSED ext=-
+5 JMP line=55 op1=JMP(7) op2=UNUSED result=UNUSED ext=-
+6 ASSIGN line=58 op1=CV(2:$x) op2=CONST(int(2)) result=UNUSED ext=-
+7 JMP line=54 op1=JMP(9) op2=UNUSED result=UNUSED ext=-
+8 ASSIGN line=61 op1=CV(2:$x) op2=CONST(int(3)) result=UNUSED ext=-
+9 VERIFY_RETURN_TYPE line=64 op1=CV(2:$x) op2=UNUSED result=UNUSED ext=-
+10 RETURN line=64 op1=CV(2:$x) op2=UNUSED result=UNUSED ext=-
+11 VERIFY_RETURN_TYPE line=65 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+12 RETURN line=65 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Conditionals.php
+Function: emptyThen
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 9
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 2
+Literals: 3
+Return type: int
+Lines: 67-76
+
+Compiled variables:
+0 $a
+1 $x
+
+Literals:
+0 int(0)
+1 int(1)
+2 null
+
+Argument details:
+0 $a int
+
+Opcodes:
+0 RECV line=67 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$a) ext=-
+1 ASSIGN line=69 op1=CV(1:$x) op2=CONST(int(0)) result=UNUSED ext=-
+2 JMPZ line=70 op1=CV(0:$a) op2=JMP(4) result=UNUSED ext=-
+3 JMP line=70 op1=JMP(5) op2=UNUSED result=UNUSED ext=-
+4 ASSIGN line=72 op1=CV(1:$x) op2=CONST(int(1)) result=UNUSED ext=-
+5 VERIFY_RETURN_TYPE line=75 op1=CV(1:$x) op2=UNUSED result=UNUSED ext=-
+6 RETURN line=75 op1=CV(1:$x) op2=UNUSED result=UNUSED ext=-
+7 VERIFY_RETURN_TYPE line=76 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+8 RETURN line=76 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Conditionals.php
+Function: emptyElse
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 7
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 1
+Literals: 3
+Return type: int
+Lines: 78-86
+
+Compiled variables:
+0 $a
+1 $x
+
+Literals:
+0 int(1)
+1 int(0)
+2 null
+
+Argument details:
+0 $a int
+
+Opcodes:
+0 RECV line=78 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$a) ext=-
+1 JMPZ line=80 op1=CV(0:$a) op2=JMP(4) result=UNUSED ext=-
+2 ASSIGN line=81 op1=CV(1:$x) op2=CONST(int(1)) result=UNUSED ext=-
+3 JMP line=80 op1=JMP(4) op2=UNUSED result=UNUSED ext=-
+4 RETURN line=85 op1=CONST(int(0)) op2=UNUSED result=UNUSED ext=-
+5 VERIFY_RETURN_TYPE line=86 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+6 RETURN line=86 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Conditionals.php
+Function: emptyIf
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 5
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 0
+Literals: 2
+Return type: int
+Lines: 88-94
+
+Compiled variables:
+0 $a
+
+Literals:
+0 int(0)
+1 null
+
+Argument details:
+0 $a int
+
+Opcodes:
+0 RECV line=88 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$a) ext=-
+1 JMPZ line=90 op1=CV(0:$a) op2=JMP(2) result=UNUSED ext=-
+2 RETURN line=93 op1=CONST(int(0)) op2=UNUSED result=UNUSED ext=-
+3 VERIFY_RETURN_TYPE line=94 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 RETURN line=94 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Conditionals.php
+Function: returnTrue
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 6
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 0
+Literals: 3
+Return type: int
+Lines: 96-103
+
+Compiled variables:
+0 $a
+
+Literals:
+0 int(1)
+1 int(0)
+2 null
+
+Argument details:
+0 $a int
+
+Opcodes:
+0 RECV line=96 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$a) ext=-
+1 JMPZ line=98 op1=CV(0:$a) op2=JMP(3) result=UNUSED ext=-
+2 RETURN line=99 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+3 RETURN line=102 op1=CONST(int(0)) op2=UNUSED result=UNUSED ext=-
+4 VERIFY_RETURN_TYPE line=103 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+5 RETURN line=103 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Conditionals.php
+Function: returnBoth
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 6
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 0
+Literals: 3
+Return type: int
+Lines: 105-112
+
+Compiled variables:
+0 $a
+
+Literals:
+0 int(1)
+1 int(2)
+2 null
+
+Argument details:
+0 $a int
+
+Opcodes:
+0 RECV line=105 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$a) ext=-
+1 JMPZ line=107 op1=CV(0:$a) op2=JMP(3) result=UNUSED ext=-
+2 RETURN line=108 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+3 RETURN line=111 op1=CONST(int(2)) op2=UNUSED result=UNUSED ext=-
+4 VERIFY_RETURN_TYPE line=112 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+5 RETURN line=112 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Conditionals.php
+Function: returnBothElse
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 7
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 0
+Literals: 3
+Return type: int
+Lines: 114-121
+
+Compiled variables:
+0 $a
+
+Literals:
+0 int(1)
+1 int(2)
+2 null
+
+Argument details:
+0 $a int
+
+Opcodes:
+0 RECV line=114 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$a) ext=-
+1 JMPZ line=116 op1=CV(0:$a) op2=JMP(4) result=UNUSED ext=-
+2 RETURN line=117 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+3 JMP line=116 op1=JMP(5) op2=UNUSED result=UNUSED ext=-
+4 RETURN line=119 op1=CONST(int(2)) op2=UNUSED result=UNUSED ext=-
+5 VERIFY_RETURN_TYPE line=121 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+6 RETURN line=121 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Conditionals.php
+Function: thrown
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 11
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 3
+Literals: 5
+Return type: int
+Lines: 123-130
+
+Compiled variables:
+0 $a
+
+Literals:
+0 int(0)
+1 string("Exception")
+2 string("exception")
+3 string("bad")
+4 null
+
+Argument details:
+0 $a int
+
+Opcodes:
+0 RECV line=123 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$a) ext=-
+1 IS_SMALLER line=125 op1=CV(0:$a) op2=CONST(int(0)) result=TMP(0)|SMART_JMPZ ext=-
+2 JMPZ line=125 op1=TMP(0) op2=JMP(7) result=UNUSED ext=-
+3 NEW line=126 op1=CONST(string("Exception")) op2=UNUSED result=VAR(1) ext=1
+4 SEND_VAL_EX line=126 op1=CONST(string("bad")) op2=UNUSED(1) result=UNUSED(80) ext=-
+5 DO_FCALL line=126 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+6 THROW line=126 op1=VAR(1) op2=UNUSED result=UNUSED ext=-
+7 VERIFY_RETURN_TYPE line=129 op1=CV(0:$a) op2=UNUSED result=UNUSED ext=-
+8 RETURN line=129 op1=CV(0:$a) op2=UNUSED result=UNUSED ext=-
+9 VERIFY_RETURN_TYPE line=130 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+10 RETURN line=130 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Conditionals.php
+Function: compared
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 8
+Arguments: 2
+Required arguments: 2
+Compiled variables: 2
+Temporary variables: 1
+Literals: 3
+Return type: int
+Lines: 132-139
+
+Compiled variables:
+0 $a
+1 $b
+
+Literals:
+0 int(1)
+1 int(0)
+2 null
+
+Argument details:
+0 $a int
+1 $b int
+
+Opcodes:
+0 RECV line=132 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$a) ext=-
+1 RECV line=132 op1=UNUSED(2) op2=UNUSED(16) result=CV(1:$b) ext=-
+2 IS_SMALLER line=134 op1=CV(1:$b) op2=CV(0:$a) result=TMP(0)|SMART_JMPZ ext=-
+3 JMPZ line=134 op1=TMP(0) op2=JMP(5) result=UNUSED ext=-
+4 RETURN line=135 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+5 RETURN line=138 op1=CONST(int(0)) op2=UNUSED result=UNUSED ext=-
+6 VERIFY_RETURN_TYPE line=139 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+7 RETURN line=139 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Conditionals.php
+Function: comparedEqual
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 8
+Arguments: 2
+Required arguments: 2
+Compiled variables: 2
+Temporary variables: 1
+Literals: 3
+Return type: int
+Lines: 141-148
+
+Compiled variables:
+0 $a
+1 $b
+
+Literals:
+0 int(1)
+1 int(0)
+2 null
+
+Argument details:
+0 $a int
+1 $b int
+
+Opcodes:
+0 RECV line=141 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$a) ext=-
+1 RECV line=141 op1=UNUSED(2) op2=UNUSED(16) result=CV(1:$b) ext=-
+2 IS_IDENTICAL line=143 op1=CV(0:$a) op2=CV(1:$b) result=TMP(0)|SMART_JMPZ ext=-
+3 JMPZ line=143 op1=TMP(0) op2=JMP(5) result=UNUSED ext=-
+4 RETURN line=144 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+5 RETURN line=147 op1=CONST(int(0)) op2=UNUSED result=UNUSED ext=-
+6 VERIFY_RETURN_TYPE line=148 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+7 RETURN line=148 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Conditionals.php
+Function: variable
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 6
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 0
+Literals: 3
+Return type: int
+Lines: 150-157
+
+Compiled variables:
+0 $a
+
+Literals:
+0 int(1)
+1 int(0)
+2 null
+
+Argument details:
+0 $a int
+
+Opcodes:
+0 RECV line=150 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$a) ext=-
+1 JMPZ line=152 op1=CV(0:$a) op2=JMP(3) result=UNUSED ext=-
+2 RETURN line=153 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+3 RETURN line=156 op1=CONST(int(0)) op2=UNUSED result=UNUSED ext=-
+4 VERIFY_RETURN_TYPE line=157 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+5 RETURN line=157 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Conditionals.php
+Function: negated
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 7
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 1
+Literals: 3
+Return type: int
+Lines: 159-166
+
+Compiled variables:
+0 $a
+
+Literals:
+0 int(1)
+1 int(0)
+2 null
+
+Argument details:
+0 $a int
+
+Opcodes:
+0 RECV line=159 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$a) ext=-
+1 BOOL_NOT line=161 op1=CV(0:$a) op2=UNUSED result=TMP(0) ext=-
+2 JMPZ line=161 op1=TMP(0) op2=JMP(4) result=UNUSED ext=-
+3 RETURN line=162 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+4 RETURN line=165 op1=CONST(int(0)) op2=UNUSED result=UNUSED ext=-
+5 VERIFY_RETURN_TYPE line=166 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+6 RETURN line=166 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Conditionals.php
+Function: sequential
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 11
+Arguments: 2
+Required arguments: 2
+Compiled variables: 3
+Temporary variables: 3
+Literals: 4
+Return type: int
+Lines: 168-179
+
+Compiled variables:
+0 $a
+1 $b
+2 $x
+
+Literals:
+0 int(0)
+1 int(1)
+2 int(2)
+3 null
+
+Argument details:
+0 $a int
+1 $b int
+
+Opcodes:
+0 RECV line=168 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$a) ext=-
+1 RECV line=168 op1=UNUSED(2) op2=UNUSED(16) result=CV(1:$b) ext=-
+2 ASSIGN line=170 op1=CV(2:$x) op2=CONST(int(0)) result=UNUSED ext=-
+3 JMPZ line=171 op1=CV(0:$a) op2=JMP(5) result=UNUSED ext=-
+4 ASSIGN line=172 op1=CV(2:$x) op2=CONST(int(1)) result=UNUSED ext=-
+5 JMPZ line=174 op1=CV(1:$b) op2=JMP(7) result=UNUSED ext=-
+6 ASSIGN line=175 op1=CV(2:$x) op2=CONST(int(2)) result=UNUSED ext=-
+7 VERIFY_RETURN_TYPE line=178 op1=CV(2:$x) op2=UNUSED result=UNUSED ext=-
+8 RETURN line=178 op1=CV(2:$x) op2=UNUSED result=UNUSED ext=-
+9 VERIFY_RETURN_TYPE line=179 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+10 RETURN line=179 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Conditionals.php
+Function: andCond
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 9
+Arguments: 2
+Required arguments: 2
+Compiled variables: 2
+Temporary variables: 1
+Literals: 3
+Return type: int
+Lines: 181-188
+
+Compiled variables:
+0 $a
+1 $b
+
+Literals:
+0 int(1)
+1 int(0)
+2 null
+
+Argument details:
+0 $a int
+1 $b int
+
+Opcodes:
+0 RECV line=181 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$a) ext=-
+1 RECV line=181 op1=UNUSED(2) op2=UNUSED(16) result=CV(1:$b) ext=-
+2 JMPZ_EX line=183 op1=CV(0:$a) op2=JMP(4) result=TMP(0) ext=-
+3 BOOL line=183 op1=CV(1:$b) op2=UNUSED result=TMP(0) ext=-
+4 JMPZ line=183 op1=TMP(0) op2=JMP(6) result=UNUSED ext=-
+5 RETURN line=184 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+6 RETURN line=187 op1=CONST(int(0)) op2=UNUSED result=UNUSED ext=-
+7 VERIFY_RETURN_TYPE line=188 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+8 RETURN line=188 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Conditionals.php
+Function: orCond
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 9
+Arguments: 2
+Required arguments: 2
+Compiled variables: 2
+Temporary variables: 1
+Literals: 3
+Return type: int
+Lines: 190-197
+
+Compiled variables:
+0 $a
+1 $b
+
+Literals:
+0 int(1)
+1 int(0)
+2 null
+
+Argument details:
+0 $a int
+1 $b int
+
+Opcodes:
+0 RECV line=190 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$a) ext=-
+1 RECV line=190 op1=UNUSED(2) op2=UNUSED(16) result=CV(1:$b) ext=-
+2 JMPNZ_EX line=192 op1=CV(0:$a) op2=JMP(4) result=TMP(0) ext=-
+3 BOOL line=192 op1=CV(1:$b) op2=UNUSED result=TMP(0) ext=-
+4 JMPZ line=192 op1=TMP(0) op2=JMP(6) result=UNUSED ext=-
+5 RETURN line=193 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+6 RETURN line=196 op1=CONST(int(0)) op2=UNUSED result=UNUSED ext=-
+7 VERIFY_RETURN_TYPE line=197 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+8 RETURN line=197 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Conditionals.php
+Function: elseThenIf
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 14
+Arguments: 2
+Required arguments: 2
+Compiled variables: 4
+Temporary variables: 4
+Literals: 5
+Return type: int
+Lines: 199-213
+
+Compiled variables:
+0 $a
+1 $b
+2 $x
+3 $y
+
+Literals:
+0 int(1)
+1 int(2)
+2 int(3)
+3 int(4)
+4 null
+
+Argument details:
+0 $a int
+1 $b int
+
+Opcodes:
+0 RECV line=199 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$a) ext=-
+1 RECV line=199 op1=UNUSED(2) op2=UNUSED(16) result=CV(1:$b) ext=-
+2 JMPZ line=201 op1=CV(0:$a) op2=JMP(5) result=UNUSED ext=-
+3 ASSIGN line=202 op1=CV(2:$x) op2=CONST(int(1)) result=UNUSED ext=-
+4 JMP line=201 op1=JMP(10) op2=UNUSED result=UNUSED ext=-
+5 ASSIGN line=204 op1=CV(3:$y) op2=CONST(int(2)) result=UNUSED ext=-
+6 JMPZ line=205 op1=CV(1:$b) op2=JMP(9) result=UNUSED ext=-
+7 ASSIGN line=206 op1=CV(2:$x) op2=CONST(int(3)) result=UNUSED ext=-
+8 JMP line=205 op1=JMP(10) op2=UNUSED result=UNUSED ext=-
+9 ASSIGN line=208 op1=CV(2:$x) op2=CONST(int(4)) result=UNUSED ext=-
+10 VERIFY_RETURN_TYPE line=212 op1=CV(2:$x) op2=UNUSED result=UNUSED ext=-
+11 RETURN line=212 op1=CV(2:$x) op2=UNUSED result=UNUSED ext=-
+12 VERIFY_RETURN_TYPE line=213 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+13 RETURN line=213 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Conditionals.php
+Function: elseAssign
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 9
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 1
+Literals: 3
+Return type: int
+Lines: 215-224
+
+Compiled variables:
+0 $a
+1 $x
+
+Literals:
+0 int(1)
+1 int(2)
+2 null
+
+Argument details:
+0 $a int
+
+Opcodes:
+0 RECV line=215 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$a) ext=-
+1 JMPZ line=217 op1=CV(0:$a) op2=JMP(4) result=UNUSED ext=-
+2 RETURN line=218 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+3 JMP line=217 op1=JMP(5) op2=UNUSED result=UNUSED ext=-
+4 ASSIGN line=220 op1=CV(1:$x) op2=CONST(int(2)) result=UNUSED ext=-
+5 VERIFY_RETURN_TYPE line=223 op1=CV(1:$x) op2=UNUSED result=UNUSED ext=-
+6 RETURN line=223 op1=CV(1:$x) op2=UNUSED result=UNUSED ext=-
+7 VERIFY_RETURN_TYPE line=224 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+8 RETURN line=224 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Conditionals.php
+Function: elseifNoElse
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 12
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 4
+Literals: 5
+Return type: int
+Lines: 226-235
+
+Compiled variables:
+0 $a
+1 $x
+
+Literals:
+0 int(1)
+1 int(1)
+2 int(2)
+3 int(2)
+4 null
+
+Argument details:
+0 $a int
+
+Opcodes:
+0 RECV line=226 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$a) ext=-
+1 IS_IDENTICAL line=228 op1=CV(0:$a) op2=CONST(int(1)) result=TMP(0)|SMART_JMPZ ext=-
+2 JMPZ line=228 op1=TMP(0) op2=JMP(5) result=UNUSED ext=-
+3 ASSIGN line=229 op1=CV(1:$x) op2=CONST(int(1)) result=UNUSED ext=-
+4 JMP line=228 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+5 IS_IDENTICAL line=230 op1=CV(0:$a) op2=CONST(int(2)) result=TMP(2)|SMART_JMPZ ext=-
+6 JMPZ line=230 op1=TMP(2) op2=JMP(8) result=UNUSED ext=-
+7 ASSIGN line=231 op1=CV(1:$x) op2=CONST(int(2)) result=UNUSED ext=-
+8 VERIFY_RETURN_TYPE line=234 op1=CV(1:$x) op2=UNUSED result=UNUSED ext=-
+9 RETURN line=234 op1=CV(1:$x) op2=UNUSED result=UNUSED ext=-
+10 VERIFY_RETURN_TYPE line=235 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+11 RETURN line=235 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Conditionals.php
+Function: counted
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 10
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 3
+Literals: 2
+Return type: int
+Lines: 237-245
+
+Compiled variables:
+0 $n
+1 $i
+
+Literals:
+0 int(0)
+1 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=237 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 ASSIGN line=239 op1=CV(1:$i) op2=CONST(int(0)) result=UNUSED ext=-
+2 JMP line=240 op1=JMP(4) op2=UNUSED result=UNUSED ext=-
+3 PRE_INC line=241 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+4 IS_SMALLER line=240 op1=CV(1:$i) op2=CV(0:$n) result=TMP(2)|SMART_JMPNZ ext=-
+5 JMPNZ line=240 op1=TMP(2) op2=JMP(3) result=UNUSED ext=-
+6 VERIFY_RETURN_TYPE line=244 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+7 RETURN line=244 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+8 VERIFY_RETURN_TYPE line=245 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+9 RETURN line=245 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Conditionals.php
+Function: choose
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 9
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 1
+Literals: 5
+Return type: string
+Lines: 247-255
+
+Compiled variables:
+0 $n
+
+Literals:
+0 array(1: ["a"=>int(5)])
+1 string("a")
+2 string("one")
+3 string("other")
+4 null
+
+Argument details:
+0 $n string
+
+Opcodes:
+0 RECV line=247 op1=UNUSED(1) op2=UNUSED(64) result=CV(0:$n) ext=-
+1 SWITCH_STRING line=249 op1=CV(0:$n) op2=CONST(array(1: ["a"=>int(5)])) result=UNUSED ext=jmp:6
+2 IS_EQUAL line=250 op1=CV(0:$n) op2=CONST(string("a")) result=TMP(0)|SMART_JMPNZ ext=-
+3 JMPNZ line=250 op1=TMP(0) op2=JMP(5) result=UNUSED ext=-
+4 JMP line=250 op1=JMP(6) op2=UNUSED result=UNUSED ext=-
+5 RETURN line=251 op1=CONST(string("one")) op2=UNUSED result=UNUSED ext=-
+6 RETURN line=253 op1=CONST(string("other")) op2=UNUSED result=UNUSED ext=-
+7 VERIFY_RETURN_TYPE line=255 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+8 RETURN line=255 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Conditionals.php
+Function: jumped
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 9
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 2
+Literals: 4
+Return type: int
+Lines: 257-265
+
+Compiled variables:
+0 $n
+
+Literals:
+0 int(0)
+1 string("done")
+2 int(1)
+3 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=257 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 IS_SMALLER line=259 op1=CV(0:$n) op2=CONST(int(0)) result=TMP(0)|SMART_JMPZ ext=-
+2 JMPZ line=259 op1=TMP(0) op2=JMP(4) result=UNUSED ext=-
+3 GOTO line=260 op1=LABEL(0) op2=CONST(string("done")) result=UNUSED ext=-
+4 ASSIGN line=262 op1=CV(0:$n) op2=CONST(int(1)) result=UNUSED ext=-
+5 VERIFY_RETURN_TYPE line=264 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+6 RETURN line=264 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+7 VERIFY_RETURN_TYPE line=265 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+8 RETURN line=265 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Conditionals.php
+Function: <main>
+Class: -
+Kind: main
+Property: -
+Hook: -
+Opcodes: 1
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 1
+Return type: -
+Lines: 1-266
+
+Compiled variables:
+(none)
+
+Literals:
+0 int(1)
+
+Argument details:
+(none)
+
+Opcodes:
+0 RETURN line=266 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+
