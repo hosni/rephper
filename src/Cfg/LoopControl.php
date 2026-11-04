@@ -12,9 +12,11 @@ namespace Rephper\Cfg;
  * points at. The instruction is tied to the innermost loop that contains its
  * block or the in-loop block that branches to it. A break block often cannot
  * reach the header, so that block stays outside the natural-loop member set.
- * `loopId` is the loop a break leaves, or the loop a continue targets. It is
- * null when the target stays inside that innermost loop. `outer` is true when
- * `loopId` names a loop outside it.
+ * `loopId` is the loop a break leaves, or the loop whose continue block a
+ * continue lands on. It is null when a break's target stays inside that
+ * innermost loop, and when a continue lands inside a loop but not on that
+ * loop's continue block. `outer` is true when `loopId` names a loop outside
+ * the innermost related loop.
  */
 final class LoopControl
 {

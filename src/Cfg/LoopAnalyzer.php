@@ -30,7 +30,11 @@ use Rephper\Ir\OpArray;
  * A reachable BRK or CONT is resolved from the loop that contains its block
  * or the predecessor that branches to it. The CFG edge is the target. The
  * instruction's op2 depth is kept as the level and is not recomputed from
- * block order.
+ * block order. A break's loop is the outermost related loop that does not
+ * contain the target. A continue's loop is the one whose continue block is
+ * that target. A switch break, or a switch continue that does not land on a
+ * loop's continue block, has no loop id. An edge out of an unreachable block
+ * is not a loop entry.
  */
 final class LoopAnalyzer
 {
@@ -160,10 +164,11 @@ final class LoopAnalyzer
      */
     private function entries(array $members): array
     {
+        $reachable = array_fill_keys($this->dominators->reachable, true);
         $edges = [];
         foreach ($members as $id => $_) {
             foreach ($this->byId[$id]->predecessors as $predecessor) {
-                if (isset($members[$predecessor])) {
+                if (isset($members[$predecessor]) || !isset($reachable[$predecessor])) {
                     continue;
                 }
                 foreach ($this->byId[$predecessor]->successors as $edge) {
@@ -216,6 +221,10 @@ final class LoopAnalyzer
         $foreach = $this->classifyForeach($header, $backEdges, $entries);
         if ($foreach !== null) {
             return $foreach;
+        }
+        $self = $this->selfLoop($header, $entries, $members);
+        if ($self !== null) {
+            return $self;
         }
         if ($this->isDoWhile($header, $backEdges, $members)) {
             return [NaturalLoop::DO_WHILE, null];
@@ -293,15 +302,48 @@ final class LoopAnalyzer
     }
 
     /**
+     * A condition that branches to itself is an empty while when every entry
+     * is the compiler's prologue jump, and a do-while when control falls in
+     * or arrives from a conditional edge. Mixed entry kinds stay unknown.
+     *
+     * @param list<LoopEdge> $entries
+     * @param array<string, true> $members
+     * @return array{string, ?string}|null
+     */
+    private function selfLoop(Block $header, array $entries, array $members): ?array
+    {
+        if (!$this->isLoopCondition($header) || !$this->branchesToSelf($header)) {
+            return null;
+        }
+        if ($entries === []) {
+            return [NaturalLoop::UNKNOWN, NaturalLoop::REASON_SHAPE];
+        }
+
+        $jump = false;
+        $other = false;
+        foreach ($entries as $edge) {
+            if ($edge->kind === 'jump') {
+                $jump = true;
+            } else {
+                $other = true;
+            }
+        }
+        if ($jump && !$other) {
+            return $this->whileOrFor($header, $members);
+        }
+        if ($other && !$jump) {
+            return [NaturalLoop::DO_WHILE, null];
+        }
+
+        return [NaturalLoop::UNKNOWN, NaturalLoop::REASON_SHAPE];
+    }
+
+    /**
      * @param list<LoopEdge> $backEdges
      * @param array<string, true> $members
      */
     private function isDoWhile(Block $header, array $backEdges, array $members): bool
     {
-        if ($this->isLoopCondition($header) && $this->branchesToSelf($header)) {
-            return true;
-        }
-
         foreach ($backEdges as $edge) {
             if ($edge->from === $header->id) {
                 continue;
@@ -702,6 +744,10 @@ final class LoopAnalyzer
     }
 
     /**
+     * The target continues a loop only when it is that loop's continue block.
+     * A continue that lands inside the loop on some other block, such as the
+     * end of a switch, does not continue the loop.
+     *
      * @param array<string, NaturalLoop> $byLoop
      */
     private function continueLoop(string $targetId, ?NaturalLoop $innermost, array $byLoop): ?NaturalLoop
@@ -709,7 +755,12 @@ final class LoopAnalyzer
         $loop = $innermost;
         while ($loop !== null) {
             if ($loop->contains($targetId)) {
-                return $loop;
+                $continueAt = $this->continueBlock(array_fill_keys($loop->blocks, true));
+                if ($continueAt !== null && $continueAt->id === $targetId) {
+                    return $loop;
+                }
+
+                return null;
             }
             $loop = $loop->parentId === null ? null : $byLoop[$loop->parentId];
         }
