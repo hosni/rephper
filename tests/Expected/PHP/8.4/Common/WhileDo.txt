@@ -1,0 +1,788 @@
+Rephper: Compiled op array
+File: tests/Fixtures/Common/WhileDo.php
+Function: emptyWhile
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 9
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 2
+Literals: 2
+Return type: int
+Lines: 3-10
+
+Compiled variables:
+0 $n
+1 $i
+
+Literals:
+0 int(0)
+1 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=3 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 ASSIGN line=5 op1=CV(1:$i) op2=CONST(int(0)) result=UNUSED ext=-
+2 JMP line=6 op1=JMP(3) op2=UNUSED result=UNUSED ext=-
+3 IS_SMALLER line=6 op1=CV(1:$i) op2=CV(0:$n) result=TMP(1)|SMART_JMPNZ ext=-
+4 JMPNZ line=6 op1=TMP(1) op2=JMP(3) result=UNUSED ext=-
+5 VERIFY_RETURN_TYPE line=9 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+6 RETURN line=9 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+7 VERIFY_RETURN_TYPE line=10 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+8 RETURN line=10 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/WhileDo.php
+Function: compareWhile
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 10
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 3
+Literals: 2
+Return type: int
+Lines: 12-20
+
+Compiled variables:
+0 $n
+1 $i
+
+Literals:
+0 int(0)
+1 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=12 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 ASSIGN line=14 op1=CV(1:$i) op2=CONST(int(0)) result=UNUSED ext=-
+2 JMP line=15 op1=JMP(4) op2=UNUSED result=UNUSED ext=-
+3 PRE_INC line=16 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+4 IS_SMALLER_OR_EQUAL line=15 op1=CV(1:$i) op2=CV(0:$n) result=TMP(2)|SMART_JMPNZ ext=-
+5 JMPNZ line=15 op1=TMP(2) op2=JMP(3) result=UNUSED ext=-
+6 VERIFY_RETURN_TYPE line=19 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+7 RETURN line=19 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+8 VERIFY_RETURN_TYPE line=20 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+9 RETURN line=20 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/WhileDo.php
+Function: whileReturn
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 14
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 4
+Literals: 3
+Return type: int
+Lines: 22-33
+
+Compiled variables:
+0 $n
+1 $i
+
+Literals:
+0 int(0)
+1 int(1)
+2 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=22 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 ASSIGN line=24 op1=CV(1:$i) op2=CONST(int(0)) result=UNUSED ext=-
+2 JMP line=25 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+3 IS_IDENTICAL line=26 op1=CV(1:$i) op2=CONST(int(1)) result=TMP(1)|SMART_JMPZ ext=-
+4 JMPZ line=26 op1=TMP(1) op2=JMP(7) result=UNUSED ext=-
+5 VERIFY_RETURN_TYPE line=27 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+6 RETURN line=27 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+7 PRE_INC line=29 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+8 IS_SMALLER line=25 op1=CV(1:$i) op2=CV(0:$n) result=TMP(3)|SMART_JMPNZ ext=-
+9 JMPNZ line=25 op1=TMP(3) op2=JMP(3) result=UNUSED ext=-
+10 VERIFY_RETURN_TYPE line=32 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+11 RETURN line=32 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+12 VERIFY_RETURN_TYPE line=33 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+13 RETURN line=33 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/WhileDo.php
+Function: whileThrow
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 16
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 6
+Literals: 6
+Return type: int
+Lines: 35-46
+
+Compiled variables:
+0 $n
+1 $i
+
+Literals:
+0 int(0)
+1 int(1)
+2 string("Exception")
+3 string("exception")
+4 string("bad")
+5 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=35 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 ASSIGN line=37 op1=CV(1:$i) op2=CONST(int(0)) result=UNUSED ext=-
+2 JMP line=38 op1=JMP(10) op2=UNUSED result=UNUSED ext=-
+3 IS_IDENTICAL line=39 op1=CV(1:$i) op2=CONST(int(1)) result=TMP(1)|SMART_JMPZ ext=-
+4 JMPZ line=39 op1=TMP(1) op2=JMP(9) result=UNUSED ext=-
+5 NEW line=40 op1=CONST(string("Exception")) op2=UNUSED result=VAR(2) ext=1
+6 SEND_VAL_EX line=40 op1=CONST(string("bad")) op2=UNUSED(1) result=UNUSED(80) ext=-
+7 DO_FCALL line=40 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+8 THROW line=40 op1=VAR(2) op2=UNUSED result=UNUSED ext=-
+9 PRE_INC line=42 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+10 IS_SMALLER line=38 op1=CV(1:$i) op2=CV(0:$n) result=TMP(5)|SMART_JMPNZ ext=-
+11 JMPNZ line=38 op1=TMP(5) op2=JMP(3) result=UNUSED ext=-
+12 VERIFY_RETURN_TYPE line=45 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+13 RETURN line=45 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+14 VERIFY_RETURN_TYPE line=46 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+15 RETURN line=46 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/WhileDo.php
+Function: whileElseContinue
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 16
+Arguments: 1
+Required arguments: 1
+Compiled variables: 3
+Temporary variables: 6
+Literals: 4
+Return type: int
+Lines: 48-62
+
+Compiled variables:
+0 $n
+1 $i
+2 $total
+
+Literals:
+0 int(0)
+1 int(0)
+2 int(1)
+3 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=48 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 ASSIGN line=50 op1=CV(1:$i) op2=CONST(int(0)) result=UNUSED ext=-
+2 ASSIGN line=51 op1=CV(2:$total) op2=CONST(int(0)) result=UNUSED ext=-
+3 JMP line=52 op1=JMP(10) op2=UNUSED result=UNUSED ext=-
+4 IS_IDENTICAL line=53 op1=CV(1:$i) op2=CONST(int(1)) result=TMP(2)|SMART_JMPZ ext=-
+5 JMPZ line=53 op1=TMP(2) op2=JMP(8) result=UNUSED ext=-
+6 CONT line=54 op1=LEVEL(0) op2=UNUSED(1) result=UNUSED ext=-
+7 JMP line=53 op1=JMP(9) op2=UNUSED result=UNUSED ext=-
+8 PRE_INC line=56 op1=CV(2:$total) op2=UNUSED result=UNUSED ext=-
+9 PRE_INC line=58 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+10 IS_SMALLER line=52 op1=CV(1:$i) op2=CV(0:$n) result=TMP(5)|SMART_JMPNZ ext=-
+11 JMPNZ line=52 op1=TMP(5) op2=JMP(4) result=UNUSED ext=-
+12 VERIFY_RETURN_TYPE line=61 op1=CV(2:$total) op2=UNUSED result=UNUSED ext=-
+13 RETURN line=61 op1=CV(2:$total) op2=UNUSED result=UNUSED ext=-
+14 VERIFY_RETURN_TYPE line=62 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+15 RETURN line=62 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/WhileDo.php
+Function: ifWhile
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 12
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 4
+Literals: 3
+Return type: int
+Lines: 64-74
+
+Compiled variables:
+0 $n
+1 $i
+
+Literals:
+0 int(0)
+1 int(0)
+2 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=64 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 ASSIGN line=66 op1=CV(1:$i) op2=CONST(int(0)) result=UNUSED ext=-
+2 IS_SMALLER line=67 op1=CONST(int(0)) op2=CV(0:$n) result=TMP(1)|SMART_JMPZ ext=-
+3 JMPZ line=67 op1=TMP(1) op2=JMP(8) result=UNUSED ext=-
+4 JMP line=68 op1=JMP(6) op2=UNUSED result=UNUSED ext=-
+5 PRE_INC line=69 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+6 IS_SMALLER line=68 op1=CV(1:$i) op2=CV(0:$n) result=TMP(3)|SMART_JMPNZ ext=-
+7 JMPNZ line=68 op1=TMP(3) op2=JMP(5) result=UNUSED ext=-
+8 VERIFY_RETURN_TYPE line=73 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+9 RETURN line=73 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+10 VERIFY_RETURN_TYPE line=74 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+11 RETURN line=74 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/WhileDo.php
+Function: emptyDo
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 8
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 2
+Literals: 2
+Return type: int
+Lines: 76-83
+
+Compiled variables:
+0 $n
+1 $i
+
+Literals:
+0 int(0)
+1 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=76 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 ASSIGN line=78 op1=CV(1:$i) op2=CONST(int(0)) result=UNUSED ext=-
+2 IS_SMALLER line=80 op1=CV(1:$i) op2=CV(0:$n) result=TMP(1)|SMART_JMPNZ ext=-
+3 JMPNZ line=80 op1=TMP(1) op2=JMP(2) result=UNUSED ext=-
+4 VERIFY_RETURN_TYPE line=82 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+5 RETURN line=82 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+6 VERIFY_RETURN_TYPE line=83 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+7 RETURN line=83 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/WhileDo.php
+Function: doNeg
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 9
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 3
+Literals: 2
+Return type: int
+Lines: 85-93
+
+Compiled variables:
+0 $n
+1 $i
+
+Literals:
+0 int(0)
+1 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=85 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 ASSIGN line=87 op1=CV(1:$i) op2=CONST(int(0)) result=UNUSED ext=-
+2 PRE_INC line=89 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+3 BOOL_NOT line=90 op1=CV(0:$n) op2=UNUSED result=TMP(2) ext=-
+4 JMPNZ line=90 op1=TMP(2) op2=JMP(2) result=UNUSED ext=-
+5 VERIFY_RETURN_TYPE line=92 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+6 RETURN line=92 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+7 VERIFY_RETURN_TYPE line=93 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+8 RETURN line=93 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/WhileDo.php
+Function: nestedDo
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 13
+Arguments: 1
+Required arguments: 1
+Compiled variables: 3
+Temporary variables: 6
+Literals: 3
+Return type: int
+Lines: 95-107
+
+Compiled variables:
+0 $n
+1 $i
+2 $j
+
+Literals:
+0 int(0)
+1 int(0)
+2 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=95 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 ASSIGN line=97 op1=CV(1:$i) op2=CONST(int(0)) result=UNUSED ext=-
+2 ASSIGN line=99 op1=CV(2:$j) op2=CONST(int(0)) result=UNUSED ext=-
+3 PRE_INC line=101 op1=CV(2:$j) op2=UNUSED result=UNUSED ext=-
+4 IS_SMALLER line=102 op1=CV(2:$j) op2=CV(1:$i) result=TMP(3)|SMART_JMPNZ ext=-
+5 JMPNZ line=102 op1=TMP(3) op2=JMP(3) result=UNUSED ext=-
+6 PRE_INC line=103 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+7 IS_SMALLER line=104 op1=CV(1:$i) op2=CV(0:$n) result=TMP(5)|SMART_JMPNZ ext=-
+8 JMPNZ line=104 op1=TMP(5) op2=JMP(2) result=UNUSED ext=-
+9 VERIFY_RETURN_TYPE line=106 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+10 RETURN line=106 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+11 VERIFY_RETURN_TYPE line=107 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+12 RETURN line=107 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/WhileDo.php
+Function: mixedNest
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 14
+Arguments: 1
+Required arguments: 1
+Compiled variables: 3
+Temporary variables: 6
+Literals: 4
+Return type: int
+Lines: 109-121
+
+Compiled variables:
+0 $n
+1 $i
+2 $j
+
+Literals:
+0 int(0)
+1 int(0)
+2 int(2)
+3 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=109 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 ASSIGN line=111 op1=CV(1:$i) op2=CONST(int(0)) result=UNUSED ext=-
+2 JMP line=112 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+3 ASSIGN line=113 op1=CV(2:$j) op2=CONST(int(0)) result=UNUSED ext=-
+4 PRE_INC line=115 op1=CV(2:$j) op2=UNUSED result=UNUSED ext=-
+5 IS_SMALLER line=116 op1=CV(2:$j) op2=CONST(int(2)) result=TMP(3)|SMART_JMPNZ ext=-
+6 JMPNZ line=116 op1=TMP(3) op2=JMP(4) result=UNUSED ext=-
+7 PRE_INC line=117 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+8 IS_SMALLER line=112 op1=CV(1:$i) op2=CV(0:$n) result=TMP(5)|SMART_JMPNZ ext=-
+9 JMPNZ line=112 op1=TMP(5) op2=JMP(3) result=UNUSED ext=-
+10 VERIFY_RETURN_TYPE line=120 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+11 RETURN line=120 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+12 VERIFY_RETURN_TYPE line=121 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+13 RETURN line=121 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/WhileDo.php
+Function: continueTwoWhile
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 20
+Arguments: 1
+Required arguments: 1
+Compiled variables: 4
+Temporary variables: 9
+Literals: 5
+Return type: int
+Lines: 123-140
+
+Compiled variables:
+0 $n
+1 $i
+2 $total
+3 $j
+
+Literals:
+0 int(0)
+1 int(0)
+2 int(0)
+3 int(0)
+4 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=123 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 ASSIGN line=125 op1=CV(1:$i) op2=CONST(int(0)) result=UNUSED ext=-
+2 ASSIGN line=126 op1=CV(2:$total) op2=CONST(int(0)) result=UNUSED ext=-
+3 JMP line=127 op1=JMP(14) op2=UNUSED result=UNUSED ext=-
+4 ASSIGN line=128 op1=CV(3:$j) op2=CONST(int(0)) result=UNUSED ext=-
+5 JMP line=129 op1=JMP(11) op2=UNUSED result=UNUSED ext=-
+6 IS_IDENTICAL line=130 op1=CV(3:$j) op2=CONST(int(0)) result=TMP(3)|SMART_JMPZ ext=-
+7 JMPZ line=130 op1=TMP(3) op2=JMP(9) result=UNUSED ext=-
+8 CONT line=131 op1=LEVEL(1) op2=UNUSED(2) result=UNUSED ext=-
+9 PRE_INC line=133 op1=CV(2:$total) op2=UNUSED result=UNUSED ext=-
+10 PRE_INC line=134 op1=CV(3:$j) op2=UNUSED result=UNUSED ext=-
+11 IS_SMALLER line=129 op1=CV(3:$j) op2=CV(0:$n) result=TMP(6)|SMART_JMPNZ ext=-
+12 JMPNZ line=129 op1=TMP(6) op2=JMP(6) result=UNUSED ext=-
+13 PRE_INC line=136 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+14 IS_SMALLER line=127 op1=CV(1:$i) op2=CV(0:$n) result=TMP(8)|SMART_JMPNZ ext=-
+15 JMPNZ line=127 op1=TMP(8) op2=JMP(4) result=UNUSED ext=-
+16 VERIFY_RETURN_TYPE line=139 op1=CV(2:$total) op2=UNUSED result=UNUSED ext=-
+17 RETURN line=139 op1=CV(2:$total) op2=UNUSED result=UNUSED ext=-
+18 VERIFY_RETURN_TYPE line=140 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+19 RETURN line=140 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/WhileDo.php
+Function: switchBreak
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 14
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 4
+Literals: 4
+Return type: int
+Lines: 142-154
+
+Compiled variables:
+0 $value
+1 $n
+
+Literals:
+0 int(0)
+1 int(1)
+2 int(3)
+3 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=142 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 ASSIGN line=144 op1=CV(1:$n) op2=CONST(int(0)) result=UNUSED ext=-
+2 JMP line=145 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+3 IS_EQUAL line=147 op1=CV(0:$value) op2=CONST(int(1)) result=TMP(1)|SMART_JMPNZ ext=-
+4 JMPNZ line=147 op1=TMP(1) op2=JMP(6) result=UNUSED ext=-
+5 JMP line=147 op1=JMP(7) op2=UNUSED result=UNUSED ext=-
+6 BRK line=148 op1=LEVEL(1) op2=UNUSED(1) result=UNUSED ext=-
+7 PRE_INC line=150 op1=CV(1:$n) op2=UNUSED result=UNUSED ext=-
+8 IS_SMALLER line=145 op1=CV(1:$n) op2=CONST(int(3)) result=TMP(3)|SMART_JMPNZ ext=-
+9 JMPNZ line=145 op1=TMP(3) op2=JMP(3) result=UNUSED ext=-
+10 VERIFY_RETURN_TYPE line=153 op1=CV(1:$n) op2=UNUSED result=UNUSED ext=-
+11 RETURN line=153 op1=CV(1:$n) op2=UNUSED result=UNUSED ext=-
+12 VERIFY_RETURN_TYPE line=154 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+13 RETURN line=154 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/WhileDo.php
+Function: switchBreakTwo
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 14
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 4
+Literals: 4
+Return type: int
+Lines: 156-168
+
+Compiled variables:
+0 $value
+1 $n
+
+Literals:
+0 int(0)
+1 int(1)
+2 int(3)
+3 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=156 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 ASSIGN line=158 op1=CV(1:$n) op2=CONST(int(0)) result=UNUSED ext=-
+2 JMP line=159 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+3 IS_EQUAL line=161 op1=CV(0:$value) op2=CONST(int(1)) result=TMP(1)|SMART_JMPNZ ext=-
+4 JMPNZ line=161 op1=TMP(1) op2=JMP(6) result=UNUSED ext=-
+5 JMP line=161 op1=JMP(7) op2=UNUSED result=UNUSED ext=-
+6 BRK line=162 op1=LEVEL(1) op2=UNUSED(2) result=UNUSED ext=-
+7 PRE_INC line=164 op1=CV(1:$n) op2=UNUSED result=UNUSED ext=-
+8 IS_SMALLER line=159 op1=CV(1:$n) op2=CONST(int(3)) result=TMP(3)|SMART_JMPNZ ext=-
+9 JMPNZ line=159 op1=TMP(3) op2=JMP(3) result=UNUSED ext=-
+10 VERIFY_RETURN_TYPE line=167 op1=CV(1:$n) op2=UNUSED result=UNUSED ext=-
+11 RETURN line=167 op1=CV(1:$n) op2=UNUSED result=UNUSED ext=-
+12 VERIFY_RETURN_TYPE line=168 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+13 RETURN line=168 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/WhileDo.php
+Function: switchContinue
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 14
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 4
+Literals: 4
+Return type: int
+Lines: 170-182
+
+Compiled variables:
+0 $value
+1 $n
+
+Literals:
+0 int(0)
+1 int(1)
+2 int(3)
+3 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=170 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 ASSIGN line=172 op1=CV(1:$n) op2=CONST(int(0)) result=UNUSED ext=-
+2 JMP line=173 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+3 IS_EQUAL line=175 op1=CV(0:$value) op2=CONST(int(1)) result=TMP(1)|SMART_JMPNZ ext=-
+4 JMPNZ line=175 op1=TMP(1) op2=JMP(6) result=UNUSED ext=-
+5 JMP line=175 op1=JMP(7) op2=UNUSED result=UNUSED ext=-
+6 CONT line=176 op1=LEVEL(1) op2=UNUSED(1) result=UNUSED ext=-
+7 PRE_INC line=178 op1=CV(1:$n) op2=UNUSED result=UNUSED ext=-
+8 IS_SMALLER line=173 op1=CV(1:$n) op2=CONST(int(3)) result=TMP(3)|SMART_JMPNZ ext=-
+9 JMPNZ line=173 op1=TMP(3) op2=JMP(3) result=UNUSED ext=-
+10 VERIFY_RETURN_TYPE line=181 op1=CV(1:$n) op2=UNUSED result=UNUSED ext=-
+11 RETURN line=181 op1=CV(1:$n) op2=UNUSED result=UNUSED ext=-
+12 VERIFY_RETURN_TYPE line=182 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+13 RETURN line=182 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/WhileDo.php
+Function: switchContinueTwo
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 14
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 4
+Literals: 4
+Return type: int
+Lines: 184-196
+
+Compiled variables:
+0 $value
+1 $n
+
+Literals:
+0 int(0)
+1 int(1)
+2 int(3)
+3 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=184 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 ASSIGN line=186 op1=CV(1:$n) op2=CONST(int(0)) result=UNUSED ext=-
+2 JMP line=187 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+3 IS_EQUAL line=189 op1=CV(0:$value) op2=CONST(int(1)) result=TMP(1)|SMART_JMPNZ ext=-
+4 JMPNZ line=189 op1=TMP(1) op2=JMP(6) result=UNUSED ext=-
+5 JMP line=189 op1=JMP(7) op2=UNUSED result=UNUSED ext=-
+6 CONT line=190 op1=LEVEL(1) op2=UNUSED(2) result=UNUSED ext=-
+7 PRE_INC line=192 op1=CV(1:$n) op2=UNUSED result=UNUSED ext=-
+8 IS_SMALLER line=187 op1=CV(1:$n) op2=CONST(int(3)) result=TMP(3)|SMART_JMPNZ ext=-
+9 JMPNZ line=187 op1=TMP(3) op2=JMP(3) result=UNUSED ext=-
+10 VERIFY_RETURN_TYPE line=195 op1=CV(1:$n) op2=UNUSED result=UNUSED ext=-
+11 RETURN line=195 op1=CV(1:$n) op2=UNUSED result=UNUSED ext=-
+12 VERIFY_RETURN_TYPE line=196 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+13 RETURN line=196 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/WhileDo.php
+Function: whileThenFor
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 17
+Arguments: 1
+Required arguments: 1
+Compiled variables: 4
+Temporary variables: 8
+Literals: 4
+Return type: int
+Lines: 198-210
+
+Compiled variables:
+0 $n
+1 $i
+2 $total
+3 $j
+
+Literals:
+0 int(0)
+1 int(0)
+2 int(0)
+3 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=198 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 ASSIGN line=200 op1=CV(1:$i) op2=CONST(int(0)) result=UNUSED ext=-
+2 JMP line=201 op1=JMP(4) op2=UNUSED result=UNUSED ext=-
+3 PRE_INC line=202 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+4 IS_SMALLER line=201 op1=CV(1:$i) op2=CV(0:$n) result=TMP(2)|SMART_JMPNZ ext=-
+5 JMPNZ line=201 op1=TMP(2) op2=JMP(3) result=UNUSED ext=-
+6 ASSIGN line=204 op1=CV(2:$total) op2=CONST(int(0)) result=UNUSED ext=-
+7 ASSIGN line=205 op1=CV(3:$j) op2=CONST(int(0)) result=UNUSED ext=-
+8 JMP line=205 op1=JMP(11) op2=UNUSED result=UNUSED ext=-
+9 PRE_INC line=206 op1=CV(2:$total) op2=UNUSED result=UNUSED ext=-
+10 PRE_INC line=205 op1=CV(3:$j) op2=UNUSED result=UNUSED ext=-
+11 IS_SMALLER line=205 op1=CV(3:$j) op2=CV(0:$n) result=TMP(7)|SMART_JMPNZ ext=-
+12 JMPNZ line=205 op1=TMP(7) op2=JMP(9) result=UNUSED ext=-
+13 VERIFY_RETURN_TYPE line=209 op1=CV(2:$total) op2=UNUSED result=UNUSED ext=-
+14 RETURN line=209 op1=CV(2:$total) op2=UNUSED result=UNUSED ext=-
+15 VERIFY_RETURN_TYPE line=210 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+16 RETURN line=210 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/WhileDo.php
+Function: realSwitch
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 18
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 5
+Literals: 6
+Return type: int
+Lines: 212-228
+
+Compiled variables:
+0 $value
+1 $n
+
+Literals:
+0 int(0)
+1 int(1)
+2 int(2)
+3 int(3)
+4 int(2)
+5 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=212 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 ASSIGN line=214 op1=CV(1:$n) op2=CONST(int(0)) result=UNUSED ext=-
+2 JMP line=215 op1=JMP(12) op2=UNUSED result=UNUSED ext=-
+3 IS_EQUAL line=217 op1=CV(0:$value) op2=CONST(int(1)) result=TMP(1)|SMART_JMPNZ ext=-
+4 JMPNZ line=217 op1=TMP(1) op2=JMP(8) result=UNUSED ext=-
+5 IS_EQUAL line=220 op1=CV(0:$value) op2=CONST(int(2)) result=TMP(1)|SMART_JMPNZ ext=-
+6 JMPNZ line=220 op1=TMP(1) op2=JMP(10) result=UNUSED ext=-
+7 JMP line=220 op1=JMP(11) op2=UNUSED result=UNUSED ext=-
+8 PRE_INC line=218 op1=CV(1:$n) op2=UNUSED result=UNUSED ext=-
+9 BRK line=219 op1=LEVEL(1) op2=UNUSED(1) result=UNUSED ext=-
+10 BRK line=221 op1=LEVEL(1) op2=UNUSED(2) result=UNUSED ext=-
+11 ASSIGN_OP line=223 op1=CV(1:$n) op2=CONST(int(3)) result=UNUSED ext=1
+12 IS_SMALLER line=215 op1=CV(1:$n) op2=CONST(int(2)) result=TMP(4)|SMART_JMPNZ ext=-
+13 JMPNZ line=215 op1=TMP(4) op2=JMP(3) result=UNUSED ext=-
+14 VERIFY_RETURN_TYPE line=227 op1=CV(1:$n) op2=UNUSED result=UNUSED ext=-
+15 RETURN line=227 op1=CV(1:$n) op2=UNUSED result=UNUSED ext=-
+16 VERIFY_RETURN_TYPE line=228 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+17 RETURN line=228 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/WhileDo.php
+Function: <main>
+Class: -
+Kind: main
+Property: -
+Hook: -
+Opcodes: 1
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 1
+Return type: -
+Lines: 1-229
+
+Compiled variables:
+(none)
+
+Literals:
+0 int(1)
+
+Argument details:
+(none)
+
+Opcodes:
+0 RETURN line=229 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+

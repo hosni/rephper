@@ -127,6 +127,7 @@ final class FixtureSets
             'Common/Statements.php' => ['Function: assignSequence', 'Function: throwLiteral', ' THROW ', ' DO_ICALL ', ' ECHO '],
             'Common/Conditionals.php' => ['Function: nestedIf', ' JMPZ ', ' JMPZ_EX ', ' JMPNZ_EX ', ' SWITCH_', ' GOTO ', ' BOOL_NOT '],
             'Common/LoopAnalysis.php' => ['Function: simpleWhile', 'Function: simpleForeach', ' FE_FETCH_', ' BRK ', ' CONT ', ' GOTO '],
+            'Common/WhileDo.php' => ['Function: emptyWhile', 'Function: switchBreak', 'Function: realSwitch', ' BRK ', ' CONT '],
         ];
     }
 }
