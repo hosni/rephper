@@ -1,0 +1,6810 @@
+{
+  "ir_version": 1,
+  "php": {
+    "version": "PHP_VERSION",
+    "version_id": 0,
+    "api": 20240924,
+    "zend_module_api": 20240924,
+    "zend_extension_api": 420240924,
+    "zts": false,
+    "debug": false
+  },
+  "compilation": {
+    "stage": "pre_pass_two",
+    "jumps": "absolute_opline"
+  },
+  "op_arrays": [
+    {
+      "id": 0,
+      "kind": "function",
+      "name": "simpleWhile",
+      "filename": "tests/Fixtures/Common/LoopAnalysis.php",
+      "line_start": 3,
+      "line_end": 11,
+      "scope": null,
+      "property_hook": null,
+      "flags": [
+        "has_type_hints",
+        "top_level",
+        "has_return_type"
+      ],
+      "num_args": 1,
+      "required_num_args": 1,
+      "return_type": {
+        "display": "int",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [
+        {
+          "name": "n",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        }
+      ],
+      "variables": [
+        "n",
+        "i"
+      ],
+      "temporary_variables": 3,
+      "literals": [
+        {
+          "type": "int",
+          "value": 0
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [
+        {
+          "start": -1,
+          "continue": 4,
+          "break": 6,
+          "parent": -1,
+          "switch": false
+        }
+      ],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 3,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 5,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "JMP",
+          "opcode_number": 42,
+          "line": 6,
+          "op1": {
+            "kind": "jump",
+            "target": 4
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "PRE_INC",
+          "opcode_number": 34,
+          "line": 7,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 4,
+          "opcode": "IS_SMALLER",
+          "opcode_number": 20,
+          "line": 6,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 2,
+            "smart_branch": [
+              "jmpnz"
+            ]
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 5,
+          "opcode": "JMPNZ",
+          "opcode_number": 44,
+          "line": 6,
+          "op1": {
+            "kind": "tmp",
+            "index": 2
+          },
+          "op2": {
+            "kind": "jump",
+            "target": 3
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 6,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 10,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 7,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 10,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 8,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 11,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 9,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 11,
+          "op1": {
+            "kind": "const",
+            "index": 1
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "kind": "function",
+      "name": "simpleDo",
+      "filename": "tests/Fixtures/Common/LoopAnalysis.php",
+      "line_start": 13,
+      "line_end": 21,
+      "scope": null,
+      "property_hook": null,
+      "flags": [
+        "has_type_hints",
+        "top_level",
+        "has_return_type"
+      ],
+      "num_args": 1,
+      "required_num_args": 1,
+      "return_type": {
+        "display": "int",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [
+        {
+          "name": "n",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        }
+      ],
+      "variables": [
+        "n",
+        "i"
+      ],
+      "temporary_variables": 3,
+      "literals": [
+        {
+          "type": "int",
+          "value": 0
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [
+        {
+          "start": -1,
+          "continue": 3,
+          "break": 5,
+          "parent": -1,
+          "switch": false
+        }
+      ],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 13,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 15,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "PRE_INC",
+          "opcode_number": 34,
+          "line": 17,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "IS_SMALLER",
+          "opcode_number": 20,
+          "line": 18,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 2,
+            "smart_branch": [
+              "jmpnz"
+            ]
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 4,
+          "opcode": "JMPNZ",
+          "opcode_number": 44,
+          "line": 18,
+          "op1": {
+            "kind": "tmp",
+            "index": 2
+          },
+          "op2": {
+            "kind": "jump",
+            "target": 2
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 5,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 20,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 6,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 20,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 7,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 21,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 8,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 21,
+          "op1": {
+            "kind": "const",
+            "index": 1
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "kind": "function",
+      "name": "simpleFor",
+      "filename": "tests/Fixtures/Common/LoopAnalysis.php",
+      "line_start": 23,
+      "line_end": 31,
+      "scope": null,
+      "property_hook": null,
+      "flags": [
+        "has_type_hints",
+        "top_level",
+        "has_return_type"
+      ],
+      "num_args": 1,
+      "required_num_args": 1,
+      "return_type": {
+        "display": "int",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [
+        {
+          "name": "n",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        }
+      ],
+      "variables": [
+        "n",
+        "total",
+        "i"
+      ],
+      "temporary_variables": 5,
+      "literals": [
+        {
+          "type": "int",
+          "value": 0
+        },
+        {
+          "type": "int",
+          "value": 0
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [
+        {
+          "start": -1,
+          "continue": 5,
+          "break": 8,
+          "parent": -1,
+          "switch": false
+        }
+      ],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 23,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 25,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "total"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 26,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 1
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "JMP",
+          "opcode_number": 42,
+          "line": 26,
+          "op1": {
+            "kind": "jump",
+            "target": 6
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 4,
+          "opcode": "PRE_INC",
+          "opcode_number": 34,
+          "line": 27,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "total"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 5,
+          "opcode": "PRE_INC",
+          "opcode_number": 34,
+          "line": 26,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 6,
+          "opcode": "IS_SMALLER",
+          "opcode_number": 20,
+          "line": 26,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 4,
+            "smart_branch": [
+              "jmpnz"
+            ]
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 7,
+          "opcode": "JMPNZ",
+          "opcode_number": 44,
+          "line": 26,
+          "op1": {
+            "kind": "tmp",
+            "index": 4
+          },
+          "op2": {
+            "kind": "jump",
+            "target": 4
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 8,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 30,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "total"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 9,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 30,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "total"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 10,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 31,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 11,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 31,
+          "op1": {
+            "kind": "const",
+            "index": 2
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "kind": "function",
+      "name": "emptyFor",
+      "filename": "tests/Fixtures/Common/LoopAnalysis.php",
+      "line_start": 33,
+      "line_end": 39,
+      "scope": null,
+      "property_hook": null,
+      "flags": [
+        "has_type_hints",
+        "top_level",
+        "has_return_type"
+      ],
+      "num_args": 1,
+      "required_num_args": 1,
+      "return_type": {
+        "display": "int",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [
+        {
+          "name": "n",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        }
+      ],
+      "variables": [
+        "n",
+        "i"
+      ],
+      "temporary_variables": 3,
+      "literals": [
+        {
+          "type": "int",
+          "value": 0
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [
+        {
+          "start": -1,
+          "continue": 3,
+          "break": 6,
+          "parent": -1,
+          "switch": false
+        }
+      ],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 33,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 35,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "JMP",
+          "opcode_number": 42,
+          "line": 35,
+          "op1": {
+            "kind": "jump",
+            "target": 4
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "PRE_INC",
+          "opcode_number": 34,
+          "line": 35,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 4,
+          "opcode": "IS_SMALLER",
+          "opcode_number": 20,
+          "line": 35,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 2,
+            "smart_branch": [
+              "jmpnz"
+            ]
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 5,
+          "opcode": "JMPNZ",
+          "opcode_number": 44,
+          "line": 35,
+          "op1": {
+            "kind": "tmp",
+            "index": 2
+          },
+          "op2": {
+            "kind": "jump",
+            "target": 3
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 6,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 38,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 7,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 38,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 8,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 39,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 9,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 39,
+          "op1": {
+            "kind": "const",
+            "index": 1
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "kind": "function",
+      "name": "simpleForeach",
+      "filename": "tests/Fixtures/Common/LoopAnalysis.php",
+      "line_start": 41,
+      "line_end": 49,
+      "scope": null,
+      "property_hook": null,
+      "flags": [
+        "has_type_hints",
+        "top_level",
+        "has_return_type"
+      ],
+      "num_args": 1,
+      "required_num_args": 1,
+      "return_type": {
+        "display": "int",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [
+        {
+          "name": "values",
+          "type": {
+            "display": "array",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        }
+      ],
+      "variables": [
+        "values",
+        "total",
+        "value"
+      ],
+      "temporary_variables": 3,
+      "literals": [
+        {
+          "type": "int",
+          "value": 0
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [
+        {
+          "start": 3,
+          "continue": 3,
+          "break": 6,
+          "parent": -1,
+          "switch": false
+        }
+      ],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 41,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 128
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "values"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 43,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "total"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "FE_RESET_R",
+          "opcode_number": 77,
+          "line": 44,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "values"
+          },
+          "op2": {
+            "kind": "jump",
+            "target": 6
+          },
+          "result": {
+            "kind": "var",
+            "index": 1
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "FE_FETCH_R",
+          "opcode_number": 78,
+          "line": 44,
+          "op1": {
+            "kind": "var",
+            "index": 1
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 2,
+            "name": "value"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 6,
+          "jump_target": 6
+        },
+        {
+          "index": 4,
+          "opcode": "ASSIGN_OP",
+          "opcode_number": 26,
+          "line": 45,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "total"
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 2,
+            "name": "value"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 1
+        },
+        {
+          "index": 5,
+          "opcode": "JMP",
+          "opcode_number": 42,
+          "line": 44,
+          "op1": {
+            "kind": "jump",
+            "target": 3
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 6,
+          "opcode": "FE_FREE",
+          "opcode_number": 127,
+          "line": 44,
+          "op1": {
+            "kind": "var",
+            "index": 1
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 7,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 48,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "total"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 8,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 48,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "total"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 9,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 49,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 10,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 49,
+          "op1": {
+            "kind": "const",
+            "index": 1
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "kind": "function",
+      "name": "nestedWhile",
+      "filename": "tests/Fixtures/Common/LoopAnalysis.php",
+      "line_start": 51,
+      "line_end": 65,
+      "scope": null,
+      "property_hook": null,
+      "flags": [
+        "has_type_hints",
+        "top_level",
+        "has_return_type"
+      ],
+      "num_args": 1,
+      "required_num_args": 1,
+      "return_type": {
+        "display": "int",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [
+        {
+          "name": "n",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        }
+      ],
+      "variables": [
+        "n",
+        "i",
+        "total",
+        "j"
+      ],
+      "temporary_variables": 8,
+      "literals": [
+        {
+          "type": "int",
+          "value": 0
+        },
+        {
+          "type": "int",
+          "value": 0
+        },
+        {
+          "type": "int",
+          "value": 0
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [
+        {
+          "start": -1,
+          "continue": 11,
+          "break": 13,
+          "parent": -1,
+          "switch": false
+        },
+        {
+          "start": -1,
+          "continue": 8,
+          "break": 10,
+          "parent": 0,
+          "switch": false
+        }
+      ],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 51,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 53,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 54,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "total"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 1
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "JMP",
+          "opcode_number": 42,
+          "line": 55,
+          "op1": {
+            "kind": "jump",
+            "target": 11
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 4,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 56,
+          "op1": {
+            "kind": "cv",
+            "index": 3,
+            "name": "j"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 2
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 5,
+          "opcode": "JMP",
+          "opcode_number": 42,
+          "line": 57,
+          "op1": {
+            "kind": "jump",
+            "target": 8
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 6,
+          "opcode": "PRE_INC",
+          "opcode_number": 34,
+          "line": 58,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "total"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 7,
+          "opcode": "PRE_INC",
+          "opcode_number": 34,
+          "line": 59,
+          "op1": {
+            "kind": "cv",
+            "index": 3,
+            "name": "j"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 8,
+          "opcode": "IS_SMALLER",
+          "opcode_number": 20,
+          "line": 57,
+          "op1": {
+            "kind": "cv",
+            "index": 3,
+            "name": "j"
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 5,
+            "smart_branch": [
+              "jmpnz"
+            ]
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 9,
+          "opcode": "JMPNZ",
+          "opcode_number": 44,
+          "line": 57,
+          "op1": {
+            "kind": "tmp",
+            "index": 5
+          },
+          "op2": {
+            "kind": "jump",
+            "target": 6
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 10,
+          "opcode": "PRE_INC",
+          "opcode_number": 34,
+          "line": 61,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 11,
+          "opcode": "IS_SMALLER",
+          "opcode_number": 20,
+          "line": 55,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 7,
+            "smart_branch": [
+              "jmpnz"
+            ]
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 12,
+          "opcode": "JMPNZ",
+          "opcode_number": 44,
+          "line": 55,
+          "op1": {
+            "kind": "tmp",
+            "index": 7
+          },
+          "op2": {
+            "kind": "jump",
+            "target": 4
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 13,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 64,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "total"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 14,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 64,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "total"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 15,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 65,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 16,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 65,
+          "op1": {
+            "kind": "const",
+            "index": 3
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "kind": "function",
+      "name": "nestedMixed",
+      "filename": "tests/Fixtures/Common/LoopAnalysis.php",
+      "line_start": 67,
+      "line_end": 77,
+      "scope": null,
+      "property_hook": null,
+      "flags": [
+        "has_type_hints",
+        "top_level",
+        "has_return_type"
+      ],
+      "num_args": 2,
+      "required_num_args": 2,
+      "return_type": {
+        "display": "int",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [
+        {
+          "name": "n",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        },
+        {
+          "name": "rows",
+          "type": {
+            "display": "array",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        }
+      ],
+      "variables": [
+        "n",
+        "rows",
+        "total",
+        "i",
+        "row"
+      ],
+      "temporary_variables": 6,
+      "literals": [
+        {
+          "type": "int",
+          "value": 0
+        },
+        {
+          "type": "int",
+          "value": 0
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [
+        {
+          "start": -1,
+          "continue": 10,
+          "break": 13,
+          "parent": -1,
+          "switch": false
+        },
+        {
+          "start": 6,
+          "continue": 6,
+          "break": 9,
+          "parent": 0,
+          "switch": false
+        }
+      ],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 67,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 67,
+          "op1": {
+            "kind": "unused",
+            "value": 2
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 128
+          },
+          "result": {
+            "kind": "cv",
+            "index": 1,
+            "name": "rows"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 69,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "total"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 70,
+          "op1": {
+            "kind": "cv",
+            "index": 3,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 1
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 4,
+          "opcode": "JMP",
+          "opcode_number": 42,
+          "line": 70,
+          "op1": {
+            "kind": "jump",
+            "target": 11
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 5,
+          "opcode": "FE_RESET_R",
+          "opcode_number": 77,
+          "line": 71,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "rows"
+          },
+          "op2": {
+            "kind": "jump",
+            "target": 9
+          },
+          "result": {
+            "kind": "var",
+            "index": 2
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 6,
+          "opcode": "FE_FETCH_R",
+          "opcode_number": 78,
+          "line": 71,
+          "op1": {
+            "kind": "var",
+            "index": 2
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 4,
+            "name": "row"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 9,
+          "jump_target": 9
+        },
+        {
+          "index": 7,
+          "opcode": "ASSIGN_OP",
+          "opcode_number": 26,
+          "line": 72,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "total"
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 4,
+            "name": "row"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 1
+        },
+        {
+          "index": 8,
+          "opcode": "JMP",
+          "opcode_number": 42,
+          "line": 71,
+          "op1": {
+            "kind": "jump",
+            "target": 6
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 9,
+          "opcode": "FE_FREE",
+          "opcode_number": 127,
+          "line": 71,
+          "op1": {
+            "kind": "var",
+            "index": 2
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 10,
+          "opcode": "PRE_INC",
+          "opcode_number": 34,
+          "line": 70,
+          "op1": {
+            "kind": "cv",
+            "index": 3,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 11,
+          "opcode": "IS_SMALLER",
+          "opcode_number": 20,
+          "line": 70,
+          "op1": {
+            "kind": "cv",
+            "index": 3,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 5,
+            "smart_branch": [
+              "jmpnz"
+            ]
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 12,
+          "opcode": "JMPNZ",
+          "opcode_number": 44,
+          "line": 70,
+          "op1": {
+            "kind": "tmp",
+            "index": 5
+          },
+          "op2": {
+            "kind": "jump",
+            "target": 5
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 13,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 76,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "total"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 14,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 76,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "total"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 15,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 77,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 16,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 77,
+          "op1": {
+            "kind": "const",
+            "index": 2
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "kind": "function",
+      "name": "multiBack",
+      "filename": "tests/Fixtures/Common/LoopAnalysis.php",
+      "line_start": 79,
+      "line_end": 90,
+      "scope": null,
+      "property_hook": null,
+      "flags": [
+        "has_type_hints",
+        "top_level",
+        "has_return_type"
+      ],
+      "num_args": 1,
+      "required_num_args": 1,
+      "return_type": {
+        "display": "int",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [
+        {
+          "name": "n",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        }
+      ],
+      "variables": [
+        "n",
+        "i"
+      ],
+      "temporary_variables": 4,
+      "literals": [
+        {
+          "type": "int",
+          "value": 0
+        },
+        {
+          "type": "int",
+          "value": 1
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [
+        {
+          "start": -1,
+          "continue": 7,
+          "break": 9,
+          "parent": -1,
+          "switch": false
+        }
+      ],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 79,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 81,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "JMP",
+          "opcode_number": 42,
+          "line": 82,
+          "op1": {
+            "kind": "jump",
+            "target": 7
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "IS_IDENTICAL",
+          "opcode_number": 16,
+          "line": 83,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 1
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 1,
+            "smart_branch": [
+              "jmpz"
+            ]
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 4,
+          "opcode": "JMPZ",
+          "opcode_number": 43,
+          "line": 83,
+          "op1": {
+            "kind": "tmp",
+            "index": 1
+          },
+          "op2": {
+            "kind": "jump",
+            "target": 6
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 5,
+          "opcode": "CONT",
+          "opcode_number": 255,
+          "line": 84,
+          "op1": {
+            "kind": "level",
+            "value": 0
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 1
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 6,
+          "opcode": "PRE_INC",
+          "opcode_number": 34,
+          "line": 86,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 7,
+          "opcode": "IS_SMALLER",
+          "opcode_number": 20,
+          "line": 82,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 3,
+            "smart_branch": [
+              "jmpnz"
+            ]
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 8,
+          "opcode": "JMPNZ",
+          "opcode_number": 44,
+          "line": 82,
+          "op1": {
+            "kind": "tmp",
+            "index": 3
+          },
+          "op2": {
+            "kind": "jump",
+            "target": 3
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 9,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 89,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 10,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 89,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 11,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 90,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 12,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 90,
+          "op1": {
+            "kind": "const",
+            "index": 2
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "kind": "function",
+      "name": "broken",
+      "filename": "tests/Fixtures/Common/LoopAnalysis.php",
+      "line_start": 92,
+      "line_end": 103,
+      "scope": null,
+      "property_hook": null,
+      "flags": [
+        "has_type_hints",
+        "top_level",
+        "has_return_type"
+      ],
+      "num_args": 1,
+      "required_num_args": 1,
+      "return_type": {
+        "display": "int",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [
+        {
+          "name": "n",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        }
+      ],
+      "variables": [
+        "n",
+        "i"
+      ],
+      "temporary_variables": 4,
+      "literals": [
+        {
+          "type": "int",
+          "value": 0
+        },
+        {
+          "type": "int",
+          "value": 3
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [
+        {
+          "start": -1,
+          "continue": 7,
+          "break": 9,
+          "parent": -1,
+          "switch": false
+        }
+      ],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 92,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 94,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "JMP",
+          "opcode_number": 42,
+          "line": 95,
+          "op1": {
+            "kind": "jump",
+            "target": 7
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "IS_IDENTICAL",
+          "opcode_number": 16,
+          "line": 96,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 1
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 1,
+            "smart_branch": [
+              "jmpz"
+            ]
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 4,
+          "opcode": "JMPZ",
+          "opcode_number": 43,
+          "line": 96,
+          "op1": {
+            "kind": "tmp",
+            "index": 1
+          },
+          "op2": {
+            "kind": "jump",
+            "target": 6
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 5,
+          "opcode": "BRK",
+          "opcode_number": 254,
+          "line": 97,
+          "op1": {
+            "kind": "level",
+            "value": 0
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 1
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 6,
+          "opcode": "PRE_INC",
+          "opcode_number": 34,
+          "line": 99,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 7,
+          "opcode": "IS_SMALLER",
+          "opcode_number": 20,
+          "line": 95,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 3,
+            "smart_branch": [
+              "jmpnz"
+            ]
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 8,
+          "opcode": "JMPNZ",
+          "opcode_number": 44,
+          "line": 95,
+          "op1": {
+            "kind": "tmp",
+            "index": 3
+          },
+          "op2": {
+            "kind": "jump",
+            "target": 3
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 9,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 102,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 10,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 102,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 11,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 103,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 12,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 103,
+          "op1": {
+            "kind": "const",
+            "index": 2
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "kind": "function",
+      "name": "continued",
+      "filename": "tests/Fixtures/Common/LoopAnalysis.php",
+      "line_start": 105,
+      "line_end": 116,
+      "scope": null,
+      "property_hook": null,
+      "flags": [
+        "has_type_hints",
+        "top_level",
+        "has_return_type"
+      ],
+      "num_args": 1,
+      "required_num_args": 1,
+      "return_type": {
+        "display": "int",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [
+        {
+          "name": "n",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        }
+      ],
+      "variables": [
+        "n",
+        "total",
+        "i"
+      ],
+      "temporary_variables": 6,
+      "literals": [
+        {
+          "type": "int",
+          "value": 0
+        },
+        {
+          "type": "int",
+          "value": 0
+        },
+        {
+          "type": "int",
+          "value": 2
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [
+        {
+          "start": -1,
+          "continue": 8,
+          "break": 11,
+          "parent": -1,
+          "switch": false
+        }
+      ],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 105,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 107,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "total"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 108,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 1
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "JMP",
+          "opcode_number": 42,
+          "line": 108,
+          "op1": {
+            "kind": "jump",
+            "target": 9
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 4,
+          "opcode": "IS_IDENTICAL",
+          "opcode_number": 16,
+          "line": 109,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 2
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 2,
+            "smart_branch": [
+              "jmpz"
+            ]
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 5,
+          "opcode": "JMPZ",
+          "opcode_number": 43,
+          "line": 109,
+          "op1": {
+            "kind": "tmp",
+            "index": 2
+          },
+          "op2": {
+            "kind": "jump",
+            "target": 7
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 6,
+          "opcode": "CONT",
+          "opcode_number": 255,
+          "line": 110,
+          "op1": {
+            "kind": "level",
+            "value": 0
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 1
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 7,
+          "opcode": "PRE_INC",
+          "opcode_number": 34,
+          "line": 112,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "total"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 8,
+          "opcode": "PRE_INC",
+          "opcode_number": 34,
+          "line": 108,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 9,
+          "opcode": "IS_SMALLER",
+          "opcode_number": 20,
+          "line": 108,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 5,
+            "smart_branch": [
+              "jmpnz"
+            ]
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 10,
+          "opcode": "JMPNZ",
+          "opcode_number": 44,
+          "line": 108,
+          "op1": {
+            "kind": "tmp",
+            "index": 5
+          },
+          "op2": {
+            "kind": "jump",
+            "target": 4
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 11,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 115,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "total"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 12,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 115,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "total"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 13,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 116,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 14,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 116,
+          "op1": {
+            "kind": "const",
+            "index": 3
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "kind": "function",
+      "name": "breakTwo",
+      "filename": "tests/Fixtures/Common/LoopAnalysis.php",
+      "line_start": 118,
+      "line_end": 134,
+      "scope": null,
+      "property_hook": null,
+      "flags": [
+        "has_type_hints",
+        "top_level",
+        "has_return_type"
+      ],
+      "num_args": 1,
+      "required_num_args": 1,
+      "return_type": {
+        "display": "int",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [
+        {
+          "name": "n",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        }
+      ],
+      "variables": [
+        "n",
+        "total",
+        "j"
+      ],
+      "temporary_variables": 8,
+      "literals": [
+        {
+          "type": "int",
+          "value": 0
+        },
+        {
+          "type": "int",
+          "value": 0
+        },
+        {
+          "type": "int",
+          "value": 1
+        },
+        {
+          "type": "int",
+          "value": 0
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [
+        {
+          "start": -1,
+          "continue": 13,
+          "break": 15,
+          "parent": -1,
+          "switch": false
+        },
+        {
+          "start": -1,
+          "continue": 10,
+          "break": 12,
+          "parent": 0,
+          "switch": false
+        }
+      ],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 118,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 120,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "total"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "JMP",
+          "opcode_number": 42,
+          "line": 121,
+          "op1": {
+            "kind": "jump",
+            "target": 13
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 122,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "j"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 1
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 4,
+          "opcode": "JMP",
+          "opcode_number": 42,
+          "line": 123,
+          "op1": {
+            "kind": "jump",
+            "target": 10
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 5,
+          "opcode": "IS_IDENTICAL",
+          "opcode_number": 16,
+          "line": 124,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "j"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 2
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 2,
+            "smart_branch": [
+              "jmpz"
+            ]
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 6,
+          "opcode": "JMPZ",
+          "opcode_number": 43,
+          "line": 124,
+          "op1": {
+            "kind": "tmp",
+            "index": 2
+          },
+          "op2": {
+            "kind": "jump",
+            "target": 8
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 7,
+          "opcode": "BRK",
+          "opcode_number": 254,
+          "line": 125,
+          "op1": {
+            "kind": "level",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 2
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 8,
+          "opcode": "PRE_INC",
+          "opcode_number": 34,
+          "line": 127,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "j"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 9,
+          "opcode": "PRE_INC",
+          "opcode_number": 34,
+          "line": 128,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "total"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 10,
+          "opcode": "IS_SMALLER",
+          "opcode_number": 20,
+          "line": 123,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "j"
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 5,
+            "smart_branch": [
+              "jmpnz"
+            ]
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 11,
+          "opcode": "JMPNZ",
+          "opcode_number": 44,
+          "line": 123,
+          "op1": {
+            "kind": "tmp",
+            "index": 5
+          },
+          "op2": {
+            "kind": "jump",
+            "target": 5
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 12,
+          "opcode": "PRE_DEC",
+          "opcode_number": 35,
+          "line": 130,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 13,
+          "opcode": "IS_SMALLER",
+          "opcode_number": 20,
+          "line": 121,
+          "op1": {
+            "kind": "const",
+            "index": 3
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 7,
+            "smart_branch": [
+              "jmpnz"
+            ]
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 14,
+          "opcode": "JMPNZ",
+          "opcode_number": 44,
+          "line": 121,
+          "op1": {
+            "kind": "tmp",
+            "index": 7
+          },
+          "op2": {
+            "kind": "jump",
+            "target": 3
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 15,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 133,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "total"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 16,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 133,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "total"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 17,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 134,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 18,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 134,
+          "op1": {
+            "kind": "const",
+            "index": 4
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "kind": "function",
+      "name": "continueTwo",
+      "filename": "tests/Fixtures/Common/LoopAnalysis.php",
+      "line_start": 136,
+      "line_end": 151,
+      "scope": null,
+      "property_hook": null,
+      "flags": [
+        "has_type_hints",
+        "top_level",
+        "has_return_type"
+      ],
+      "num_args": 1,
+      "required_num_args": 1,
+      "return_type": {
+        "display": "int",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [
+        {
+          "name": "n",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        }
+      ],
+      "variables": [
+        "n",
+        "total",
+        "i",
+        "j"
+      ],
+      "temporary_variables": 9,
+      "literals": [
+        {
+          "type": "int",
+          "value": 0
+        },
+        {
+          "type": "int",
+          "value": 0
+        },
+        {
+          "type": "int",
+          "value": 0
+        },
+        {
+          "type": "int",
+          "value": 0
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [
+        {
+          "start": -1,
+          "continue": 13,
+          "break": 16,
+          "parent": -1,
+          "switch": false
+        },
+        {
+          "start": -1,
+          "continue": 11,
+          "break": 13,
+          "parent": 0,
+          "switch": false
+        }
+      ],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 136,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 138,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "total"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 139,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 1
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "JMP",
+          "opcode_number": 42,
+          "line": 139,
+          "op1": {
+            "kind": "jump",
+            "target": 14
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 4,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 140,
+          "op1": {
+            "kind": "cv",
+            "index": 3,
+            "name": "j"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 2
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 5,
+          "opcode": "JMP",
+          "opcode_number": 42,
+          "line": 141,
+          "op1": {
+            "kind": "jump",
+            "target": 11
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 6,
+          "opcode": "IS_IDENTICAL",
+          "opcode_number": 16,
+          "line": 142,
+          "op1": {
+            "kind": "cv",
+            "index": 3,
+            "name": "j"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 3
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 3,
+            "smart_branch": [
+              "jmpz"
+            ]
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 7,
+          "opcode": "JMPZ",
+          "opcode_number": 43,
+          "line": 142,
+          "op1": {
+            "kind": "tmp",
+            "index": 3
+          },
+          "op2": {
+            "kind": "jump",
+            "target": 9
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 8,
+          "opcode": "CONT",
+          "opcode_number": 255,
+          "line": 143,
+          "op1": {
+            "kind": "level",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 2
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 9,
+          "opcode": "PRE_INC",
+          "opcode_number": 34,
+          "line": 145,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "total"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 10,
+          "opcode": "PRE_INC",
+          "opcode_number": 34,
+          "line": 146,
+          "op1": {
+            "kind": "cv",
+            "index": 3,
+            "name": "j"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 11,
+          "opcode": "IS_SMALLER",
+          "opcode_number": 20,
+          "line": 141,
+          "op1": {
+            "kind": "cv",
+            "index": 3,
+            "name": "j"
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 2,
+            "name": "i"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 6,
+            "smart_branch": [
+              "jmpnz"
+            ]
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 12,
+          "opcode": "JMPNZ",
+          "opcode_number": 44,
+          "line": 141,
+          "op1": {
+            "kind": "tmp",
+            "index": 6
+          },
+          "op2": {
+            "kind": "jump",
+            "target": 6
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 13,
+          "opcode": "PRE_INC",
+          "opcode_number": 34,
+          "line": 139,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 14,
+          "opcode": "IS_SMALLER",
+          "opcode_number": 20,
+          "line": 139,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 8,
+            "smart_branch": [
+              "jmpnz"
+            ]
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 15,
+          "opcode": "JMPNZ",
+          "opcode_number": 44,
+          "line": 139,
+          "op1": {
+            "kind": "tmp",
+            "index": 8
+          },
+          "op2": {
+            "kind": "jump",
+            "target": 4
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 16,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 150,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "total"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 17,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 150,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "total"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 18,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 151,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 19,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 151,
+          "op1": {
+            "kind": "const",
+            "index": 4
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "kind": "function",
+      "name": "conditionalBody",
+      "filename": "tests/Fixtures/Common/LoopAnalysis.php",
+      "line_start": 153,
+      "line_end": 167,
+      "scope": null,
+      "property_hook": null,
+      "flags": [
+        "has_type_hints",
+        "top_level",
+        "has_return_type"
+      ],
+      "num_args": 1,
+      "required_num_args": 1,
+      "return_type": {
+        "display": "int",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [
+        {
+          "name": "n",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        }
+      ],
+      "variables": [
+        "n",
+        "i",
+        "total"
+      ],
+      "temporary_variables": 8,
+      "literals": [
+        {
+          "type": "int",
+          "value": 0
+        },
+        {
+          "type": "int",
+          "value": 0
+        },
+        {
+          "type": "int",
+          "value": 2
+        },
+        {
+          "type": "int",
+          "value": 0
+        },
+        {
+          "type": "int",
+          "value": 2
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [
+        {
+          "start": -1,
+          "continue": 11,
+          "break": 13,
+          "parent": -1,
+          "switch": false
+        }
+      ],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 153,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 155,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 156,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "total"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 1
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "JMP",
+          "opcode_number": 42,
+          "line": 157,
+          "op1": {
+            "kind": "jump",
+            "target": 11
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 4,
+          "opcode": "MOD",
+          "opcode_number": 5,
+          "line": 158,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 2
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 2
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 5,
+          "opcode": "IS_IDENTICAL",
+          "opcode_number": 16,
+          "line": 158,
+          "op1": {
+            "kind": "tmp",
+            "index": 2
+          },
+          "op2": {
+            "kind": "const",
+            "index": 3
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 3,
+            "smart_branch": [
+              "jmpz"
+            ]
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 6,
+          "opcode": "JMPZ",
+          "opcode_number": 43,
+          "line": 158,
+          "op1": {
+            "kind": "tmp",
+            "index": 3
+          },
+          "op2": {
+            "kind": "jump",
+            "target": 9
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 7,
+          "opcode": "PRE_INC",
+          "opcode_number": 34,
+          "line": 159,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "total"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 8,
+          "opcode": "JMP",
+          "opcode_number": 42,
+          "line": 158,
+          "op1": {
+            "kind": "jump",
+            "target": 10
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 9,
+          "opcode": "ASSIGN_OP",
+          "opcode_number": 26,
+          "line": 161,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "total"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 4
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 1
+        },
+        {
+          "index": 10,
+          "opcode": "PRE_INC",
+          "opcode_number": 34,
+          "line": 163,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 11,
+          "opcode": "IS_SMALLER",
+          "opcode_number": 20,
+          "line": 157,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 7,
+            "smart_branch": [
+              "jmpnz"
+            ]
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 12,
+          "opcode": "JMPNZ",
+          "opcode_number": 44,
+          "line": 157,
+          "op1": {
+            "kind": "tmp",
+            "index": 7
+          },
+          "op2": {
+            "kind": "jump",
+            "target": 4
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 13,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 166,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "total"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 14,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 166,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "total"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 15,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 167,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 16,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 167,
+          "op1": {
+            "kind": "const",
+            "index": 5
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "kind": "function",
+      "name": "sequential",
+      "filename": "tests/Fixtures/Common/LoopAnalysis.php",
+      "line_start": 169,
+      "line_end": 181,
+      "scope": null,
+      "property_hook": null,
+      "flags": [
+        "has_type_hints",
+        "top_level",
+        "has_return_type"
+      ],
+      "num_args": 1,
+      "required_num_args": 1,
+      "return_type": {
+        "display": "int",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [
+        {
+          "name": "n",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        }
+      ],
+      "variables": [
+        "n",
+        "i",
+        "j"
+      ],
+      "temporary_variables": 7,
+      "literals": [
+        {
+          "type": "int",
+          "value": 0
+        },
+        {
+          "type": "int",
+          "value": 0
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [
+        {
+          "start": -1,
+          "continue": 4,
+          "break": 6,
+          "parent": -1,
+          "switch": false
+        },
+        {
+          "start": -1,
+          "continue": 9,
+          "break": 11,
+          "parent": -1,
+          "switch": false
+        }
+      ],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 169,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 171,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "JMP",
+          "opcode_number": 42,
+          "line": 172,
+          "op1": {
+            "kind": "jump",
+            "target": 4
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "PRE_INC",
+          "opcode_number": 34,
+          "line": 173,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 4,
+          "opcode": "IS_SMALLER",
+          "opcode_number": 20,
+          "line": 172,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 2,
+            "smart_branch": [
+              "jmpnz"
+            ]
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 5,
+          "opcode": "JMPNZ",
+          "opcode_number": 44,
+          "line": 172,
+          "op1": {
+            "kind": "tmp",
+            "index": 2
+          },
+          "op2": {
+            "kind": "jump",
+            "target": 3
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 6,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 175,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "j"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 1
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 7,
+          "opcode": "JMP",
+          "opcode_number": 42,
+          "line": 176,
+          "op1": {
+            "kind": "jump",
+            "target": 9
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 8,
+          "opcode": "PRE_INC",
+          "opcode_number": 34,
+          "line": 177,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "j"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 9,
+          "opcode": "IS_SMALLER",
+          "opcode_number": 20,
+          "line": 176,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "j"
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 5,
+            "smart_branch": [
+              "jmpnz"
+            ]
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 10,
+          "opcode": "JMPNZ",
+          "opcode_number": 44,
+          "line": 176,
+          "op1": {
+            "kind": "tmp",
+            "index": 5
+          },
+          "op2": {
+            "kind": "jump",
+            "target": 8
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 11,
+          "opcode": "ADD",
+          "opcode_number": 1,
+          "line": 180,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 2,
+            "name": "j"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 6
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 12,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 180,
+          "op1": {
+            "kind": "tmp",
+            "index": 6
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 13,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 180,
+          "op1": {
+            "kind": "tmp",
+            "index": 6
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 14,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 181,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 15,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 181,
+          "op1": {
+            "kind": "const",
+            "index": 2
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "kind": "function",
+      "name": "backwardGoto",
+      "filename": "tests/Fixtures/Common/LoopAnalysis.php",
+      "line_start": 183,
+      "line_end": 193,
+      "scope": null,
+      "property_hook": null,
+      "flags": [
+        "has_type_hints",
+        "top_level",
+        "has_return_type"
+      ],
+      "num_args": 1,
+      "required_num_args": 1,
+      "return_type": {
+        "display": "int",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [
+        {
+          "name": "n",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        }
+      ],
+      "variables": [
+        "n",
+        "i"
+      ],
+      "temporary_variables": 3,
+      "literals": [
+        {
+          "type": "int",
+          "value": 0
+        },
+        {
+          "type": "string",
+          "value": "start"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [
+        {
+          "name": "start",
+          "opline": 2,
+          "break_continue": -1
+        }
+      ],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 183,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 185,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "PRE_INC",
+          "opcode_number": 34,
+          "line": 187,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "IS_SMALLER",
+          "opcode_number": 20,
+          "line": 188,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 2,
+            "smart_branch": [
+              "jmpz"
+            ]
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 4,
+          "opcode": "JMPZ",
+          "opcode_number": 43,
+          "line": 188,
+          "op1": {
+            "kind": "tmp",
+            "index": 2
+          },
+          "op2": {
+            "kind": "jump",
+            "target": 6
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 5,
+          "opcode": "GOTO",
+          "opcode_number": 253,
+          "line": 189,
+          "op1": {
+            "kind": "label",
+            "id": 0
+          },
+          "op2": {
+            "kind": "const",
+            "index": 1
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        },
+        {
+          "index": 6,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 192,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 7,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 192,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 8,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 193,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 9,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 193,
+          "op1": {
+            "kind": "const",
+            "index": 2
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "kind": "function",
+      "name": "notALoop",
+      "filename": "tests/Fixtures/Common/LoopAnalysis.php",
+      "line_start": 195,
+      "line_end": 206,
+      "scope": null,
+      "property_hook": null,
+      "flags": [
+        "has_type_hints",
+        "top_level",
+        "has_return_type"
+      ],
+      "num_args": 1,
+      "required_num_args": 1,
+      "return_type": {
+        "display": "int",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [
+        {
+          "name": "n",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        }
+      ],
+      "variables": [
+        "n"
+      ],
+      "temporary_variables": 2,
+      "literals": [
+        {
+          "type": "string",
+          "value": "mid"
+        },
+        {
+          "type": "int",
+          "value": 1
+        },
+        {
+          "type": "int",
+          "value": 0
+        },
+        {
+          "type": "string",
+          "value": "start"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [
+        {
+          "name": "start",
+          "opline": 2,
+          "break_continue": -1
+        },
+        {
+          "name": "mid",
+          "opline": 3,
+          "break_continue": -1
+        }
+      ],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 195,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "GOTO",
+          "opcode_number": 253,
+          "line": 197,
+          "op1": {
+            "kind": "label",
+            "id": 0
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        },
+        {
+          "index": 2,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 199,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 1
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "IS_SMALLER",
+          "opcode_number": 20,
+          "line": 201,
+          "op1": {
+            "kind": "const",
+            "index": 2
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 1,
+            "smart_branch": [
+              "jmpz"
+            ]
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 4,
+          "opcode": "JMPZ",
+          "opcode_number": 43,
+          "line": 201,
+          "op1": {
+            "kind": "tmp",
+            "index": 1
+          },
+          "op2": {
+            "kind": "jump",
+            "target": 6
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 5,
+          "opcode": "GOTO",
+          "opcode_number": 253,
+          "line": 202,
+          "op1": {
+            "kind": "label",
+            "id": 0
+          },
+          "op2": {
+            "kind": "const",
+            "index": 3
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        },
+        {
+          "index": 6,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 205,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 7,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 205,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 8,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 206,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 9,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 206,
+          "op1": {
+            "kind": "const",
+            "index": 4
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "kind": "function",
+      "name": "dead",
+      "filename": "tests/Fixtures/Common/LoopAnalysis.php",
+      "line_start": 208,
+      "line_end": 214,
+      "scope": null,
+      "property_hook": null,
+      "flags": [
+        "has_type_hints",
+        "top_level",
+        "has_return_type"
+      ],
+      "num_args": 1,
+      "required_num_args": 1,
+      "return_type": {
+        "display": "int",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [
+        {
+          "name": "n",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        }
+      ],
+      "variables": [
+        "n"
+      ],
+      "temporary_variables": 1,
+      "literals": [
+        {
+          "type": "int",
+          "value": 0
+        },
+        {
+          "type": "int",
+          "value": 0
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [
+        {
+          "start": -1,
+          "continue": 4,
+          "break": 6,
+          "parent": -1,
+          "switch": false
+        }
+      ],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 208,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 210,
+          "op1": {
+            "kind": "const",
+            "index": 0
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "JMP",
+          "opcode_number": 42,
+          "line": 211,
+          "op1": {
+            "kind": "jump",
+            "target": 4
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "BRK",
+          "opcode_number": 254,
+          "line": 212,
+          "op1": {
+            "kind": "level",
+            "value": 0
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 1
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 4,
+          "opcode": "IS_SMALLER",
+          "opcode_number": 20,
+          "line": 211,
+          "op1": {
+            "kind": "const",
+            "index": 1
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 0,
+            "smart_branch": [
+              "jmpnz"
+            ]
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 5,
+          "opcode": "JMPNZ",
+          "opcode_number": 44,
+          "line": 211,
+          "op1": {
+            "kind": "tmp",
+            "index": 0
+          },
+          "op2": {
+            "kind": "jump",
+            "target": 3
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 6,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 214,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 7,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 214,
+          "op1": {
+            "kind": "const",
+            "index": 2
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "kind": "function",
+      "name": "andWhile",
+      "filename": "tests/Fixtures/Common/LoopAnalysis.php",
+      "line_start": 216,
+      "line_end": 224,
+      "scope": null,
+      "property_hook": null,
+      "flags": [
+        "has_type_hints",
+        "top_level",
+        "has_return_type"
+      ],
+      "num_args": 2,
+      "required_num_args": 2,
+      "return_type": {
+        "display": "int",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [
+        {
+          "name": "a",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        },
+        {
+          "name": "b",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        }
+      ],
+      "variables": [
+        "a",
+        "b",
+        "i"
+      ],
+      "temporary_variables": 4,
+      "literals": [
+        {
+          "type": "int",
+          "value": 0
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [
+        {
+          "start": -1,
+          "continue": 5,
+          "break": 9,
+          "parent": -1,
+          "switch": false
+        }
+      ],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 216,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "a"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 216,
+          "op1": {
+            "kind": "unused",
+            "value": 2
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 1,
+            "name": "b"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 218,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "JMP",
+          "opcode_number": 42,
+          "line": 219,
+          "op1": {
+            "kind": "jump",
+            "target": 5
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 4,
+          "opcode": "PRE_INC",
+          "opcode_number": 34,
+          "line": 220,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 5,
+          "opcode": "JMPZ_EX",
+          "opcode_number": 46,
+          "line": 219,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "a"
+          },
+          "op2": {
+            "kind": "jump",
+            "target": 8
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 2
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 6,
+          "opcode": "IS_SMALLER",
+          "opcode_number": 20,
+          "line": 219,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 1,
+            "name": "b"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 3
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 7,
+          "opcode": "BOOL",
+          "opcode_number": 52,
+          "line": 219,
+          "op1": {
+            "kind": "tmp",
+            "index": 3
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 2
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 8,
+          "opcode": "JMPNZ",
+          "opcode_number": 44,
+          "line": 219,
+          "op1": {
+            "kind": "tmp",
+            "index": 2
+          },
+          "op2": {
+            "kind": "jump",
+            "target": 4
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 9,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 223,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 10,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 223,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 11,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 224,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 12,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 224,
+          "op1": {
+            "kind": "const",
+            "index": 1
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "kind": "function",
+      "name": "whileTrue",
+      "filename": "tests/Fixtures/Common/LoopAnalysis.php",
+      "line_start": 226,
+      "line_end": 236,
+      "scope": null,
+      "property_hook": null,
+      "flags": [
+        "has_type_hints",
+        "top_level",
+        "has_return_type"
+      ],
+      "num_args": 1,
+      "required_num_args": 1,
+      "return_type": {
+        "display": "int",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [
+        {
+          "name": "n",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        }
+      ],
+      "variables": [
+        "n"
+      ],
+      "temporary_variables": 2,
+      "literals": [
+        {
+          "type": "int",
+          "value": 0
+        },
+        {
+          "type": "bool",
+          "value": true
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [
+        {
+          "start": -1,
+          "continue": 6,
+          "break": 7,
+          "parent": -1,
+          "switch": false
+        }
+      ],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 226,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "JMP",
+          "opcode_number": 42,
+          "line": 228,
+          "op1": {
+            "kind": "jump",
+            "target": 6
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "IS_IDENTICAL",
+          "opcode_number": 16,
+          "line": 229,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 0,
+            "smart_branch": [
+              "jmpz"
+            ]
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "JMPZ",
+          "opcode_number": 43,
+          "line": 229,
+          "op1": {
+            "kind": "tmp",
+            "index": 0
+          },
+          "op2": {
+            "kind": "jump",
+            "target": 5
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 4,
+          "opcode": "BRK",
+          "opcode_number": 254,
+          "line": 230,
+          "op1": {
+            "kind": "level",
+            "value": 0
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 1
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 5,
+          "opcode": "PRE_DEC",
+          "opcode_number": 35,
+          "line": 232,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 6,
+          "opcode": "JMPNZ",
+          "opcode_number": 44,
+          "line": 228,
+          "op1": {
+            "kind": "const",
+            "index": 1
+          },
+          "op2": {
+            "kind": "jump",
+            "target": 2
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 7,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 235,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 8,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 235,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 9,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 236,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 10,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 236,
+          "op1": {
+            "kind": "const",
+            "index": 2
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "kind": "function",
+      "name": "doReturn",
+      "filename": "tests/Fixtures/Common/LoopAnalysis.php",
+      "line_start": 238,
+      "line_end": 249,
+      "scope": null,
+      "property_hook": null,
+      "flags": [
+        "has_type_hints",
+        "top_level",
+        "has_return_type"
+      ],
+      "num_args": 1,
+      "required_num_args": 1,
+      "return_type": {
+        "display": "int",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [
+        {
+          "name": "n",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        }
+      ],
+      "variables": [
+        "n",
+        "i"
+      ],
+      "temporary_variables": 4,
+      "literals": [
+        {
+          "type": "int",
+          "value": 0
+        },
+        {
+          "type": "int",
+          "value": 0
+        },
+        {
+          "type": "int",
+          "value": 0
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [
+        {
+          "start": -1,
+          "continue": 6,
+          "break": 8,
+          "parent": -1,
+          "switch": false
+        }
+      ],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 238,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 240,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "IS_SMALLER",
+          "opcode_number": 20,
+          "line": 242,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 1
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 1,
+            "smart_branch": [
+              "jmpz"
+            ]
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "JMPZ",
+          "opcode_number": 43,
+          "line": 242,
+          "op1": {
+            "kind": "tmp",
+            "index": 1
+          },
+          "op2": {
+            "kind": "jump",
+            "target": 5
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 4,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 243,
+          "op1": {
+            "kind": "const",
+            "index": 2
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 5,
+          "opcode": "PRE_INC",
+          "opcode_number": 34,
+          "line": 245,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 6,
+          "opcode": "IS_SMALLER",
+          "opcode_number": 20,
+          "line": 246,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 3,
+            "smart_branch": [
+              "jmpnz"
+            ]
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 7,
+          "opcode": "JMPNZ",
+          "opcode_number": 44,
+          "line": 246,
+          "op1": {
+            "kind": "tmp",
+            "index": 3
+          },
+          "op2": {
+            "kind": "jump",
+            "target": 2
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 8,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 248,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 9,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 248,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 10,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 249,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 11,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 249,
+          "op1": {
+            "kind": "const",
+            "index": 3
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "kind": "function",
+      "name": "doContinue",
+      "filename": "tests/Fixtures/Common/LoopAnalysis.php",
+      "line_start": 251,
+      "line_end": 262,
+      "scope": null,
+      "property_hook": null,
+      "flags": [
+        "has_type_hints",
+        "top_level",
+        "has_return_type"
+      ],
+      "num_args": 1,
+      "required_num_args": 1,
+      "return_type": {
+        "display": "int",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [
+        {
+          "name": "n",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        }
+      ],
+      "variables": [
+        "n",
+        "i"
+      ],
+      "temporary_variables": 4,
+      "literals": [
+        {
+          "type": "int",
+          "value": 0
+        },
+        {
+          "type": "int",
+          "value": 2
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [
+        {
+          "start": -1,
+          "continue": 6,
+          "break": 8,
+          "parent": -1,
+          "switch": false
+        }
+      ],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 251,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 253,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "PRE_INC",
+          "opcode_number": 34,
+          "line": 255,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "IS_IDENTICAL",
+          "opcode_number": 16,
+          "line": 256,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 1
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 2,
+            "smart_branch": [
+              "jmpz"
+            ]
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 4,
+          "opcode": "JMPZ",
+          "opcode_number": 43,
+          "line": 256,
+          "op1": {
+            "kind": "tmp",
+            "index": 2
+          },
+          "op2": {
+            "kind": "jump",
+            "target": 6
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 5,
+          "opcode": "CONT",
+          "opcode_number": 255,
+          "line": 257,
+          "op1": {
+            "kind": "level",
+            "value": 0
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 1
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 6,
+          "opcode": "IS_SMALLER",
+          "opcode_number": 20,
+          "line": 259,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "cv",
+            "index": 0,
+            "name": "n"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 3,
+            "smart_branch": [
+              "jmpnz"
+            ]
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 7,
+          "opcode": "JMPNZ",
+          "opcode_number": 44,
+          "line": 259,
+          "op1": {
+            "kind": "tmp",
+            "index": 3
+          },
+          "op2": {
+            "kind": "jump",
+            "target": 2
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 8,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 261,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 9,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 261,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "i"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 10,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 262,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 11,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 262,
+          "op1": {
+            "kind": "const",
+            "index": 2
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "kind": "main",
+      "name": null,
+      "filename": "tests/Fixtures/Common/LoopAnalysis.php",
+      "line_start": 1,
+      "line_end": 263,
+      "scope": null,
+      "property_hook": null,
+      "flags": [],
+      "num_args": 0,
+      "required_num_args": 0,
+      "return_type": null,
+      "arguments": [],
+      "variables": [],
+      "temporary_variables": 0,
+      "literals": [
+        {
+          "type": "int",
+          "value": 1
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 263,
+          "op1": {
+            "kind": "const",
+            "index": 0
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    }
+  ],
+  "classes": []
+}

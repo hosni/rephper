@@ -126,6 +126,7 @@ final class FixtureSets
             'Common/Calls.php' => ['Function: nested', ' INIT_FCALL_BY_NAME ', ' SEND_UNPACK ', ' SEND_REF ', ' INIT_DYNAMIC_CALL ', ' INIT_METHOD_CALL ', ' CALLABLE_CONVERT ', ' DO_UCALL '],
             'Common/Statements.php' => ['Function: assignSequence', 'Function: throwLiteral', ' THROW ', ' DO_ICALL ', ' ECHO '],
             'Common/Conditionals.php' => ['Function: nestedIf', ' JMPZ ', ' JMPZ_EX ', ' JMPNZ_EX ', ' SWITCH_', ' GOTO ', ' BOOL_NOT '],
+            'Common/LoopAnalysis.php' => ['Function: simpleWhile', 'Function: simpleForeach', ' FE_FETCH_', ' BRK ', ' CONT ', ' GOTO '],
         ];
     }
 }

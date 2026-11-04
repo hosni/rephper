@@ -1,0 +1,953 @@
+Rephper: Compiled op array
+File: tests/Fixtures/Common/LoopAnalysis.php
+Function: simpleWhile
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 10
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 3
+Literals: 2
+Return type: int
+Lines: 3-11
+
+Compiled variables:
+0 $n
+1 $i
+
+Literals:
+0 int(0)
+1 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=3 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 ASSIGN line=5 op1=CV(1:$i) op2=CONST(int(0)) result=UNUSED ext=-
+2 JMP line=6 op1=JMP(4) op2=UNUSED result=UNUSED ext=-
+3 PRE_INC line=7 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+4 IS_SMALLER line=6 op1=CV(1:$i) op2=CV(0:$n) result=TMP(2)|SMART_JMPNZ ext=-
+5 JMPNZ line=6 op1=TMP(2) op2=JMP(3) result=UNUSED ext=-
+6 VERIFY_RETURN_TYPE line=10 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+7 RETURN line=10 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+8 VERIFY_RETURN_TYPE line=11 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+9 RETURN line=11 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/LoopAnalysis.php
+Function: simpleDo
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 9
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 3
+Literals: 2
+Return type: int
+Lines: 13-21
+
+Compiled variables:
+0 $n
+1 $i
+
+Literals:
+0 int(0)
+1 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=13 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 ASSIGN line=15 op1=CV(1:$i) op2=CONST(int(0)) result=UNUSED ext=-
+2 PRE_INC line=17 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+3 IS_SMALLER line=18 op1=CV(1:$i) op2=CV(0:$n) result=TMP(2)|SMART_JMPNZ ext=-
+4 JMPNZ line=18 op1=TMP(2) op2=JMP(2) result=UNUSED ext=-
+5 VERIFY_RETURN_TYPE line=20 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+6 RETURN line=20 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+7 VERIFY_RETURN_TYPE line=21 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+8 RETURN line=21 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/LoopAnalysis.php
+Function: simpleFor
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 12
+Arguments: 1
+Required arguments: 1
+Compiled variables: 3
+Temporary variables: 5
+Literals: 3
+Return type: int
+Lines: 23-31
+
+Compiled variables:
+0 $n
+1 $total
+2 $i
+
+Literals:
+0 int(0)
+1 int(0)
+2 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=23 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 ASSIGN line=25 op1=CV(1:$total) op2=CONST(int(0)) result=UNUSED ext=-
+2 ASSIGN line=26 op1=CV(2:$i) op2=CONST(int(0)) result=UNUSED ext=-
+3 JMP line=26 op1=JMP(6) op2=UNUSED result=UNUSED ext=-
+4 PRE_INC line=27 op1=CV(1:$total) op2=UNUSED result=UNUSED ext=-
+5 PRE_INC line=26 op1=CV(2:$i) op2=UNUSED result=UNUSED ext=-
+6 IS_SMALLER line=26 op1=CV(2:$i) op2=CV(0:$n) result=TMP(4)|SMART_JMPNZ ext=-
+7 JMPNZ line=26 op1=TMP(4) op2=JMP(4) result=UNUSED ext=-
+8 VERIFY_RETURN_TYPE line=30 op1=CV(1:$total) op2=UNUSED result=UNUSED ext=-
+9 RETURN line=30 op1=CV(1:$total) op2=UNUSED result=UNUSED ext=-
+10 VERIFY_RETURN_TYPE line=31 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+11 RETURN line=31 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/LoopAnalysis.php
+Function: emptyFor
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 10
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 3
+Literals: 2
+Return type: int
+Lines: 33-39
+
+Compiled variables:
+0 $n
+1 $i
+
+Literals:
+0 int(0)
+1 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=33 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 ASSIGN line=35 op1=CV(1:$i) op2=CONST(int(0)) result=UNUSED ext=-
+2 JMP line=35 op1=JMP(4) op2=UNUSED result=UNUSED ext=-
+3 PRE_INC line=35 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+4 IS_SMALLER line=35 op1=CV(1:$i) op2=CV(0:$n) result=TMP(2)|SMART_JMPNZ ext=-
+5 JMPNZ line=35 op1=TMP(2) op2=JMP(3) result=UNUSED ext=-
+6 VERIFY_RETURN_TYPE line=38 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+7 RETURN line=38 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+8 VERIFY_RETURN_TYPE line=39 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+9 RETURN line=39 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/LoopAnalysis.php
+Function: simpleForeach
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 11
+Arguments: 1
+Required arguments: 1
+Compiled variables: 3
+Temporary variables: 3
+Literals: 2
+Return type: int
+Lines: 41-49
+
+Compiled variables:
+0 $values
+1 $total
+2 $value
+
+Literals:
+0 int(0)
+1 null
+
+Argument details:
+0 $values array
+
+Opcodes:
+0 RECV line=41 op1=UNUSED(1) op2=UNUSED(128) result=CV(0:$values) ext=-
+1 ASSIGN line=43 op1=CV(1:$total) op2=CONST(int(0)) result=UNUSED ext=-
+2 FE_RESET_R line=44 op1=CV(0:$values) op2=JMP(6) result=VAR(1) ext=-
+3 FE_FETCH_R line=44 op1=VAR(1) op2=CV(2:$value) result=UNUSED ext=jmp:6
+4 ASSIGN_OP line=45 op1=CV(1:$total) op2=CV(2:$value) result=UNUSED ext=1
+5 JMP line=44 op1=JMP(3) op2=UNUSED result=UNUSED ext=-
+6 FE_FREE line=44 op1=VAR(1) op2=UNUSED result=UNUSED ext=-
+7 VERIFY_RETURN_TYPE line=48 op1=CV(1:$total) op2=UNUSED result=UNUSED ext=-
+8 RETURN line=48 op1=CV(1:$total) op2=UNUSED result=UNUSED ext=-
+9 VERIFY_RETURN_TYPE line=49 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+10 RETURN line=49 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/LoopAnalysis.php
+Function: nestedWhile
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 17
+Arguments: 1
+Required arguments: 1
+Compiled variables: 4
+Temporary variables: 8
+Literals: 4
+Return type: int
+Lines: 51-65
+
+Compiled variables:
+0 $n
+1 $i
+2 $total
+3 $j
+
+Literals:
+0 int(0)
+1 int(0)
+2 int(0)
+3 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=51 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 ASSIGN line=53 op1=CV(1:$i) op2=CONST(int(0)) result=UNUSED ext=-
+2 ASSIGN line=54 op1=CV(2:$total) op2=CONST(int(0)) result=UNUSED ext=-
+3 JMP line=55 op1=JMP(11) op2=UNUSED result=UNUSED ext=-
+4 ASSIGN line=56 op1=CV(3:$j) op2=CONST(int(0)) result=UNUSED ext=-
+5 JMP line=57 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+6 PRE_INC line=58 op1=CV(2:$total) op2=UNUSED result=UNUSED ext=-
+7 PRE_INC line=59 op1=CV(3:$j) op2=UNUSED result=UNUSED ext=-
+8 IS_SMALLER line=57 op1=CV(3:$j) op2=CV(1:$i) result=TMP(5)|SMART_JMPNZ ext=-
+9 JMPNZ line=57 op1=TMP(5) op2=JMP(6) result=UNUSED ext=-
+10 PRE_INC line=61 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+11 IS_SMALLER line=55 op1=CV(1:$i) op2=CV(0:$n) result=TMP(7)|SMART_JMPNZ ext=-
+12 JMPNZ line=55 op1=TMP(7) op2=JMP(4) result=UNUSED ext=-
+13 VERIFY_RETURN_TYPE line=64 op1=CV(2:$total) op2=UNUSED result=UNUSED ext=-
+14 RETURN line=64 op1=CV(2:$total) op2=UNUSED result=UNUSED ext=-
+15 VERIFY_RETURN_TYPE line=65 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+16 RETURN line=65 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/LoopAnalysis.php
+Function: nestedMixed
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 17
+Arguments: 2
+Required arguments: 2
+Compiled variables: 5
+Temporary variables: 6
+Literals: 3
+Return type: int
+Lines: 67-77
+
+Compiled variables:
+0 $n
+1 $rows
+2 $total
+3 $i
+4 $row
+
+Literals:
+0 int(0)
+1 int(0)
+2 null
+
+Argument details:
+0 $n int
+1 $rows array
+
+Opcodes:
+0 RECV line=67 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 RECV line=67 op1=UNUSED(2) op2=UNUSED(128) result=CV(1:$rows) ext=-
+2 ASSIGN line=69 op1=CV(2:$total) op2=CONST(int(0)) result=UNUSED ext=-
+3 ASSIGN line=70 op1=CV(3:$i) op2=CONST(int(0)) result=UNUSED ext=-
+4 JMP line=70 op1=JMP(11) op2=UNUSED result=UNUSED ext=-
+5 FE_RESET_R line=71 op1=CV(1:$rows) op2=JMP(9) result=VAR(2) ext=-
+6 FE_FETCH_R line=71 op1=VAR(2) op2=CV(4:$row) result=UNUSED ext=jmp:9
+7 ASSIGN_OP line=72 op1=CV(2:$total) op2=CV(4:$row) result=UNUSED ext=1
+8 JMP line=71 op1=JMP(6) op2=UNUSED result=UNUSED ext=-
+9 FE_FREE line=71 op1=VAR(2) op2=UNUSED result=UNUSED ext=-
+10 PRE_INC line=70 op1=CV(3:$i) op2=UNUSED result=UNUSED ext=-
+11 IS_SMALLER line=70 op1=CV(3:$i) op2=CV(0:$n) result=TMP(5)|SMART_JMPNZ ext=-
+12 JMPNZ line=70 op1=TMP(5) op2=JMP(5) result=UNUSED ext=-
+13 VERIFY_RETURN_TYPE line=76 op1=CV(2:$total) op2=UNUSED result=UNUSED ext=-
+14 RETURN line=76 op1=CV(2:$total) op2=UNUSED result=UNUSED ext=-
+15 VERIFY_RETURN_TYPE line=77 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+16 RETURN line=77 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/LoopAnalysis.php
+Function: multiBack
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 13
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 4
+Literals: 3
+Return type: int
+Lines: 79-90
+
+Compiled variables:
+0 $n
+1 $i
+
+Literals:
+0 int(0)
+1 int(1)
+2 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=79 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 ASSIGN line=81 op1=CV(1:$i) op2=CONST(int(0)) result=UNUSED ext=-
+2 JMP line=82 op1=JMP(7) op2=UNUSED result=UNUSED ext=-
+3 IS_IDENTICAL line=83 op1=CV(1:$i) op2=CONST(int(1)) result=TMP(1)|SMART_JMPZ ext=-
+4 JMPZ line=83 op1=TMP(1) op2=JMP(6) result=UNUSED ext=-
+5 CONT line=84 op1=LEVEL(0) op2=UNUSED(1) result=UNUSED ext=-
+6 PRE_INC line=86 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+7 IS_SMALLER line=82 op1=CV(1:$i) op2=CV(0:$n) result=TMP(3)|SMART_JMPNZ ext=-
+8 JMPNZ line=82 op1=TMP(3) op2=JMP(3) result=UNUSED ext=-
+9 VERIFY_RETURN_TYPE line=89 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+10 RETURN line=89 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+11 VERIFY_RETURN_TYPE line=90 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+12 RETURN line=90 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/LoopAnalysis.php
+Function: broken
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 13
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 4
+Literals: 3
+Return type: int
+Lines: 92-103
+
+Compiled variables:
+0 $n
+1 $i
+
+Literals:
+0 int(0)
+1 int(3)
+2 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=92 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 ASSIGN line=94 op1=CV(1:$i) op2=CONST(int(0)) result=UNUSED ext=-
+2 JMP line=95 op1=JMP(7) op2=UNUSED result=UNUSED ext=-
+3 IS_IDENTICAL line=96 op1=CV(1:$i) op2=CONST(int(3)) result=TMP(1)|SMART_JMPZ ext=-
+4 JMPZ line=96 op1=TMP(1) op2=JMP(6) result=UNUSED ext=-
+5 BRK line=97 op1=LEVEL(0) op2=UNUSED(1) result=UNUSED ext=-
+6 PRE_INC line=99 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+7 IS_SMALLER line=95 op1=CV(1:$i) op2=CV(0:$n) result=TMP(3)|SMART_JMPNZ ext=-
+8 JMPNZ line=95 op1=TMP(3) op2=JMP(3) result=UNUSED ext=-
+9 VERIFY_RETURN_TYPE line=102 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+10 RETURN line=102 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+11 VERIFY_RETURN_TYPE line=103 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+12 RETURN line=103 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/LoopAnalysis.php
+Function: continued
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 15
+Arguments: 1
+Required arguments: 1
+Compiled variables: 3
+Temporary variables: 6
+Literals: 4
+Return type: int
+Lines: 105-116
+
+Compiled variables:
+0 $n
+1 $total
+2 $i
+
+Literals:
+0 int(0)
+1 int(0)
+2 int(2)
+3 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=105 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 ASSIGN line=107 op1=CV(1:$total) op2=CONST(int(0)) result=UNUSED ext=-
+2 ASSIGN line=108 op1=CV(2:$i) op2=CONST(int(0)) result=UNUSED ext=-
+3 JMP line=108 op1=JMP(9) op2=UNUSED result=UNUSED ext=-
+4 IS_IDENTICAL line=109 op1=CV(2:$i) op2=CONST(int(2)) result=TMP(2)|SMART_JMPZ ext=-
+5 JMPZ line=109 op1=TMP(2) op2=JMP(7) result=UNUSED ext=-
+6 CONT line=110 op1=LEVEL(0) op2=UNUSED(1) result=UNUSED ext=-
+7 PRE_INC line=112 op1=CV(1:$total) op2=UNUSED result=UNUSED ext=-
+8 PRE_INC line=108 op1=CV(2:$i) op2=UNUSED result=UNUSED ext=-
+9 IS_SMALLER line=108 op1=CV(2:$i) op2=CV(0:$n) result=TMP(5)|SMART_JMPNZ ext=-
+10 JMPNZ line=108 op1=TMP(5) op2=JMP(4) result=UNUSED ext=-
+11 VERIFY_RETURN_TYPE line=115 op1=CV(1:$total) op2=UNUSED result=UNUSED ext=-
+12 RETURN line=115 op1=CV(1:$total) op2=UNUSED result=UNUSED ext=-
+13 VERIFY_RETURN_TYPE line=116 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+14 RETURN line=116 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/LoopAnalysis.php
+Function: breakTwo
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 19
+Arguments: 1
+Required arguments: 1
+Compiled variables: 3
+Temporary variables: 8
+Literals: 5
+Return type: int
+Lines: 118-134
+
+Compiled variables:
+0 $n
+1 $total
+2 $j
+
+Literals:
+0 int(0)
+1 int(0)
+2 int(1)
+3 int(0)
+4 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=118 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 ASSIGN line=120 op1=CV(1:$total) op2=CONST(int(0)) result=UNUSED ext=-
+2 JMP line=121 op1=JMP(13) op2=UNUSED result=UNUSED ext=-
+3 ASSIGN line=122 op1=CV(2:$j) op2=CONST(int(0)) result=UNUSED ext=-
+4 JMP line=123 op1=JMP(10) op2=UNUSED result=UNUSED ext=-
+5 IS_IDENTICAL line=124 op1=CV(2:$j) op2=CONST(int(1)) result=TMP(2)|SMART_JMPZ ext=-
+6 JMPZ line=124 op1=TMP(2) op2=JMP(8) result=UNUSED ext=-
+7 BRK line=125 op1=LEVEL(1) op2=UNUSED(2) result=UNUSED ext=-
+8 PRE_INC line=127 op1=CV(2:$j) op2=UNUSED result=UNUSED ext=-
+9 PRE_INC line=128 op1=CV(1:$total) op2=UNUSED result=UNUSED ext=-
+10 IS_SMALLER line=123 op1=CV(2:$j) op2=CV(0:$n) result=TMP(5)|SMART_JMPNZ ext=-
+11 JMPNZ line=123 op1=TMP(5) op2=JMP(5) result=UNUSED ext=-
+12 PRE_DEC line=130 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+13 IS_SMALLER line=121 op1=CONST(int(0)) op2=CV(0:$n) result=TMP(7)|SMART_JMPNZ ext=-
+14 JMPNZ line=121 op1=TMP(7) op2=JMP(3) result=UNUSED ext=-
+15 VERIFY_RETURN_TYPE line=133 op1=CV(1:$total) op2=UNUSED result=UNUSED ext=-
+16 RETURN line=133 op1=CV(1:$total) op2=UNUSED result=UNUSED ext=-
+17 VERIFY_RETURN_TYPE line=134 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+18 RETURN line=134 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/LoopAnalysis.php
+Function: continueTwo
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 20
+Arguments: 1
+Required arguments: 1
+Compiled variables: 4
+Temporary variables: 9
+Literals: 5
+Return type: int
+Lines: 136-151
+
+Compiled variables:
+0 $n
+1 $total
+2 $i
+3 $j
+
+Literals:
+0 int(0)
+1 int(0)
+2 int(0)
+3 int(0)
+4 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=136 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 ASSIGN line=138 op1=CV(1:$total) op2=CONST(int(0)) result=UNUSED ext=-
+2 ASSIGN line=139 op1=CV(2:$i) op2=CONST(int(0)) result=UNUSED ext=-
+3 JMP line=139 op1=JMP(14) op2=UNUSED result=UNUSED ext=-
+4 ASSIGN line=140 op1=CV(3:$j) op2=CONST(int(0)) result=UNUSED ext=-
+5 JMP line=141 op1=JMP(11) op2=UNUSED result=UNUSED ext=-
+6 IS_IDENTICAL line=142 op1=CV(3:$j) op2=CONST(int(0)) result=TMP(3)|SMART_JMPZ ext=-
+7 JMPZ line=142 op1=TMP(3) op2=JMP(9) result=UNUSED ext=-
+8 CONT line=143 op1=LEVEL(1) op2=UNUSED(2) result=UNUSED ext=-
+9 PRE_INC line=145 op1=CV(1:$total) op2=UNUSED result=UNUSED ext=-
+10 PRE_INC line=146 op1=CV(3:$j) op2=UNUSED result=UNUSED ext=-
+11 IS_SMALLER line=141 op1=CV(3:$j) op2=CV(2:$i) result=TMP(6)|SMART_JMPNZ ext=-
+12 JMPNZ line=141 op1=TMP(6) op2=JMP(6) result=UNUSED ext=-
+13 PRE_INC line=139 op1=CV(2:$i) op2=UNUSED result=UNUSED ext=-
+14 IS_SMALLER line=139 op1=CV(2:$i) op2=CV(0:$n) result=TMP(8)|SMART_JMPNZ ext=-
+15 JMPNZ line=139 op1=TMP(8) op2=JMP(4) result=UNUSED ext=-
+16 VERIFY_RETURN_TYPE line=150 op1=CV(1:$total) op2=UNUSED result=UNUSED ext=-
+17 RETURN line=150 op1=CV(1:$total) op2=UNUSED result=UNUSED ext=-
+18 VERIFY_RETURN_TYPE line=151 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+19 RETURN line=151 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/LoopAnalysis.php
+Function: conditionalBody
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 17
+Arguments: 1
+Required arguments: 1
+Compiled variables: 3
+Temporary variables: 8
+Literals: 6
+Return type: int
+Lines: 153-167
+
+Compiled variables:
+0 $n
+1 $i
+2 $total
+
+Literals:
+0 int(0)
+1 int(0)
+2 int(2)
+3 int(0)
+4 int(2)
+5 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=153 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 ASSIGN line=155 op1=CV(1:$i) op2=CONST(int(0)) result=UNUSED ext=-
+2 ASSIGN line=156 op1=CV(2:$total) op2=CONST(int(0)) result=UNUSED ext=-
+3 JMP line=157 op1=JMP(11) op2=UNUSED result=UNUSED ext=-
+4 MOD line=158 op1=CV(1:$i) op2=CONST(int(2)) result=TMP(2) ext=-
+5 IS_IDENTICAL line=158 op1=TMP(2) op2=CONST(int(0)) result=TMP(3)|SMART_JMPZ ext=-
+6 JMPZ line=158 op1=TMP(3) op2=JMP(9) result=UNUSED ext=-
+7 PRE_INC line=159 op1=CV(2:$total) op2=UNUSED result=UNUSED ext=-
+8 JMP line=158 op1=JMP(10) op2=UNUSED result=UNUSED ext=-
+9 ASSIGN_OP line=161 op1=CV(2:$total) op2=CONST(int(2)) result=UNUSED ext=1
+10 PRE_INC line=163 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+11 IS_SMALLER line=157 op1=CV(1:$i) op2=CV(0:$n) result=TMP(7)|SMART_JMPNZ ext=-
+12 JMPNZ line=157 op1=TMP(7) op2=JMP(4) result=UNUSED ext=-
+13 VERIFY_RETURN_TYPE line=166 op1=CV(2:$total) op2=UNUSED result=UNUSED ext=-
+14 RETURN line=166 op1=CV(2:$total) op2=UNUSED result=UNUSED ext=-
+15 VERIFY_RETURN_TYPE line=167 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+16 RETURN line=167 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/LoopAnalysis.php
+Function: sequential
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 16
+Arguments: 1
+Required arguments: 1
+Compiled variables: 3
+Temporary variables: 7
+Literals: 3
+Return type: int
+Lines: 169-181
+
+Compiled variables:
+0 $n
+1 $i
+2 $j
+
+Literals:
+0 int(0)
+1 int(0)
+2 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=169 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 ASSIGN line=171 op1=CV(1:$i) op2=CONST(int(0)) result=UNUSED ext=-
+2 JMP line=172 op1=JMP(4) op2=UNUSED result=UNUSED ext=-
+3 PRE_INC line=173 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+4 IS_SMALLER line=172 op1=CV(1:$i) op2=CV(0:$n) result=TMP(2)|SMART_JMPNZ ext=-
+5 JMPNZ line=172 op1=TMP(2) op2=JMP(3) result=UNUSED ext=-
+6 ASSIGN line=175 op1=CV(2:$j) op2=CONST(int(0)) result=UNUSED ext=-
+7 JMP line=176 op1=JMP(9) op2=UNUSED result=UNUSED ext=-
+8 PRE_INC line=177 op1=CV(2:$j) op2=UNUSED result=UNUSED ext=-
+9 IS_SMALLER line=176 op1=CV(2:$j) op2=CV(0:$n) result=TMP(5)|SMART_JMPNZ ext=-
+10 JMPNZ line=176 op1=TMP(5) op2=JMP(8) result=UNUSED ext=-
+11 ADD line=180 op1=CV(1:$i) op2=CV(2:$j) result=TMP(6) ext=-
+12 VERIFY_RETURN_TYPE line=180 op1=TMP(6) op2=UNUSED result=UNUSED ext=-
+13 RETURN line=180 op1=TMP(6) op2=UNUSED result=UNUSED ext=-
+14 VERIFY_RETURN_TYPE line=181 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+15 RETURN line=181 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/LoopAnalysis.php
+Function: backwardGoto
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 10
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 3
+Literals: 3
+Return type: int
+Lines: 183-193
+
+Compiled variables:
+0 $n
+1 $i
+
+Literals:
+0 int(0)
+1 string("start")
+2 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=183 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 ASSIGN line=185 op1=CV(1:$i) op2=CONST(int(0)) result=UNUSED ext=-
+2 PRE_INC line=187 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+3 IS_SMALLER line=188 op1=CV(1:$i) op2=CV(0:$n) result=TMP(2)|SMART_JMPZ ext=-
+4 JMPZ line=188 op1=TMP(2) op2=JMP(6) result=UNUSED ext=-
+5 GOTO line=189 op1=LABEL(0) op2=CONST(string("start")) result=UNUSED ext=-
+6 VERIFY_RETURN_TYPE line=192 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+7 RETURN line=192 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+8 VERIFY_RETURN_TYPE line=193 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+9 RETURN line=193 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/LoopAnalysis.php
+Function: notALoop
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 10
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 2
+Literals: 5
+Return type: int
+Lines: 195-206
+
+Compiled variables:
+0 $n
+
+Literals:
+0 string("mid")
+1 int(1)
+2 int(0)
+3 string("start")
+4 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=195 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 GOTO line=197 op1=LABEL(0) op2=CONST(string("mid")) result=UNUSED ext=-
+2 ASSIGN line=199 op1=CV(0:$n) op2=CONST(int(1)) result=UNUSED ext=-
+3 IS_SMALLER line=201 op1=CONST(int(0)) op2=CV(0:$n) result=TMP(1)|SMART_JMPZ ext=-
+4 JMPZ line=201 op1=TMP(1) op2=JMP(6) result=UNUSED ext=-
+5 GOTO line=202 op1=LABEL(0) op2=CONST(string("start")) result=UNUSED ext=-
+6 VERIFY_RETURN_TYPE line=205 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+7 RETURN line=205 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+8 VERIFY_RETURN_TYPE line=206 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+9 RETURN line=206 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/LoopAnalysis.php
+Function: dead
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 8
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 1
+Literals: 3
+Return type: int
+Lines: 208-214
+
+Compiled variables:
+0 $n
+
+Literals:
+0 int(0)
+1 int(0)
+2 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=208 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 RETURN line=210 op1=CONST(int(0)) op2=UNUSED result=UNUSED ext=-
+2 JMP line=211 op1=JMP(4) op2=UNUSED result=UNUSED ext=-
+3 BRK line=212 op1=LEVEL(0) op2=UNUSED(1) result=UNUSED ext=-
+4 IS_SMALLER line=211 op1=CONST(int(0)) op2=CV(0:$n) result=TMP(0)|SMART_JMPNZ ext=-
+5 JMPNZ line=211 op1=TMP(0) op2=JMP(3) result=UNUSED ext=-
+6 VERIFY_RETURN_TYPE line=214 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+7 RETURN line=214 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/LoopAnalysis.php
+Function: andWhile
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 13
+Arguments: 2
+Required arguments: 2
+Compiled variables: 3
+Temporary variables: 4
+Literals: 2
+Return type: int
+Lines: 216-224
+
+Compiled variables:
+0 $a
+1 $b
+2 $i
+
+Literals:
+0 int(0)
+1 null
+
+Argument details:
+0 $a int
+1 $b int
+
+Opcodes:
+0 RECV line=216 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$a) ext=-
+1 RECV line=216 op1=UNUSED(2) op2=UNUSED(16) result=CV(1:$b) ext=-
+2 ASSIGN line=218 op1=CV(2:$i) op2=CONST(int(0)) result=UNUSED ext=-
+3 JMP line=219 op1=JMP(5) op2=UNUSED result=UNUSED ext=-
+4 PRE_INC line=220 op1=CV(2:$i) op2=UNUSED result=UNUSED ext=-
+5 JMPZ_EX line=219 op1=CV(0:$a) op2=JMP(8) result=TMP(2) ext=-
+6 IS_SMALLER line=219 op1=CV(2:$i) op2=CV(1:$b) result=TMP(3) ext=-
+7 BOOL line=219 op1=TMP(3) op2=UNUSED result=TMP(2) ext=-
+8 JMPNZ line=219 op1=TMP(2) op2=JMP(4) result=UNUSED ext=-
+9 VERIFY_RETURN_TYPE line=223 op1=CV(2:$i) op2=UNUSED result=UNUSED ext=-
+10 RETURN line=223 op1=CV(2:$i) op2=UNUSED result=UNUSED ext=-
+11 VERIFY_RETURN_TYPE line=224 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+12 RETURN line=224 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/LoopAnalysis.php
+Function: whileTrue
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 11
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 2
+Literals: 3
+Return type: int
+Lines: 226-236
+
+Compiled variables:
+0 $n
+
+Literals:
+0 int(0)
+1 true
+2 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=226 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 JMP line=228 op1=JMP(6) op2=UNUSED result=UNUSED ext=-
+2 IS_IDENTICAL line=229 op1=CV(0:$n) op2=CONST(int(0)) result=TMP(0)|SMART_JMPZ ext=-
+3 JMPZ line=229 op1=TMP(0) op2=JMP(5) result=UNUSED ext=-
+4 BRK line=230 op1=LEVEL(0) op2=UNUSED(1) result=UNUSED ext=-
+5 PRE_DEC line=232 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+6 JMPNZ line=228 op1=CONST(true) op2=JMP(2) result=UNUSED ext=-
+7 VERIFY_RETURN_TYPE line=235 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+8 RETURN line=235 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+9 VERIFY_RETURN_TYPE line=236 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+10 RETURN line=236 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/LoopAnalysis.php
+Function: doReturn
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 12
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 4
+Literals: 4
+Return type: int
+Lines: 238-249
+
+Compiled variables:
+0 $n
+1 $i
+
+Literals:
+0 int(0)
+1 int(0)
+2 int(0)
+3 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=238 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 ASSIGN line=240 op1=CV(1:$i) op2=CONST(int(0)) result=UNUSED ext=-
+2 IS_SMALLER line=242 op1=CV(0:$n) op2=CONST(int(0)) result=TMP(1)|SMART_JMPZ ext=-
+3 JMPZ line=242 op1=TMP(1) op2=JMP(5) result=UNUSED ext=-
+4 RETURN line=243 op1=CONST(int(0)) op2=UNUSED result=UNUSED ext=-
+5 PRE_INC line=245 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+6 IS_SMALLER line=246 op1=CV(1:$i) op2=CV(0:$n) result=TMP(3)|SMART_JMPNZ ext=-
+7 JMPNZ line=246 op1=TMP(3) op2=JMP(2) result=UNUSED ext=-
+8 VERIFY_RETURN_TYPE line=248 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+9 RETURN line=248 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+10 VERIFY_RETURN_TYPE line=249 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+11 RETURN line=249 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/LoopAnalysis.php
+Function: doContinue
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 12
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 4
+Literals: 3
+Return type: int
+Lines: 251-262
+
+Compiled variables:
+0 $n
+1 $i
+
+Literals:
+0 int(0)
+1 int(2)
+2 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=251 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 ASSIGN line=253 op1=CV(1:$i) op2=CONST(int(0)) result=UNUSED ext=-
+2 PRE_INC line=255 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+3 IS_IDENTICAL line=256 op1=CV(1:$i) op2=CONST(int(2)) result=TMP(2)|SMART_JMPZ ext=-
+4 JMPZ line=256 op1=TMP(2) op2=JMP(6) result=UNUSED ext=-
+5 CONT line=257 op1=LEVEL(0) op2=UNUSED(1) result=UNUSED ext=-
+6 IS_SMALLER line=259 op1=CV(1:$i) op2=CV(0:$n) result=TMP(3)|SMART_JMPNZ ext=-
+7 JMPNZ line=259 op1=TMP(3) op2=JMP(2) result=UNUSED ext=-
+8 VERIFY_RETURN_TYPE line=261 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+9 RETURN line=261 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+10 VERIFY_RETURN_TYPE line=262 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+11 RETURN line=262 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/LoopAnalysis.php
+Function: <main>
+Class: -
+Kind: main
+Property: -
+Hook: -
+Opcodes: 1
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 1
+Return type: -
+Lines: 1-263
+
+Compiled variables:
+(none)
+
+Literals:
+0 int(1)
+
+Argument details:
+(none)
+
+Opcodes:
+0 RETURN line=263 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+
