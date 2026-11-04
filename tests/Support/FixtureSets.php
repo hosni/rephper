@@ -129,6 +129,7 @@ final class FixtureSets
             'Common/LoopAnalysis.php' => ['Function: simpleWhile', 'Function: simpleForeach', ' FE_FETCH_', ' BRK ', ' CONT ', ' GOTO '],
             'Common/WhileDo.php' => ['Function: emptyWhile', 'Function: switchBreak', 'Function: realSwitch', ' BRK ', ' CONT '],
             'Common/ForLoops.php' => ['Function: simple', 'Function: whileAssign', 'Function: assignCond', 'Function: ambiguous', ' BRK ', ' CONT ', ' COALESCE '],
+            'Common/ForeachLoops.php' => ['Function: simple', 'Function: withKey', 'Function: byRef', 'Function: keyRef', ' FE_RESET_', ' FE_FETCH_', ' FE_FREE ', ' BRK ', ' CONT '],
         ];
     }
 }

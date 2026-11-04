@@ -1,0 +1,1225 @@
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ForeachLoops.php
+Function: process
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 2
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 0
+Literals: 1
+Return type: void
+Lines: 3-5
+
+Compiled variables:
+0 $value
+
+Literals:
+0 null
+
+Argument details:
+0 $value mixed
+
+Opcodes:
+0 RECV line=3 op1=UNUSED(1) op2=UNUSED(1022) result=CV(0:$value) ext=-
+1 RETURN line=5 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ForeachLoops.php
+Function: processKey
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 3
+Arguments: 2
+Required arguments: 2
+Compiled variables: 2
+Temporary variables: 0
+Literals: 1
+Return type: void
+Lines: 7-9
+
+Compiled variables:
+0 $key
+1 $value
+
+Literals:
+0 null
+
+Argument details:
+0 $key mixed
+1 $value mixed
+
+Opcodes:
+0 RECV line=7 op1=UNUSED(1) op2=UNUSED(1022) result=CV(0:$key) ext=-
+1 RECV line=7 op1=UNUSED(2) op2=UNUSED(1022) result=CV(1:$value) ext=-
+2 RETURN line=9 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ForeachLoops.php
+Function: getItems
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 3
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 2
+Return type: array
+Lines: 11-14
+
+Compiled variables:
+(none)
+
+Literals:
+0 array(3: [0=>int(1), 1=>int(2), 2=>int(3)])
+1 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 RETURN line=13 op1=CONST(array(3: [0=>int(1), 1=>int(2), 2=>int(3)])) op2=UNUSED result=UNUSED ext=-
+1 VERIFY_RETURN_TYPE line=14 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+2 RETURN line=14 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ForeachLoops.php
+Function: simple
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 9
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 2
+Literals: 2
+Return type: void
+Lines: 16-21
+
+Compiled variables:
+0 $items
+1 $value
+
+Literals:
+0 string("process")
+1 null
+
+Argument details:
+0 $items array
+
+Opcodes:
+0 RECV line=16 op1=UNUSED(1) op2=UNUSED(128) result=CV(0:$items) ext=-
+1 FE_RESET_R line=18 op1=CV(0:$items) op2=JMP(7) result=VAR(0) ext=-
+2 FE_FETCH_R line=18 op1=VAR(0) op2=CV(1:$value) result=UNUSED ext=jmp:7
+3 INIT_FCALL line=19 op1=UNUSED(96) op2=CONST(string("process")) result=UNUSED ext=1
+4 SEND_VAR line=19 op1=CV(1:$value) op2=UNUSED(1) result=UNUSED(80) ext=-
+5 DO_UCALL line=19 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+6 JMP line=18 op1=JMP(2) op2=UNUSED result=UNUSED ext=-
+7 FE_FREE line=18 op1=VAR(0) op2=UNUSED result=UNUSED ext=-
+8 RETURN line=21 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ForeachLoops.php
+Function: withKey
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 11
+Arguments: 1
+Required arguments: 1
+Compiled variables: 3
+Temporary variables: 4
+Literals: 2
+Return type: void
+Lines: 23-28
+
+Compiled variables:
+0 $items
+1 $value
+2 $key
+
+Literals:
+0 string("processkey")
+1 null
+
+Argument details:
+0 $items array
+
+Opcodes:
+0 RECV line=23 op1=UNUSED(1) op2=UNUSED(128) result=CV(0:$items) ext=-
+1 FE_RESET_R line=25 op1=CV(0:$items) op2=JMP(9) result=VAR(0) ext=-
+2 FE_FETCH_R line=25 op1=VAR(0) op2=CV(1:$value) result=TMP(1) ext=jmp:9
+3 ASSIGN line=25 op1=CV(2:$key) op2=TMP(1) result=UNUSED ext=-
+4 INIT_FCALL line=26 op1=UNUSED(112) op2=CONST(string("processkey")) result=UNUSED ext=2
+5 SEND_VAR line=26 op1=CV(2:$key) op2=UNUSED(1) result=UNUSED(80) ext=-
+6 SEND_VAR line=26 op1=CV(1:$value) op2=UNUSED(2) result=UNUSED(96) ext=-
+7 DO_UCALL line=26 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+8 JMP line=25 op1=JMP(2) op2=UNUSED result=UNUSED ext=-
+9 FE_FREE line=25 op1=VAR(0) op2=UNUSED result=UNUSED ext=-
+10 RETURN line=28 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ForeachLoops.php
+Function: byRef
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 7
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 2
+Literals: 1
+Return type: void
+Lines: 30-35
+
+Compiled variables:
+0 $items
+1 $value
+
+Literals:
+0 null
+
+Argument details:
+0 $items array
+
+Opcodes:
+0 RECV line=30 op1=UNUSED(1) op2=UNUSED(128) result=CV(0:$items) ext=-
+1 FE_RESET_RW line=32 op1=CV(0:$items) op2=JMP(5) result=VAR(0) ext=-
+2 FE_FETCH_RW line=32 op1=VAR(0) op2=CV(1:$value) result=UNUSED ext=jmp:5
+3 PRE_INC line=33 op1=CV(1:$value) op2=UNUSED result=UNUSED ext=-
+4 JMP line=32 op1=JMP(2) op2=UNUSED result=UNUSED ext=-
+5 FE_FREE line=32 op1=VAR(0) op2=UNUSED result=UNUSED ext=-
+6 RETURN line=35 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ForeachLoops.php
+Function: keyRef
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 8
+Arguments: 1
+Required arguments: 1
+Compiled variables: 3
+Temporary variables: 4
+Literals: 1
+Return type: void
+Lines: 37-42
+
+Compiled variables:
+0 $items
+1 $value
+2 $key
+
+Literals:
+0 null
+
+Argument details:
+0 $items array
+
+Opcodes:
+0 RECV line=37 op1=UNUSED(1) op2=UNUSED(128) result=CV(0:$items) ext=-
+1 FE_RESET_RW line=39 op1=CV(0:$items) op2=JMP(6) result=VAR(0) ext=-
+2 FE_FETCH_RW line=39 op1=VAR(0) op2=CV(1:$value) result=TMP(1) ext=jmp:6
+3 ASSIGN line=39 op1=CV(2:$key) op2=TMP(1) result=UNUSED ext=-
+4 PRE_INC line=40 op1=CV(1:$value) op2=UNUSED result=UNUSED ext=-
+5 JMP line=39 op1=JMP(2) op2=UNUSED result=UNUSED ext=-
+6 FE_FREE line=39 op1=VAR(0) op2=UNUSED result=UNUSED ext=-
+7 RETURN line=42 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ForeachLoops.php
+Function: callIterable
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 10
+Arguments: 0
+Required arguments: 0
+Compiled variables: 1
+Temporary variables: 3
+Literals: 3
+Return type: void
+Lines: 44-49
+
+Compiled variables:
+0 $value
+
+Literals:
+0 string("getitems")
+1 string("process")
+2 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 INIT_FCALL line=46 op1=UNUSED(80) op2=CONST(string("getitems")) result=UNUSED ext=-
+1 DO_UCALL line=46 op1=UNUSED op2=UNUSED result=VAR(0) ext=-
+2 FE_RESET_R line=46 op1=VAR(0) op2=JMP(8) result=VAR(1) ext=-
+3 FE_FETCH_R line=46 op1=VAR(1) op2=CV(0:$value) result=UNUSED ext=jmp:8
+4 INIT_FCALL line=47 op1=UNUSED(96) op2=CONST(string("process")) result=UNUSED(8) ext=1
+5 SEND_VAR line=47 op1=CV(0:$value) op2=UNUSED(1) result=UNUSED(80) ext=-
+6 DO_UCALL line=47 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+7 JMP line=46 op1=JMP(3) op2=UNUSED result=UNUSED ext=-
+8 FE_FREE line=46 op1=VAR(1) op2=UNUSED result=UNUSED ext=-
+9 RETURN line=49 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ForeachLoops.php
+Function: emptyBody
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 6
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 1
+Literals: 1
+Return type: void
+Lines: 51-55
+
+Compiled variables:
+0 $items
+1 $value
+
+Literals:
+0 null
+
+Argument details:
+0 $items array
+
+Opcodes:
+0 RECV line=51 op1=UNUSED(1) op2=UNUSED(128) result=CV(0:$items) ext=-
+1 FE_RESET_R line=53 op1=CV(0:$items) op2=JMP(4) result=VAR(0) ext=-
+2 FE_FETCH_R line=53 op1=VAR(0) op2=CV(1:$value) result=UNUSED ext=jmp:4
+3 JMP line=53 op1=JMP(2) op2=UNUSED result=UNUSED ext=-
+4 FE_FREE line=53 op1=VAR(0) op2=UNUSED result=UNUSED ext=-
+5 RETURN line=55 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ForeachLoops.php
+Function: ifElse
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 15
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 4
+Literals: 4
+Return type: void
+Lines: 57-66
+
+Compiled variables:
+0 $items
+1 $value
+
+Literals:
+0 int(0)
+1 string("process")
+2 string("process")
+3 null
+
+Argument details:
+0 $items array
+
+Opcodes:
+0 RECV line=57 op1=UNUSED(1) op2=UNUSED(128) result=CV(0:$items) ext=-
+1 FE_RESET_R line=59 op1=CV(0:$items) op2=JMP(13) result=VAR(0) ext=-
+2 FE_FETCH_R line=59 op1=VAR(0) op2=CV(1:$value) result=UNUSED ext=jmp:13
+3 IS_SMALLER line=60 op1=CONST(int(0)) op2=CV(1:$value) result=TMP(1)|SMART_JMPZ ext=-
+4 JMPZ line=60 op1=TMP(1) op2=JMP(9) result=UNUSED ext=-
+5 INIT_FCALL line=61 op1=UNUSED(96) op2=CONST(string("process")) result=UNUSED ext=1
+6 SEND_VAR line=61 op1=CV(1:$value) op2=UNUSED(1) result=UNUSED(80) ext=-
+7 DO_UCALL line=61 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+8 JMP line=60 op1=JMP(12) op2=UNUSED result=UNUSED ext=-
+9 INIT_FCALL line=63 op1=UNUSED(96) op2=CONST(string("process")) result=UNUSED(8) ext=1
+10 SEND_VAR line=63 op1=CV(1:$value) op2=UNUSED(1) result=UNUSED(80) ext=-
+11 DO_UCALL line=63 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+12 JMP line=59 op1=JMP(2) op2=UNUSED result=UNUSED ext=-
+13 FE_FREE line=59 op1=VAR(0) op2=UNUSED result=UNUSED ext=-
+14 RETURN line=66 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ForeachLoops.php
+Function: nested
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 13
+Arguments: 1
+Required arguments: 1
+Compiled variables: 3
+Temporary variables: 3
+Literals: 2
+Return type: void
+Lines: 68-75
+
+Compiled variables:
+0 $rows
+1 $row
+2 $value
+
+Literals:
+0 string("process")
+1 null
+
+Argument details:
+0 $rows array
+
+Opcodes:
+0 RECV line=68 op1=UNUSED(1) op2=UNUSED(128) result=CV(0:$rows) ext=-
+1 FE_RESET_R line=70 op1=CV(0:$rows) op2=JMP(11) result=VAR(0) ext=-
+2 FE_FETCH_R line=70 op1=VAR(0) op2=CV(1:$row) result=UNUSED ext=jmp:11
+3 FE_RESET_R line=71 op1=CV(1:$row) op2=JMP(9) result=VAR(1) ext=-
+4 FE_FETCH_R line=71 op1=VAR(1) op2=CV(2:$value) result=UNUSED ext=jmp:9
+5 INIT_FCALL line=72 op1=UNUSED(96) op2=CONST(string("process")) result=UNUSED ext=1
+6 SEND_VAR line=72 op1=CV(2:$value) op2=UNUSED(1) result=UNUSED(80) ext=-
+7 DO_UCALL line=72 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+8 JMP line=71 op1=JMP(4) op2=UNUSED result=UNUSED ext=-
+9 FE_FREE line=71 op1=VAR(1) op2=UNUSED result=UNUSED ext=-
+10 JMP line=70 op1=JMP(2) op2=UNUSED result=UNUSED ext=-
+11 FE_FREE line=70 op1=VAR(0) op2=UNUSED result=UNUSED ext=-
+12 RETURN line=75 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ForeachLoops.php
+Function: foreachInFor
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 15
+Arguments: 2
+Required arguments: 2
+Compiled variables: 4
+Temporary variables: 5
+Literals: 3
+Return type: void
+Lines: 77-84
+
+Compiled variables:
+0 $n
+1 $rows
+2 $i
+3 $row
+
+Literals:
+0 int(0)
+1 string("process")
+2 null
+
+Argument details:
+0 $n int
+1 $rows array
+
+Opcodes:
+0 RECV line=77 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 RECV line=77 op1=UNUSED(2) op2=UNUSED(128) result=CV(1:$rows) ext=-
+2 ASSIGN line=79 op1=CV(2:$i) op2=CONST(int(0)) result=UNUSED ext=-
+3 JMP line=79 op1=JMP(12) op2=UNUSED result=UNUSED ext=-
+4 FE_RESET_R line=80 op1=CV(1:$rows) op2=JMP(10) result=VAR(1) ext=-
+5 FE_FETCH_R line=80 op1=VAR(1) op2=CV(3:$row) result=UNUSED ext=jmp:10
+6 INIT_FCALL line=81 op1=UNUSED(96) op2=CONST(string("process")) result=UNUSED ext=1
+7 SEND_VAR line=81 op1=CV(3:$row) op2=UNUSED(1) result=UNUSED(80) ext=-
+8 DO_UCALL line=81 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+9 JMP line=80 op1=JMP(5) op2=UNUSED result=UNUSED ext=-
+10 FE_FREE line=80 op1=VAR(1) op2=UNUSED result=UNUSED ext=-
+11 PRE_INC line=79 op1=CV(2:$i) op2=UNUSED result=UNUSED ext=-
+12 IS_SMALLER line=79 op1=CV(2:$i) op2=CV(0:$n) result=TMP(4)|SMART_JMPNZ ext=-
+13 JMPNZ line=79 op1=TMP(4) op2=JMP(4) result=UNUSED ext=-
+14 RETURN line=84 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ForeachLoops.php
+Function: forInForeach
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 14
+Arguments: 1
+Required arguments: 1
+Compiled variables: 3
+Temporary variables: 5
+Literals: 3
+Return type: void
+Lines: 86-93
+
+Compiled variables:
+0 $rows
+1 $row
+2 $i
+
+Literals:
+0 int(0)
+1 string("process")
+2 null
+
+Argument details:
+0 $rows array
+
+Opcodes:
+0 RECV line=86 op1=UNUSED(1) op2=UNUSED(128) result=CV(0:$rows) ext=-
+1 FE_RESET_R line=88 op1=CV(0:$rows) op2=JMP(12) result=VAR(0) ext=-
+2 FE_FETCH_R line=88 op1=VAR(0) op2=CV(1:$row) result=UNUSED ext=jmp:12
+3 ASSIGN line=89 op1=CV(2:$i) op2=CONST(int(0)) result=UNUSED ext=-
+4 JMP line=89 op1=JMP(9) op2=UNUSED result=UNUSED ext=-
+5 INIT_FCALL line=90 op1=UNUSED(96) op2=CONST(string("process")) result=UNUSED ext=1
+6 SEND_VAR line=90 op1=CV(2:$i) op2=UNUSED(1) result=UNUSED(80) ext=-
+7 DO_UCALL line=90 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+8 PRE_INC line=89 op1=CV(2:$i) op2=UNUSED result=UNUSED ext=-
+9 IS_SMALLER line=89 op1=CV(2:$i) op2=CV(1:$row) result=TMP(4)|SMART_JMPNZ ext=-
+10 JMPNZ line=89 op1=TMP(4) op2=JMP(5) result=UNUSED ext=-
+11 JMP line=88 op1=JMP(2) op2=UNUSED result=UNUSED ext=-
+12 FE_FREE line=88 op1=VAR(0) op2=UNUSED result=UNUSED ext=-
+13 RETURN line=93 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ForeachLoops.php
+Function: foreachInWhile
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 16
+Arguments: 1
+Required arguments: 1
+Compiled variables: 3
+Temporary variables: 5
+Literals: 4
+Return type: void
+Lines: 95-103
+
+Compiled variables:
+0 $groups
+1 $group
+2 $value
+
+Literals:
+0 string("array_shift")
+1 string("process")
+2 array(0)
+3 null
+
+Argument details:
+0 $groups array
+
+Opcodes:
+0 RECV line=95 op1=UNUSED(1) op2=UNUSED(128) result=CV(0:$groups) ext=-
+1 JMP line=97 op1=JMP(13) op2=UNUSED result=UNUSED ext=-
+2 INIT_FCALL line=98 op1=UNUSED(96) op2=CONST(string("array_shift")) result=UNUSED ext=1
+3 SEND_REF line=98 op1=CV(0:$groups) op2=UNUSED(1) result=UNUSED(80) ext=-
+4 DO_ICALL line=98 op1=UNUSED op2=UNUSED result=VAR(0) ext=-
+5 ASSIGN line=98 op1=CV(1:$group) op2=VAR(0) result=UNUSED ext=-
+6 FE_RESET_R line=99 op1=CV(1:$group) op2=JMP(12) result=VAR(2) ext=-
+7 FE_FETCH_R line=99 op1=VAR(2) op2=CV(2:$value) result=UNUSED ext=jmp:12
+8 INIT_FCALL line=100 op1=UNUSED(96) op2=CONST(string("process")) result=UNUSED(8) ext=1
+9 SEND_VAR line=100 op1=CV(2:$value) op2=UNUSED(1) result=UNUSED(80) ext=-
+10 DO_UCALL line=100 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+11 JMP line=99 op1=JMP(7) op2=UNUSED result=UNUSED ext=-
+12 FE_FREE line=99 op1=VAR(2) op2=UNUSED result=UNUSED ext=-
+13 IS_NOT_IDENTICAL line=97 op1=CV(0:$groups) op2=CONST(array(0)) result=TMP(4)|SMART_JMPNZ ext=-
+14 JMPNZ line=97 op1=TMP(4) op2=JMP(2) result=UNUSED ext=-
+15 RETURN line=103 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ForeachLoops.php
+Function: whileInForeach
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 14
+Arguments: 1
+Required arguments: 1
+Compiled variables: 3
+Temporary variables: 5
+Literals: 3
+Return type: void
+Lines: 105-114
+
+Compiled variables:
+0 $rows
+1 $row
+2 $j
+
+Literals:
+0 int(0)
+1 string("process")
+2 null
+
+Argument details:
+0 $rows array
+
+Opcodes:
+0 RECV line=105 op1=UNUSED(1) op2=UNUSED(128) result=CV(0:$rows) ext=-
+1 FE_RESET_R line=107 op1=CV(0:$rows) op2=JMP(12) result=VAR(0) ext=-
+2 FE_FETCH_R line=107 op1=VAR(0) op2=CV(1:$row) result=UNUSED ext=jmp:12
+3 ASSIGN line=108 op1=CV(2:$j) op2=CONST(int(0)) result=UNUSED ext=-
+4 JMP line=109 op1=JMP(9) op2=UNUSED result=UNUSED ext=-
+5 INIT_FCALL line=110 op1=UNUSED(96) op2=CONST(string("process")) result=UNUSED ext=1
+6 SEND_VAR line=110 op1=CV(2:$j) op2=UNUSED(1) result=UNUSED(80) ext=-
+7 DO_UCALL line=110 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+8 PRE_INC line=111 op1=CV(2:$j) op2=UNUSED result=UNUSED ext=-
+9 IS_SMALLER line=109 op1=CV(2:$j) op2=CV(1:$row) result=TMP(4)|SMART_JMPNZ ext=-
+10 JMPNZ line=109 op1=TMP(4) op2=JMP(5) result=UNUSED ext=-
+11 JMP line=107 op1=JMP(2) op2=UNUSED result=UNUSED ext=-
+12 FE_FREE line=107 op1=VAR(0) op2=UNUSED result=UNUSED ext=-
+13 RETURN line=114 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ForeachLoops.php
+Function: foreachInDo
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 15
+Arguments: 1
+Required arguments: 1
+Compiled variables: 3
+Temporary variables: 5
+Literals: 4
+Return type: void
+Lines: 116-124
+
+Compiled variables:
+0 $groups
+1 $group
+2 $value
+
+Literals:
+0 string("array_shift")
+1 string("process")
+2 array(0)
+3 null
+
+Argument details:
+0 $groups array
+
+Opcodes:
+0 RECV line=116 op1=UNUSED(1) op2=UNUSED(128) result=CV(0:$groups) ext=-
+1 INIT_FCALL line=119 op1=UNUSED(96) op2=CONST(string("array_shift")) result=UNUSED ext=1
+2 SEND_REF line=119 op1=CV(0:$groups) op2=UNUSED(1) result=UNUSED(80) ext=-
+3 DO_ICALL line=119 op1=UNUSED op2=UNUSED result=VAR(0) ext=-
+4 ASSIGN line=119 op1=CV(1:$group) op2=VAR(0) result=UNUSED ext=-
+5 FE_RESET_R line=120 op1=CV(1:$group) op2=JMP(11) result=VAR(2) ext=-
+6 FE_FETCH_R line=120 op1=VAR(2) op2=CV(2:$value) result=UNUSED ext=jmp:11
+7 INIT_FCALL line=121 op1=UNUSED(96) op2=CONST(string("process")) result=UNUSED(8) ext=1
+8 SEND_VAR line=121 op1=CV(2:$value) op2=UNUSED(1) result=UNUSED(80) ext=-
+9 DO_UCALL line=121 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+10 JMP line=120 op1=JMP(6) op2=UNUSED result=UNUSED ext=-
+11 FE_FREE line=120 op1=VAR(2) op2=UNUSED result=UNUSED ext=-
+12 IS_NOT_IDENTICAL line=123 op1=CV(0:$groups) op2=CONST(array(0)) result=TMP(4)|SMART_JMPNZ ext=-
+13 JMPNZ line=123 op1=TMP(4) op2=JMP(1) result=UNUSED ext=-
+14 RETURN line=124 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ForeachLoops.php
+Function: doInForeach
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 13
+Arguments: 1
+Required arguments: 1
+Compiled variables: 3
+Temporary variables: 5
+Literals: 3
+Return type: void
+Lines: 126-135
+
+Compiled variables:
+0 $rows
+1 $row
+2 $j
+
+Literals:
+0 int(0)
+1 string("process")
+2 null
+
+Argument details:
+0 $rows array
+
+Opcodes:
+0 RECV line=126 op1=UNUSED(1) op2=UNUSED(128) result=CV(0:$rows) ext=-
+1 FE_RESET_R line=128 op1=CV(0:$rows) op2=JMP(11) result=VAR(0) ext=-
+2 FE_FETCH_R line=128 op1=VAR(0) op2=CV(1:$row) result=UNUSED ext=jmp:11
+3 ASSIGN line=129 op1=CV(2:$j) op2=CONST(int(0)) result=UNUSED ext=-
+4 INIT_FCALL line=131 op1=UNUSED(96) op2=CONST(string("process")) result=UNUSED ext=1
+5 SEND_VAR line=131 op1=CV(2:$j) op2=UNUSED(1) result=UNUSED(80) ext=-
+6 DO_UCALL line=131 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+7 PRE_INC line=132 op1=CV(2:$j) op2=UNUSED result=UNUSED ext=-
+8 IS_SMALLER line=133 op1=CV(2:$j) op2=CV(1:$row) result=TMP(4)|SMART_JMPNZ ext=-
+9 JMPNZ line=133 op1=TMP(4) op2=JMP(4) result=UNUSED ext=-
+10 JMP line=128 op1=JMP(2) op2=UNUSED result=UNUSED ext=-
+11 FE_FREE line=128 op1=VAR(0) op2=UNUSED result=UNUSED ext=-
+12 RETURN line=135 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ForeachLoops.php
+Function: breakContinue
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 15
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 4
+Literals: 4
+Return type: void
+Lines: 137-148
+
+Compiled variables:
+0 $items
+1 $value
+
+Literals:
+0 int(0)
+1 int(0)
+2 string("process")
+3 null
+
+Argument details:
+0 $items array
+
+Opcodes:
+0 RECV line=137 op1=UNUSED(1) op2=UNUSED(128) result=CV(0:$items) ext=-
+1 FE_RESET_R line=139 op1=CV(0:$items) op2=JMP(13) result=VAR(0) ext=-
+2 FE_FETCH_R line=139 op1=VAR(0) op2=CV(1:$value) result=UNUSED ext=jmp:13
+3 IS_SMALLER line=140 op1=CV(1:$value) op2=CONST(int(0)) result=TMP(1)|SMART_JMPZ ext=-
+4 JMPZ line=140 op1=TMP(1) op2=JMP(6) result=UNUSED ext=-
+5 CONT line=141 op1=LEVEL(0) op2=UNUSED(1) result=UNUSED ext=-
+6 IS_IDENTICAL line=143 op1=CV(1:$value) op2=CONST(int(0)) result=TMP(2)|SMART_JMPZ ext=-
+7 JMPZ line=143 op1=TMP(2) op2=JMP(9) result=UNUSED ext=-
+8 BRK line=144 op1=LEVEL(0) op2=UNUSED(1) result=UNUSED ext=-
+9 INIT_FCALL line=146 op1=UNUSED(96) op2=CONST(string("process")) result=UNUSED ext=1
+10 SEND_VAR line=146 op1=CV(1:$value) op2=UNUSED(1) result=UNUSED(80) ext=-
+11 DO_UCALL line=146 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+12 JMP line=139 op1=JMP(2) op2=UNUSED result=UNUSED ext=-
+13 FE_FREE line=139 op1=VAR(0) op2=UNUSED result=UNUSED ext=-
+14 RETURN line=148 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ForeachLoops.php
+Function: breakTwo
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 17
+Arguments: 1
+Required arguments: 1
+Compiled variables: 3
+Temporary variables: 4
+Literals: 3
+Return type: void
+Lines: 150-160
+
+Compiled variables:
+0 $rows
+1 $row
+2 $value
+
+Literals:
+0 int(0)
+1 string("process")
+2 null
+
+Argument details:
+0 $rows array
+
+Opcodes:
+0 RECV line=150 op1=UNUSED(1) op2=UNUSED(128) result=CV(0:$rows) ext=-
+1 FE_RESET_R line=152 op1=CV(0:$rows) op2=JMP(15) result=VAR(0) ext=-
+2 FE_FETCH_R line=152 op1=VAR(0) op2=CV(1:$row) result=UNUSED ext=jmp:15
+3 FE_RESET_R line=153 op1=CV(1:$row) op2=JMP(13) result=VAR(1) ext=-
+4 FE_FETCH_R line=153 op1=VAR(1) op2=CV(2:$value) result=UNUSED ext=jmp:13
+5 IS_IDENTICAL line=154 op1=CV(2:$value) op2=CONST(int(0)) result=TMP(2)|SMART_JMPZ ext=-
+6 JMPZ line=154 op1=TMP(2) op2=JMP(9) result=UNUSED ext=-
+7 FE_FREE line=155 op1=VAR(1) op2=UNUSED result=UNUSED ext=1
+8 BRK line=155 op1=LEVEL(1) op2=UNUSED(2) result=UNUSED ext=-
+9 INIT_FCALL line=157 op1=UNUSED(96) op2=CONST(string("process")) result=UNUSED ext=1
+10 SEND_VAR line=157 op1=CV(2:$value) op2=UNUSED(1) result=UNUSED(80) ext=-
+11 DO_UCALL line=157 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+12 JMP line=153 op1=JMP(4) op2=UNUSED result=UNUSED ext=-
+13 FE_FREE line=153 op1=VAR(1) op2=UNUSED result=UNUSED ext=-
+14 JMP line=152 op1=JMP(2) op2=UNUSED result=UNUSED ext=-
+15 FE_FREE line=152 op1=VAR(0) op2=UNUSED result=UNUSED ext=-
+16 RETURN line=160 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ForeachLoops.php
+Function: continueTwo
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 17
+Arguments: 1
+Required arguments: 1
+Compiled variables: 3
+Temporary variables: 4
+Literals: 3
+Return type: void
+Lines: 162-172
+
+Compiled variables:
+0 $rows
+1 $row
+2 $value
+
+Literals:
+0 int(0)
+1 string("process")
+2 null
+
+Argument details:
+0 $rows array
+
+Opcodes:
+0 RECV line=162 op1=UNUSED(1) op2=UNUSED(128) result=CV(0:$rows) ext=-
+1 FE_RESET_R line=164 op1=CV(0:$rows) op2=JMP(15) result=VAR(0) ext=-
+2 FE_FETCH_R line=164 op1=VAR(0) op2=CV(1:$row) result=UNUSED ext=jmp:15
+3 FE_RESET_R line=165 op1=CV(1:$row) op2=JMP(13) result=VAR(1) ext=-
+4 FE_FETCH_R line=165 op1=VAR(1) op2=CV(2:$value) result=UNUSED ext=jmp:13
+5 IS_SMALLER line=166 op1=CV(2:$value) op2=CONST(int(0)) result=TMP(2)|SMART_JMPZ ext=-
+6 JMPZ line=166 op1=TMP(2) op2=JMP(9) result=UNUSED ext=-
+7 FE_FREE line=167 op1=VAR(1) op2=UNUSED result=UNUSED ext=1
+8 CONT line=167 op1=LEVEL(1) op2=UNUSED(2) result=UNUSED ext=-
+9 INIT_FCALL line=169 op1=UNUSED(96) op2=CONST(string("process")) result=UNUSED ext=1
+10 SEND_VAR line=169 op1=CV(2:$value) op2=UNUSED(1) result=UNUSED(80) ext=-
+11 DO_UCALL line=169 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+12 JMP line=165 op1=JMP(4) op2=UNUSED result=UNUSED ext=-
+13 FE_FREE line=165 op1=VAR(1) op2=UNUSED result=UNUSED ext=-
+14 JMP line=164 op1=JMP(2) op2=UNUSED result=UNUSED ext=-
+15 FE_FREE line=164 op1=VAR(0) op2=UNUSED result=UNUSED ext=-
+16 RETURN line=172 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ForeachLoops.php
+Function: earlyReturn
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 13
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 2
+Literals: 3
+Return type: int
+Lines: 174-183
+
+Compiled variables:
+0 $items
+1 $value
+
+Literals:
+0 int(0)
+1 int(0)
+2 null
+
+Argument details:
+0 $items array
+
+Opcodes:
+0 RECV line=174 op1=UNUSED(1) op2=UNUSED(128) result=CV(0:$items) ext=-
+1 FE_RESET_R line=176 op1=CV(0:$items) op2=JMP(9) result=VAR(0) ext=-
+2 FE_FETCH_R line=176 op1=VAR(0) op2=CV(1:$value) result=UNUSED ext=jmp:9
+3 IS_SMALLER line=177 op1=CV(1:$value) op2=CONST(int(0)) result=TMP(1)|SMART_JMPZ ext=-
+4 JMPZ line=177 op1=TMP(1) op2=JMP(8) result=UNUSED ext=-
+5 VERIFY_RETURN_TYPE line=178 op1=CV(1:$value) op2=UNUSED result=UNUSED ext=-
+6 FE_FREE line=178 op1=VAR(0) op2=UNUSED result=UNUSED ext=1
+7 RETURN line=178 op1=CV(1:$value) op2=UNUSED result=UNUSED ext=-
+8 JMP line=176 op1=JMP(2) op2=UNUSED result=UNUSED ext=-
+9 FE_FREE line=176 op1=VAR(0) op2=UNUSED result=UNUSED ext=-
+10 RETURN line=182 op1=CONST(int(0)) op2=UNUSED result=UNUSED ext=-
+11 VERIFY_RETURN_TYPE line=183 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+12 RETURN line=183 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ForeachLoops.php
+Function: thrown
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 12
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 4
+Literals: 5
+Return type: void
+Lines: 185-192
+
+Compiled variables:
+0 $items
+1 $value
+
+Literals:
+0 int(0)
+1 string("Exception")
+2 string("exception")
+3 string("bad")
+4 null
+
+Argument details:
+0 $items array
+
+Opcodes:
+0 RECV line=185 op1=UNUSED(1) op2=UNUSED(128) result=CV(0:$items) ext=-
+1 FE_RESET_R line=187 op1=CV(0:$items) op2=JMP(10) result=VAR(0) ext=-
+2 FE_FETCH_R line=187 op1=VAR(0) op2=CV(1:$value) result=UNUSED ext=jmp:10
+3 IS_SMALLER line=188 op1=CV(1:$value) op2=CONST(int(0)) result=TMP(1)|SMART_JMPZ ext=-
+4 JMPZ line=188 op1=TMP(1) op2=JMP(9) result=UNUSED ext=-
+5 NEW line=189 op1=CONST(string("Exception")) op2=UNUSED result=VAR(2) ext=1
+6 SEND_VAL_EX line=189 op1=CONST(string("bad")) op2=UNUSED(1) result=UNUSED(80) ext=-
+7 DO_FCALL line=189 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+8 THROW line=189 op1=VAR(2) op2=UNUSED result=UNUSED ext=-
+9 JMP line=187 op1=JMP(2) op2=UNUSED result=UNUSED ext=-
+10 FE_FREE line=187 op1=VAR(0) op2=UNUSED result=UNUSED ext=-
+11 RETURN line=192 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ForeachLoops.php
+Function: destructure
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 15
+Arguments: 1
+Required arguments: 1
+Compiled variables: 3
+Temporary variables: 7
+Literals: 4
+Return type: void
+Lines: 194-199
+
+Compiled variables:
+0 $pairs
+1 $key
+2 $value
+
+Literals:
+0 int(0)
+1 int(1)
+2 string("processkey")
+3 null
+
+Argument details:
+0 $pairs array
+
+Opcodes:
+0 RECV line=194 op1=UNUSED(1) op2=UNUSED(128) result=CV(0:$pairs) ext=-
+1 FE_RESET_R line=196 op1=CV(0:$pairs) op2=JMP(13) result=VAR(0) ext=-
+2 FE_FETCH_R line=196 op1=VAR(0) op2=VAR(1) result=UNUSED ext=jmp:13
+3 FETCH_LIST_R line=196 op1=VAR(1) op2=CONST(int(0)) result=VAR(2) ext=-
+4 ASSIGN line=196 op1=CV(1:$key) op2=VAR(2) result=UNUSED ext=-
+5 FETCH_LIST_R line=196 op1=VAR(1) op2=CONST(int(1)) result=VAR(4) ext=-
+6 ASSIGN line=196 op1=CV(2:$value) op2=VAR(4) result=UNUSED ext=-
+7 FREE line=196 op1=VAR(1) op2=UNUSED result=UNUSED ext=-
+8 INIT_FCALL line=197 op1=UNUSED(112) op2=CONST(string("processkey")) result=UNUSED ext=2
+9 SEND_VAR line=197 op1=CV(1:$key) op2=UNUSED(1) result=UNUSED(80) ext=-
+10 SEND_VAR line=197 op1=CV(2:$value) op2=UNUSED(2) result=UNUSED(96) ext=-
+11 DO_UCALL line=197 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+12 JMP line=196 op1=JMP(2) op2=UNUSED result=UNUSED ext=-
+13 FE_FREE line=196 op1=VAR(0) op2=UNUSED result=UNUSED ext=-
+14 RETURN line=199 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ForeachLoops.php
+Function: listAssign
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 16
+Arguments: 1
+Required arguments: 1
+Compiled variables: 4
+Temporary variables: 9
+Literals: 4
+Return type: void
+Lines: 201-206
+
+Compiled variables:
+0 $pairs
+1 $value
+2 $extra
+3 $key
+
+Literals:
+0 int(0)
+1 int(1)
+2 string("processkey")
+3 null
+
+Argument details:
+0 $pairs array
+
+Opcodes:
+0 RECV line=201 op1=UNUSED(1) op2=UNUSED(128) result=CV(0:$pairs) ext=-
+1 FE_RESET_R line=203 op1=CV(0:$pairs) op2=JMP(14) result=VAR(0) ext=-
+2 FE_FETCH_R line=203 op1=VAR(0) op2=VAR(1) result=TMP(6) ext=jmp:14
+3 FETCH_LIST_R line=203 op1=VAR(1) op2=CONST(int(0)) result=VAR(2) ext=-
+4 ASSIGN line=203 op1=CV(1:$value) op2=VAR(2) result=UNUSED ext=-
+5 FETCH_LIST_R line=203 op1=VAR(1) op2=CONST(int(1)) result=VAR(4) ext=-
+6 ASSIGN line=203 op1=CV(2:$extra) op2=VAR(4) result=UNUSED ext=-
+7 FREE line=203 op1=VAR(1) op2=UNUSED result=UNUSED ext=-
+8 ASSIGN line=203 op1=CV(3:$key) op2=TMP(6) result=UNUSED ext=-
+9 INIT_FCALL line=204 op1=UNUSED(112) op2=CONST(string("processkey")) result=UNUSED ext=2
+10 SEND_VAR line=204 op1=CV(3:$key) op2=UNUSED(1) result=UNUSED(80) ext=-
+11 SEND_VAR line=204 op1=CV(1:$value) op2=UNUSED(2) result=UNUSED(96) ext=-
+12 DO_UCALL line=204 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+13 JMP line=203 op1=JMP(2) op2=UNUSED result=UNUSED ext=-
+14 FE_FREE line=203 op1=VAR(0) op2=UNUSED result=UNUSED ext=-
+15 RETURN line=206 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ForeachLoops.php
+Function: refAfter
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 9
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 2
+Literals: 1
+Return type: mixed
+Lines: 208-215
+
+Compiled variables:
+0 $items
+1 $value
+
+Literals:
+0 null
+
+Argument details:
+0 $items array
+
+Opcodes:
+0 RECV line=208 op1=UNUSED(1) op2=UNUSED(128) result=CV(0:$items) ext=-
+1 FE_RESET_RW line=210 op1=CV(0:$items) op2=JMP(5) result=VAR(0) ext=-
+2 FE_FETCH_RW line=210 op1=VAR(0) op2=CV(1:$value) result=UNUSED ext=jmp:5
+3 PRE_INC line=211 op1=CV(1:$value) op2=UNUSED result=UNUSED ext=-
+4 JMP line=210 op1=JMP(2) op2=UNUSED result=UNUSED ext=-
+5 FE_FREE line=210 op1=VAR(0) op2=UNUSED result=UNUSED ext=-
+6 RETURN line=214 op1=CV(1:$value) op2=UNUSED result=UNUSED ext=-
+7 VERIFY_RETURN_TYPE line=215 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+8 RETURN line=215 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ForeachLoops.php
+Function: sequential
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 17
+Arguments: 2
+Required arguments: 2
+Compiled variables: 3
+Temporary variables: 4
+Literals: 3
+Return type: void
+Lines: 217-225
+
+Compiled variables:
+0 $left
+1 $right
+2 $value
+
+Literals:
+0 string("process")
+1 string("process")
+2 null
+
+Argument details:
+0 $left array
+1 $right array
+
+Opcodes:
+0 RECV line=217 op1=UNUSED(1) op2=UNUSED(128) result=CV(0:$left) ext=-
+1 RECV line=217 op1=UNUSED(2) op2=UNUSED(128) result=CV(1:$right) ext=-
+2 FE_RESET_R line=219 op1=CV(0:$left) op2=JMP(8) result=VAR(0) ext=-
+3 FE_FETCH_R line=219 op1=VAR(0) op2=CV(2:$value) result=UNUSED ext=jmp:8
+4 INIT_FCALL line=220 op1=UNUSED(96) op2=CONST(string("process")) result=UNUSED ext=1
+5 SEND_VAR line=220 op1=CV(2:$value) op2=UNUSED(1) result=UNUSED(80) ext=-
+6 DO_UCALL line=220 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+7 JMP line=219 op1=JMP(3) op2=UNUSED result=UNUSED ext=-
+8 FE_FREE line=219 op1=VAR(0) op2=UNUSED result=UNUSED ext=-
+9 FE_RESET_R line=222 op1=CV(1:$right) op2=JMP(15) result=VAR(2) ext=-
+10 FE_FETCH_R line=222 op1=VAR(2) op2=CV(2:$value) result=UNUSED ext=jmp:15
+11 INIT_FCALL line=223 op1=UNUSED(96) op2=CONST(string("process")) result=UNUSED(8) ext=1
+12 SEND_VAR line=223 op1=CV(2:$value) op2=UNUSED(1) result=UNUSED(80) ext=-
+13 DO_UCALL line=223 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+14 JMP line=222 op1=JMP(10) op2=UNUSED result=UNUSED ext=-
+15 FE_FREE line=222 op1=VAR(2) op2=UNUSED result=UNUSED ext=-
+16 RETURN line=225 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ForeachLoops.php
+Function: foreachInIf
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 15
+Arguments: 2
+Required arguments: 2
+Compiled variables: 3
+Temporary variables: 3
+Literals: 3
+Return type: void
+Lines: 227-236
+
+Compiled variables:
+0 $items
+1 $go
+2 $value
+
+Literals:
+0 string("process")
+1 string("process")
+2 null
+
+Argument details:
+0 $items array
+1 $go bool
+
+Opcodes:
+0 RECV line=227 op1=UNUSED(1) op2=UNUSED(128) result=CV(0:$items) ext=-
+1 RECV line=227 op1=UNUSED(2) op2=UNUSED(12) result=CV(1:$go) ext=-
+2 JMPZ line=229 op1=CV(1:$go) op2=JMP(11) result=UNUSED ext=-
+3 FE_RESET_R line=230 op1=CV(0:$items) op2=JMP(9) result=VAR(0) ext=-
+4 FE_FETCH_R line=230 op1=VAR(0) op2=CV(2:$value) result=UNUSED ext=jmp:9
+5 INIT_FCALL line=231 op1=UNUSED(96) op2=CONST(string("process")) result=UNUSED ext=1
+6 SEND_VAR line=231 op1=CV(2:$value) op2=UNUSED(1) result=UNUSED(80) ext=-
+7 DO_UCALL line=231 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+8 JMP line=230 op1=JMP(4) op2=UNUSED result=UNUSED ext=-
+9 FE_FREE line=230 op1=VAR(0) op2=UNUSED result=UNUSED ext=-
+10 JMP line=229 op1=JMP(14) op2=UNUSED result=UNUSED ext=-
+11 INIT_FCALL line=234 op1=UNUSED(96) op2=CONST(string("process")) result=UNUSED(8) ext=1
+12 SEND_VAR line=234 op1=CV(0:$items) op2=UNUSED(1) result=UNUSED(80) ext=-
+13 DO_UCALL line=234 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+14 RETURN line=236 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ForeachLoops.php
+Function: destructureInFor
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 21
+Arguments: 2
+Required arguments: 2
+Compiled variables: 5
+Temporary variables: 10
+Literals: 5
+Return type: void
+Lines: 238-245
+
+Compiled variables:
+0 $n
+1 $pairs
+2 $i
+3 $key
+4 $value
+
+Literals:
+0 int(0)
+1 int(0)
+2 int(1)
+3 string("processkey")
+4 null
+
+Argument details:
+0 $n int
+1 $pairs array
+
+Opcodes:
+0 RECV line=238 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 RECV line=238 op1=UNUSED(2) op2=UNUSED(128) result=CV(1:$pairs) ext=-
+2 ASSIGN line=240 op1=CV(2:$i) op2=CONST(int(0)) result=UNUSED ext=-
+3 JMP line=240 op1=JMP(18) op2=UNUSED result=UNUSED ext=-
+4 FE_RESET_R line=241 op1=CV(1:$pairs) op2=JMP(16) result=VAR(1) ext=-
+5 FE_FETCH_R line=241 op1=VAR(1) op2=VAR(2) result=UNUSED ext=jmp:16
+6 FETCH_LIST_R line=241 op1=VAR(2) op2=CONST(int(0)) result=VAR(3) ext=-
+7 ASSIGN line=241 op1=CV(3:$key) op2=VAR(3) result=UNUSED ext=-
+8 FETCH_LIST_R line=241 op1=VAR(2) op2=CONST(int(1)) result=VAR(5) ext=-
+9 ASSIGN line=241 op1=CV(4:$value) op2=VAR(5) result=UNUSED ext=-
+10 FREE line=241 op1=VAR(2) op2=UNUSED result=UNUSED ext=-
+11 INIT_FCALL line=242 op1=UNUSED(112) op2=CONST(string("processkey")) result=UNUSED ext=2
+12 SEND_VAR line=242 op1=CV(3:$key) op2=UNUSED(1) result=UNUSED(80) ext=-
+13 SEND_VAR line=242 op1=CV(4:$value) op2=UNUSED(2) result=UNUSED(96) ext=-
+14 DO_UCALL line=242 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+15 JMP line=241 op1=JMP(5) op2=UNUSED result=UNUSED ext=-
+16 FE_FREE line=241 op1=VAR(1) op2=UNUSED result=UNUSED ext=-
+17 PRE_INC line=240 op1=CV(2:$i) op2=UNUSED result=UNUSED ext=-
+18 IS_SMALLER line=240 op1=CV(2:$i) op2=CV(0:$n) result=TMP(9)|SMART_JMPNZ ext=-
+19 JMPNZ line=240 op1=TMP(9) op2=JMP(4) result=UNUSED ext=-
+20 RETURN line=245 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ForeachLoops.php
+Function: <main>
+Class: -
+Kind: main
+Property: -
+Hook: -
+Opcodes: 1
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 1
+Return type: -
+Lines: 1-246
+
+Compiled variables:
+(none)
+
+Literals:
+0 int(1)
+
+Argument details:
+(none)
+
+Opcodes:
+0 RETURN line=246 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+
