@@ -128,6 +128,7 @@ final class FixtureSets
             'Common/Conditionals.php' => ['Function: nestedIf', ' JMPZ ', ' JMPZ_EX ', ' JMPNZ_EX ', ' SWITCH_', ' GOTO ', ' BOOL_NOT '],
             'Common/LoopAnalysis.php' => ['Function: simpleWhile', 'Function: simpleForeach', ' FE_FETCH_', ' BRK ', ' CONT ', ' GOTO '],
             'Common/WhileDo.php' => ['Function: emptyWhile', 'Function: switchBreak', 'Function: realSwitch', ' BRK ', ' CONT '],
+            'Common/ForLoops.php' => ['Function: simple', 'Function: whileAssign', 'Function: assignCond', 'Function: ambiguous', ' BRK ', ' CONT ', ' COALESCE '],
         ];
     }
 }
