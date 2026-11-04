@@ -6,9 +6,11 @@ namespace Rephper\Tests\Unit\Expr;
 
 use PHPUnit\Framework\TestCase;
 use Rephper\Cfg\Builder;
+use Rephper\Expr\Argument;
 use Rephper\Expr\Assignment;
 use Rephper\Expr\Binary;
 use Rephper\Expr\ExpressionException;
+use Rephper\Expr\FunctionCall;
 use Rephper\Expr\Literal;
 use Rephper\Expr\Opaque;
 use Rephper\Expr\Reconstructor;
@@ -263,27 +265,25 @@ final class ReconstructorTest extends TestCase
     public function testAnUnsupportedOpcodeKeepsInstructionMetadata(): void
     {
         $expressions = $this->opaqueForms();
-        $init = $this->opaqueNamed($expressions, 'INIT_FCALL', 0);
-        $send = $this->opaqueNamed($expressions, 'SEND_REF', 0);
+        $echo = $this->opaqueNamed($expressions, 'ECHO', 1);
+        $fetch = $echo->op1->resolved;
 
-        $this->assertSame(61, $init->opcodeNumber);
-        $this->assertSame(1, $init->extendedValue);
-        $this->assertNull($init->jumpTarget);
-        $this->assertSame([], $init->extra);
-        $this->assertSame('unused', $init->op1->kind);
-        $this->assertSame(96, $init->op1->value);
-        $this->assertNull($init->op1->resolved);
-        $this->assertSame('const', $init->op2->kind);
-        $this->assertSame(0, $init->op2->index);
-        $this->assertInstanceOf(Literal::class, $init->op2->resolved);
-        $this->assertSame('string', $init->op2->resolved->type);
-        $this->assertSame('sort', $init->op2->resolved->value);
-        $this->assertSame('unused', $send->op2->kind);
-        $this->assertSame(1, $send->op2->value);
-        $this->assertSame('unused', $send->result->kind);
-        $this->assertSame(80, $send->result->value);
-        $this->assertInstanceOf(VariableRead::class, $send->op1->resolved);
-        $this->assertSame('items', $send->op1->resolved->name);
+        $this->assertInstanceOf(Opaque::class, $fetch);
+        $this->assertSame('FETCH_DIM_R', $fetch->opcode);
+        $this->assertSame(81, $fetch->opcodeNumber);
+        $this->assertSame(0, $fetch->extendedValue);
+        $this->assertNull($fetch->jumpTarget);
+        $this->assertSame([], $fetch->extra);
+        $this->assertSame('cv', $fetch->op1->kind);
+        $this->assertSame(1, $fetch->op1->index);
+        $this->assertSame('items', $fetch->op1->name);
+        $this->assertInstanceOf(VariableRead::class, $fetch->op1->resolved);
+        $this->assertSame('cv', $fetch->op2->kind);
+        $this->assertSame('index', $fetch->op2->name);
+        $this->assertInstanceOf(VariableRead::class, $fetch->op2->resolved);
+        $this->assertSame('tmp', $fetch->result->kind);
+        $this->assertSame(0, $fetch->result->index);
+        $this->assertNull($fetch->result->resolved);
 
         $document = $this->mutated(function (array $document): array {
             foreach ($document['op_arrays'] as &$opArray) {
@@ -291,26 +291,60 @@ final class ReconstructorTest extends TestCase
                     continue;
                 }
                 foreach ($opArray['instructions'] as &$instruction) {
-                    if ($instruction['opcode'] === 'INIT_FCALL') {
+                    if ($instruction['opcode'] === 'FETCH_DIM_R') {
                         $instruction['jump_target'] = 12;
                         $instruction['trace'] = ['kept' => true];
-                        $instruction['op2']['note'] = 'function-name';
+                        $instruction['op2']['note'] = 'dimension';
                     }
                 }
             }
 
             return $document;
         });
-        $kept = $this->opaqueNamed(
-            $this->reconstruct('opaqueForms', $document)->blockStartingAt(0)?->expressions ?? [],
-            'INIT_FCALL',
-            0,
-        );
+        $roots = $this->reconstruct('opaqueForms', $document)->blockStartingAt(0)?->expressions ?? [];
+        $kept = $this->opaqueNamed($roots, 'ECHO', 1)->op1->resolved;
+        $this->assertInstanceOf(Opaque::class, $kept);
         $this->assertSame(12, $kept->jumpTarget);
         $this->assertSame(['kept' => true], $kept->extra['trace'] ?? null);
-        $this->assertSame('function-name', $kept->op2->extra['note'] ?? null);
-        $this->assertInstanceOf(Literal::class, $kept->op2->resolved);
-        $this->assertSame('sort', $kept->op2->resolved->value);
+        $this->assertSame('dimension', $kept->op2->extra['note'] ?? null);
+        $this->assertInstanceOf(VariableRead::class, $kept->op2->resolved);
+        $this->assertSame('index', $kept->op2->resolved->name);
+    }
+
+    public function testAByReferenceCallBecomesOneFunctionCall(): void
+    {
+        $result = $this->reconstruct('opaqueForms');
+        $expressions = $result->blockStartingAt(0)?->expressions;
+        $this->assertNotNull($expressions);
+        $call = null;
+        foreach ($expressions as $expression) {
+            if ($expression instanceof FunctionCall) {
+                $call = $expression;
+            }
+        }
+        $this->assertInstanceOf(FunctionCall::class, $call);
+        $this->assertSame('sort', $call->name);
+        $this->assertSame('INIT_FCALL', $call->initOpcode);
+        $this->assertSame(1, $call->initExtendedValue);
+        $this->assertSame('DO_ICALL', $call->executeOpcode);
+        $this->assertSame(0, $call->executeExtendedValue);
+        $this->assertFalse($call->checksUndefinedArguments);
+        $this->assertLessThan($call->opline, $call->initOpline);
+        $this->assertCount(1, $call->arguments);
+        $argument = $call->arguments[0];
+        $this->assertSame('SEND_REF', $argument->opcode);
+        $this->assertSame(Argument::REFERENCE, $argument->mode);
+        $this->assertFalse($argument->unpack);
+        $this->assertNull($argument->name);
+        $this->assertSame(1, $argument->position);
+        $this->assertInstanceOf(VariableRead::class, $argument->value);
+        $this->assertSame('items', $argument->value->name);
+        $this->assertLessThan($argument->opline, $call->initOpline);
+        $this->assertLessThan($call->opline, $argument->opline);
+        $opcodes = array_map(static fn ($diagnostic) => $diagnostic->opcode, $result->diagnostics);
+        $this->assertNotContains('INIT_FCALL', $opcodes);
+        $this->assertNotContains('SEND_REF', $opcodes);
+        $this->assertNotContains('DO_ICALL', $opcodes);
     }
 
     public function testACallFeedsStrlenAndTheAdditionKeepsItsArgument(): void
@@ -318,19 +352,8 @@ final class ReconstructorTest extends TestCase
         $result = $this->reconstruct('calledValue');
         $expressions = $result->blockStartingAt(0)?->expressions;
         $this->assertNotNull($expressions);
-        $init = $this->opaqueNamed($expressions, 'INIT_FCALL', 0);
-        $send = $this->opaqueNamed($expressions, 'SEND_VAR', 0);
         $return = $expressions[array_key_last($expressions)];
 
-        $this->assertSame('unused', $init->result->kind);
-        $this->assertNull($init->result->resolved);
-        $this->assertSame(1, $init->extendedValue);
-        $this->assertInstanceOf(Literal::class, $init->op2->resolved);
-        $this->assertSame('strtolower', $init->op2->resolved->value);
-        $this->assertSame('unused', $send->result->kind);
-        $this->assertNull($send->result->resolved);
-        $this->assertInstanceOf(VariableRead::class, $send->op1->resolved);
-        $this->assertSame('text', $send->op1->resolved->name);
         $this->assertInstanceOf(ReturnValue::class, $return);
         $this->assertInstanceOf(Binary::class, $return->value);
         $this->assertSame('+', $return->value->operator);
@@ -341,16 +364,24 @@ final class ReconstructorTest extends TestCase
         $this->assertSame('var', $strlen->op1->kind);
         $this->assertSame(0, $strlen->op1->index);
         $call = $strlen->op1->resolved;
-        $this->assertInstanceOf(Opaque::class, $call);
-        $this->assertSame('DO_ICALL', $call->opcode);
-        $this->assertSame('var', $call->result->kind);
-        $this->assertSame(0, $call->result->index);
-        $this->assertNull($call->result->resolved);
-        $this->assertLessThan($send->opline, $init->opline);
-        $this->assertLessThan($call->opline, $send->opline);
+        $this->assertInstanceOf(FunctionCall::class, $call);
+        $this->assertSame('strtolower', $call->name);
+        $this->assertSame('DO_ICALL', $call->executeOpcode);
+        $this->assertSame('INIT_FCALL', $call->initOpcode);
+        $this->assertCount(1, $call->arguments);
+        $this->assertSame('SEND_VAR', $call->arguments[0]->opcode);
+        $this->assertInstanceOf(VariableRead::class, $call->arguments[0]->value);
+        $this->assertSame('text', $call->arguments[0]->value->name);
+        $this->assertSame($call, $strlen->op1->resolved);
+        $this->assertLessThan($call->arguments[0]->opline, $call->initOpline);
+        $this->assertLessThan($call->opline, $call->arguments[0]->opline);
         $this->assertLessThan($strlen->opline, $call->opline);
         $this->assertLessThan($return->value->opline, $strlen->opline);
         $this->assertLessThan($return->opline, $return->value->opline);
+        $opcodes = array_map(static fn ($diagnostic) => $diagnostic->opcode, $result->diagnostics);
+        $this->assertNotContains('INIT_FCALL', $opcodes);
+        $this->assertNotContains('SEND_VAR', $opcodes);
+        $this->assertNotContains('DO_ICALL', $opcodes);
         foreach ($expressions as $expression) {
             $this->assertNotSame($call, $expression);
             $this->assertNotSame($strlen, $expression);
@@ -359,35 +390,35 @@ final class ReconstructorTest extends TestCase
 
     public function testASideEffectingCallKeepsTheArgumentAndTheEcho(): void
     {
-        $expressions = $this->reconstruct('calledSideEffect')->blockStartingAt(0)?->expressions;
+        $result = $this->reconstruct('calledSideEffect');
+        $expressions = $result->blockStartingAt(0)?->expressions;
         $this->assertNotNull($expressions);
-        $init = $this->opaqueNamed($expressions, 'INIT_FCALL', 0);
-        $send = $this->opaqueNamed($expressions, 'SEND_VAL', 0);
         $echo = $this->opaqueNamed($expressions, 'ECHO', 0);
-        $concat = $send->op1->resolved;
         $call = $echo->op1->resolved;
 
-        $this->assertSame('unused', $init->result->kind);
-        $this->assertNull($init->result->resolved);
-        $this->assertSame('tmp', $send->op1->kind);
-        $this->assertSame(0, $send->op1->index);
-        $this->assertSame('unused', $send->result->kind);
-        $this->assertInstanceOf(Binary::class, $concat);
-        $this->assertSame('.', $concat->operator);
-        $this->assertVariable($concat->left, 'text');
-        $this->assertVariable($concat->right, 'n');
         $this->assertSame('var', $echo->op1->kind);
         $this->assertSame(1, $echo->op1->index);
         $this->assertSame('unused', $echo->result->kind);
         $this->assertNull($echo->result->resolved);
-        $this->assertInstanceOf(Opaque::class, $call);
-        $this->assertSame('DO_ICALL', $call->opcode);
-        $this->assertSame('var', $call->result->kind);
-        $this->assertSame(1, $call->result->index);
-        $this->assertLessThan($concat->opline, $init->opline);
-        $this->assertLessThan($send->opline, $concat->opline);
-        $this->assertLessThan($call->opline, $send->opline);
+        $this->assertInstanceOf(FunctionCall::class, $call);
+        $this->assertSame('strtolower', $call->name);
+        $this->assertSame('DO_ICALL', $call->executeOpcode);
+        $this->assertCount(1, $call->arguments);
+        $this->assertSame('SEND_VAL', $call->arguments[0]->opcode);
+        $concat = $call->arguments[0]->value;
+        $this->assertInstanceOf(Binary::class, $concat);
+        $this->assertSame('.', $concat->operator);
+        $this->assertVariable($concat->left, 'text');
+        $this->assertVariable($concat->right, 'n');
+        $this->assertSame($call, $echo->op1->resolved);
+        $this->assertLessThan($concat->opline, $call->initOpline);
+        $this->assertLessThan($call->arguments[0]->opline, $concat->opline);
+        $this->assertLessThan($call->opline, $call->arguments[0]->opline);
         $this->assertLessThan($echo->opline, $call->opline);
+        $opcodes = array_map(static fn ($diagnostic) => $diagnostic->opcode, $result->diagnostics);
+        $this->assertNotContains('INIT_FCALL', $opcodes);
+        $this->assertNotContains('SEND_VAL', $opcodes);
+        $this->assertNotContains('DO_ICALL', $opcodes);
         foreach ($expressions as $expression) {
             $this->assertNotSame($concat, $expression);
             $this->assertNotSame($call, $expression);

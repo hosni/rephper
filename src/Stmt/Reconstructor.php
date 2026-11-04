@@ -8,6 +8,7 @@ use Rephper\Cfg\Graph;
 use Rephper\Expr\Assignment;
 use Rephper\Expr\Diagnostic;
 use Rephper\Expr\Expression;
+use Rephper\Expr\FunctionCall;
 use Rephper\Expr\Opaque;
 use Rephper\Expr\ReturnValue;
 use Rephper\Expr\Reconstruction as ExpressionReconstruction;
@@ -83,7 +84,7 @@ final class Reconstructor
      */
     private function statement(OpArray $opArray, string $blockId, Expression $expression, array &$diagnostics): ?Statement
     {
-        if ($expression instanceof Assignment) {
+        if ($expression instanceof Assignment || $expression instanceof FunctionCall) {
             return new ExpressionStatement($expression->opline, $expression->line, $expression);
         }
         if ($expression instanceof ReturnValue) {

@@ -9,6 +9,8 @@ use Rephper\Cfg\Builder;
 use Rephper\Expr\Assignment;
 use Rephper\Expr\Binary;
 use Rephper\Expr\Literal;
+use Rephper\Expr\Argument;
+use Rephper\Expr\FunctionCall;
 use Rephper\Expr\Opaque;
 use Rephper\Expr\Reconstructor as ExpressionReconstructor;
 use Rephper\Expr\VariableRead;
@@ -77,44 +79,50 @@ final class ReconstructorTest extends TestCase
 
     public function testAnAssignedCallIsNotEmittedTwice(): void
     {
-        $statements = $this->statements('assignCall')->blockStartingAt(0)?->statements;
+        [$expressions, $result] = $this->both('assignCall');
+        $statements = $result->blockStartingAt(0)?->statements;
+        $roots = $expressions->blockStartingAt(0)?->expressions;
         $this->assertNotNull($statements);
-        $this->assertCount(3, $statements);
-        $this->assertInstanceOf(OpaqueStatement::class, $statements[0]);
-        $this->assertSame('INIT_FCALL', $statements[0]->instruction->opcode);
-        $this->assertInstanceOf(Literal::class, $statements[0]->instruction->op2->resolved);
-        $this->assertSame('strtolower', $statements[0]->instruction->op2->resolved->value);
-        $this->assertInstanceOf(OpaqueStatement::class, $statements[1]);
-        $this->assertSame('SEND_VAR', $statements[1]->instruction->opcode);
-        $this->assertInstanceOf(VariableRead::class, $statements[1]->instruction->op1->resolved);
-        $this->assertSame('text', $statements[1]->instruction->op1->resolved->name);
-        $this->assertInstanceOf(ExpressionStatement::class, $statements[2]);
-        $this->assertInstanceOf(Assignment::class, $statements[2]->expression);
-        $this->assertSame('result', $statements[2]->expression->variable);
-        $this->assertInstanceOf(Opaque::class, $statements[2]->expression->value);
-        $this->assertSame('DO_ICALL', $statements[2]->expression->value->opcode);
+        $this->assertNotNull($roots);
+        $this->assertCount(1, $statements);
+        $this->assertInstanceOf(ExpressionStatement::class, $statements[0]);
+        $this->assertInstanceOf(Assignment::class, $statements[0]->expression);
+        $this->assertSame('result', $statements[0]->expression->variable);
+        $this->assertInstanceOf(FunctionCall::class, $statements[0]->expression->value);
+        $this->assertSame('strtolower', $statements[0]->expression->value->name);
+        $this->assertSame('DO_ICALL', $statements[0]->expression->value->executeOpcode);
+        $this->assertCount(1, $statements[0]->expression->value->arguments);
+        $this->assertSame(Argument::VALUE, $statements[0]->expression->value->arguments[0]->mode);
+        $this->assertInstanceOf(VariableRead::class, $statements[0]->expression->value->arguments[0]->value);
+        $this->assertSame('text', $statements[0]->expression->value->arguments[0]->value->name);
         $this->assertSame(22, $statements[0]->line);
-        $this->assertLessThan($statements[1]->opline, $statements[0]->opline);
-        $this->assertLessThan($statements[2]->opline, $statements[1]->opline);
-        foreach ($statements as $statement) {
-            if ($statement instanceof OpaqueStatement) {
-                $this->assertNotSame($statements[2]->expression->value, $statement->instruction);
+        $assignment = null;
+        foreach ($roots as $root) {
+            if ($root instanceof Assignment) {
+                $assignment = $root;
             }
         }
+        $this->assertSame($assignment, $statements[0]->expression);
+        $this->assertSame([], $result->diagnostics);
     }
 
     public function testAStandaloneCallRemainsAStatement(): void
     {
-        $statements = $this->statements('callSideEffect')->blockStartingAt(0)?->statements;
+        [$expressions, $result] = $this->both('callSideEffect');
+        $statements = $result->blockStartingAt(0)?->statements;
+        $roots = $expressions->blockStartingAt(0)?->expressions;
         $this->assertNotNull($statements);
-        $this->assertCount(3, $statements);
-        $this->assertSame(
-            ['INIT_FCALL', 'SEND_VAR', 'DO_ICALL'],
-            array_map(static fn (OpaqueStatement $statement): string => $statement->instruction->opcode, $statements),
-        );
-        $this->assertSame('unused', $statements[2]->instruction->result->kind);
-        $this->assertNull($statements[2]->instruction->result->resolved);
-        $this->assertSame([1, 2, 3], array_map(static fn (OpaqueStatement $statement): int => $statement->opline, $statements));
+        $this->assertNotNull($roots);
+        $this->assertCount(1, $statements);
+        $this->assertInstanceOf(ExpressionStatement::class, $statements[0]);
+        $this->assertInstanceOf(FunctionCall::class, $statements[0]->expression);
+        $this->assertSame('strtolower', $statements[0]->expression->name);
+        $this->assertSame('DO_ICALL', $statements[0]->expression->executeOpcode);
+        $this->assertSame(0, $statements[0]->expression->executeExtendedValue);
+        $this->assertCount(1, $statements[0]->expression->arguments);
+        $this->assertSame($statements[0]->expression, $this->rootCall($roots));
+        $this->assertSame($statements[0]->opline, $statements[0]->expression->opline);
+        $this->assertSame([], $result->diagnostics);
     }
 
     public function testReturnLiteralVariableAndExpression(): void
@@ -288,6 +296,20 @@ final class ReconstructorTest extends TestCase
         }
 
         $this->fail('Missing graph ' . $name);
+    }
+
+    /**
+     * @param list<\Rephper\Expr\Expression> $expressions
+     */
+    private function rootCall(array $expressions): FunctionCall
+    {
+        foreach ($expressions as $expression) {
+            if ($expression instanceof FunctionCall) {
+                return $expression;
+            }
+        }
+
+        $this->fail('Missing function call');
     }
 
     private function opArray(string $name): OpArray

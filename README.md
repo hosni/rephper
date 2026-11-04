@@ -380,7 +380,7 @@ An out-of-range jump is invalid IR for the CFG and uses `CfgException` directly.
 $reconstruction = (new Rephper\Expr\Reconstructor())->reconstruct($opArray, $graph);
 ```
 
-Each block has an ordered list of expressions. Value opcodes such as `ADD` and the comparisons are stored in their `tmp` or `var` result slot and folded into the later instruction in that same block that uses the slot. Both uses of one slot share one expression object. Assignments and returns stay in the list. A later use of an assignment's own result slot is unresolved. The `opline` on each node is the instruction that created it, so the original evaluation order remains visible. The compiler epilogue stays too: after a user's `return`, a following block can still hold `VERIFY_RETURN_TYPE` and another `RETURN` of null. Instructions this pass does not fold stay in the list as opaque nodes.
+Each block has an ordered list of expressions. Value opcodes such as `ADD` and the comparisons are stored in their `tmp` or `var` result slot and folded into the later instruction in that same block that uses the slot. Both uses of one slot share one expression object. A direct named function call is folded the same way: the call expression is stored in the slot written by `DO_ICALL`, `DO_UCALL`, or `DO_FCALL_BY_NAME`, and a later use of that slot is the same object. Assignments and returns stay in the list. A later use of an assignment's own result slot is unresolved. The `opline` on each node is the instruction that created it, so the original evaluation order remains visible. For a function call that opline is the instruction that executes the call. The compiler epilogue stays too: after a user's `return`, a following block can still hold `VERIFY_RETURN_TYPE` and another `RETURN` of null. Instructions this pass does not fold stay in the list as opaque nodes.
 
 | Node | What it records |
 | --- | --- |
@@ -390,12 +390,14 @@ Each block has an ordered list of expressions. Value opcodes such as `ADD` and t
 | `Unary` | `!` for `BOOL_NOT`, `~` for `BW_NOT`, and `bool` for `BOOL`. |
 | `Assignment` | A write to a compiled variable. `operator` is null for `=`. `+` means `+=`, from `ASSIGN_OP`'s `extended_value`. |
 | `ReturnValue` | The returned value. A `return;` is a return of the null literal the compiler emitted. |
+| `FunctionCall` | A direct named call. The name is the string literal the compiler stored. Arguments stay in send order. |
+| `Argument` | One argument: its expression, send opcode, passing mode (`value` or `reference`), unpack flag, optional name, and 1-based position when the send is positional. |
 | `Opaque` | An instruction kept in place. It records the opcode, opcode number, extended value, jump target, unknown instruction fields, and all three operands. |
 | `Unresolved` | A `tmp` or `var` used in a block that does not define it. |
 
-`RECV` and `VERIFY_RETURN_TYPE` are opaque and do not produce a diagnostic. Any other opcode that this pass does not fold, including `STRLEN`, `ECHO`, `FETCH_DIM_R`, `INIT_FCALL`, `JMPZ_EX`, and `JMPNZ_EX`, is opaque and adds an `unsupported` diagnostic. The diagnostic names the opcode, opline, source line, block, and reason. A const index that is not in the literal table is invalid IR and throws `ExpressionException`.
+`RECV` and `VERIFY_RETURN_TYPE` are opaque and do not produce a diagnostic. A reconstructed function call does not produce a diagnostic for its `INIT_*`, `SEND_*`, `CHECK_UNDEF_ARGS`, or `DO_*` instructions. Any other opcode that this pass does not fold, including `STRLEN`, `ECHO`, `FETCH_DIM_R`, `INIT_DYNAMIC_CALL`, `INIT_METHOD_CALL`, `NEW`, `CALLABLE_CONVERT`, `JMPZ_EX`, and `JMPNZ_EX`, is opaque and adds an `unsupported` diagnostic. The diagnostic names the opcode, opline, source line, block, and reason. A const index that is not in the literal table is invalid IR and throws `ExpressionException`.
 
-An opaque operand keeps the IR kind and its fields. A `const`, compiled variable, `tmp`, or `var` also points at the expression it uses, and a temporary points at the same object stored for that slot. `unused`, `jump`, `this`, and the other non-value kinds stay as IR data. The result operand records the written slot and does not point back at the opaque node. `echo $text` keeps the compiled variable. `echo strlen($text)` keeps the `STRLEN` node as the operand of `ECHO`. `sort($items)` keeps `INIT_FCALL`'s argument count, the unused operand number, and the function-name literal.
+An opaque operand keeps the IR kind and its fields. A `const`, compiled variable, `tmp`, or `var` also points at the expression it uses, and a temporary points at the same object stored for that slot. `unused`, `jump`, `this`, and the other non-value kinds stay as IR data. The result operand records the written slot and does not point back at the opaque node. `echo $text` keeps the compiled variable. `echo strlen($text)` keeps the `STRLEN` node as the operand of `ECHO`. `FETCH_DIM_R` keeps both compiled variables, the opcode number, and any extra instruction fields.
 
 These compiled forms are easy to misread as source syntax:
 
@@ -415,7 +417,39 @@ ReturnValue
         VariableRead n
 ```
 
-`return strlen(strtolower($text)) + $n` is not rewritten as one call expression. `INIT_FCALL` and `SEND_VAR` stay as earlier expressions because they have no result slot. `DO_ICALL` writes a `var` slot, and `STRLEN` uses that same object. `echo strtolower($text . $n)` keeps the concatenation as the `SEND_VAL` operand and the `DO_ICALL` as the `ECHO` operand.
+`strlen($text)` on a compiled variable is the `STRLEN` opcode, not a call, so it stays opaque. `strtolower($text)` is a real call. `return strlen(strtolower($text)) + $n` keeps `STRLEN` as the left side of `+`. Its operand is the `FunctionCall` stored by `DO_ICALL`, and that call's argument is the compiled variable `text`. `echo strtolower($text . $n)` keeps the concatenation as the call argument and the same `FunctionCall` as the `ECHO` operand.
+
+```text
+return strlen(strtolower($text)) + $n
+
+ReturnValue
+    Binary +
+        Opaque STRLEN
+            op1 var -> FunctionCall strtolower
+                Argument value: VariableRead text
+        VariableRead n
+```
+
+A named call is reconstructed only when the whole sequence is one of these shapes:
+
+| Init | Arguments | Execute |
+| --- | --- | --- |
+| `INIT_FCALL` whose op2 is a string literal | `SEND_VAL`, `SEND_VAR`, `SEND_REF`, `SEND_UNPACK`, and the same sends with a const name on op2 | `DO_ICALL` for an internal function, `DO_UCALL` for a known user function |
+| `INIT_FCALL_BY_NAME` whose op2 is a string literal | `SEND_VAL_EX`, `SEND_VAR_EX`, `SEND_REF`, `SEND_UNPACK`, and named sends | `DO_FCALL_BY_NAME` |
+
+The init instruction's `extended_value` is the number of positional arguments when it is greater than zero. Zero means there is no fixed positional prefix, so the call may have no arguments or only named and unpacked arguments. Named and unpacked arguments follow a positional prefix, and `CHECK_UNDEF_ARGS` is recorded on the call instead of becoming its own expression. Argument expressions, including nested calls, are compiled between the init and the send that consumes them. They keep their own expression objects and their original order. A call result that is used twice is one `FunctionCall` object.
+
+`DO_FCALL` is not treated as the end of `INIT_FCALL`. Constructors, dynamic calls, and method calls use `DO_FCALL`, and those sequences can sit inside another call's argument. They open an opaque frame so their sends stay with them. The outer named call can still be reconstructed, with the opaque value as its argument. If a named sequence is missing an argument, has an unrecognized send, or is interrupted, every instruction in that sequence stays opaque and each one is diagnosed. A partial call is not emitted.
+
+These forms stay opaque:
+
+- `INIT_DYNAMIC_CALL` and `$name($price)`
+- `INIT_METHOD_CALL` and `INIT_STATIC_METHOD_CALL`
+- `NEW` followed by `SEND_*` and `DO_FCALL`
+- `CALLABLE_CONVERT` after `INIT_FCALL`, which is first-class callable syntax
+- a send opcode this pass does not model, such as `SEND_USER`, `SEND_ARRAY`, or `SEND_FUNC_ARG`
+
+The function name is the literal the compiler stored. A call compiled against a known function can be lowercased (`byReference($n)` is stored as `byreference`). A named argument whose callee is already known can be rewritten by the compiler into a positional send, and the tree then has no name. `unknown_func(quantity: $quantity)` keeps the name because the callee is not known at compile time.
 
 ```text
 $result = $a + $b * $c
@@ -428,7 +462,7 @@ Assignment result
             VariableRead c
 ```
 
-Function-call opcodes stay separate. PHP source generation is not part of this pass.
+PHP source generation is not part of this pass.
 
 ## Statement reconstruction
 
@@ -444,12 +478,12 @@ $statements = (new Rephper\Stmt\Reconstructor())->reconstruct(
 
 | Statement | What it records |
 | --- | --- |
-| `ExpressionStatement` | An assignment. The statement holds the same `Assignment` object the expression pass produced. |
+| `ExpressionStatement` | An assignment, or a function call whose result is unused. The statement holds the same expression object the expression pass produced. |
 | `ReturnStatement` | The returned expression. `return;` is a return of the null literal the compiler emitted for that instruction. |
 | `ThrowStatement` | The thrown value. `throw new Exception('bad')` keeps `NEW` as that value. The constructor argument and `DO_FCALL` stay as earlier statements. |
-| `OpaqueStatement` | A side-effecting instruction that is not one of those statements. It holds the same `Opaque` expression, including the opcode and its operands. `echo $text` is an `ECHO` statement. `strtolower($text);` is `INIT_FCALL`, `SEND_VAR`, then `DO_ICALL`. |
+| `OpaqueStatement` | A side-effecting instruction that is not one of those statements. It holds the same `Opaque` expression, including the opcode and its operands. `echo $text` is an `ECHO` statement. `strtolower($text);` is one expression statement whose expression is the `FunctionCall`. |
 
-A temporary that was folded into a later expression does not become its own statement. `$result = $a + $b` is one assignment whose value is the addition. `return $price * $quantity` is one return whose value is the multiplication. `RECV`, `VERIFY_RETURN_TYPE`, and the compiler's trailing return (`extended_value` 4294967295) produce no statement. A bare `JMP` produces no statement; the CFG already records that edge. A branch that still carries a value, such as `JMPZ`, stays an opaque statement so the condition is not dropped.
+A temporary that was folded into a later expression does not become its own statement. `$result = $a + $b` is one assignment whose value is the addition. `$result = strtolower($text)` is one assignment whose value is the call. `return $price * $quantity` is one return whose value is the multiplication. `RECV`, `VERIFY_RETURN_TYPE`, and the compiler's trailing return (`extended_value` 4294967295) produce no statement. A bare `JMP` produces no statement; the CFG already records that edge. A branch that still carries a value, such as `JMPZ`, stays an opaque statement so the condition is not dropped.
 
 An opaque statement adds an `unsupported` diagnostic with the opcode, opline, source line, block, and reason. A `THROW` whose exception value is present does not.
 
@@ -492,7 +526,7 @@ make test-integration
 
 `composer test`, `composer test:unit`, and `composer test:integration` run the same PHPUnit suites. `make test` and `make test-integration` build the extension first and pass it to PHPUnit through `REPHPER_PHP` and `REPHPER_EXTENSION`. The unit suite does not load the extension. Run PHPUnit with the normal PHP extensions enabled. The spawned `php -l` processes still use `-n`, so OPcache stays out of the opcode dump.
 
-`tests/Unit/` covers the reader, control-flow edges, exception edges, expression trees, straight-line statements, invalid IR, and the `graph` command through Symfony’s `CommandTester`. One unit test also runs `bin/rephper` so the executable bootstrap is checked. Version selection still treats `8.10` as newer than `8.9`, and PHP 8.4 remains the only supported compiler.
+`tests/Unit/` covers the reader, control-flow edges, exception edges, expression trees, named function calls, straight-line statements, invalid IR, and the `graph` command through Symfony’s `CommandTester`. One unit test also runs `bin/rephper` so the executable bootstrap is checked. Version selection still treats `8.10` as newer than `8.9`, and PHP 8.4 remains the only supported compiler.
 
 `tests/Integration/ExporterTest.php` compiles every fixture with the extension when `extension/modules/rephper.so` exists. Without that file the integration tests are skipped. For each fixture it checks:
 
@@ -545,7 +579,8 @@ Linting one file does not compile files it would include at runtime, and it does
 
 - PHP 8.4 only.
 - Ubuntu is the only operating system that has been targeted. It has been built and tested locally on Linux with PHP 8.4.27.
-- There is no PHP source generator and no control-flow structuring. Straight-line statements cover assignments, returns, throws, and opaque side effects inside one basic block. `if`, loops, `switch`, `match`, and `try` stay as separate blocks.
+- There is no PHP source generator and no control-flow structuring. Straight-line statements cover assignments, returns, throws, function calls used as statements, and opaque side effects inside one basic block. `if`, loops, `switch`, `match`, and `try` stay as separate blocks.
+- Direct named function calls are reconstructed from `INIT_FCALL` / `INIT_FCALL_BY_NAME`, their sends, and the matching `DO_ICALL`, `DO_UCALL`, or `DO_FCALL_BY_NAME`. Dynamic calls, method calls, static calls, constructors, and first-class callables stay opaque. `strlen($text)` on a compiled variable remains the `STRLEN` opcode. A named argument that the compiler rewrote into a positional send is positional in the tree. The stored function name can be lowercased.
 - CFG semantics are implemented for PHP 8.4, `pre_pass_two`, and absolute opline jumps only. `src/Cfg/Php84/Semantics.php` is the only opcode switch. Another PHP version needs its own semantics class.
 - `HANDLE_EXCEPTION`, `USER_OPCODE`, and `CALL_TRAMPOLINE` are rejected. The builder does not guess their successors.
 - `BIND_INIT_STATIC_OR_JMP` and `JMP_FRAMELESS` follow the PHP 8.4 handlers. The current fixtures do not emit them; the CFG tests cover them by editing a real instruction.
@@ -564,7 +599,7 @@ Linting one file does not compile files it would include at runtime, and it does
 ## Roadmap
 
 - Structured control flow, then PHP source generation. Straight-line statements are already grouped by basic block.
-- Expression reconstruction across basic blocks, including `&&` and `||`. Function-call opcodes stay separate instructions; they are not combined into one call expression.
+- Expression reconstruction across basic blocks, including `&&` and `||`. Method calls, dynamic calls, constructors, and first-class callables are still separate instructions.
 - More PHP versions, each with its own compatibility directory and expected dumps.
 - More operating systems, as extra `os` matrix entries once the build has been verified there.
 - Inspecting a directory of source files without executing the application.

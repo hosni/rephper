@@ -123,6 +123,7 @@ final class FixtureSets
             'Common/TryForms.php' => ['Function: caught', ' CATCH ', ' FAST_RET '],
             'Common/Minimal.php' => ['Kind: main', ' RETURN'],
             'Common/Expressions.php' => ['Function: precedence', ' CONCAT ', ' BOOL_NOT ', ' ASSIGN_OP ', ' BW_NOT ', ' STRLEN ', ' ECHO ', ' FETCH_DIM_R ', ' INIT_FCALL ', ' SEND_VAR ', ' DO_ICALL '],
+            'Common/Calls.php' => ['Function: nested', ' INIT_FCALL_BY_NAME ', ' SEND_UNPACK ', ' SEND_REF ', ' INIT_DYNAMIC_CALL ', ' INIT_METHOD_CALL ', ' CALLABLE_CONVERT ', ' DO_UCALL '],
             'Common/Statements.php' => ['Function: assignSequence', 'Function: throwLiteral', ' THROW ', ' DO_ICALL ', ' ECHO '],
         ];
     }
