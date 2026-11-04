@@ -10,6 +10,7 @@ use Rephper\Cfg\Graph;
 use Rephper\Cfg\LoopAnalysis;
 use Rephper\Cfg\LoopControl;
 use Rephper\Cfg\NaturalLoop;
+use Rephper\Expr\Assignment;
 use Rephper\Expr\Diagnostic;
 use Rephper\Expr\Expression;
 use Rephper\Expr\Literal;
@@ -20,12 +21,14 @@ use Rephper\Ir\Instruction;
 use Rephper\Ir\Operand;
 
 /**
- * Rebuilds while, do-while, and for loops from a CFG, natural-loop analysis,
- * and statement lists.
+ * Rebuilds while, do-while, for, and foreach loops from a CFG, natural-loop
+ * analysis, and statement lists.
  *
- * Expressions and straight-line statements are reused. foreach and unknown
- * loops stay in their original statements with a diagnostic. The graph and
- * the per-block reconstruction are not modified.
+ * Expressions and straight-line statements are reused. A foreach whose value
+ * is one compiled variable becomes a ForeachStatement. Destructuring and any
+ * other writable target stay in their original statements with a diagnostic.
+ * Unknown loops stay unstructured. The graph and the per-block reconstruction
+ * are not modified.
  *
  * ConditionalStructurer::structure() is unchanged and still refuses a loop.
  * This walk structures an if inside a supported loop, and a supported loop
@@ -87,6 +90,14 @@ final class LoopStructurer
 
     /** @var list<int> */
     private array $structuredOplines = [];
+
+    /**
+     * Oplines of foreach machinery that must not appear as statements.
+     * A key assignment and each FE_FREE of the iterator being structured.
+     *
+     * @var array<int, true>
+     */
+    private array $hiddenOplines = [];
 
     /** @var list<Diagnostic> */
     private array $diagnostics = [];
@@ -195,6 +206,7 @@ final class LoopStructurer
 
         $this->visited = [];
         $this->structuredOplines = [];
+        $this->hiddenOplines = [];
         $this->originalDiagnostics = $statements->diagnostics;
         $this->diagnostics = $statements->diagnostics;
         $this->boundary = [];
@@ -233,6 +245,15 @@ final class LoopStructurer
         }
         if (isset($this->visited[$block->id])) {
             $this->fail($block, $this->last($block), 'The block is reached by more than one structured path.');
+        }
+
+        $resetLoop = $this->foreachByReset($block);
+        if (
+            $resetLoop instanceof NaturalLoop
+            && $resetLoop->headerId !== $this->activeHeader
+            && !isset($this->visited[$resetLoop->headerId])
+        ) {
+            return $this->enterForeach($block, $resetLoop, $stops);
         }
 
         $this->refuse($block);
@@ -356,6 +377,12 @@ final class LoopStructurer
                 return $this->enterLoop($prologue, $loop, $stops);
             }
         }
+        if ($loop->kind === NaturalLoop::FOREACH) {
+            $reset = $this->resetBlock($loop);
+            if ($reset instanceof Block && !isset($this->visited[$reset->id])) {
+                return $this->enterForeach($reset, $loop, $stops);
+            }
+        }
 
         $this->diagnostics[] = $this->loopDiagnostic($loop, $loop->reason ?? $this->unsupportedReason($loop));
 
@@ -424,6 +451,138 @@ final class LoopStructurer
         $this->visited[$prologue->id] = true;
 
         return $this->appendContinuation(array_merge($leading, [$statement]), $continuation, $stops);
+    }
+
+    /**
+     * @param list<string> $stops
+     * @return list<Statement>
+     */
+    private function enterForeach(Block $reset, NaturalLoop $loop, array $stops): array
+    {
+        $saved = $this->snapshot();
+        try {
+            [$leading, $statement, $continuation] = $this->buildForeach($reset, $loop, $stops);
+        } catch (UnstructuredFlow $failure) {
+            $this->restore($saved);
+            $this->diagnostics[] = $this->flowDiagnostic($failure);
+            $this->visited[$reset->id] = true;
+
+            return array_merge($this->blockStatements($reset), $this->emitOriginal($loop, $stops));
+        }
+        $this->visited[$reset->id] = true;
+
+        return $this->appendContinuation(array_merge($leading, [$statement]), $continuation, $stops);
+    }
+
+    /**
+     * @param list<string> $stops
+     * @return array{list<Statement>, ForeachStatement, Block}
+     */
+    private function buildForeach(Block $reset, NaturalLoop $loop, array $stops): array
+    {
+        $resetInstruction = $this->last($reset);
+        if (!$this->isReset($resetInstruction) || $this->foreachByReset($reset) !== $loop) {
+            $this->fail($reset, $resetInstruction, 'foreach is not entered from FE_RESET.');
+        }
+        if (
+            count($loop->entries) !== 1
+            || $loop->entries[0]->from !== $reset->id
+            || $loop->entries[0]->to !== $loop->headerId
+            || $loop->entries[0]->kind !== 'fallthrough'
+        ) {
+            $this->fail($reset, $resetInstruction, 'foreach is not entered from FE_RESET.');
+        }
+
+        $header = $this->block($loop->headerId);
+        $fetch = $this->last($header);
+        $expectedFetch = $resetInstruction->opcode === 'FE_RESET_RW' ? 'FE_FETCH_RW' : 'FE_FETCH_R';
+        if ($fetch->opcode !== $expectedFetch) {
+            $this->fail($header, $fetch, 'foreach reset and fetch disagree about by-reference iteration.');
+        }
+        $iterator = $resetInstruction->result->index;
+        if ($resetInstruction->result->kind !== 'var' || $iterator === null) {
+            $this->fail($reset, $resetInstruction, 'foreach reset does not define an iterator.');
+        }
+        if (!$this->sameSlot($fetch->op1, 'var', $iterator)) {
+            $this->fail($header, $fetch, 'foreach fetch does not use the reset iterator.');
+        }
+        foreach ($this->blockStatements($header) as $statement) {
+            if ($statement->opline !== $fetch->index) {
+                $this->fail($header, $fetch, 'foreach header contains a statement before the fetch.');
+            }
+        }
+
+        $iterable = $this->iterableExpression($reset, $resetInstruction);
+        $value = $this->valueTarget($header, $fetch);
+        $bodyEdge = $this->bodyEdge($header, $loop);
+        if ($bodyEdge->kind !== 'fallthrough') {
+            $this->fail($header, $fetch, 'foreach body is not the fetch fallthrough.');
+        }
+        $exit = $this->exitEdge($header, $loop);
+        if ($exit->kind !== 'foreach_exit') {
+            $this->fail($header, $fetch, 'foreach exit is not the fetch exit.');
+        }
+        $exitBlock = $this->block($exit->to);
+        $key = null;
+        if ($fetch->result->kind === 'unused') {
+            $key = null;
+        } elseif (
+            ($fetch->result->kind === 'tmp' || $fetch->result->kind === 'var')
+            && $fetch->result->index !== null
+        ) {
+            if ($bodyEdge->to === $header->id) {
+                $this->fail($header, $fetch, 'foreach key is not assigned to a compiled variable.');
+            }
+            $key = $this->keyTarget($this->block($bodyEdge->to), $fetch);
+        } else {
+            $this->fail($header, $fetch, 'foreach key result is not a temporary.');
+        }
+        $exitFree = $this->exitFree($exitBlock, $iterator);
+
+        $leading = [];
+        foreach ($this->blockStatements($reset) as $statement) {
+            if ($statement->opline === $resetInstruction->index && $statement instanceof OpaqueStatement) {
+                continue;
+            }
+            $leading[] = $statement;
+        }
+
+        $this->structuredOplines[] = $resetInstruction->index;
+        $this->structuredOplines[] = $fetch->index;
+        $this->hideIteratorFrees($reset, $iterator, $exitFree);
+        if ($key instanceof CompiledVariableTarget) {
+            $this->hiddenOplines[$key->opline] = true;
+            $this->structuredOplines[] = $key->opline;
+        }
+
+        $this->push($header->id, $exitBlock->id, null);
+        try {
+            $this->visited[$header->id] = true;
+            $bodyStops = $this->withStops($stops, [$header->id, $exitBlock->id]);
+            if ($bodyEdge->to === $header->id) {
+                $body = [];
+            } else {
+                $body = $this->emit($this->block($bodyEdge->to), $bodyStops);
+            }
+            $this->assertVisited($loop);
+        } finally {
+            $this->pop();
+        }
+
+        return [
+            $leading,
+            new ForeachStatement(
+                $fetch->index,
+                $fetch->line,
+                $iterable,
+                $key,
+                $value,
+                $fetch->opcode === 'FE_FETCH_RW',
+                $body,
+                $loop->id,
+            ),
+            $exitBlock,
+        ];
     }
 
     private function presentAsFor(Block $prologue, NaturalLoop $loop): bool
@@ -874,6 +1033,169 @@ final class LoopStructurer
         $this->updateBlockId = $frame['updateBlock'];
         $this->updateOpline = $frame['updateOpline'];
         $this->loopDepth = $frame['depth'];
+    }
+
+    private function foreachByReset(Block $block): ?NaturalLoop
+    {
+        if ($block->instructions === []) {
+            return null;
+        }
+        $last = $block->instructions[array_key_last($block->instructions)];
+        if (!$this->isReset($last)) {
+            return null;
+        }
+        $target = null;
+        foreach ($block->successors as $edge) {
+            if ($edge->kind === 'fallthrough') {
+                $target = $edge->to;
+                break;
+            }
+        }
+        if ($target === null) {
+            return null;
+        }
+        $loop = $this->loopsByHeader[$target] ?? null;
+        if (!$loop instanceof NaturalLoop || $loop->kind !== NaturalLoop::FOREACH || $loop->headerId !== $target) {
+            return null;
+        }
+        $fetch = $this->last($this->block($loop->headerId));
+        if ($fetch->opcode !== 'FE_FETCH_R' && $fetch->opcode !== 'FE_FETCH_RW') {
+            return null;
+        }
+
+        return $loop;
+    }
+
+    private function resetBlock(NaturalLoop $loop): ?Block
+    {
+        if ($loop->kind !== NaturalLoop::FOREACH || count($loop->entries) !== 1) {
+            return null;
+        }
+        $entry = $loop->entries[0];
+        if ($entry->to !== $loop->headerId || $entry->kind !== 'fallthrough') {
+            return null;
+        }
+        $block = $this->block($entry->from);
+        if (!$this->isReset($this->last($block)) || $this->foreachByReset($block) !== $loop) {
+            return null;
+        }
+
+        return $block;
+    }
+
+    private function isReset(Instruction $instruction): bool
+    {
+        return $instruction->opcode === 'FE_RESET_R' || $instruction->opcode === 'FE_RESET_RW';
+    }
+
+    private function iterableExpression(Block $reset, Instruction $instruction): Expression
+    {
+        foreach ($this->blockStatements($reset) as $statement) {
+            if (
+                !$statement instanceof OpaqueStatement
+                || $statement->opline !== $instruction->index
+                || $statement->instruction->opcode !== $instruction->opcode
+            ) {
+                continue;
+            }
+            $resolved = $statement->instruction->op1->resolved;
+            if (!$resolved instanceof Expression || $resolved instanceof Unresolved) {
+                $this->fail($reset, $instruction, 'foreach iterable expression is missing.');
+            }
+
+            return $resolved;
+        }
+
+        $this->fail($reset, $instruction, 'foreach iterable expression is missing.');
+    }
+
+    private function valueTarget(Block $header, Instruction $fetch): CompiledVariableTarget
+    {
+        if ($fetch->op2->kind !== 'cv' || $fetch->op2->name === null || $fetch->op2->index === null) {
+            $this->fail($header, $fetch, 'foreach value target is not a compiled variable.');
+        }
+
+        return new CompiledVariableTarget($fetch->op2->name, $fetch->op2->index, $fetch->index, $fetch->line);
+    }
+
+    private function keyTarget(Block $body, Instruction $fetch): CompiledVariableTarget
+    {
+        $statements = $this->blockStatements($body);
+        $first = $statements[0] ?? null;
+        if (
+            !$first instanceof ExpressionStatement
+            || !$first->expression instanceof Assignment
+            || $first->expression->operator !== null
+        ) {
+            $this->fail($body, $this->last($body), 'foreach key is not assigned to a compiled variable.');
+        }
+        $value = $first->expression->value;
+        if (
+            !$value instanceof Unresolved
+            || $value->kind !== $fetch->result->kind
+            || $value->index !== $fetch->result->index
+        ) {
+            $this->fail($body, $this->last($body), 'foreach key is not the fetch result.');
+        }
+        $assignment = null;
+        foreach ($body->instructions as $instruction) {
+            if ($instruction->index === $first->opline) {
+                $assignment = $instruction;
+                break;
+            }
+        }
+        if (
+            !$assignment instanceof Instruction
+            || $assignment->opcode !== 'ASSIGN'
+            || $assignment->op1->kind !== 'cv'
+            || $assignment->op1->name !== $first->expression->variable
+            || $assignment->op1->index === null
+        ) {
+            $this->fail($body, $assignment ?? $this->last($body), 'foreach key is not assigned to a compiled variable.');
+        }
+
+        return new CompiledVariableTarget(
+            $assignment->op1->name,
+            $assignment->op1->index,
+            $assignment->index,
+            $assignment->line,
+        );
+    }
+
+    private function exitFree(Block $exit, int $iterator): Instruction
+    {
+        foreach ($exit->instructions as $instruction) {
+            if ($instruction->opcode === 'FE_FREE' && $this->sameSlot($instruction->op1, 'var', $iterator)) {
+                return $instruction;
+            }
+        }
+        $this->fail($exit, $this->last($exit), 'foreach exit does not free its iterator.');
+    }
+
+    private function hideIteratorFrees(Block $reset, int $iterator, Instruction $exitFree): void
+    {
+        $found = false;
+        foreach ($this->graph->blocks as $block) {
+            foreach ($block->instructions as $instruction) {
+                if ($instruction->opcode !== 'FE_FREE' || !$this->sameSlot($instruction->op1, 'var', $iterator)) {
+                    continue;
+                }
+                if ($instruction->index < $this->last($reset)->index || $instruction->index > $exitFree->index) {
+                    continue;
+                }
+                $this->hiddenOplines[$instruction->index] = true;
+                $this->structuredOplines[] = $instruction->index;
+                $found = true;
+            }
+        }
+        if (!$found) {
+            $this->fail($reset, $this->last($reset), 'foreach exit does not free its iterator.');
+        }
+    }
+
+    private function sameSlot(Operand $operand, string $kind, int $index): bool
+    {
+        return $operand->kind === $kind && $operand->index === $index;
     }
 
     private function bodyEdge(Block $header, NaturalLoop $loop): Edge
@@ -1371,7 +1693,19 @@ final class LoopStructurer
      */
     private function blockStatements(Block $block): array
     {
-        return $this->statementBlocks[$block->id]->statements;
+        $statements = $this->statementBlocks[$block->id]->statements;
+        if ($this->hiddenOplines === []) {
+            return $statements;
+        }
+        $visible = [];
+        foreach ($statements as $statement) {
+            if (isset($this->hiddenOplines[$statement->opline])) {
+                continue;
+            }
+            $visible[] = $statement;
+        }
+
+        return $visible;
     }
 
     private function block(string $id): Block
@@ -1401,11 +1735,28 @@ final class LoopStructurer
     private function refuse(Block $block): void
     {
         foreach ($block->instructions as $instruction) {
+            if ($this->keepsForeachOpcode($block, $instruction)) {
+                continue;
+            }
             $reason = self::REFUSED[$instruction->opcode] ?? null;
             if ($reason !== null) {
                 $this->fail($block, $instruction, $reason);
             }
         }
+    }
+
+    private function keepsForeachOpcode(Block $block, Instruction $instruction): bool
+    {
+        if ($instruction->opcode === 'FE_FETCH_R' || $instruction->opcode === 'FE_FETCH_RW') {
+            $loop = $this->loopsByHeader[$block->id] ?? null;
+
+            return $loop instanceof NaturalLoop && $loop->kind === NaturalLoop::FOREACH;
+        }
+        if ($this->isReset($instruction)) {
+            return $this->foreachByReset($block) instanceof NaturalLoop;
+        }
+
+        return false;
     }
 
     /**
@@ -1417,21 +1768,22 @@ final class LoopStructurer
     }
 
     /**
-     * @return array{0: array<string, true>, 1: list<int>, 2: list<Diagnostic>}
+     * @return array{0: array<string, true>, 1: list<int>, 2: list<Diagnostic>, 3: array<int, true>}
      */
     private function snapshot(): array
     {
-        return [$this->visited, $this->structuredOplines, $this->diagnostics];
+        return [$this->visited, $this->structuredOplines, $this->diagnostics, $this->hiddenOplines];
     }
 
     /**
-     * @param array{0: array<string, true>, 1: list<int>, 2: list<Diagnostic>} $snapshot
+     * @param array{0: array<string, true>, 1: list<int>, 2: list<Diagnostic>, 3: array<int, true>} $snapshot
      */
     private function restore(array $snapshot): void
     {
         $this->visited = $snapshot[0];
         $this->structuredOplines = $snapshot[1];
         $this->diagnostics = $snapshot[2];
+        $this->hiddenOplines = $snapshot[3];
     }
 
     /**
@@ -1593,8 +1945,7 @@ final class LoopStructurer
         $diagnostics = [];
         foreach ($this->diagnostics as $diagnostic) {
             if (
-                in_array($diagnostic->opcode, ['JMPZ', 'JMPNZ'], true)
-                && in_array($diagnostic->opline, $this->structuredOplines, true)
+                in_array($diagnostic->opline, $this->structuredOplines, true)
                 && $diagnostic->kind === 'unsupported'
             ) {
                 continue;

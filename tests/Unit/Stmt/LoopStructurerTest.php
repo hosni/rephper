@@ -12,6 +12,7 @@ use Rephper\Cfg\LoopAnalysis;
 use Rephper\Cfg\LoopAnalyzer;
 use Rephper\Cfg\LoopControl;
 use Rephper\Cfg\NaturalLoop;
+use Rephper\Expr\Assignment;
 use Rephper\Expr\Binary;
 use Rephper\Expr\Literal;
 use Rephper\Expr\Reconstructor as ExpressionReconstructor;
@@ -26,6 +27,7 @@ use Rephper\Expr\Expression;
 use Rephper\Stmt\DoWhileStatement;
 use Rephper\Stmt\ExpressionStatement;
 use Rephper\Stmt\ForStatement;
+use Rephper\Stmt\ForeachStatement;
 use Rephper\Stmt\IfStatement;
 use Rephper\Stmt\LoopStructurer;
 use Rephper\Stmt\OpaqueStatement;
@@ -432,10 +434,27 @@ final class LoopStructurerTest extends TestCase
         $this->assertSame([], $this->dos($forStructured->statements));
         $this->assertCount(1, $this->fors($forStructured->statements));
 
-        [, , $eachAnalysis, $eachStructured] = $this->prepare('LoopAnalysis.json', 'simpleForeach');
-        $this->assertSame(NaturalLoop::FOREACH, $this->onlyLoop($eachAnalysis)->kind);
+        [, $eachReconstruction, $eachAnalysis, $eachStructured] = $this->prepare('LoopAnalysis.json', 'simpleForeach');
+        $eachLoop = $this->onlyLoop($eachAnalysis);
+        $each = $this->onlyForeach($eachStructured->statements);
+        $this->assertSame(NaturalLoop::FOREACH, $eachLoop->kind);
         $this->assertSame([], $this->whiles($eachStructured->statements));
-        $this->assertSame('unstructured', $eachStructured->diagnostics[array_key_last($eachStructured->diagnostics)]->kind);
+        $this->assertSame($eachLoop->id, $each->loopId);
+        $this->assertNull($each->key);
+        $this->assertFalse($each->byReference);
+        $this->assertSame('value', $each->value->name);
+        $this->assertInstanceOf(VariableRead::class, $each->iterable);
+        $this->assertSame('values', $each->iterable->name);
+        $this->assertSame($this->resetOf($eachReconstruction, $eachLoop)->instruction->op1->resolved, $each->iterable);
+        $this->assertAssignment($eachStructured->statements[0], 'total');
+        $this->assertInstanceOf(ExpressionStatement::class, $each->body[0]);
+        $this->assertInstanceOf(Assignment::class, $each->body[0]->expression);
+        $this->assertSame('total', $each->body[0]->expression->variable);
+        $this->assertSame('+', $each->body[0]->expression->operator);
+        $this->assertInstanceOf(ReturnStatement::class, $eachStructured->statements[2]);
+        foreach ($eachStructured->diagnostics as $diagnostic) {
+            $this->assertNotSame('unstructured', $diagnostic->kind);
+        }
 
         [, , $unknownAnalysis, $unknown] = $this->prepare('LoopAnalysis.json', 'andWhile');
         $this->assertSame(NaturalLoop::UNKNOWN, $this->onlyLoop($unknownAnalysis)->kind);
@@ -722,6 +741,47 @@ final class LoopStructurerTest extends TestCase
 
     /**
      * @param list<Statement> $statements
+     * @return list<ForeachStatement>
+     */
+    private function foreaches(array $statements): array
+    {
+        $found = [];
+        foreach ($this->walk($statements) as $statement) {
+            if ($statement instanceof ForeachStatement) {
+                $found[] = $statement;
+            }
+        }
+
+        return $found;
+    }
+
+    /**
+     * @param list<Statement> $statements
+     */
+    private function onlyForeach(array $statements): ForeachStatement
+    {
+        $found = $this->foreaches($statements);
+        $this->assertCount(1, $found);
+
+        return $found[0];
+    }
+
+    private function resetOf(Reconstruction $reconstruction, NaturalLoop $loop): OpaqueStatement
+    {
+        $this->assertCount(1, $loop->entries);
+
+        return $this->branch($reconstruction, $loop->entries[0]->opline);
+    }
+
+    private function isHiddenLoopOpcode(string $opcode): bool
+    {
+        return in_array($opcode, ['JMPZ', 'JMPNZ', 'FE_FREE'], true)
+            || str_starts_with($opcode, 'FE_RESET')
+            || str_starts_with($opcode, 'FE_FETCH');
+    }
+
+    /**
+     * @param list<Statement> $statements
      */
     private function onlyBreak(array $statements): BreakStatement
     {
@@ -751,7 +811,7 @@ final class LoopStructurerTest extends TestCase
         $found = [];
         foreach ($statements as $statement) {
             $found[] = $statement;
-            if ($statement instanceof WhileStatement || $statement instanceof DoWhileStatement || $statement instanceof ForStatement) {
+            if ($statement instanceof WhileStatement || $statement instanceof DoWhileStatement || $statement instanceof ForStatement || $statement instanceof ForeachStatement) {
                 foreach ($this->walk($statement->body) as $nested) {
                     $found[] = $nested;
                 }
@@ -888,6 +948,7 @@ final class LoopStructurerTest extends TestCase
                 $statement instanceof WhileStatement
                 || $statement instanceof DoWhileStatement
                 || $statement instanceof ForStatement
+                || $statement instanceof ForeachStatement
                 || $statement instanceof IfStatement
             ) {
                 continue;
@@ -911,12 +972,25 @@ final class LoopStructurerTest extends TestCase
     {
         $actual = $this->actualLeaves($structured);
         $consumed = $this->consumedExpressions($structured);
+        $keyOplines = [];
+        foreach ($this->walk($structured->statements) as $statement) {
+            if ($statement instanceof ForeachStatement && $statement->key !== null) {
+                $keyOplines[$statement->key->opline] = true;
+            }
+        }
         $expected = [];
         foreach ($reconstruction->blocks as $block) {
             foreach ($block->statements as $statement) {
                 if (
                     $statement instanceof OpaqueStatement
-                    && in_array($statement->instruction->opcode, ['JMPZ', 'JMPNZ'], true)
+                    && $this->isHiddenLoopOpcode($statement->instruction->opcode)
+                    && !in_array($statement, $actual, true)
+                ) {
+                    continue;
+                }
+                if (
+                    $statement instanceof ExpressionStatement
+                    && isset($keyOplines[$statement->opline])
                     && !in_array($statement, $actual, true)
                 ) {
                     continue;
@@ -961,7 +1035,7 @@ final class LoopStructurerTest extends TestCase
     private function assertStructuredControls(LoopAnalysis $analysis, StructuredStatements $structured, string $name): void
     {
         $structuredIds = [];
-        foreach (array_merge($this->whiles($structured->statements), $this->dos($structured->statements), $this->fors($structured->statements)) as $loop) {
+        foreach (array_merge($this->whiles($structured->statements), $this->dos($structured->statements), $this->fors($structured->statements), $this->foreaches($structured->statements)) as $loop) {
             $structuredIds[$loop->loopId] = true;
         }
         foreach ($analysis->controls as $control) {
@@ -994,6 +1068,7 @@ final class LoopStructurerTest extends TestCase
                 && !$statement instanceof WhileStatement
                 && !$statement instanceof DoWhileStatement
                 && !$statement instanceof ForStatement
+                && !$statement instanceof ForeachStatement
                 && !$statement instanceof IfStatement
             ) {
                 return $statement;
