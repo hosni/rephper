@@ -216,13 +216,13 @@ final class Reconstructor
             return;
         }
 
-        $this->roots[] = new Assignment(
+        $this->store($instruction, new Assignment(
             $instruction->index,
             $instruction->line,
             $instruction->op1->name,
             $this->value($opArray, $instruction, $instruction->op2),
             $operator,
-        );
+        ));
     }
 
     private function assignOp(OpArray $opArray, Instruction $instruction): void
