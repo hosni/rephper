@@ -1,6 +1,6 @@
 # Rephper
 
-Rephper inspects PHP source after the Zend Engine has compiled it. A PHP 8.4 Zend extension prints compiled op arrays and writes them as versioned JSON. A separate PHP program reads that JSON and prints a control-flow graph for each op array. `Rephper\Expr\Reconstructor` turns the instructions inside one basic block into expression trees. `Rephper\Stmt\Reconstructor` turns those trees into straight-line statements, still one basic block at a time. Structured control flow and PHP source generation are later milestones.
+Rephper inspects PHP source after the Zend Engine has compiled it. A PHP 8.4 Zend extension prints compiled op arrays and writes them as versioned JSON. A separate PHP program reads that JSON and prints a control-flow graph for each op array. `Rephper\Expr\Reconstructor` turns the instructions inside one basic block into expression trees. `Rephper\Stmt\Reconstructor` turns those trees into straight-line statements, still one basic block at a time. `Rephper\Stmt\ConditionalStructurer` rebuilds `if` / `elseif` / `else` from the control-flow graph and those statements. Loops, `switch`, `match`, `try`, and PHP source generation are later milestones.
 
 ## Objectives
 
@@ -11,7 +11,8 @@ Rephper inspects PHP source after the Zend Engine has compiled it. A PHP 8.4 Zen
 5. Read the JSON without loading the Zend extension, and build a control-flow graph for each op array.
 6. Reconstruct expression trees from the instructions inside each basic block.
 7. Reconstruct straight-line statements from those trees, still grouped by basic block.
-8. Reconstruct structured control flow and PHP source. Later milestone.
+8. Reconstruct `if`, `elseif`, and `else` from the control-flow graph.
+9. Reconstruct loops, `switch`, `match`, `try`, and PHP source. Later milestone.
 
 The extension does not parse another tool's text output. It reads `zend_op_array` and `zend_op` directly.
 
@@ -57,10 +58,16 @@ extension/src/Compatibility/php84/
          statements for one basic block
               |
               v
-         future control-flow structuring and source generation
+         src/Stmt/ConditionalStructurer.php
+              |
+              v
+         if / elseif / else, or the original statements
+              |
+              v
+         future loop, switch, match, try, and source generation
 ```
 
-The reader, the IR model, the CFG builder, the expression reconstructor, the statement reconstructor, and `php bin/rephper graph` do not load the extension and do not use Zend C structures. Opcode control-flow rules for this stage live in `src/Cfg/Php84/Semantics.php`. Expression folding lives in `src/Expr/Reconstructor.php`. Statement grouping lives in `src/Stmt/Reconstructor.php`.
+The reader, the IR model, the CFG builder, the expression reconstructor, the statement reconstructor, the conditional structurer, and `php bin/rephper graph` do not load the extension and do not use Zend C structures. Opcode control-flow rules for this stage live in `src/Cfg/Php84/Semantics.php`. Expression folding lives in `src/Expr/Reconstructor.php`. Statement grouping lives in `src/Stmt/Reconstructor.php`. Conditional structuring lives in `src/Stmt/ConditionalStructurer.php`.
 
 `extension/rephper.c` is the Zend extension entry point. It registers `op_array_handler`. PHP 8.4 declares that callback as:
 
@@ -466,7 +473,7 @@ PHP source generation is not part of this pass.
 
 ## Statement reconstruction
 
-`src/Stmt/Reconstructor.php` takes an op array, the CFG for that op array, and the expression reconstruction already produced for it. It does not fold expressions again and it does not load the extension. Each basic block gets its own ordered statement list. Blocks are not merged into `if`, loops, `switch`, `match`, or `try`.
+`src/Stmt/Reconstructor.php` takes an op array, the CFG for that op array, and the expression reconstruction already produced for it. It does not fold expressions again and it does not load the extension. Each basic block gets its own ordered statement list. This pass does not merge blocks. Loops, `switch`, `match`, and `try` stay in separate blocks. Conditional structuring is the next pass.
 
 ```php
 $statements = (new Rephper\Stmt\Reconstructor())->reconstruct(
@@ -497,7 +504,47 @@ ExpressionStatement   opline 1
     Assignment b = Literal int 20
 ```
 
-Structured control flow and PHP source generation are not part of this pass.
+This pass does not join blocks. A `JMPZ` or `JMPNZ` that still carries its condition stays an opaque statement here, so the condition is available to the next pass. PHP source generation is not part of this pass.
+
+## Structured conditionals
+
+`src/Stmt/ConditionalStructurer.php` takes the control-flow graph and the statement reconstruction for one op array. It does not fold expressions again, does not rebuild statements, and does not change the graph or the per-block lists. It returns a separate statement list for the whole op array. Statement objects inside a branch are the same objects the statement pass produced.
+
+```php
+$structured = (new Rephper\Stmt\ConditionalStructurer())->structure(
+    $controlFlowGraph,
+    $statements,
+);
+```
+
+| Type | What it records |
+| --- | --- |
+| `IfStatement` | Ordered tested branches and an optional else. `elseStatements === null` means there is no else region. An empty array is an else region with no statements. The statement opline and line are the first tested branch. `elseOpline` and `elseLine` are the first instruction of the else region. |
+| `ConditionalBranch` | The condition expression, the branch opline and line, and the statements in that arm. `elseif` is another branch of the same `IfStatement`. |
+
+The supported forms are `if`, `if` / `else`, `if` / `elseif` / `else`, and conditionals nested inside a branch. The branch opcodes are `JMPZ` and `JMPNZ`.
+
+The condition is the expression already stored on that branch instruction: `op1` of the `JMPZ` or `JMPNZ` statement. A comparison or a `!` that the compiler evaluated into a temporary in the same block is that expression. The pass does not build a new condition and does not wrap it in another `!`. `$a > $b` stays the comparison the compiler emitted, which is `$b < $a`. `if (!$a)` stays a unary `!`. A condition that is an unresolved temporary, because its definition is in another block, is refused.
+
+The then arm is the successor whose edge kind is `true`. The other arm is the edge whose kind is `false`. Those kinds come from `src/Cfg/Php84/Semantics.php`. For `JMPZ`, true falls through and false is the jump. For `JMPNZ`, true is the jump and false falls through. The pass does not decide this from block numbers or from which block was created next.
+
+The merge point comes from the graph:
+
+- When both edges target the same block, that block is the merge and the body is empty. PHP emits this for an `if` whose body it deleted.
+- Otherwise the immediate post-dominator of the branch block is the merge when it is a real block. A block post-dominates the branch when every path from the branch to the function exit goes through it. Blocks with no ordinary successor are treated as reaching a synthetic exit, so a `return` or `throw` still has a path to the end. The immediate post-dominator is the closest of those blocks.
+- When that block is the false successor, there is no else. The false block's statements stay after the `IfStatement`.
+- When it is a later block, the true region and the false region both stop there. Statements after that block stay outside the conditional.
+- When the only common end is the synthetic exit, the false successor stays outside the conditional. PHP also emits an unreachable `JMP` immediately after a true branch that returns or throws when the source has an explicit else that does not fall through. If that jump lands past the false successor, the false successor is the else and the jump target is the merge. Without that jump, a later `return` stays outside the `if`.
+
+Each branch is walked with the same rules and stops at the surrounding merge, so a conditional inside a branch stays nested. When an else region is exactly one `IfStatement`, with no statement before or after it, that statement's branches are appended to the outer one. That is an `elseif` chain, including an `elseif` that has no final else. An else that contains any other statement keeps the inner `IfStatement` nested. An empty else that the compiler deletes has no else region.
+
+`JMPZ_EX`, `JMPNZ_EX`, `JMP_SET`, `COALESCE`, and `JMP_NULL` are not `if` headers. The same opcodes implement `&&`, `||`, and null coalescing. They stay in the original statement lists.
+
+If any region in the op array is not an unambiguous forward conditional, the result is the original statements in block order, the original diagnostics, and one `unstructured` diagnostic. That diagnostic names the opcode, opline, source line, block, and the reason. No condition or branch relationship is invented. A loop, `switch`, `match`, `goto`, `break`, `continue`, `foreach`, `try` / `catch`, or a backward edge makes the whole op array unstructured, even if another part of it is a plain `if`.
+
+A branch that became an `IfStatement` is not also left in the new list as an opaque statement. Its `unsupported` diagnostic is omitted from the new diagnostic list. The per-block reconstruction is unchanged and still contains both.
+
+Loops, `switch`, `match`, `try` / `catch` / `finally`, and PHP source generation are not implemented.
 
 ## Commands
 
@@ -526,7 +573,7 @@ make test-integration
 
 `composer test`, `composer test:unit`, and `composer test:integration` run the same PHPUnit suites. `make test` and `make test-integration` build the extension first and pass it to PHPUnit through `REPHPER_PHP` and `REPHPER_EXTENSION`. The unit suite does not load the extension. Run PHPUnit with the normal PHP extensions enabled. The spawned `php -l` processes still use `-n`, so OPcache stays out of the opcode dump.
 
-`tests/Unit/` covers the reader, control-flow edges, exception edges, expression trees, named function calls, straight-line statements, invalid IR, and the `graph` command through Symfony’s `CommandTester`. One unit test also runs `bin/rephper` so the executable bootstrap is checked. Version selection still treats `8.10` as newer than `8.9`, and PHP 8.4 remains the only supported compiler.
+`tests/Unit/` covers the reader, control-flow edges, exception edges, expression trees, named function calls, straight-line statements, structured conditionals, invalid IR, and the `graph` command through Symfony’s `CommandTester`. One unit test also runs `bin/rephper` so the executable bootstrap is checked. Version selection still treats `8.10` as newer than `8.9`, and PHP 8.4 remains the only supported compiler.
 
 `tests/Integration/ExporterTest.php` compiles every fixture with the extension when `extension/modules/rephper.so` exists. Without that file the integration tests are skipped. For each fixture it checks:
 
@@ -579,7 +626,7 @@ Linting one file does not compile files it would include at runtime, and it does
 
 - PHP 8.4 only.
 - Ubuntu is the only operating system that has been targeted. It has been built and tested locally on Linux with PHP 8.4.27.
-- There is no PHP source generator and no control-flow structuring. Straight-line statements cover assignments, returns, throws, function calls used as statements, and opaque side effects inside one basic block. `if`, loops, `switch`, `match`, and `try` stay as separate blocks.
+- There is no PHP source generator. `if`, `if` / `else`, `if` / `elseif` / `else`, and nested conditionals are structured from `JMPZ` and `JMPNZ`. Loops, `switch`, `match`, and `try` / `catch` / `finally` are not. An op array that contains one of those, or a short-circuit opcode such as `JMPZ_EX` or `JMPNZ_EX`, stays as its original per-block statements plus an `unstructured` diagnostic. An empty else that the compiler deletes is an `if` without else. A `return` after an `if` that has no explicit else stays outside the conditional. `$a > $b` remains the compiled `$b < $a` comparison.
 - Direct named function calls are reconstructed from `INIT_FCALL` / `INIT_FCALL_BY_NAME`, their sends, and the matching `DO_ICALL`, `DO_UCALL`, or `DO_FCALL_BY_NAME`. Dynamic calls, method calls, static calls, constructors, and first-class callables stay opaque. `strlen($text)` on a compiled variable remains the `STRLEN` opcode. A named argument that the compiler rewrote into a positional send is positional in the tree. The stored function name can be lowercased.
 - CFG semantics are implemented for PHP 8.4, `pre_pass_two`, and absolute opline jumps only. `src/Cfg/Php84/Semantics.php` is the only opcode switch. Another PHP version needs its own semantics class.
 - `HANDLE_EXCEPTION`, `USER_OPCODE`, and `CALL_TRAMPOLINE` are rejected. The builder does not guess their successors.
@@ -598,7 +645,7 @@ Linting one file does not compile files it would include at runtime, and it does
 
 ## Roadmap
 
-- Structured control flow, then PHP source generation. Straight-line statements are already grouped by basic block.
+- Loops, `switch`, `match`, `try` / `catch` / `finally`, then PHP source generation. `if` / `elseif` / `else` is already structured from the control-flow graph.
 - Expression reconstruction across basic blocks, including `&&` and `||`. Method calls, dynamic calls, constructors, and first-class callables are still separate instructions.
 - More PHP versions, each with its own compatibility directory and expected dumps.
 - More operating systems, as extra `os` matrix entries once the build has been verified there.
