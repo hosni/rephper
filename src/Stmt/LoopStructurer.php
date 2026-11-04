@@ -12,6 +12,7 @@ use Rephper\Cfg\LoopControl;
 use Rephper\Cfg\NaturalLoop;
 use Rephper\Expr\Diagnostic;
 use Rephper\Expr\Expression;
+use Rephper\Expr\Literal;
 use Rephper\Expr\Opaque;
 use Rephper\Expr\Unary;
 use Rephper\Expr\Unresolved;
@@ -19,12 +20,12 @@ use Rephper\Ir\Instruction;
 use Rephper\Ir\Operand;
 
 /**
- * Rebuilds while and do-while loops from a CFG, natural-loop analysis, and
- * statement lists.
+ * Rebuilds while, do-while, and for loops from a CFG, natural-loop analysis,
+ * and statement lists.
  *
- * Expressions and straight-line statements are reused. for, foreach, and
- * unknown loops stay in their original statements with a diagnostic. The
- * graph and the per-block reconstruction are not modified.
+ * Expressions and straight-line statements are reused. foreach and unknown
+ * loops stay in their original statements with a diagnostic. The graph and
+ * the per-block reconstruction are not modified.
  *
  * ConditionalStructurer::structure() is unchanged and still refuses a loop.
  * This walk structures an if inside a supported loop, and a supported loop
@@ -103,6 +104,10 @@ final class LoopStructurer
 
     private ?string $latchId = null;
 
+    private ?string $updateBlockId = null;
+
+    private ?int $updateOpline = null;
+
     private int $loopDepth = 0;
 
     /**
@@ -111,6 +116,8 @@ final class LoopStructurer
      *     post: array<string, array<string, true>>,
      *     active: ?string,
      *     latch: ?string,
+     *     updateBlock: ?string,
+     *     updateOpline: ?int,
      *     depth: int
      * }>
      */
@@ -193,6 +200,8 @@ final class LoopStructurer
         $this->boundary = [];
         $this->activeHeader = null;
         $this->latchId = null;
+        $this->updateBlockId = null;
+        $this->updateOpline = null;
         $this->loopDepth = 0;
         $this->stack = [];
         $this->post = $this->postDominators();
@@ -206,6 +215,9 @@ final class LoopStructurer
     {
         if ($this->stopped($block->id, $stops)) {
             return [];
+        }
+        if ($this->updateBlockId !== null && $block->id === $this->updateBlockId) {
+            return $this->updatePrefix($block);
         }
         if ($this->latchId !== null && $block->id === $this->latchId) {
             return $this->latchStatements($block);
@@ -225,6 +237,18 @@ final class LoopStructurer
 
         $this->refuse($block);
         $last = $this->last($block);
+        if ($last->opcode === 'JMP' && count($block->successors) === 1) {
+            $entered = $this->loopsByHeader[$block->successors[0]->to] ?? null;
+            if (
+                $entered instanceof NaturalLoop
+                && ($entered->kind === NaturalLoop::FOR || $entered->kind === NaturalLoop::WHILE)
+                && $entered->headerId !== $this->activeHeader
+                && !isset($this->visited[$entered->headerId])
+                && $this->isPrologue($block, $entered)
+            ) {
+                return $this->enterLoop($block, $entered, $stops);
+            }
+        }
         if ($last->opcode === 'JMPZ' || $last->opcode === 'JMPNZ') {
             return $this->emitConditional($block, $last, $stops);
         }
@@ -326,6 +350,12 @@ final class LoopStructurer
         if ($loop->kind === NaturalLoop::WHILE || $loop->kind === NaturalLoop::DO_WHILE) {
             return $this->emitSupported($loop, $stops);
         }
+        if ($loop->kind === NaturalLoop::FOR) {
+            $prologue = $this->prologue($loop);
+            if ($prologue instanceof Block && !isset($this->visited[$prologue->id])) {
+                return $this->enterLoop($prologue, $loop, $stops);
+            }
+        }
 
         $this->diagnostics[] = $this->loopDiagnostic($loop, $loop->reason ?? $this->unsupportedReason($loop));
 
@@ -357,6 +387,347 @@ final class LoopStructurer
 
     /**
      * @param list<string> $stops
+     * @return list<Statement>
+     */
+    private function enterLoop(Block $prologue, NaturalLoop $loop, array $stops): array
+    {
+        if ($loop->kind === NaturalLoop::FOR || $this->presentAsFor($prologue, $loop)) {
+            return $this->emitFor($prologue, $loop, $stops);
+        }
+
+        $this->visited[$prologue->id] = true;
+        $header = $this->block($loop->headerId);
+
+        return $this->appendWalk($this->blockStatements($prologue), $header, $stops);
+    }
+
+    /**
+     * @param list<string> $stops
+     * @return list<Statement>
+     */
+    private function emitFor(Block $prologue, NaturalLoop $loop, array $stops): array
+    {
+        $saved = $this->snapshot();
+        try {
+            if ($loop->kind === NaturalLoop::FOR) {
+                [$leading, $statement, $continuation] = $this->buildFor($prologue, $loop, $stops);
+            } else {
+                [$leading, $statement, $continuation] = $this->buildPromotedFor($prologue, $loop, $stops);
+            }
+        } catch (UnstructuredFlow $failure) {
+            $this->restore($saved);
+            $this->diagnostics[] = $this->flowDiagnostic($failure);
+            $this->visited[$prologue->id] = true;
+
+            return array_merge($this->blockStatements($prologue), $this->emitOriginal($loop, $stops));
+        }
+        $this->visited[$prologue->id] = true;
+
+        return $this->appendContinuation(array_merge($leading, [$statement]), $continuation, $stops);
+    }
+
+    private function presentAsFor(Block $prologue, NaturalLoop $loop): bool
+    {
+        if ($loop->kind !== NaturalLoop::WHILE || !$this->isPrologue($prologue, $loop)) {
+            return false;
+        }
+        try {
+            [, $initializers] = $this->splitInitializers($prologue);
+        } catch (UnstructuredFlow) {
+            return false;
+        }
+
+        return $initializers !== [] || $this->omittedCondition($prologue, $loop);
+    }
+
+    /**
+     * @param list<string> $stops
+     * @return array{list<Statement>, ForStatement, Block}
+     */
+    private function buildFor(Block $prologue, NaturalLoop $loop, array $stops): array
+    {
+        if (!$this->isPrologue($prologue, $loop)) {
+            $header = $this->block($loop->headerId);
+            $this->fail($header, $this->last($header), 'for is not entered through its prologue jump.');
+        }
+        $header = $this->block($loop->headerId);
+        $branch = $this->last($header);
+        if ($branch->opcode !== 'JMPZ' && $branch->opcode !== 'JMPNZ') {
+            $this->fail($header, $branch, 'for header does not end with a condition branch.');
+        }
+        $bodyEdge = $this->bodyEdge($header, $loop);
+        $continuation = $this->block($this->exitEdge($header, $loop)->to);
+        if ($this->statementsBefore($header, $branch->index) !== []) {
+            $this->fail($header, $branch, 'The condition block contains a statement before the branch.');
+        }
+        $condition = $this->loopCondition($header, $branch, $bodyEdge->kind);
+        if ($this->synthesizedTrue($prologue, $header, $condition)) {
+            $condition = null;
+        }
+        if ($loop->continueOpline === null) {
+            $this->fail($header, $branch, 'for has no continue target.');
+        }
+        [$leading, $initializers] = $this->splitInitializers($prologue);
+        $updates = $this->updateExpressions($loop, $loop->continueOpline);
+        $updateBlock = $this->blockContaining($loop, $loop->continueOpline);
+
+        $this->push($header->id, $continuation->id, null);
+        try {
+            $this->updateBlockId = $updateBlock->id;
+            $this->updateOpline = $loop->continueOpline;
+            $this->visited[$header->id] = true;
+            $bodyStops = $this->withStops($stops, [$header->id, $continuation->id]);
+            foreach ($this->pureUpdateBlocks($loop, $updateBlock, $loop->continueOpline) as $id) {
+                $this->visited[$id] = true;
+                $bodyStops[] = $id;
+            }
+            if ($bodyEdge->to === $header->id) {
+                $body = [];
+            } else {
+                $body = $this->emit($this->block($bodyEdge->to), $bodyStops);
+            }
+            $this->assertVisited($loop);
+        } finally {
+            $this->pop();
+        }
+
+        return [
+            $leading,
+            new ForStatement($branch->index, $branch->line, $initializers, $condition, $updates, $body, $loop->id),
+            $continuation,
+        ];
+    }
+
+    /**
+     * A while shape whose prologue owns initializers, or whose true test was
+     * synthesized for an omitted condition, is the compiler's empty-update
+     * or empty-condition for.
+     *
+     * @param list<string> $stops
+     * @return array{list<Statement>, ForStatement, Block}
+     */
+    private function buildPromotedFor(Block $prologue, NaturalLoop $loop, array $stops): array
+    {
+        [$leading, $initializers] = $this->splitInitializers($prologue);
+        $omitted = $this->omittedCondition($prologue, $loop);
+        [$while, $continuation] = $this->buildWhile($loop, $stops);
+
+        return [
+            $leading,
+            new ForStatement(
+                $while->opline,
+                $while->line,
+                $initializers,
+                $omitted ? null : $while->condition,
+                [],
+                $while->body,
+                $while->loopId,
+            ),
+            $continuation,
+        ];
+    }
+
+    private function isPrologue(Block $block, NaturalLoop $loop): bool
+    {
+        return count($loop->entries) === 1
+            && $loop->entries[0]->kind === 'jump'
+            && $loop->entries[0]->from === $block->id
+            && $loop->entries[0]->to === $loop->headerId
+            && $this->last($block)->opcode === 'JMP';
+    }
+
+    private function prologue(NaturalLoop $loop): ?Block
+    {
+        if (count($loop->entries) !== 1 || $loop->entries[0]->kind !== 'jump' || $loop->entries[0]->to !== $loop->headerId) {
+            return null;
+        }
+        $block = $this->block($loop->entries[0]->from);
+
+        return $this->last($block)->opcode === 'JMP' ? $block : null;
+    }
+
+    /**
+     * Statements in the prologue that share the jump's line are the for
+     * initializers. An earlier statement on another line stays before the loop.
+     *
+     * @return array{list<Statement>, list<Expression>}
+     */
+    private function splitInitializers(Block $prologue): array
+    {
+        $line = $this->last($prologue)->line;
+        $statements = $this->statementsBefore($prologue, $this->last($prologue)->index);
+        $initializers = [];
+        while ($statements !== [] && $statements[array_key_last($statements)]->line === $line) {
+            array_unshift($initializers, $this->expressionOf($prologue, array_pop($statements)));
+        }
+
+        return [$statements, $initializers];
+    }
+
+    /**
+     * @return list<Expression>
+     */
+    private function updateExpressions(NaturalLoop $loop, int $continueAt): array
+    {
+        $block = $this->blockContaining($loop, $continueAt);
+        if ($block->id === $loop->headerId) {
+            $this->fail($block, $this->last($block), 'for update target is the condition.');
+        }
+        $expressions = [];
+        $guard = 0;
+        while ($block->id !== $loop->headerId) {
+            if (++$guard > count($loop->blocks)) {
+                $this->fail($block, $this->last($block), 'for update path does not reach the condition.');
+            }
+            foreach ($this->blockStatements($block) as $statement) {
+                if ($statement->opline < $continueAt) {
+                    continue;
+                }
+                $expressions[] = $this->expressionOf($block, $statement);
+            }
+            if (count($block->successors) !== 1) {
+                $this->fail($block, $this->last($block), 'for update is not a straight path to the condition.');
+            }
+            $next = $this->block($block->successors[0]->to);
+            if ($next->id !== $loop->headerId && !$loop->contains($next->id)) {
+                $this->fail($block, $this->last($block), 'for update leaves the loop before the condition.');
+            }
+            $block = $next;
+        }
+
+        return $expressions;
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function pureUpdateBlocks(NaturalLoop $loop, Block $first, int $continueAt): array
+    {
+        $ids = [];
+        $block = $first;
+        $guard = 0;
+        while ($block->id !== $loop->headerId) {
+            if (++$guard > count($loop->blocks)) {
+                break;
+            }
+            $shared = false;
+            foreach ($this->blockStatements($block) as $statement) {
+                if ($statement->opline < $continueAt) {
+                    $shared = true;
+                    break;
+                }
+            }
+            if (!$shared) {
+                $ids[] = $block->id;
+            }
+            if (count($block->successors) !== 1) {
+                break;
+            }
+            $block = $this->block($block->successors[0]->to);
+        }
+
+        return $ids;
+    }
+
+    private function blockContaining(NaturalLoop $loop, int $opline): Block
+    {
+        foreach ($loop->blocks as $id) {
+            $block = $this->block($id);
+            if ($block->start <= $opline && $opline < $block->end) {
+                return $block;
+            }
+        }
+        $header = $this->block($loop->headerId);
+        $this->fail($header, $this->last($header), 'for continue target is not in the loop.');
+    }
+
+    /**
+     * @return list<Statement>
+     */
+    private function updatePrefix(Block $block): array
+    {
+        if (isset($this->visited[$block->id])) {
+            $this->fail($block, $this->last($block), 'The block is reached by more than one structured path.');
+        }
+        $this->visited[$block->id] = true;
+        $statements = [];
+        foreach ($this->blockStatements($block) as $statement) {
+            if ($statement->opline < ($this->updateOpline ?? $block->end)) {
+                $statements[] = $statement;
+            }
+        }
+
+        return $statements;
+    }
+
+    private function expressionOf(Block $block, Statement $statement): Expression
+    {
+        if ($statement instanceof ExpressionStatement) {
+            return $statement->expression;
+        }
+        if ($statement instanceof OpaqueStatement) {
+            return $statement->instruction;
+        }
+        $this->fail($block, $this->last($block), 'for initializer or update is not an expression.');
+    }
+
+    private function omittedCondition(Block $prologue, NaturalLoop $loop): bool
+    {
+        $header = $this->block($loop->headerId);
+        $branch = $this->last($header);
+        if (($branch->opcode !== 'JMPZ' && $branch->opcode !== 'JMPNZ') || $this->statementsBefore($header, $branch->index) !== []) {
+            return false;
+        }
+        $resolved = null;
+        foreach ($this->blockStatements($header) as $statement) {
+            if ($statement instanceof OpaqueStatement && $statement->opline === $branch->index) {
+                $resolved = $statement->instruction->op1->resolved;
+                break;
+            }
+        }
+        if (!$resolved instanceof Expression || $resolved instanceof Unresolved) {
+            return false;
+        }
+        try {
+            if ($this->bodyEdge($header, $loop)->kind !== 'true') {
+                return false;
+            }
+        } catch (UnstructuredFlow) {
+            return false;
+        }
+
+        return $this->synthesizedTrue($prologue, $header, $resolved);
+    }
+
+    private function synthesizedTrue(Block $prologue, Block $header, Expression $condition): bool
+    {
+        if (!$condition instanceof Literal || $condition->type !== 'bool' || $condition->value !== true) {
+            return false;
+        }
+        $branch = $this->last($header);
+        $previous = $this->instructionBefore($branch->index);
+        if ($previous === null || $previous->line !== $branch->line) {
+            return false;
+        }
+
+        return $branch->line !== $this->last($prologue)->line;
+    }
+
+    private function instructionBefore(int $index): ?Instruction
+    {
+        foreach ($this->graph->blocks as $block) {
+            foreach ($block->instructions as $instruction) {
+                if ($instruction->index === $index - 1) {
+                    return $instruction;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param list<string> $stops
      * @return array{WhileStatement, Block}
      */
     private function buildWhile(NaturalLoop $loop, array $stops): array
@@ -369,7 +740,7 @@ final class LoopStructurer
         $bodyEdge = $this->bodyEdge($header, $loop);
         $continuation = $this->block($this->exitEdge($header, $loop)->to);
         if ($this->statementsBefore($header, $branch->index) !== []) {
-            $this->fail($header, $branch, 'while condition block contains a statement before the branch.');
+            $this->fail($header, $branch, 'The condition block contains a statement before the branch.');
         }
         $condition = $this->loopCondition($header, $branch, $bodyEdge->kind);
 
@@ -479,6 +850,8 @@ final class LoopStructurer
             'post' => $this->post,
             'active' => $this->activeHeader,
             'latch' => $this->latchId,
+            'updateBlock' => $this->updateBlockId,
+            'updateOpline' => $this->updateOpline,
             'depth' => $this->loopDepth,
         ];
         $this->boundary = $this->boundary + [$headerId => true, $continuationId => true];
@@ -498,6 +871,8 @@ final class LoopStructurer
         $this->post = $frame['post'];
         $this->activeHeader = $frame['active'];
         $this->latchId = $frame['latch'];
+        $this->updateBlockId = $frame['updateBlock'];
+        $this->updateOpline = $frame['updateOpline'];
         $this->loopDepth = $frame['depth'];
     }
 
@@ -765,7 +1140,7 @@ final class LoopStructurer
             $this->refuse($block);
             foreach ($block->successors as $edge) {
                 $next = $this->block($edge->to);
-                if ($next->id === $stop->id || isset($this->boundary[$next->id])) {
+                if ($next->id === $stop->id || isset($this->boundary[$next->id]) || $next->id === $this->updateBlockId) {
                     continue;
                 }
                 if ($next->start <= $entry->start) {
@@ -783,7 +1158,12 @@ final class LoopStructurer
                 $this->fail($block, $this->last($block), 'The branch is entered from outside the conditional.');
             }
             foreach ($block->successors as $edge) {
-                if ($edge->to === $stop->id || isset($region[$edge->to]) || isset($this->boundary[$edge->to])) {
+                if (
+                    $edge->to === $stop->id
+                    || isset($region[$edge->to])
+                    || isset($this->boundary[$edge->to])
+                    || $edge->to === $this->updateBlockId
+                ) {
                     continue;
                 }
                 $this->fail($block, $this->last($block), 'The branch leaves the conditional without reaching the merge point.');
