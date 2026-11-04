@@ -11,6 +11,9 @@ namespace Rephper\Cfg;
  * `blocks` is sorted by start opline. `oplines` lists the header start, the
  * header's terminating instruction, and each back-edge instruction.
  * `headerLine` is the line of the header's last instruction.
+ * `continueOpline` is the breaks[] continue target when the loop has one
+ * matching non-switch row. A for update starts at that opline. It is null
+ * when the row is missing or not unique.
  */
 final class NaturalLoop
 {
@@ -62,6 +65,7 @@ final class NaturalLoop
         public readonly string $kind,
         public readonly ?string $reason,
         public readonly array $oplines,
+        public readonly ?int $continueOpline,
     ) {
     }
 

@@ -474,6 +474,19 @@ final class LoopAnalyzer
     }
 
     /**
+     * @param array<string, true> $members
+     */
+    private function continueOpline(array $members): ?int
+    {
+        $rows = $this->matchingRows($members);
+        if (count($rows) !== 1) {
+            return null;
+        }
+
+        return $rows[0]->continueTarget;
+    }
+
+    /**
      * @param list<array{
      *     header: Block,
      *     backEdges: list<LoopEdge>,
@@ -606,6 +619,7 @@ final class LoopAnalyzer
                 $draft['kind'],
                 $draft['reason'],
                 $draft['oplines'],
+                $this->continueOpline($draft['members']),
             );
         }
 
