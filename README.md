@@ -1,6 +1,6 @@
 # Rephper
 
-Rephper inspects PHP source after the Zend Engine has compiled it. A PHP 8.4 Zend extension prints compiled op arrays and writes them as versioned JSON. A separate PHP program reads that JSON and prints a control-flow graph for each op array. `Rephper\Expr\Reconstructor` turns the instructions inside one basic block into expression trees. `Rephper\Stmt\Reconstructor` turns those trees into straight-line statements, still one basic block at a time. `Rephper\Stmt\ConditionalStructurer` rebuilds `if` / `elseif` / `else` from the control-flow graph and those statements. Loops, `switch`, `match`, `try`, and PHP source generation are later milestones.
+Rephper inspects PHP source after the Zend Engine has compiled it. A PHP 8.4 Zend extension prints compiled op arrays and writes them as versioned JSON. A separate PHP program reads that JSON and prints a control-flow graph for each op array. `Rephper\Expr\Reconstructor` turns the instructions inside one basic block into expression trees. `Rephper\Stmt\Reconstructor` turns those trees into straight-line statements, still one basic block at a time. `Rephper\Stmt\ConditionalStructurer` rebuilds `if` / `elseif` / `else` from the control-flow graph and those statements. `Rephper\Cfg\LoopAnalyzer` finds natural loops in that same graph and classifies each one as `while`, `do-while`, `for`, `foreach`, or `unknown`. It does not emit loop statements. `switch`, `match`, `try`, and PHP source generation are later milestones.
 
 ## Objectives
 
@@ -12,7 +12,7 @@ Rephper inspects PHP source after the Zend Engine has compiled it. A PHP 8.4 Zen
 6. Reconstruct expression trees from the instructions inside each basic block.
 7. Reconstruct straight-line statements from those trees, still grouped by basic block.
 8. Reconstruct `if`, `elseif`, and `else` from the control-flow graph.
-9. Reconstruct loops, `switch`, `match`, `try`, and PHP source. Later milestone.
+9. Analyze natural loops from the control-flow graph. Reconstruct loop statements, `switch`, `match`, `try`, and PHP source. Later milestone.
 
 The extension does not parse another tool's text output. It reads `zend_op_array` and `zend_op` directly.
 
@@ -45,6 +45,16 @@ extension/src/Compatibility/php84/
               v
          control-flow graph
               |
+              +--> src/Cfg/DominatorAnalysis.php
+              |         |
+              |         v
+              |    dominators of reachable blocks
+              |
+              +--> src/Cfg/LoopAnalyzer.php
+              |         |
+              |         v
+              |    natural loops and break/continue targets
+              |
               v
          src/Expr/Reconstructor.php
               |
@@ -64,10 +74,10 @@ extension/src/Compatibility/php84/
          if / elseif / else, or the original statements
               |
               v
-         future loop, switch, match, try, and source generation
+         future loop statements, switch, match, try, and source generation
 ```
 
-The reader, the IR model, the CFG builder, the expression reconstructor, the statement reconstructor, the conditional structurer, and `php bin/rephper graph` do not load the extension and do not use Zend C structures. Opcode control-flow rules for this stage live in `src/Cfg/Php84/Semantics.php`. Expression folding lives in `src/Expr/Reconstructor.php`. Statement grouping lives in `src/Stmt/Reconstructor.php`. Conditional structuring lives in `src/Stmt/ConditionalStructurer.php`.
+The reader, the IR model, the CFG builder, dominator analysis, natural-loop analysis, the expression reconstructor, the statement reconstructor, the conditional structurer, and `php bin/rephper graph` do not load the extension and do not use Zend C structures. Opcode control-flow rules for this stage live in `src/Cfg/Php84/Semantics.php`. Expression folding lives in `src/Expr/Reconstructor.php`. Statement grouping lives in `src/Stmt/Reconstructor.php`. Conditional structuring lives in `src/Stmt/ConditionalStructurer.php`. Natural-loop analysis lives in `src/Cfg/LoopAnalyzer.php` and does not feed the statement passes.
 
 `extension/rephper.c` is the Zend extension entry point. It registers `op_array_handler`. PHP 8.4 declares that callback as:
 
@@ -473,7 +483,7 @@ PHP source generation is not part of this pass.
 
 ## Statement reconstruction
 
-`src/Stmt/Reconstructor.php` takes an op array, the CFG for that op array, and the expression reconstruction already produced for it. It does not fold expressions again and it does not load the extension. Each basic block gets its own ordered statement list. This pass does not merge blocks. Loops, `switch`, `match`, and `try` stay in separate blocks. Conditional structuring is the next pass.
+`src/Stmt/Reconstructor.php` takes an op array, the CFG for that op array, and the expression reconstruction already produced for it. It does not fold expressions again and it does not load the extension. Each basic block gets its own ordered statement list. This pass does not merge blocks. Loops, `switch`, `match`, and `try` stay in separate blocks. Conditional structuring and natural-loop analysis are separate later passes. Neither one merges blocks.
 
 ```php
 $statements = (new Rephper\Stmt\Reconstructor())->reconstruct(
@@ -544,7 +554,33 @@ If any region in the op array is not an unambiguous forward conditional, the res
 
 A branch that became an `IfStatement` is not also left in the new list as an opaque statement. Its `unsupported` diagnostic is omitted from the new diagnostic list. The per-block reconstruction is unchanged and still contains both.
 
-Loops, `switch`, `match`, `try` / `catch` / `finally`, and PHP source generation are not implemented.
+Natural-loop analysis is a separate pass over the same graph. It does not change this result. Loop statements, `switch`, `match`, `try` / `catch` / `finally`, and PHP source generation are not implemented.
+
+## Natural loops
+
+`src/Cfg/LoopAnalyzer.php` takes the control-flow graph and the op array it was built from. It returns dominators, natural loops, and the reachable `BRK` and `CONT` instructions. It does not rebuild expressions or statements, does not change the graph, and does not emit `while`, `do-while`, `for`, or `foreach` statements.
+
+```php
+$loops = (new Rephper\Cfg\LoopAnalyzer())->analyze($controlFlowGraph, $opArray);
+```
+
+Dominators come from `src/Cfg/DominatorAnalysis.php`. The entry is the block that starts at opline 0. A block D dominates N when every ordinary path from the entry to N goes through D. A reachable block dominates itself. Unreachable blocks are listed and have no dominator set. Exception edges are not followed. The iteration does not treat block ids as execution order.
+
+A back edge is an ordinary edge from block N to block H where H dominates N. The edge may point at a block that is earlier or later in the opline layout. PHP lays a `while` body out before its condition, so the body's fallthrough into the condition is the back edge. The condition's branch into the body is not.
+
+The natural loop of every back edge into one header is that header plus every block that can reach a back-edge source without passing through the header. Several back edges into the same header are one loop. A parent is the smallest loop whose blocks contain the child. Each loop records its header, member blocks, back edges, entry edges, exit edges, children, and the oplines of the header and the back edges. An exit edge leaves the member set. A back edge is not an exit. Blocks that cannot reach a back-edge source stay outside the member set, including the block after the loop and a `break` block that has no path back to the header.
+
+`BRK` and `CONT` keep op2 as the depth and op1 as the `breaks[]` index. The target is the block the CFG edge already names. The depth is not inferred from block order. A `break` block is tied to the loop that contains the member which branches to it. The recorded loop is the outermost of those whose members do not contain the target. A `continue` records the innermost related loop whose members contain the target. `outer` is set when that loop is not the innermost related loop, which is how `break 2` and `continue 2` name an outer loop. A `break` whose target stays inside that innermost loop has no loop id.
+
+| Kind | What decides it |
+| --- | --- |
+| `while` | The header ends with `JMPZ` or `JMPNZ`, an edge leaves the loop, and the non-switch `breaks[]` continue opline lies in the header. |
+| `do_while` | The condition block branches to itself, or the back edge leaves a `JMPZ` / `JMPNZ` condition that is not the header. |
+| `for` | The header has the `while` shape, and the continue opline lies in another block of the loop. An empty `for` has the same blocks as a `while` whose body is the increment. The continue opline is what distinguishes them. |
+| `foreach` | The header ends with `FE_FETCH_R` or `FE_FETCH_RW`, an entry comes from `FE_RESET_R` or `FE_RESET_RW`, and a back edge is a `JMP` to the header. |
+| `unknown` | The loop contains `GOTO`, the header is not one of those conditions, or the `breaks[]` rows do not choose one shape. The reason is stored on the loop. |
+
+A backward `goto` can satisfy the back-edge definition and still stays `unknown`. A `goto` whose target does not dominate its source is not a back edge. `while ($a && $i < $b)` is a natural loop whose header is `JMPZ_EX`; it stays `unknown`. An unreachable cycle, including a loop left after `return`, is not a loop. PHP rejects `goto` into a loop, so that shape is not in the CFG. Conditional structuring still reports an op array that contains a loop as unstructured.
 
 ## Commands
 
@@ -573,7 +609,7 @@ make test-integration
 
 `composer test`, `composer test:unit`, and `composer test:integration` run the same PHPUnit suites. `make test` and `make test-integration` build the extension first and pass it to PHPUnit through `REPHPER_PHP` and `REPHPER_EXTENSION`. The unit suite does not load the extension. Run PHPUnit with the normal PHP extensions enabled. The spawned `php -l` processes still use `-n`, so OPcache stays out of the opcode dump.
 
-`tests/Unit/` covers the reader, control-flow edges, exception edges, expression trees, named function calls, straight-line statements, structured conditionals, invalid IR, and the `graph` command through Symfony’s `CommandTester`. One unit test also runs `bin/rephper` so the executable bootstrap is checked. Version selection still treats `8.10` as newer than `8.9`, and PHP 8.4 remains the only supported compiler.
+`tests/Unit/` covers the reader, control-flow edges, exception edges, expression trees, named function calls, straight-line statements, structured conditionals, dominators, natural loops, invalid IR, and the `graph` command through Symfony’s `CommandTester`. One unit test also runs `bin/rephper` so the executable bootstrap is checked. Version selection still treats `8.10` as newer than `8.9`, and PHP 8.4 remains the only supported compiler.
 
 `tests/Integration/ExporterTest.php` compiles every fixture with the extension when `extension/modules/rephper.so` exists. Without that file the integration tests are skipped. For each fixture it checks:
 
@@ -626,7 +662,7 @@ Linting one file does not compile files it would include at runtime, and it does
 
 - PHP 8.4 only.
 - Ubuntu is the only operating system that has been targeted. It has been built and tested locally on Linux with PHP 8.4.27.
-- There is no PHP source generator. `if`, `if` / `else`, `if` / `elseif` / `else`, and nested conditionals are structured from `JMPZ` and `JMPNZ`. Loops, `switch`, `match`, and `try` / `catch` / `finally` are not. An op array that contains one of those, or a short-circuit opcode such as `JMPZ_EX` or `JMPNZ_EX`, stays as its original per-block statements plus an `unstructured` diagnostic. An empty else that the compiler deletes is an `if` without else. A `return` after an `if` that has no explicit else stays outside the conditional. `$a > $b` remains the compiled `$b < $a` comparison.
+- There is no PHP source generator. `if`, `if` / `else`, `if` / `elseif` / `else`, and nested conditionals are structured from `JMPZ` and `JMPNZ`. Natural loops are analyzed separately: each reachable back edge, in the dominator sense, belongs to a `while`, `do-while`, `for`, `foreach`, or `unknown` loop, with its header, members, nesting, exits, and `break` / `continue` targets. Loop statements are not emitted. A `break` block with no path back to the header is outside the member set. A short-circuit loop condition (`JMPZ_EX`) and a backward `goto` stay `unknown`. An unreachable cycle is not a loop. `switch`, `match`, and `try` / `catch` / `finally` are not analyzed. An op array that contains a loop, one of those forms, or a short-circuit opcode such as `JMPZ_EX` or `JMPNZ_EX` stays as its original per-block statements plus an `unstructured` diagnostic. An empty else that the compiler deletes is an `if` without else. A `return` after an `if` that has no explicit else stays outside the conditional. `$a > $b` remains the compiled `$b < $a` comparison.
 - Direct named function calls are reconstructed from `INIT_FCALL` / `INIT_FCALL_BY_NAME`, their sends, and the matching `DO_ICALL`, `DO_UCALL`, or `DO_FCALL_BY_NAME`. Dynamic calls, method calls, static calls, constructors, and first-class callables stay opaque. `strlen($text)` on a compiled variable remains the `STRLEN` opcode. A named argument that the compiler rewrote into a positional send is positional in the tree. The stored function name can be lowercased.
 - CFG semantics are implemented for PHP 8.4, `pre_pass_two`, and absolute opline jumps only. `src/Cfg/Php84/Semantics.php` is the only opcode switch. Another PHP version needs its own semantics class.
 - `HANDLE_EXCEPTION`, `USER_OPCODE`, and `CALL_TRAMPOLINE` are rejected. The builder does not guess their successors.
@@ -645,7 +681,7 @@ Linting one file does not compile files it would include at runtime, and it does
 
 ## Roadmap
 
-- Loops, `switch`, `match`, `try` / `catch` / `finally`, then PHP source generation. `if` / `elseif` / `else` is already structured from the control-flow graph.
+- Loop statements, `switch`, `match`, `try` / `catch` / `finally`, then PHP source generation. Natural loops are already analyzed from the control-flow graph. `if` / `elseif` / `else` is already structured from it.
 - Expression reconstruction across basic blocks, including `&&` and `||`. Method calls, dynamic calls, constructors, and first-class callables are still separate instructions.
 - More PHP versions, each with its own compatibility directory and expected dumps.
 - More operating systems, as extra `os` matrix entries once the build has been verified there.
