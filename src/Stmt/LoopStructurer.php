@@ -30,9 +30,12 @@ use Rephper\Ir\Operand;
  * Expressions and straight-line statements are reused. A foreach whose value
  * is one compiled variable becomes a ForeachStatement. SWITCH_LONG and
  * SWITCH_STRING become a SwitchStatement when the type-mismatch path restates
- * the jump table. Destructuring, match, a comparison-chain switch, and an
- * unknown loop stay in their original statements with a diagnostic. The graph
- * and the per-block reconstruction are not modified.
+ * the jump table. A jump-table match is a MatchExpression. This walk skips
+ * that region and continues at its result merge, so an if or a loop that
+ * contains it stays structured. Destructuring, a comparison-chain match, a
+ * comparison-chain switch, and an unknown loop stay in their original
+ * statements with a diagnostic. The graph and the per-block reconstruction
+ * are not modified.
  *
  * ConditionalStructurer::structure() is unchanged. It still refuses a loop
  * and a jump-table switch. This walk structures an if inside a supported
@@ -287,6 +290,12 @@ final class LoopStructurer
         }
         if ($this->isSwitchBlock($block)) {
             return $this->enterSwitch($block, $stops);
+        }
+        if ($this->last($block)->opcode === 'MATCH') {
+            $merge = $this->matchMerge($block);
+            if ($merge instanceof Block) {
+                return $this->emitMatchRegion($block, $merge, $stops);
+            }
         }
 
         $this->refuse($block);
@@ -1244,6 +1253,93 @@ final class LoopStructurer
     private function keepsSwitchOpcode(Instruction $instruction): bool
     {
         return $instruction->opcode === 'SWITCH_LONG' || $instruction->opcode === 'SWITCH_STRING';
+    }
+
+    private function keepsMatchOpcode(Instruction $instruction): bool
+    {
+        return $instruction->opcode === 'MATCH' || $instruction->opcode === 'MATCH_ERROR';
+    }
+
+    private function matchMerge(Block $match): ?Block
+    {
+        $stack = [];
+        foreach ($match->successors as $edge) {
+            if ($edge->kind === 'switch' || $edge->kind === 'default') {
+                $stack[] = $this->block($edge->to);
+            }
+        }
+        $seen = [];
+        $best = null;
+        while ($stack !== []) {
+            $block = array_pop($stack);
+            if (!$block instanceof Block || isset($seen[$block->id])) {
+                continue;
+            }
+            $seen[$block->id] = true;
+            if ($block->instructions === []) {
+                continue;
+            }
+            $last = $block->instructions[array_key_last($block->instructions)];
+            if ($last->opcode === 'MATCH_ERROR') {
+                continue;
+            }
+            if ($last->opcode === 'JMP' && count($block->successors) === 1) {
+                $target = $this->block($block->successors[0]->to);
+                if (!$best instanceof Block || $target->start > $best->start) {
+                    $best = $target;
+                }
+                if ($this->isMatchExitBlock($target)) {
+                    $stack[] = $target;
+                }
+                continue;
+            }
+            foreach ($block->successors as $edge) {
+                $stack[] = $this->block($edge->to);
+            }
+        }
+        if (!$best instanceof Block || $best->start <= $match->start) {
+            return null;
+        }
+
+        return $best;
+    }
+
+    private function isMatchExitBlock(Block $block): bool
+    {
+        if ($block->instructions === [] || count($block->successors) !== 1) {
+            return false;
+        }
+        $last = $block->instructions[array_key_last($block->instructions)];
+        if ($last->opcode !== 'JMP') {
+            return false;
+        }
+        foreach ($block->instructions as $instruction) {
+            if ($instruction->opcode === 'QM_ASSIGN') {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param list<string> $stops
+     * @return list<Statement>
+     */
+    private function emitMatchRegion(Block $match, Block $merge, array $stops): array
+    {
+        $statements = [];
+        foreach ($this->graph->blocks as $block) {
+            if ($block->start < $match->start || $block->start >= $merge->start || isset($this->visited[$block->id])) {
+                continue;
+            }
+            $this->visited[$block->id] = true;
+            foreach ($this->blockStatements($block) as $statement) {
+                $statements[] = $statement;
+            }
+        }
+
+        return $this->appendContinuation($statements, $merge, $stops);
     }
 
     /**
@@ -2284,7 +2380,11 @@ final class LoopStructurer
     private function refuse(Block $block): void
     {
         foreach ($block->instructions as $instruction) {
-            if ($this->keepsForeachOpcode($block, $instruction) || $this->keepsSwitchOpcode($instruction)) {
+            if (
+                $this->keepsForeachOpcode($block, $instruction)
+                || $this->keepsSwitchOpcode($instruction)
+                || $this->keepsMatchOpcode($instruction)
+            ) {
                 continue;
             }
             $reason = self::REFUSED[$instruction->opcode] ?? null;

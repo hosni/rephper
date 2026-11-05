@@ -15,6 +15,8 @@ use Rephper\Ir\Operand;
  *
  * Temporary slots do not carry across blocks. A value defined on another path
  * stays unresolved instead of being copied from a different block.
+ * MatchReconstructor then rebuilds a jump-table match whose arms meet again
+ * after the branch. Blocks that contain no MATCH are unchanged.
  */
 final class Reconstructor
 {
@@ -124,7 +126,11 @@ final class Reconstructor
             $blocks[] = $this->block($opArray, $block);
         }
 
-        return new Reconstruction($blocks, $this->diagnostics);
+        return (new MatchReconstructor())->reconstruct(
+            $opArray,
+            $graph,
+            new Reconstruction($blocks, $this->diagnostics),
+        );
     }
 
     private function block(OpArray $opArray, Block $block): BlockExpressions
