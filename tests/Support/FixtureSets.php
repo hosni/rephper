@@ -131,6 +131,7 @@ final class FixtureSets
             'Common/ForLoops.php' => ['Function: simple', 'Function: whileAssign', 'Function: assignCond', 'Function: ambiguous', ' BRK ', ' CONT ', ' COALESCE '],
             'Common/ForeachLoops.php' => ['Function: simple', 'Function: withKey', 'Function: byRef', 'Function: keyRef', ' FE_RESET_', ' FE_FETCH_', ' FE_FREE ', ' BRK ', ' CONT '],
             'Common/Switches.php' => ['Function: simpleInt', 'Function: simpleString', ' SWITCH_LONG ', ' SWITCH_STRING ', ' BRK ', ' CONT '],
+            'Common/MatchExpressions.php' => ['Function: simpleInt', 'Function: withoutDefault', ' MATCH ', ' MATCH_ERROR '],
         ];
     }
 }

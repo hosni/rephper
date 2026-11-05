@@ -1,0 +1,1417 @@
+Rephper: Compiled op array
+File: tests/Fixtures/Common/MatchExpressions.php
+Function: getValue
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 3
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 2
+Return type: int
+Lines: 3-6
+
+Compiled variables:
+(none)
+
+Literals:
+0 int(1)
+1 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 RETURN line=5 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+1 VERIFY_RETURN_TYPE line=6 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+2 RETURN line=6 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/MatchExpressions.php
+Function: calculate
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 6
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 1
+Literals: 2
+Return type: int
+Lines: 8-11
+
+Compiled variables:
+0 $value
+
+Literals:
+0 int(1)
+1 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=8 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 ADD line=10 op1=CV(0:$value) op2=CONST(int(1)) result=TMP(0) ext=-
+2 VERIFY_RETURN_TYPE line=10 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+3 RETURN line=10 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+4 VERIFY_RETURN_TYPE line=11 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+5 RETURN line=11 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/MatchExpressions.php
+Function: label
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 5
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 0
+Literals: 1
+Return type: string
+Lines: 13-16
+
+Compiled variables:
+0 $text
+
+Literals:
+0 null
+
+Argument details:
+0 $text string
+
+Opcodes:
+0 RECV line=13 op1=UNUSED(1) op2=UNUSED(64) result=CV(0:$text) ext=-
+1 VERIFY_RETURN_TYPE line=15 op1=CV(0:$text) op2=UNUSED result=UNUSED ext=-
+2 RETURN line=15 op1=CV(0:$text) op2=UNUSED result=UNUSED ext=-
+3 VERIFY_RETURN_TYPE line=16 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 RETURN line=16 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/MatchExpressions.php
+Function: simpleInt
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 14
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 2
+Literals: 6
+Return type: string
+Lines: 18-26
+
+Compiled variables:
+0 $value
+
+Literals:
+0 array(3: [1=>int(2), 2=>int(4), 3=>int(6)])
+1 string("one")
+2 string("two")
+3 string("three")
+4 string("other")
+5 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=18 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 MATCH line=20 op1=CV(0:$value) op2=CONST(array(3: [1=>int(2), 2=>int(4), 3=>int(6)])) result=UNUSED ext=jmp:8
+2 QM_ASSIGN line=21 op1=CONST(string("one")) op2=UNUSED result=TMP(1) ext=-
+3 JMP line=21 op1=JMP(10) op2=UNUSED result=UNUSED ext=-
+4 QM_ASSIGN line=22 op1=CONST(string("two")) op2=UNUSED result=TMP(1) ext=-
+5 JMP line=22 op1=JMP(10) op2=UNUSED result=UNUSED ext=-
+6 QM_ASSIGN line=23 op1=CONST(string("three")) op2=UNUSED result=TMP(1) ext=-
+7 JMP line=23 op1=JMP(10) op2=UNUSED result=UNUSED ext=-
+8 QM_ASSIGN line=24 op1=CONST(string("other")) op2=UNUSED result=TMP(1) ext=-
+9 JMP line=24 op1=JMP(10) op2=UNUSED result=UNUSED ext=-
+10 VERIFY_RETURN_TYPE line=24 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+11 RETURN line=24 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+12 VERIFY_RETURN_TYPE line=26 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+13 RETURN line=26 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/MatchExpressions.php
+Function: simpleString
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 12
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 2
+Literals: 5
+Return type: string
+Lines: 28-35
+
+Compiled variables:
+0 $value
+
+Literals:
+0 array(3: ["a"=>int(2), "b"=>int(4), "c"=>int(4)])
+1 string("one")
+2 string("few")
+3 string("other")
+4 null
+
+Argument details:
+0 $value string
+
+Opcodes:
+0 RECV line=28 op1=UNUSED(1) op2=UNUSED(64) result=CV(0:$value) ext=-
+1 MATCH line=30 op1=CV(0:$value) op2=CONST(array(3: ["a"=>int(2), "b"=>int(4), "c"=>int(4)])) result=UNUSED ext=jmp:6
+2 QM_ASSIGN line=31 op1=CONST(string("one")) op2=UNUSED result=TMP(1) ext=-
+3 JMP line=31 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+4 QM_ASSIGN line=32 op1=CONST(string("few")) op2=UNUSED result=TMP(1) ext=-
+5 JMP line=32 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+6 QM_ASSIGN line=33 op1=CONST(string("other")) op2=UNUSED result=TMP(1) ext=-
+7 JMP line=33 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+8 VERIFY_RETURN_TYPE line=33 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+9 RETURN line=33 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+10 VERIFY_RETURN_TYPE line=35 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+11 RETURN line=35 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/MatchExpressions.php
+Function: sharedArm
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 12
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 2
+Literals: 5
+Return type: string
+Lines: 37-44
+
+Compiled variables:
+0 $value
+
+Literals:
+0 array(3: [1=>int(2), 2=>int(2), 3=>int(4)])
+1 string("few")
+2 string("three")
+3 string("other")
+4 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=37 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 MATCH line=39 op1=CV(0:$value) op2=CONST(array(3: [1=>int(2), 2=>int(2), 3=>int(4)])) result=UNUSED ext=jmp:6
+2 QM_ASSIGN line=40 op1=CONST(string("few")) op2=UNUSED result=TMP(1) ext=-
+3 JMP line=40 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+4 QM_ASSIGN line=41 op1=CONST(string("three")) op2=UNUSED result=TMP(1) ext=-
+5 JMP line=41 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+6 QM_ASSIGN line=42 op1=CONST(string("other")) op2=UNUSED result=TMP(1) ext=-
+7 JMP line=42 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+8 VERIFY_RETURN_TYPE line=42 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+9 RETURN line=42 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+10 VERIFY_RETURN_TYPE line=44 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+11 RETURN line=44 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/MatchExpressions.php
+Function: withDefault
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 12
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 2
+Literals: 5
+Return type: int
+Lines: 46-53
+
+Compiled variables:
+0 $value
+
+Literals:
+0 array(2: [1=>int(2), 2=>int(4)])
+1 int(10)
+2 int(20)
+3 int(30)
+4 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=46 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 MATCH line=48 op1=CV(0:$value) op2=CONST(array(2: [1=>int(2), 2=>int(4)])) result=UNUSED ext=jmp:6
+2 QM_ASSIGN line=49 op1=CONST(int(10)) op2=UNUSED result=TMP(1) ext=-
+3 JMP line=49 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+4 QM_ASSIGN line=50 op1=CONST(int(20)) op2=UNUSED result=TMP(1) ext=-
+5 JMP line=50 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+6 QM_ASSIGN line=51 op1=CONST(int(30)) op2=UNUSED result=TMP(1) ext=-
+7 JMP line=51 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+8 VERIFY_RETURN_TYPE line=51 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+9 RETURN line=51 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+10 VERIFY_RETURN_TYPE line=53 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+11 RETURN line=53 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/MatchExpressions.php
+Function: withoutDefault
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 11
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 2
+Literals: 4
+Return type: string
+Lines: 55-61
+
+Compiled variables:
+0 $value
+
+Literals:
+0 array(2: [1=>int(3), 2=>int(5)])
+1 string("one")
+2 string("two")
+3 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=55 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 MATCH line=57 op1=CV(0:$value) op2=CONST(array(2: [1=>int(3), 2=>int(5)])) result=UNUSED ext=jmp:2
+2 MATCH_ERROR line=57 op1=CV(0:$value) op2=UNUSED result=UNUSED ext=-
+3 QM_ASSIGN line=58 op1=CONST(string("one")) op2=UNUSED result=TMP(1) ext=-
+4 JMP line=58 op1=JMP(7) op2=UNUSED result=UNUSED ext=-
+5 QM_ASSIGN line=59 op1=CONST(string("two")) op2=UNUSED result=TMP(1) ext=-
+6 JMP line=59 op1=JMP(7) op2=UNUSED result=UNUSED ext=-
+7 VERIFY_RETURN_TYPE line=59 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+8 RETURN line=59 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+9 VERIFY_RETURN_TYPE line=61 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+10 RETURN line=61 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/MatchExpressions.php
+Function: subjectVar
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 12
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 2
+Literals: 5
+Return type: string
+Lines: 63-70
+
+Compiled variables:
+0 $value
+
+Literals:
+0 array(2: [1=>int(2), 2=>int(4)])
+1 string("one")
+2 string("two")
+3 string("other")
+4 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=63 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 MATCH line=65 op1=CV(0:$value) op2=CONST(array(2: [1=>int(2), 2=>int(4)])) result=UNUSED ext=jmp:6
+2 QM_ASSIGN line=66 op1=CONST(string("one")) op2=UNUSED result=TMP(1) ext=-
+3 JMP line=66 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+4 QM_ASSIGN line=67 op1=CONST(string("two")) op2=UNUSED result=TMP(1) ext=-
+5 JMP line=67 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+6 QM_ASSIGN line=68 op1=CONST(string("other")) op2=UNUSED result=TMP(1) ext=-
+7 JMP line=68 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+8 VERIFY_RETURN_TYPE line=68 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+9 RETURN line=68 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+10 VERIFY_RETURN_TYPE line=70 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+11 RETURN line=70 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/MatchExpressions.php
+Function: subjectCall
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 15
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 3
+Literals: 6
+Return type: string
+Lines: 72-79
+
+Compiled variables:
+0 $value
+
+Literals:
+0 string("getvalue")
+1 array(2: [1=>int(4), 2=>int(6)])
+2 string("one")
+3 string("two")
+4 string("other")
+5 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=72 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 INIT_FCALL line=74 op1=UNUSED(80) op2=CONST(string("getvalue")) result=UNUSED ext=-
+2 DO_UCALL line=74 op1=UNUSED op2=UNUSED result=VAR(0) ext=-
+3 MATCH line=74 op1=VAR(0) op2=CONST(array(2: [1=>int(4), 2=>int(6)])) result=UNUSED ext=jmp:8
+4 QM_ASSIGN line=75 op1=CONST(string("one")) op2=UNUSED result=TMP(2) ext=-
+5 JMP line=75 op1=JMP(10) op2=UNUSED result=UNUSED ext=-
+6 QM_ASSIGN line=76 op1=CONST(string("two")) op2=UNUSED result=TMP(2) ext=-
+7 JMP line=76 op1=JMP(10) op2=UNUSED result=UNUSED ext=-
+8 QM_ASSIGN line=77 op1=CONST(string("other")) op2=UNUSED result=TMP(2) ext=-
+9 JMP line=77 op1=JMP(10) op2=UNUSED result=UNUSED ext=-
+10 FREE line=77 op1=VAR(0) op2=UNUSED result=UNUSED ext=2
+11 VERIFY_RETURN_TYPE line=77 op1=TMP(2) op2=UNUSED result=UNUSED ext=-
+12 RETURN line=77 op1=TMP(2) op2=UNUSED result=UNUSED ext=-
+13 VERIFY_RETURN_TYPE line=79 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+14 RETURN line=79 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/MatchExpressions.php
+Function: subjectExpr
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 14
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 3
+Literals: 6
+Return type: string
+Lines: 81-88
+
+Compiled variables:
+0 $value
+
+Literals:
+0 int(1)
+1 array(2: [1=>int(3), 2=>int(5)])
+2 string("one")
+3 string("two")
+4 string("other")
+5 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=81 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 ADD line=83 op1=CV(0:$value) op2=CONST(int(1)) result=TMP(0) ext=-
+2 MATCH line=83 op1=TMP(0) op2=CONST(array(2: [1=>int(3), 2=>int(5)])) result=UNUSED ext=jmp:7
+3 QM_ASSIGN line=84 op1=CONST(string("one")) op2=UNUSED result=TMP(2) ext=-
+4 JMP line=84 op1=JMP(9) op2=UNUSED result=UNUSED ext=-
+5 QM_ASSIGN line=85 op1=CONST(string("two")) op2=UNUSED result=TMP(2) ext=-
+6 JMP line=85 op1=JMP(9) op2=UNUSED result=UNUSED ext=-
+7 QM_ASSIGN line=86 op1=CONST(string("other")) op2=UNUSED result=TMP(2) ext=-
+8 JMP line=86 op1=JMP(9) op2=UNUSED result=UNUSED ext=-
+9 FREE line=86 op1=TMP(0) op2=UNUSED result=UNUSED ext=2
+10 VERIFY_RETURN_TYPE line=86 op1=TMP(2) op2=UNUSED result=UNUSED ext=-
+11 RETURN line=86 op1=TMP(2) op2=UNUSED result=UNUSED ext=-
+12 VERIFY_RETURN_TYPE line=88 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+13 RETURN line=88 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/MatchExpressions.php
+Function: subjectCompare
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 17
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 3
+Literals: 6
+Return type: string
+Lines: 90-96
+
+Compiled variables:
+0 $value
+
+Literals:
+0 int(0)
+1 true
+2 false
+3 string("yes")
+4 string("no")
+5 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=90 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 IS_SMALLER line=92 op1=CONST(int(0)) op2=CV(0:$value) result=TMP(0) ext=-
+2 CASE_STRICT line=92 op1=TMP(0) op2=CONST(true) result=TMP(1)|SMART_JMPNZ ext=-
+3 JMPNZ line=92 op1=TMP(1) op2=JMP(8) result=UNUSED ext=-
+4 CASE_STRICT line=94 op1=TMP(0) op2=CONST(false) result=TMP(1)|SMART_JMPNZ ext=-
+5 JMPNZ line=94 op1=TMP(1) op2=JMP(10) result=UNUSED ext=-
+6 JMP line=94 op1=JMP(7) op2=UNUSED result=UNUSED ext=-
+7 MATCH_ERROR line=94 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+8 QM_ASSIGN line=93 op1=CONST(string("yes")) op2=UNUSED result=TMP(2) ext=-
+9 JMP line=93 op1=JMP(12) op2=UNUSED result=UNUSED ext=-
+10 QM_ASSIGN line=94 op1=CONST(string("no")) op2=UNUSED result=TMP(2) ext=-
+11 JMP line=94 op1=JMP(12) op2=UNUSED result=UNUSED ext=-
+12 FREE line=94 op1=TMP(0) op2=UNUSED result=UNUSED ext=2
+13 VERIFY_RETURN_TYPE line=94 op1=TMP(2) op2=UNUSED result=UNUSED ext=-
+14 RETURN line=94 op1=TMP(2) op2=UNUSED result=UNUSED ext=-
+15 VERIFY_RETURN_TYPE line=96 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+16 RETURN line=96 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/MatchExpressions.php
+Function: assigned
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 19
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 5
+Literals: 5
+Return type: string
+Lines: 98-107
+
+Compiled variables:
+0 $value
+1 $result
+
+Literals:
+0 array(2: [1=>int(2), 2=>int(4)])
+1 string("one")
+2 string("calculate")
+3 string("label")
+4 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=98 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 MATCH line=100 op1=CV(0:$value) op2=CONST(array(2: [1=>int(2), 2=>int(4)])) result=UNUSED ext=jmp:9
+2 QM_ASSIGN line=101 op1=CONST(string("one")) op2=UNUSED result=TMP(1) ext=-
+3 JMP line=101 op1=JMP(11) op2=UNUSED result=UNUSED ext=-
+4 INIT_FCALL line=102 op1=UNUSED(112) op2=CONST(string("calculate")) result=UNUSED ext=1
+5 SEND_VAR line=102 op1=CV(0:$value) op2=UNUSED(1) result=UNUSED(80) ext=-
+6 DO_UCALL line=102 op1=UNUSED op2=UNUSED result=VAR(2) ext=-
+7 QM_ASSIGN line=102 op1=VAR(2) op2=UNUSED result=TMP(1) ext=-
+8 JMP line=102 op1=JMP(11) op2=UNUSED result=UNUSED ext=-
+9 QM_ASSIGN line=103 op1=CV(0:$value) op2=UNUSED result=TMP(1) ext=-
+10 JMP line=103 op1=JMP(11) op2=UNUSED result=UNUSED ext=-
+11 ASSIGN line=100 op1=CV(1:$result) op2=TMP(1) result=UNUSED ext=-
+12 INIT_FCALL line=106 op1=UNUSED(96) op2=CONST(string("label")) result=UNUSED(8) ext=1
+13 SEND_VAR line=106 op1=CV(1:$result) op2=UNUSED(1) result=UNUSED(80) ext=-
+14 DO_UCALL line=106 op1=UNUSED op2=UNUSED result=VAR(4) ext=-
+15 VERIFY_RETURN_TYPE line=106 op1=VAR(4) op2=UNUSED result=UNUSED ext=-
+16 RETURN line=106 op1=VAR(4) op2=UNUSED result=UNUSED ext=-
+17 VERIFY_RETURN_TYPE line=107 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+18 RETURN line=107 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/MatchExpressions.php
+Function: returned
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 12
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 2
+Literals: 5
+Return type: int
+Lines: 109-116
+
+Compiled variables:
+0 $value
+
+Literals:
+0 array(2: [1=>int(2), 2=>int(4)])
+1 int(10)
+2 int(20)
+3 int(30)
+4 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=109 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 MATCH line=111 op1=CV(0:$value) op2=CONST(array(2: [1=>int(2), 2=>int(4)])) result=UNUSED ext=jmp:6
+2 QM_ASSIGN line=112 op1=CONST(int(10)) op2=UNUSED result=TMP(1) ext=-
+3 JMP line=112 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+4 QM_ASSIGN line=113 op1=CONST(int(20)) op2=UNUSED result=TMP(1) ext=-
+5 JMP line=113 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+6 QM_ASSIGN line=114 op1=CONST(int(30)) op2=UNUSED result=TMP(1) ext=-
+7 JMP line=114 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+8 VERIFY_RETURN_TYPE line=114 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+9 RETURN line=114 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+10 VERIFY_RETURN_TYPE line=116 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+11 RETURN line=116 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/MatchExpressions.php
+Function: inArithmetic
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 13
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 3
+Literals: 6
+Return type: int
+Lines: 118-125
+
+Compiled variables:
+0 $value
+
+Literals:
+0 array(2: [1=>int(2), 2=>int(4)])
+1 int(10)
+2 int(20)
+3 int(30)
+4 int(1)
+5 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=118 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 MATCH line=120 op1=CV(0:$value) op2=CONST(array(2: [1=>int(2), 2=>int(4)])) result=UNUSED ext=jmp:6
+2 QM_ASSIGN line=121 op1=CONST(int(10)) op2=UNUSED result=TMP(1) ext=-
+3 JMP line=121 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+4 QM_ASSIGN line=122 op1=CONST(int(20)) op2=UNUSED result=TMP(1) ext=-
+5 JMP line=122 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+6 QM_ASSIGN line=123 op1=CONST(int(30)) op2=UNUSED result=TMP(1) ext=-
+7 JMP line=123 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+8 ADD line=123 op1=CONST(int(1)) op2=TMP(1) result=TMP(2) ext=-
+9 VERIFY_RETURN_TYPE line=123 op1=TMP(2) op2=UNUSED result=UNUSED ext=-
+10 RETURN line=123 op1=TMP(2) op2=UNUSED result=UNUSED ext=-
+11 VERIFY_RETURN_TYPE line=125 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+12 RETURN line=125 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/MatchExpressions.php
+Function: inConcat
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 13
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 3
+Literals: 6
+Return type: string
+Lines: 127-134
+
+Compiled variables:
+0 $value
+
+Literals:
+0 array(2: [1=>int(2), 2=>int(4)])
+1 string("one")
+2 string("two")
+3 string("other")
+4 string("value: ")
+5 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=127 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 MATCH line=129 op1=CV(0:$value) op2=CONST(array(2: [1=>int(2), 2=>int(4)])) result=UNUSED ext=jmp:6
+2 QM_ASSIGN line=130 op1=CONST(string("one")) op2=UNUSED result=TMP(1) ext=-
+3 JMP line=130 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+4 QM_ASSIGN line=131 op1=CONST(string("two")) op2=UNUSED result=TMP(1) ext=-
+5 JMP line=131 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+6 QM_ASSIGN line=132 op1=CONST(string("other")) op2=UNUSED result=TMP(1) ext=-
+7 JMP line=132 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+8 CONCAT line=132 op1=CONST(string("value: ")) op2=TMP(1) result=TMP(2) ext=-
+9 VERIFY_RETURN_TYPE line=132 op1=TMP(2) op2=UNUSED result=UNUSED ext=-
+10 RETURN line=132 op1=TMP(2) op2=UNUSED result=UNUSED ext=-
+11 VERIFY_RETURN_TYPE line=134 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+12 RETURN line=134 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/MatchExpressions.php
+Function: asArgument
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 15
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 3
+Literals: 6
+Return type: int
+Lines: 136-143
+
+Compiled variables:
+0 $value
+
+Literals:
+0 string("calculate")
+1 array(2: [1=>int(3), 2=>int(5)])
+2 int(10)
+3 int(20)
+4 int(30)
+5 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=136 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 INIT_FCALL line=138 op1=UNUSED(112) op2=CONST(string("calculate")) result=UNUSED ext=1
+2 MATCH line=138 op1=CV(0:$value) op2=CONST(array(2: [1=>int(3), 2=>int(5)])) result=UNUSED ext=jmp:7
+3 QM_ASSIGN line=139 op1=CONST(int(10)) op2=UNUSED result=TMP(1) ext=-
+4 JMP line=139 op1=JMP(9) op2=UNUSED result=UNUSED ext=-
+5 QM_ASSIGN line=140 op1=CONST(int(20)) op2=UNUSED result=TMP(1) ext=-
+6 JMP line=140 op1=JMP(9) op2=UNUSED result=UNUSED ext=-
+7 QM_ASSIGN line=141 op1=CONST(int(30)) op2=UNUSED result=TMP(1) ext=-
+8 JMP line=141 op1=JMP(9) op2=UNUSED result=UNUSED ext=-
+9 SEND_VAL line=141 op1=TMP(1) op2=UNUSED(1) result=UNUSED(80) ext=-
+10 DO_UCALL line=138 op1=UNUSED op2=UNUSED result=VAR(2) ext=-
+11 VERIFY_RETURN_TYPE line=141 op1=VAR(2) op2=UNUSED result=UNUSED ext=-
+12 RETURN line=141 op1=VAR(2) op2=UNUSED result=UNUSED ext=-
+13 VERIFY_RETURN_TYPE line=143 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+14 RETURN line=143 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/MatchExpressions.php
+Function: callInArm
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 15
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 3
+Literals: 5
+Return type: int
+Lines: 145-152
+
+Compiled variables:
+0 $value
+
+Literals:
+0 array(2: [1=>int(2), 2=>int(7)])
+1 string("calculate")
+2 int(2)
+3 int(0)
+4 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=145 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 MATCH line=147 op1=CV(0:$value) op2=CONST(array(2: [1=>int(2), 2=>int(7)])) result=UNUSED ext=jmp:9
+2 INIT_FCALL line=148 op1=UNUSED(112) op2=CONST(string("calculate")) result=UNUSED ext=1
+3 SEND_VAR line=148 op1=CV(0:$value) op2=UNUSED(1) result=UNUSED(80) ext=-
+4 DO_UCALL line=148 op1=UNUSED op2=UNUSED result=VAR(1) ext=-
+5 QM_ASSIGN line=148 op1=VAR(1) op2=UNUSED result=TMP(2) ext=-
+6 JMP line=148 op1=JMP(11) op2=UNUSED result=UNUSED ext=-
+7 QM_ASSIGN line=149 op1=CONST(int(2)) op2=UNUSED result=TMP(2) ext=-
+8 JMP line=149 op1=JMP(11) op2=UNUSED result=UNUSED ext=-
+9 QM_ASSIGN line=150 op1=CONST(int(0)) op2=UNUSED result=TMP(2) ext=-
+10 JMP line=150 op1=JMP(11) op2=UNUSED result=UNUSED ext=-
+11 VERIFY_RETURN_TYPE line=150 op1=TMP(2) op2=UNUSED result=UNUSED ext=-
+12 RETURN line=150 op1=TMP(2) op2=UNUSED result=UNUSED ext=-
+13 VERIFY_RETURN_TYPE line=152 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+14 RETURN line=152 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/MatchExpressions.php
+Function: mixedArmTypes
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 14
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 3
+Literals: 6
+Return type: mixed
+Lines: 154-162
+
+Compiled variables:
+0 $value
+
+Literals:
+0 array(3: [1=>int(2), 2=>int(4), 3=>int(6)])
+1 int(10)
+2 string("two")
+3 int(0)
+4 null
+5 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=154 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 MATCH line=156 op1=CV(0:$value) op2=CONST(array(3: [1=>int(2), 2=>int(4), 3=>int(6)])) result=UNUSED ext=jmp:9
+2 QM_ASSIGN line=157 op1=CONST(int(10)) op2=UNUSED result=TMP(1) ext=-
+3 JMP line=157 op1=JMP(11) op2=UNUSED result=UNUSED ext=-
+4 QM_ASSIGN line=158 op1=CONST(string("two")) op2=UNUSED result=TMP(1) ext=-
+5 JMP line=158 op1=JMP(11) op2=UNUSED result=UNUSED ext=-
+6 IS_SMALLER line=159 op1=CONST(int(0)) op2=CV(0:$value) result=TMP(2) ext=-
+7 QM_ASSIGN line=159 op1=TMP(2) op2=UNUSED result=TMP(1) ext=-
+8 JMP line=159 op1=JMP(11) op2=UNUSED result=UNUSED ext=-
+9 QM_ASSIGN line=160 op1=CONST(null) op2=UNUSED result=TMP(1) ext=-
+10 JMP line=160 op1=JMP(11) op2=UNUSED result=UNUSED ext=-
+11 RETURN line=160 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+12 VERIFY_RETURN_TYPE line=162 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+13 RETURN line=162 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/MatchExpressions.php
+Function: nested
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 20
+Arguments: 2
+Required arguments: 2
+Compiled variables: 2
+Temporary variables: 4
+Literals: 8
+Return type: string
+Lines: 164-175
+
+Compiled variables:
+0 $value
+1 $other
+
+Literals:
+0 array(2: [1=>int(3), 2=>int(12)])
+1 array(2: [1=>int(4), 2=>int(6)])
+2 string("one")
+3 string("two")
+4 string("inner")
+5 string("outer")
+6 string("other")
+7 null
+
+Argument details:
+0 $value int
+1 $other int
+
+Opcodes:
+0 RECV line=164 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 RECV line=164 op1=UNUSED(2) op2=UNUSED(16) result=CV(1:$other) ext=-
+2 MATCH line=166 op1=CV(0:$value) op2=CONST(array(2: [1=>int(3), 2=>int(12)])) result=UNUSED ext=jmp:14
+3 MATCH line=167 op1=CV(1:$other) op2=CONST(array(2: [1=>int(4), 2=>int(6)])) result=UNUSED ext=jmp:8
+4 QM_ASSIGN line=168 op1=CONST(string("one")) op2=UNUSED result=TMP(2) ext=-
+5 JMP line=168 op1=JMP(10) op2=UNUSED result=UNUSED ext=-
+6 QM_ASSIGN line=169 op1=CONST(string("two")) op2=UNUSED result=TMP(2) ext=-
+7 JMP line=169 op1=JMP(10) op2=UNUSED result=UNUSED ext=-
+8 QM_ASSIGN line=170 op1=CONST(string("inner")) op2=UNUSED result=TMP(2) ext=-
+9 JMP line=170 op1=JMP(10) op2=UNUSED result=UNUSED ext=-
+10 QM_ASSIGN line=170 op1=TMP(2) op2=UNUSED result=TMP(3) ext=-
+11 JMP line=170 op1=JMP(16) op2=UNUSED result=UNUSED ext=-
+12 QM_ASSIGN line=172 op1=CONST(string("outer")) op2=UNUSED result=TMP(3) ext=-
+13 JMP line=172 op1=JMP(16) op2=UNUSED result=UNUSED ext=-
+14 QM_ASSIGN line=173 op1=CONST(string("other")) op2=UNUSED result=TMP(3) ext=-
+15 JMP line=173 op1=JMP(16) op2=UNUSED result=UNUSED ext=-
+16 VERIFY_RETURN_TYPE line=173 op1=TMP(3) op2=UNUSED result=UNUSED ext=-
+17 RETURN line=173 op1=TMP(3) op2=UNUSED result=UNUSED ext=-
+18 VERIFY_RETURN_TYPE line=175 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+19 RETURN line=175 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/MatchExpressions.php
+Function: twoMatches
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 20
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 5
+Literals: 9
+Return type: int
+Lines: 177-190
+
+Compiled variables:
+0 $value
+1 $first
+
+Literals:
+0 array(2: [1=>int(2), 2=>int(4)])
+1 int(10)
+2 int(20)
+3 int(30)
+4 array(2: [10=>int(10), 20=>int(12)])
+5 int(1)
+6 int(2)
+7 int(0)
+8 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=177 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 MATCH line=179 op1=CV(0:$value) op2=CONST(array(2: [1=>int(2), 2=>int(4)])) result=UNUSED ext=jmp:6
+2 QM_ASSIGN line=180 op1=CONST(int(10)) op2=UNUSED result=TMP(1) ext=-
+3 JMP line=180 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+4 QM_ASSIGN line=181 op1=CONST(int(20)) op2=UNUSED result=TMP(1) ext=-
+5 JMP line=181 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+6 QM_ASSIGN line=182 op1=CONST(int(30)) op2=UNUSED result=TMP(1) ext=-
+7 JMP line=182 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+8 ASSIGN line=179 op1=CV(1:$first) op2=TMP(1) result=UNUSED ext=-
+9 MATCH line=185 op1=CV(1:$first) op2=CONST(array(2: [10=>int(10), 20=>int(12)])) result=UNUSED ext=jmp:14
+10 QM_ASSIGN line=186 op1=CONST(int(1)) op2=UNUSED result=TMP(4) ext=-
+11 JMP line=186 op1=JMP(16) op2=UNUSED result=UNUSED ext=-
+12 QM_ASSIGN line=187 op1=CONST(int(2)) op2=UNUSED result=TMP(4) ext=-
+13 JMP line=187 op1=JMP(16) op2=UNUSED result=UNUSED ext=-
+14 QM_ASSIGN line=188 op1=CONST(int(0)) op2=UNUSED result=TMP(4) ext=-
+15 JMP line=188 op1=JMP(16) op2=UNUSED result=UNUSED ext=-
+16 VERIFY_RETURN_TYPE line=188 op1=TMP(4) op2=UNUSED result=UNUSED ext=-
+17 RETURN line=188 op1=TMP(4) op2=UNUSED result=UNUSED ext=-
+18 VERIFY_RETURN_TYPE line=190 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+19 RETURN line=190 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/MatchExpressions.php
+Function: matchInIf
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 16
+Arguments: 2
+Required arguments: 2
+Compiled variables: 2
+Temporary variables: 3
+Literals: 7
+Return type: string
+Lines: 192-203
+
+Compiled variables:
+0 $flag
+1 $value
+
+Literals:
+0 int(0)
+1 array(2: [1=>int(5), 2=>int(7)])
+2 string("one")
+3 string("two")
+4 string("other")
+5 string("no")
+6 null
+
+Argument details:
+0 $flag int
+1 $value int
+
+Opcodes:
+0 RECV line=192 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$flag) ext=-
+1 RECV line=192 op1=UNUSED(2) op2=UNUSED(16) result=CV(1:$value) ext=-
+2 IS_SMALLER line=194 op1=CONST(int(0)) op2=CV(0:$flag) result=TMP(0)|SMART_JMPZ ext=-
+3 JMPZ line=194 op1=TMP(0) op2=JMP(13) result=UNUSED ext=-
+4 MATCH line=195 op1=CV(1:$value) op2=CONST(array(2: [1=>int(5), 2=>int(7)])) result=UNUSED ext=jmp:9
+5 QM_ASSIGN line=196 op1=CONST(string("one")) op2=UNUSED result=TMP(2) ext=-
+6 JMP line=196 op1=JMP(11) op2=UNUSED result=UNUSED ext=-
+7 QM_ASSIGN line=197 op1=CONST(string("two")) op2=UNUSED result=TMP(2) ext=-
+8 JMP line=197 op1=JMP(11) op2=UNUSED result=UNUSED ext=-
+9 QM_ASSIGN line=198 op1=CONST(string("other")) op2=UNUSED result=TMP(2) ext=-
+10 JMP line=198 op1=JMP(11) op2=UNUSED result=UNUSED ext=-
+11 VERIFY_RETURN_TYPE line=198 op1=TMP(2) op2=UNUSED result=UNUSED ext=-
+12 RETURN line=198 op1=TMP(2) op2=UNUSED result=UNUSED ext=-
+13 RETURN line=202 op1=CONST(string("no")) op2=UNUSED result=UNUSED ext=-
+14 VERIFY_RETURN_TYPE line=203 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+15 RETURN line=203 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/MatchExpressions.php
+Function: matchInWhile
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 16
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 4
+Literals: 6
+Return type: int
+Lines: 205-216
+
+Compiled variables:
+0 $n
+
+Literals:
+0 array(2: [0=>int(3), 1=>int(5)])
+1 int(1)
+2 int(2)
+3 int(3)
+4 int(3)
+5 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=205 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 JMP line=207 op1=JMP(10) op2=UNUSED result=UNUSED ext=-
+2 MATCH line=208 op1=CV(0:$n) op2=CONST(array(2: [0=>int(3), 1=>int(5)])) result=UNUSED ext=jmp:7
+3 QM_ASSIGN line=209 op1=CONST(int(1)) op2=UNUSED result=TMP(1) ext=-
+4 JMP line=209 op1=JMP(9) op2=UNUSED result=UNUSED ext=-
+5 QM_ASSIGN line=210 op1=CONST(int(2)) op2=UNUSED result=TMP(1) ext=-
+6 JMP line=210 op1=JMP(9) op2=UNUSED result=UNUSED ext=-
+7 QM_ASSIGN line=211 op1=CONST(int(3)) op2=UNUSED result=TMP(1) ext=-
+8 JMP line=211 op1=JMP(9) op2=UNUSED result=UNUSED ext=-
+9 ASSIGN line=208 op1=CV(0:$n) op2=TMP(1) result=UNUSED ext=-
+10 IS_SMALLER line=207 op1=CV(0:$n) op2=CONST(int(3)) result=TMP(3)|SMART_JMPNZ ext=-
+11 JMPNZ line=207 op1=TMP(3) op2=JMP(2) result=UNUSED ext=-
+12 VERIFY_RETURN_TYPE line=215 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+13 RETURN line=215 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+14 VERIFY_RETURN_TYPE line=216 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+15 RETURN line=216 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/MatchExpressions.php
+Function: dynamicCond
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 17
+Arguments: 2
+Required arguments: 2
+Compiled variables: 2
+Temporary variables: 2
+Literals: 5
+Return type: string
+Lines: 218-225
+
+Compiled variables:
+0 $value
+1 $limit
+
+Literals:
+0 int(1)
+1 string("limit")
+2 string("one")
+3 string("other")
+4 null
+
+Argument details:
+0 $value int
+1 $limit int
+
+Opcodes:
+0 RECV line=218 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 RECV line=218 op1=UNUSED(2) op2=UNUSED(16) result=CV(1:$limit) ext=-
+2 IS_IDENTICAL line=221 op1=CV(0:$value) op2=CV(1:$limit) result=TMP(0)|SMART_JMPNZ ext=-
+3 JMPNZ line=221 op1=TMP(0) op2=JMP(7) result=UNUSED ext=-
+4 IS_IDENTICAL line=222 op1=CV(0:$value) op2=CONST(int(1)) result=TMP(0)|SMART_JMPNZ ext=-
+5 JMPNZ line=222 op1=TMP(0) op2=JMP(9) result=UNUSED ext=-
+6 JMP line=222 op1=JMP(11) op2=UNUSED result=UNUSED ext=-
+7 QM_ASSIGN line=221 op1=CONST(string("limit")) op2=UNUSED result=TMP(1) ext=-
+8 JMP line=221 op1=JMP(13) op2=UNUSED result=UNUSED ext=-
+9 QM_ASSIGN line=222 op1=CONST(string("one")) op2=UNUSED result=TMP(1) ext=-
+10 JMP line=222 op1=JMP(13) op2=UNUSED result=UNUSED ext=-
+11 QM_ASSIGN line=223 op1=CONST(string("other")) op2=UNUSED result=TMP(1) ext=-
+12 JMP line=223 op1=JMP(13) op2=UNUSED result=UNUSED ext=-
+13 VERIFY_RETURN_TYPE line=223 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+14 RETURN line=223 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+15 VERIFY_RETURN_TYPE line=225 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+16 RETURN line=225 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/MatchExpressions.php
+Function: oneCond
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 12
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 2
+Literals: 4
+Return type: string
+Lines: 227-233
+
+Compiled variables:
+0 $value
+
+Literals:
+0 int(1)
+1 string("one")
+2 string("other")
+3 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=227 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 IS_IDENTICAL line=230 op1=CV(0:$value) op2=CONST(int(1)) result=TMP(0)|SMART_JMPNZ ext=-
+2 JMPNZ line=230 op1=TMP(0) op2=JMP(4) result=UNUSED ext=-
+3 JMP line=230 op1=JMP(6) op2=UNUSED result=UNUSED ext=-
+4 QM_ASSIGN line=230 op1=CONST(string("one")) op2=UNUSED result=TMP(1) ext=-
+5 JMP line=230 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+6 QM_ASSIGN line=231 op1=CONST(string("other")) op2=UNUSED result=TMP(1) ext=-
+7 JMP line=231 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+8 VERIFY_RETURN_TYPE line=231 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+9 RETURN line=231 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+10 VERIFY_RETURN_TYPE line=233 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+11 RETURN line=233 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/MatchExpressions.php
+Function: mixedTypes
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 12
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 2
+Literals: 5
+Return type: string
+Lines: 235-242
+
+Compiled variables:
+0 $value
+
+Literals:
+0 array(2: [1=>int(2), "a"=>int(4)])
+1 string("int")
+2 string("string")
+3 string("other")
+4 null
+
+Argument details:
+0 $value string|int
+
+Opcodes:
+0 RECV line=235 op1=UNUSED(1) op2=UNUSED(80) result=CV(0:$value) ext=-
+1 MATCH line=237 op1=CV(0:$value) op2=CONST(array(2: [1=>int(2), "a"=>int(4)])) result=UNUSED ext=jmp:6
+2 QM_ASSIGN line=238 op1=CONST(string("int")) op2=UNUSED result=TMP(1) ext=-
+3 JMP line=238 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+4 QM_ASSIGN line=239 op1=CONST(string("string")) op2=UNUSED result=TMP(1) ext=-
+5 JMP line=239 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+6 QM_ASSIGN line=240 op1=CONST(string("other")) op2=UNUSED result=TMP(1) ext=-
+7 JMP line=240 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+8 VERIFY_RETURN_TYPE line=240 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+9 RETURN line=240 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+10 VERIFY_RETURN_TYPE line=242 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+11 RETURN line=242 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/MatchExpressions.php
+Function: numericString
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 12
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 2
+Literals: 5
+Return type: string
+Lines: 244-251
+
+Compiled variables:
+0 $value
+
+Literals:
+0 array(2: ["1"=>int(2), "2"=>int(4)])
+1 string("one")
+2 string("two")
+3 string("other")
+4 null
+
+Argument details:
+0 $value string
+
+Opcodes:
+0 RECV line=244 op1=UNUSED(1) op2=UNUSED(64) result=CV(0:$value) ext=-
+1 MATCH line=246 op1=CV(0:$value) op2=CONST(array(2: ["1"=>int(2), "2"=>int(4)])) result=UNUSED ext=jmp:6
+2 QM_ASSIGN line=247 op1=CONST(string("one")) op2=UNUSED result=TMP(1) ext=-
+3 JMP line=247 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+4 QM_ASSIGN line=248 op1=CONST(string("two")) op2=UNUSED result=TMP(1) ext=-
+5 JMP line=248 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+6 QM_ASSIGN line=249 op1=CONST(string("other")) op2=UNUSED result=TMP(1) ext=-
+7 JMP line=249 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+8 VERIFY_RETURN_TYPE line=249 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+9 RETURN line=249 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+10 VERIFY_RETURN_TYPE line=251 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+11 RETURN line=251 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/MatchExpressions.php
+Function: duplicateCond
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 12
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 2
+Literals: 5
+Return type: string
+Lines: 253-260
+
+Compiled variables:
+0 $value
+
+Literals:
+0 array(1: [1=>int(2)])
+1 string("first")
+2 string("second")
+3 string("other")
+4 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=253 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 MATCH line=255 op1=CV(0:$value) op2=CONST(array(1: [1=>int(2)])) result=UNUSED ext=jmp:6
+2 QM_ASSIGN line=256 op1=CONST(string("first")) op2=UNUSED result=TMP(1) ext=-
+3 JMP line=256 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+4 QM_ASSIGN line=257 op1=CONST(string("second")) op2=UNUSED result=TMP(1) ext=-
+5 JMP line=257 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+6 QM_ASSIGN line=258 op1=CONST(string("other")) op2=UNUSED result=TMP(1) ext=-
+7 JMP line=258 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+8 VERIFY_RETURN_TYPE line=258 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+9 RETURN line=258 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+10 VERIFY_RETURN_TYPE line=260 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+11 RETURN line=260 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/MatchExpressions.php
+Function: literalSubject
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 11
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 2
+Literals: 6
+Return type: string
+Lines: 262-269
+
+Compiled variables:
+(none)
+
+Literals:
+0 int(1)
+1 array(2: [1=>int(1), 2=>int(3)])
+2 string("one")
+3 string("two")
+4 string("other")
+5 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 MATCH line=264 op1=CONST(int(1)) op2=CONST(array(2: [1=>int(1), 2=>int(3)])) result=UNUSED ext=jmp:5
+1 QM_ASSIGN line=265 op1=CONST(string("one")) op2=UNUSED result=TMP(1) ext=-
+2 JMP line=265 op1=JMP(7) op2=UNUSED result=UNUSED ext=-
+3 QM_ASSIGN line=266 op1=CONST(string("two")) op2=UNUSED result=TMP(1) ext=-
+4 JMP line=266 op1=JMP(7) op2=UNUSED result=UNUSED ext=-
+5 QM_ASSIGN line=267 op1=CONST(string("other")) op2=UNUSED result=TMP(1) ext=-
+6 JMP line=267 op1=JMP(7) op2=UNUSED result=UNUSED ext=-
+7 VERIFY_RETURN_TYPE line=267 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+8 RETURN line=267 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+9 VERIFY_RETURN_TYPE line=269 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+10 RETURN line=269 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/MatchExpressions.php
+Function: boolArms
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 17
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 4
+Literals: 7
+Return type: string
+Lines: 271-278
+
+Compiled variables:
+0 $value
+
+Literals:
+0 array(2: [1=>int(2), 2=>int(4)])
+1 string("one")
+2 string("two")
+3 int(0)
+4 string("zero")
+5 string("other")
+6 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=271 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 MATCH line=273 op1=CV(0:$value) op2=CONST(array(2: [1=>int(2), 2=>int(4)])) result=UNUSED ext=jmp:6
+2 QM_ASSIGN line=274 op1=CONST(string("one")) op2=UNUSED result=TMP(1) ext=-
+3 JMP line=274 op1=JMP(13) op2=UNUSED result=UNUSED ext=-
+4 QM_ASSIGN line=275 op1=CONST(string("two")) op2=UNUSED result=TMP(1) ext=-
+5 JMP line=275 op1=JMP(13) op2=UNUSED result=UNUSED ext=-
+6 IS_IDENTICAL line=276 op1=CV(0:$value) op2=CONST(int(0)) result=TMP(2)|SMART_JMPZ ext=-
+7 JMPZ line=276 op1=TMP(2) op2=JMP(10) result=UNUSED ext=-
+8 QM_ASSIGN line=276 op1=CONST(string("zero")) op2=UNUSED result=TMP(3) ext=-
+9 JMP line=276 op1=JMP(11) op2=UNUSED result=UNUSED ext=-
+10 QM_ASSIGN line=276 op1=CONST(string("other")) op2=UNUSED result=TMP(3) ext=-
+11 QM_ASSIGN line=276 op1=TMP(3) op2=UNUSED result=TMP(1) ext=-
+12 JMP line=276 op1=JMP(13) op2=UNUSED result=UNUSED ext=-
+13 VERIFY_RETURN_TYPE line=276 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+14 RETURN line=276 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+15 VERIFY_RETURN_TYPE line=278 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+16 RETURN line=278 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/MatchExpressions.php
+Function: defaultFirst
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 12
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 2
+Literals: 5
+Return type: string
+Lines: 280-287
+
+Compiled variables:
+0 $value
+
+Literals:
+0 array(2: [1=>int(4), 2=>int(6)])
+1 string("other")
+2 string("one")
+3 string("two")
+4 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=280 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 MATCH line=282 op1=CV(0:$value) op2=CONST(array(2: [1=>int(4), 2=>int(6)])) result=UNUSED ext=jmp:2
+2 QM_ASSIGN line=283 op1=CONST(string("other")) op2=UNUSED result=TMP(1) ext=-
+3 JMP line=283 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+4 QM_ASSIGN line=284 op1=CONST(string("one")) op2=UNUSED result=TMP(1) ext=-
+5 JMP line=284 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+6 QM_ASSIGN line=285 op1=CONST(string("two")) op2=UNUSED result=TMP(1) ext=-
+7 JMP line=285 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+8 VERIFY_RETURN_TYPE line=285 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+9 RETURN line=285 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+10 VERIFY_RETURN_TYPE line=287 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+11 RETURN line=287 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/MatchExpressions.php
+Function: <main>
+Class: -
+Kind: main
+Property: -
+Hook: -
+Opcodes: 1
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 1
+Return type: -
+Lines: 1-288
+
+Compiled variables:
+(none)
+
+Literals:
+0 int(1)
+
+Argument details:
+(none)
+
+Opcodes:
+0 RETURN line=288 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+
