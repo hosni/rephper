@@ -1,6 +1,6 @@
 # Rephper
 
-Rephper inspects PHP source after the Zend Engine has compiled it. A PHP 8.4 Zend extension prints compiled op arrays and writes them as versioned JSON. A separate PHP program reads that JSON and prints a control-flow graph for each op array. `Rephper\Expr\Reconstructor` turns the instructions inside one basic block into expression trees. `Rephper\Stmt\Reconstructor` turns those trees into straight-line statements, still one basic block at a time. `Rephper\Stmt\ConditionalStructurer` rebuilds `if` / `elseif` / `else` from the control-flow graph and those statements. `Rephper\Cfg\DominatorAnalysis` and `Rephper\Cfg\LoopAnalyzer` find natural loops in that graph and classify each one as `while`, `do-while`, `for`, `foreach`, or `unknown`. `Rephper\Stmt\LoopStructurer` turns the `while`, `do-while`, `for`, and `foreach` loops into statements, including an `if` nested in a loop and a loop nested in an `if`. It also rebuilds a jump-table `switch` (`SWITCH_LONG` and `SWITCH_STRING`). A jump-table `match` is reconstructed as one expression. `Rephper\Stmt\ExceptionStructurer` rebuilds `try` / `catch`, `try` / `finally`, and `try` / `catch` / `finally`, including nested handlers and a conditional, loop, switch, or match inside a body. PHP source generation is a later milestone.
+Rephper inspects PHP source after the Zend Engine has compiled it. A PHP 8.4 Zend extension prints compiled op arrays and writes them as versioned JSON. A separate PHP program reads that JSON and prints a control-flow graph for each op array. `Rephper\Expr\Reconstructor` turns the instructions inside one basic block into expression trees. `Rephper\Stmt\Reconstructor` turns those trees into straight-line statements, still one basic block at a time. `Rephper\Stmt\ConditionalStructurer` rebuilds `if` / `elseif` / `else` from the control-flow graph and those statements. `Rephper\Cfg\DominatorAnalysis` and `Rephper\Cfg\LoopAnalyzer` find natural loops in that graph and classify each one as `while`, `do-while`, `for`, `foreach`, or `unknown`. `Rephper\Stmt\LoopStructurer` turns the `while`, `do-while`, `for`, and `foreach` loops into statements, including an `if` nested in a loop and a loop nested in an `if`. It also rebuilds a jump-table `switch` (`SWITCH_LONG` and `SWITCH_STRING`). A jump-table `match` is reconstructed as one expression. `Rephper\Stmt\ExceptionStructurer` rebuilds `try` / `catch`, `try` / `finally`, and `try` / `catch` / `finally`, including nested handlers and a conditional, loop, switch, or match inside a body. `Rephper\CodeGen\PhpSourceGenerator` prints that structured body as PHP. The result is one op array, not the original file.
 
 ## Objectives
 
@@ -16,7 +16,7 @@ Rephper inspects PHP source after the Zend Engine has compiled it. A PHP 8.4 Zen
 10. Reconstruct jump-table `switch` statements (`SWITCH_LONG` and `SWITCH_STRING`).
 11. Reconstruct jump-table `match` expressions.
 12. Reconstruct `try` / `catch`, `try` / `finally`, and `try` / `catch` / `finally`.
-13. Generate PHP source. Later milestone.
+13. Generate the PHP body of one op array from the structured statements.
 
 The extension does not parse another tool's text output. It reads `zend_op_array` and `zend_op` directly.
 
@@ -99,10 +99,13 @@ extension/src/Compatibility/php84/
          try / catch, try / finally, and try / catch / finally
               |
               v
-         future PHP source generation
+         src/CodeGen/PhpSourceGenerator.php
+              |    one op-array body, opening tag, no closing tag
+              v
+         PHP fragment
 ```
 
-The reader, the IR model, the CFG builder, dominator analysis, natural-loop analysis, the expression reconstructor, the statement reconstructor, the conditional structurer, the loop structurer, and `php bin/rephper graph` do not load the extension and do not use Zend C structures. Opcode control-flow rules for this stage live in `src/Cfg/Php84/Semantics.php`. Expression folding lives in `src/Expr/Reconstructor.php`. Jump-table match expressions live in `src/Expr/MatchReconstructor.php`. Statement grouping lives in `src/Stmt/Reconstructor.php`. Conditional structuring lives in `src/Stmt/ConditionalStructurer.php`. Natural-loop analysis lives in `src/Cfg/LoopAnalyzer.php`. While, do-while, for, foreach, and jump-table switch statements live in `src/Stmt/LoopStructurer.php`. Try, catch, and finally regions live in `src/Cfg/ExceptionRegions.php`. Those statements live in `src/Stmt/ExceptionStructurer.php`. PHP source generation is not implemented.
+The reader, the IR model, the CFG builder, dominator analysis, natural-loop analysis, the expression reconstructor, the statement reconstructor, the conditional structurer, the loop structurer, and `php bin/rephper graph` do not load the extension and do not use Zend C structures. Opcode control-flow rules for this stage live in `src/Cfg/Php84/Semantics.php`. Expression folding lives in `src/Expr/Reconstructor.php`. Jump-table match expressions live in `src/Expr/MatchReconstructor.php`. Statement grouping lives in `src/Stmt/Reconstructor.php`. Conditional structuring lives in `src/Stmt/ConditionalStructurer.php`. Natural-loop analysis lives in `src/Cfg/LoopAnalyzer.php`. While, do-while, for, foreach, and jump-table switch statements live in `src/Stmt/LoopStructurer.php`. Try, catch, and finally regions live in `src/Cfg/ExceptionRegions.php`. Those statements live in `src/Stmt/ExceptionStructurer.php`. `src/Application/OpArrayPipeline.php` runs that sequence for one op array. PHP rendering lives in `src/CodeGen/PhpSourceGenerator.php`. The generator does not load the extension and does not use Zend C structures.
 
 `extension/rephper.c` is the Zend extension entry point. It registers `op_array_handler`. PHP 8.4 declares that callback as:
 
@@ -426,7 +429,7 @@ Each block has an ordered list of expressions. Value opcodes such as `ADD` and t
 
 | Node | What it records |
 | --- | --- |
-| `Literal` | The IR literal type and value. Numbers, strings, booleans, and null stay distinct. |
+| `Literal` | The IR literal type and value. Numbers, strings, booleans, and null stay distinct. An array keeps `value` null and stores `elements` in source order. `binary` is set for a non-UTF-8 string. |
 | `VariableRead` | A compiled variable name. Temporary slot numbers are not variable names. |
 | `Binary` | `+`, `-`, `*`, `/`, `%`, `.`, `===`, `!==`, `==`, `!=`, `<`, `<=`, with the operands in the order the opcode uses. |
 | `Unary` | `!` for `BOOL_NOT`, `~` for `BW_NOT`, and `bool` for `BOOL`. |
@@ -581,7 +584,7 @@ If any region in the op array is not an unambiguous forward conditional, the res
 
 A branch that became an `IfStatement` is not also left in the new list as an opaque statement. Its `unsupported` diagnostic is omitted from the new diagnostic list. The per-block reconstruction is unchanged and still contains both.
 
-This public result is unchanged when the op array contains a loop, a jump-table `switch`, or a `MATCH`: the original statements come back with one `unstructured` diagnostic. While, do-while, for, foreach, and jump-table switch structuring is a separate pass, described below. It can place an `IfStatement` inside a loop body or a switch case, and it can leave a reconstructed match expression inside an `if` or a loop. `ConditionalStructurer::structure()` still refuses `SWITCH_LONG`, `SWITCH_STRING`, `MATCH`, `CATCH`, `FAST_CALL`, and `FAST_RET`. Try, catch, and finally are a separate pass. PHP source generation is not implemented.
+This public result is unchanged when the op array contains a loop, a jump-table `switch`, or a `MATCH`: the original statements come back with one `unstructured` diagnostic. While, do-while, for, foreach, and jump-table switch structuring is a separate pass, described below. It can place an `IfStatement` inside a loop body or a switch case, and it can leave a reconstructed match expression inside an `if` or a loop. `ConditionalStructurer::structure()` still refuses `SWITCH_LONG`, `SWITCH_STRING`, `MATCH`, `CATCH`, `FAST_CALL`, and `FAST_RET`. Try, catch, and finally are a separate pass. PHP source generation is a separate pass.
 
 ## Natural loops
 
@@ -756,6 +759,90 @@ $structured = (new Rephper\Stmt\ExceptionStructurer())->structure(
 );
 ```
 
+## PHP source generation
+
+`src/CodeGen/PhpSourceGenerator.php` renders the structured statements of one op array. It does not read Zend structures, does not inspect the opcode array, does not rebuild expressions or statements, and does not change the control-flow graph. `src/Application/OpArrayPipeline.php` runs the existing passes for one op array from a document the command has already read: build its CFG, reconstruct expressions, reconstruct straight-line statements, structure conditionals, loops, switches, and exception regions, then the command hands the `StructuredStatements` to the generator.
+
+```php
+$source = (new Rephper\CodeGen\PhpSourceGenerator())->generate($structuredStatements);
+```
+
+The string is a fragment:
+
+```php
+<?php
+$result = $a + $b;
+
+return $result;
+```
+
+It starts with `<?php` and a newline. It has no closing `?>`. Indentation is four spaces. Lines end with `\n`. Top-level statements are separated by a blank line. Statements inside a block are not. The same tree always produces the same text.
+
+That fragment is the body of one op array. It is not a reconstruction of the file that was compiled. Comments and the original whitespace are not in the IR. Function declarations, method declarations, class declarations, namespace declarations, imports, property declarations, class constants, and file-level documentation comments are not emitted. A function op array becomes the statements inside the function, including its `return`, with the parameters left as compiled-variable reads. The script body is a separate op array. Passing the fragment to `php -l` checks the syntax of that body. It does not mean the original file was recovered.
+
+### Expressions
+
+The renderer prints a node only when the tree already has a PHP spelling.
+
+| Node | Rendered form |
+| --- | --- |
+| `Literal` | `null`, `true`, `false`, a decimal integer, a float, a quoted string, or an array |
+| `VariableRead` | `$name` |
+| `Assignment` | `$name = expr`, or `$name += expr` when `operator` is set |
+| `Binary` | The stored operator, with parentheses only where PHP 8.4 would group differently |
+| `Unary` | `!`, `~`, or `(bool)` |
+| `FunctionCall` | `name(arguments)` for a direct named call |
+| `Argument` | A positional expression, `name: expr`, or `...expr` |
+| `MatchExpression` | `match` with the arms in stored order |
+| `MatchArm` | The condition literals, or `default` when `isDefault` is set |
+
+`Opaque`, `Unresolved`, and `ReturnValue` are not expressions with a source form. Rendering one throws `Rephper\CodeGen\SourceGenerationException`. The exception names the opcode when the node has one, and the opline and source line. Nothing is returned, so a caller that writes the result only after `generate()` returns does not keep a partial file.
+
+`ECHO` is the one opaque statement with a verified spelling. `echo $text;` is printed when the operand is itself renderable. `echo strlen($text)` stays unsupported because `STRLEN` is still an `Opaque` expression. No other opcode is guessed into source.
+
+Parentheses follow PHP 8.4 precedence and associativity, not the number of child nodes. `*`, `/`, and `%` bind tighter than `+`, `-`, and `.`, and those six associate to the left, so `$a + $b * $c` needs no extra parentheses and `$a - ($b - $c)` does. `+`, `-`, and `.` share one level: `($a . $b) + $c` is `$a . $b + $c`, and `$a + ($b . $c)` keeps the parentheses. `<`, `<=`, `==`, `!=`, `===`, and `!==` do not associate, so `($a < $b) < $c` stays parenthesized. Assignment and the compound assignments associate to the right. A prefix operator is not wrapped around another prefix operator: `~!$a` is already `~(!$a)`, and `!~$a` is already `!(~$a)`. `!foo()` and `(bool)foo()` need no parentheses around the call. A `match` expression is a primary, so it is parenthesized only when a lower-precedence operator around it would not parse as that tree.
+
+`-$a` and `+$a` stay multiplications by `-1` and `1`. The tree does not contain a unary plus or minus. `$a > $b` stays the compiled `$b < $a`. `&&` and `||` are not operators in the tree.
+
+Literals keep the PHP type stored on the node. `null`, `true`, and `false` stay those words. An integer is decimal. `PHP_INT_MIN` is printed as `PHP_INT_MIN` because the token `-9223372036854775808` is not an integer in PHP. A float is a float token, including `1.0` when the IR value is the integer `1` with type `float`. `-0.0` is `-0.0`. `NAN`, `INF`, and `-INF` are the spellings of the IR strings `"NaN"`, `"Infinity"`, and `"-Infinity"`. A string uses single quotes when every byte is printable UTF-8. Quotes and backslashes are escaped there. Control bytes use a double-quoted string with `\\`, `\"`, `\$`, `\n`, `\r`, `\t`, and `\xHH`. A binary string is the IR form whose bytes were written as `\u00XX`; each code point's low eight bits are emitted as `\xHH`, so the source stays ASCII and evaluates to the original bytes. An array is `[]` in element order. An integer key is omitted only when it is the next implicit index. A string key stays quoted, including `'0'`. A recursive array, a constant AST, `undef`, and `unsupported` have no source form and throw.
+
+A match keeps arm order, condition types, several conditions on one arm, and a default wherever it was stored. A match with no default arm does not gain one. `unhandledOpline` is the `MATCH_ERROR` path. It is not printed as `default`.
+
+A reference argument is the variable the compiler sent. PHP 8 rejects `&` at the call site, so `sort($items)` is printed without it. The reference is a property of the callee, and this pass does not print the callee's signature. Named and unpacked arguments stay in send order.
+
+### Statements
+
+| Statement | Rendered form |
+| --- | --- |
+| `ExpressionStatement` | The expression followed by `;` |
+| `ReturnStatement` | `return expr;` |
+| `ThrowStatement` | `throw expr;` |
+| `IfStatement` | `if` / `elseif` / `else`, with braces |
+| `WhileStatement` | `while (condition) { body }` |
+| `DoWhileStatement` | `do { body } while (condition);` |
+| `ForStatement` | Initializers, condition, and updates in stored order. A null condition is omitted |
+| `ForeachStatement` | `foreach (iterable as value)`, with `$key =>` and `&` when the tree has them |
+| `BreakStatement`, `ContinueStatement` | `break` or `continue`, plus the level when it is greater than 1 |
+| `SwitchStatement` | `switch`, cases in stored order |
+| `SwitchBreakStatement` | `break`, not an invented case break |
+| `SwitchContinueStatement` | `continue`. It is not rewritten as `break` |
+| `TryStatement` | `try`, then each catch, then `finally` when present |
+| `OpaqueStatement` | `echo expr;` when the opcode is `ECHO` and the operand can be rendered |
+
+An `if` with `elseStatements === null` has no else. An empty array is an empty else. Switch cases keep shared labels and fallthrough. A break is printed only when the body already has one. The type-fallback comparisons are how the compiler implements the same `switch`; they are not copied after it. Catch types stay in order and are joined with `|`. A null catch variable is omitted. `break 2` and `continue 2` keep that level.
+
+`return null;` is the null literal the compiler stored for `return;`. The two spellings are not distinguished. A stored function name is printed as stored, including a name the compiler lowercased.
+
+An unsupported statement, an unresolved temporary, or any other node without a spelling throws `SourceGenerationException`. Generation is all or nothing.
+
+```bash
+php8.4 bin/rephper source out.json --op-array=3
+php8.4 bin/rephper source out.json --op-array=calculate
+php8.4 bin/rephper source out.json --op-array=main --output=body.php
+```
+
+An integer `--op-array` selects that id. Any other value selects the name, and `main` selects the script body. Without `--output` the fragment is written to stdout. The command returns 1 when the file, the op array, or generation fails, and the message names what stopped it. The command does not load the Zend extension and does not execute the original PHP file. It does not format expressions itself.
+
 ## Commands
 
 `bin/rephper` is a Symfony Console application. It loads Composer’s autoload and does not load the Zend extension. With no command it prints the command list and exits 0.
@@ -766,11 +853,13 @@ php8.4 bin/rephper graph out.json
 php8.4 bin/rephper graph out.json --op-array=calculate
 php8.4 bin/rephper graph out.json --op-array=main
 php8.4 bin/rephper help graph
+php8.4 bin/rephper source out.json --op-array=calculate
+php8.4 bin/rephper source out.json --op-array=0 --output=body.php
 ```
 
 `graph` reads one IR JSON file and prints one block list per op array. `--op-array` limits the output. `main` selects the script body, whose JSON name is null. Validation errors go to stderr and the process exits 1. That includes a missing file, invalid JSON, an IR version other than 1, a jump the builder cannot accept, an unsupported opcode, and an unknown op-array name. A missing `file` argument also exits 1.
 
-There is no `inspect` or `export` command. Inspection and export still go through `php -l` and `REPHPER_IR`. There is no command that prints expression trees. Reconstruction is the `Rephper\Expr\Reconstructor` library call, and it needs the op array together with the graph the builder produced for that same op array.
+`source` reads one IR JSON file and writes the PHP body of one op array. The choice and the failure behavior are described above. There is no `inspect` or `export` command. Inspection and export still go through `php -l` and `REPHPER_IR`. There is no command that prints expression trees. Reconstruction is the `Rephper\Expr\Reconstructor` library call, and it needs the op array together with the graph the builder produced for that same op array.
 
 ## Tests
 
@@ -783,7 +872,9 @@ make test-integration
 
 `composer test`, `composer test:unit`, and `composer test:integration` run the same PHPUnit suites. `make test` and `make test-integration` build the extension first and pass it to PHPUnit through `REPHPER_PHP` and `REPHPER_EXTENSION`. The unit suite does not load the extension. Run PHPUnit with the normal PHP extensions enabled. The spawned `php -l` processes still use `-n`, so OPcache stays out of the opcode dump.
 
-`tests/Unit/` covers the reader, control-flow edges, exception edges, expression trees, named function calls, straight-line statements, structured conditionals, dominators, natural loops, `while`, `do-while`, `for`, `foreach`, jump-table `switch` statements, jump-table `match` expressions, and `try` / `catch` statements, invalid IR, and the `graph` command through Symfony’s `CommandTester`. One unit test also runs `bin/rephper` so the executable bootstrap is checked. Version selection still treats `8.10` as newer than `8.9`, and PHP 8.4 remains the only supported compiler.
+`tests/Unit/` covers the reader, control-flow edges, exception edges, expression trees, named function calls, straight-line statements, structured conditionals, dominators, natural loops, `while`, `do-while`, `for`, `foreach`, jump-table `switch` statements, jump-table `match` expressions, `try` / `catch` statements, PHP rendering of those trees, invalid IR, and the `graph` and `source` commands through Symfony’s `CommandTester`. One unit test also runs `bin/rephper` so the executable bootstrap is checked. Version selection still treats `8.10` as newer than `8.9`, and PHP 8.4 remains the only supported compiler.
+
+`tests/Integration/SourceGeneratorTest.php` reads checked-in PHP 8.4 IR, runs the reconstruction pipeline, and lints each generated body with `php8.4 -n -l`. That lint does not load the Rephper extension and does not execute the original fixture. The same input is generated twice and the text must match. A failure throws before a source file is written.
 
 `tests/Integration/ExporterTest.php` compiles every fixture with the extension when `extension/modules/rephper.so` exists. Without that file the integration tests are skipped. For each fixture it checks:
 
@@ -836,13 +927,13 @@ Linting one file does not compile files it would include at runtime, and it does
 
 - PHP 8.4 only.
 - Ubuntu is the only operating system that has been targeted. It has been built and tested locally on Linux with PHP 8.4.27.
-- There is no PHP source generator. `if`, `if` / `else`, `if` / `elseif` / `else`, and nested conditionals are structured from `JMPZ` and `JMPNZ`. `ConditionalStructurer::structure()` still returns the original statements for an op array that contains a loop or a jump-table switch. `while`, `do-while`, `for`, `foreach`, and jump-table `switch` statements come from `LoopStructurer`, including an `if` inside them and one of those regions inside an `if`. A `for` initializer is the trailing run of prologue statements on the prologue jump's line. Earlier lines stay before the loop, including the earlier lines of a multi-line initializer. A statement on the same line as `for` or `while` is an initializer. An empty update is classified as `while` and presented as `for` when that initializer is present. `for (;;)` has a null condition when the synthesized true uses the previous instruction's line. `for (; true;)` with no update stays `while (true)`. `for ($i = 0; ; $i++)` keeps a literal true. A `foreach` value or key is structured only when it is one compiled variable. Destructuring stays unstructured, and that failure does not by itself flatten a containing `for`. By-reference iteration is the `RW` reset and fetch, not an assignment. `unknown` loops stay in their original statements with an `unstructured` diagnostic. A short-circuit loop condition (`JMPZ_EX` or `COALESCE`) and a backward `goto` stay `unknown` and unstructured, and an assignment in that condition is not moved before the loop. An unreachable cycle is not a loop. `SWITCH_LONG` and `SWITCH_STRING` become a `SwitchStatement` when the type-mismatch chain restates the jump table. A small switch that PHP compiles as comparisons stays nested `if` statements. `switch (true)` and a duplicate case label do not match that chain, so that switch region stays in its original statements and does not flatten an enclosing loop. An empty trailing default is not distinct from no default. A `continue` inside a switch stays a `SwitchContinueStatement` and is not rewritten as a break. A switch-local `break` of a switch that was not structured stays an opaque statement, not a loop break. `break 2` and `continue 2` keep the source depth. A jump-table `match` is a `MatchExpression`. A comparison-chain `match`, including one condition or a non-constant condition, stays in its original instructions. An arm that branches internally, and a duplicated condition whose second body is not in the jump table, stay unrestructured, with an `unstructured` diagnostic. `MATCH_ERROR` is the unmatched path of a match that has no default. It is recorded on the expression and is not a statement. `try` / `catch`, `try` / `finally`, and `try` / `catch` / `finally` are a `TryStatement` with one optional `FinallyClause`. Empty catch clauses written on one line cannot be told apart from one empty union catch, so that region stays unstructured. A compiled-variable return copied across `FAST_CALL` stays unresolved. A `while` that never returns to its header is not a natural loop. An empty else that the compiler deletes is an `if` without else. A `return` after an `if` that has no explicit else stays outside the conditional. `$a > $b` remains the compiled `$b < $a` comparison. A repeating edge of kind `false` wraps the stored condition in `!`; the PHP 8.4 fixtures repeat on a true edge, and `while (!$n)` already stores that `!`. An assignment consumed in the same block is that use, not a second root.
+- PHP source generation prints one op-array body. It does not restore comments, the original whitespace, function declarations, method declarations, class declarations, namespace declarations, imports, property declarations, class constants, or file-level documentation comments. `if`, `if` / `else`, `if` / `elseif` / `else`, and nested conditionals are structured from `JMPZ` and `JMPNZ`. `ConditionalStructurer::structure()` still returns the original statements for an op array that contains a loop or a jump-table switch. `while`, `do-while`, `for`, `foreach`, and jump-table `switch` statements come from `LoopStructurer`, including an `if` inside them and one of those regions inside an `if`. A `for` initializer is the trailing run of prologue statements on the prologue jump's line. Earlier lines stay before the loop, including the earlier lines of a multi-line initializer. A statement on the same line as `for` or `while` is an initializer. An empty update is classified as `while` and presented as `for` when that initializer is present. `for (;;)` has a null condition when the synthesized true uses the previous instruction's line. `for (; true;)` with no update stays `while (true)`. `for ($i = 0; ; $i++)` keeps a literal true. A `foreach` value or key is structured only when it is one compiled variable. Destructuring stays unstructured, and that failure does not by itself flatten a containing `for`. By-reference iteration is the `RW` reset and fetch, not an assignment. `unknown` loops stay in their original statements with an `unstructured` diagnostic. A short-circuit loop condition (`JMPZ_EX` or `COALESCE`) and a backward `goto` stay `unknown` and unstructured, and an assignment in that condition is not moved before the loop. An unreachable cycle is not a loop. `SWITCH_LONG` and `SWITCH_STRING` become a `SwitchStatement` when the type-mismatch chain restates the jump table. A small switch that PHP compiles as comparisons stays nested `if` statements. `switch (true)` and a duplicate case label do not match that chain, so that switch region stays in its original statements and does not flatten an enclosing loop. An empty trailing default is not distinct from no default. A `continue` inside a switch stays a `SwitchContinueStatement` and is not rewritten as a break. A switch-local `break` of a switch that was not structured stays an opaque statement, not a loop break. `break 2` and `continue 2` keep the source depth. A jump-table `match` is a `MatchExpression`. A comparison-chain `match`, including one condition or a non-constant condition, stays in its original instructions. An arm that branches internally, and a duplicated condition whose second body is not in the jump table, stay unrestructured, with an `unstructured` diagnostic. `MATCH_ERROR` is the unmatched path of a match that has no default. It is recorded on the expression and is not a statement. `try` / `catch`, `try` / `finally`, and `try` / `catch` / `finally` are a `TryStatement` with one optional `FinallyClause`. Empty catch clauses written on one line cannot be told apart from one empty union catch, so that region stays unstructured. A compiled-variable return copied across `FAST_CALL` stays unresolved. A `while` that never returns to its header is not a natural loop. An empty else that the compiler deletes is an `if` without else. A `return` after an `if` that has no explicit else stays outside the conditional. `$a > $b` remains the compiled `$b < $a` comparison. A repeating edge of kind `false` wraps the stored condition in `!`; the PHP 8.4 fixtures repeat on a true edge, and `while (!$n)` already stores that `!`. An assignment consumed in the same block is that use, not a second root.
 - Direct named function calls are reconstructed from `INIT_FCALL` / `INIT_FCALL_BY_NAME`, their sends, and the matching `DO_ICALL`, `DO_UCALL`, or `DO_FCALL_BY_NAME`. Dynamic calls, method calls, static calls, constructors, and first-class callables stay opaque. `strlen($text)` on a compiled variable remains the `STRLEN` opcode. A named argument that the compiler rewrote into a positional send is positional in the tree. The stored function name can be lowercased.
 - CFG semantics are implemented for PHP 8.4, `pre_pass_two`, and absolute opline jumps only. `src/Cfg/Php84/Semantics.php` is the only opcode switch. Another PHP version needs its own semantics class.
 - `HANDLE_EXCEPTION`, `USER_OPCODE`, and `CALL_TRAMPOLINE` are rejected. The builder does not guess their successors.
 - `BIND_INIT_STATIC_OR_JMP` and `JMP_FRAMELESS` follow the PHP 8.4 handlers. The current fixtures do not emit them; the CFG tests cover them by editing a real instruction.
 - Exception edges are one per block, from `try_catch` ranges. The IR does not name the exception class a `THROW` can reach, so the edge is the VM's handler boundary, not a typed catch match. Typed clauses come from the `CATCH` operands and `catch_next` edges. Those edges are not added to the successor list.
-- `try` / `finally` and `try` / `catch` / `finally` are `TryStatement` values with one `FinallyClause`. `FAST_CALL` and `FAST_RET` stay the CFG's `finally_call` and `finally_return` edges. `FAST_RET` lists every `FAST_CALL` continuation for that row; the statement tree does not duplicate the body. A compiled-variable `return` copied through a temporary stays unresolved on the `ReturnStatement`. A `while` that never returns to its header is not a natural loop, so a finally that contains only that branch stays unstructured. `GOTO` through a finally is unstructured. PHP source generation is not implemented.
+- `try` / `finally` and `try` / `catch` / `finally` are `TryStatement` values with one `FinallyClause`. `FAST_CALL` and `FAST_RET` stay the CFG's `finally_call` and `finally_return` edges. `FAST_RET` lists every `FAST_CALL` continuation for that row; the statement tree does not duplicate the body. A compiled-variable `return` copied through a temporary stays unresolved on the `ReturnStatement`. A `while` that never returns to its header is not a natural loop, so a finally that contains only that branch stays unstructured. `GOTO` through a finally is unstructured. A generated body is not the original source file.
 - `BRK` op1 is a `breaks` index and `GOTO` op1 is an unwind count. The CFG uses the `breaks` and `labels` tables. The JSON field names are unchanged.
 - OPcache must be off for a stable dump and a stable IR file.
 - Included and required files are not compiled with the file that names them.
@@ -856,7 +947,7 @@ Linting one file does not compile files it would include at runtime, and it does
 
 ## Roadmap
 
-- PHP source generation. `try` / `catch`, `try` / `finally`, and `try` / `catch` / `finally` are already a `TryStatement`. Empty catch clauses on one line stay unstructured when they cannot be told apart from one empty union. Natural loops, `while`, `do-while`, `for`, `foreach`, and jump-table `switch` are already structured from the control-flow graph. A jump-table `match` is already one expression. A comparison-chain switch stays nested conditionals. A comparison-chain `match` stays in its original instructions. A `foreach` value that is not one compiled variable stays unstructured. `if` / `elseif` / `else` is already structured from it, including inside those regions.
+- A complete PHP file. The generator prints one op-array body and does not yet emit declarations, namespaces, or imports. `try` / `catch`, `try` / `finally`, and `try` / `catch` / `finally` are already a `TryStatement`. Empty catch clauses on one line stay unstructured when they cannot be told apart from one empty union. Natural loops, `while`, `do-while`, `for`, `foreach`, and jump-table `switch` are already structured from the control-flow graph. A jump-table `match` is already one expression. A comparison-chain switch stays nested conditionals. A comparison-chain `match` stays in its original instructions. A `foreach` value that is not one compiled variable stays unstructured. `if` / `elseif` / `else` is already structured from it, including inside those regions.
 - Expression reconstruction across basic blocks, including `&&` and `||`. Method calls, dynamic calls, constructors, and first-class callables are still separate instructions.
 - More PHP versions, each with its own compatibility directory and expected dumps.
 - More operating systems, as extra `os` matrix entries once the build has been verified there.
