@@ -73,10 +73,10 @@ final class LoopAnalyzer
     }
 
     /**
-     * Adds natural loops that are reachable from catch bodies.
+     * Adds natural loops that are reachable from catch or finally bodies.
      *
-     * Catch bodies have no ordinary path from the function entry, so the main
-     * analysis does not see them. Each handler is its own entry. Blocks the
+     * Those bodies can have no ordinary path from the function entry, so the
+     * main analysis does not see them. Each handler is its own entry. Blocks the
      * main entry already reaches are not entered, and exception edges are not
      * followed. The graph is not modified. The dominators on the returned
      * analysis are the original ones.

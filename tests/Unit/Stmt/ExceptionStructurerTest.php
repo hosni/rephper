@@ -6,19 +6,25 @@ namespace Rephper\Tests\Unit\Stmt;
 
 use PHPUnit\Framework\TestCase;
 use Rephper\Cfg\Builder;
+use Rephper\Cfg\CfgException;
 use Rephper\Cfg\Edge;
 use Rephper\Cfg\Graph;
 use Rephper\Cfg\LoopAnalyzer;
 use Rephper\Expr\Assignment;
 use Rephper\Expr\Binary;
 use Rephper\Expr\FunctionCall;
+use Rephper\Expr\Literal;
 use Rephper\Expr\MatchExpression;
 use Rephper\Expr\Opaque;
 use Rephper\Expr\Reconstructor as ExpressionReconstructor;
+use Rephper\Expr\Unresolved;
 use Rephper\Ir\Document;
 use Rephper\Ir\Reader;
+use Rephper\Stmt\BreakStatement;
+use Rephper\Stmt\ContinueStatement;
 use Rephper\Stmt\ExceptionStructurer;
 use Rephper\Stmt\ExpressionStatement;
+use Rephper\Stmt\FinallyClause;
 use Rephper\Stmt\ForStatement;
 use Rephper\Stmt\ForeachStatement;
 use Rephper\Stmt\IfStatement;
@@ -373,50 +379,49 @@ final class ExceptionStructurerTest extends TestCase
         $this->assertSame('recover', $this->onlyCall($this->onlyTry($structured->statements)->catches[0]->body, 'recover')->name);
     }
 
-    public function testTryFinallyStaysUnstructured(): void
+    public function testTryFinallyKeepsTheBodyAndTheCleanup(): void
     {
         [, $reconstruction, $structured] = $this->prepare('tryFinally');
+        $try = $this->onlyTry($structured->statements);
 
-        $this->assertSame([], $this->tries($structured->statements));
-        $this->assertSame(
-            [$this->originalCall($reconstruction, 'operation'), $this->originalCall($reconstruction, 'cleanup')],
-            $this->calls($structured->statements),
-        );
-        $this->assertReason($structured, 'finally is not reconstructed.');
-        $this->assertContains('FAST_RET', $this->opcodes($structured));
+        $this->assertSame([], $try->catches);
+        $this->assertNull($try->catchOpline);
+        $this->assertSame($this->originalCall($reconstruction, 'operation'), $this->onlyCall($try->body, 'operation'));
+        $this->assertFinallyCall($try->finally, 'cleanup', $reconstruction);
+        $this->assertNoUnstructured($structured);
+        $this->assertNoFinallyMachinery($structured);
     }
 
-    public function testTryCatchFinallyDoesNotDropTheFinally(): void
+    public function testTryCatchFinallyKeepsTheCatchAndTheCleanup(): void
     {
-        [, $reconstruction, $structured] = $this->prepare('tryCatchFinally', false);
+        [, $reconstruction, $structured] = $this->prepare('tryCatchFinally');
+        $try = $this->onlyTry($structured->statements);
 
-        $this->assertSame([], $this->tries($structured->statements));
-        $this->assertSame(
-            [
-                $this->originalCall($reconstruction, 'operation'),
-                $this->originalCall($reconstruction, 'recover'),
-                $this->originalCall($reconstruction, 'cleanup'),
-            ],
-            $this->calls($structured->statements),
-        );
-        $this->assertReason($structured, 'finally is not reconstructed.');
-        $this->assertContains('CATCH', $this->opcodes($structured));
+        $this->assertSame(['RuntimeException'], $try->catches[0]->types);
+        $this->assertSame($this->originalCall($reconstruction, 'recover'), $this->onlyCall($try->catches[0]->body, 'recover'));
+        $this->assertSame($this->originalCall($reconstruction, 'operation'), $this->onlyCall($try->body, 'operation'));
+        $this->assertFinallyCall($try->finally, 'cleanup', $reconstruction);
+        $this->assertNoUnstructured($structured);
+        $this->assertNoFinallyMachinery($structured);
     }
 
-    public function testATryThatContainsFinallyIsNotPartiallyStructured(): void
+    public function testATryThatContainsFinallyStructuresBothRegions(): void
     {
-        [, $reconstruction, $structured] = $this->prepare('containsFinally', false);
+        [, $reconstruction, $structured] = $this->prepare('containsFinally');
+        $tries = $this->tries($structured->statements);
+        $this->assertCount(2, $tries);
+        $outer = $tries[0];
+        $inner = $outer->body[0];
 
-        $this->assertSame([], $this->tries($structured->statements));
-        $this->assertSame(
-            [
-                $this->originalCall($reconstruction, 'operation'),
-                $this->originalCall($reconstruction, 'cleanup'),
-                $this->originalCall($reconstruction, 'recover'),
-            ],
-            $this->calls($structured->statements),
-        );
-        $this->assertReason($structured, 'The region contains a finally handler, which is not reconstructed.');
+        $this->assertSame($inner, $tries[1]);
+        $this->assertInstanceOf(TryStatement::class, $inner);
+        $this->assertNull($outer->finally);
+        $this->assertSame(['RuntimeException'], $outer->catches[0]->types);
+        $this->assertSame($this->originalCall($reconstruction, 'operation'), $this->onlyCall($inner->body, 'operation'));
+        $this->assertFinallyCall($inner->finally, 'cleanup', $reconstruction);
+        $this->assertSame($this->originalCall($reconstruction, 'recover'), $this->onlyCall($outer->catches[0]->body, 'recover'));
+        $this->assertNoUnstructured($structured);
+        $this->assertNoFinallyMachinery($structured);
     }
 
     public function testEmptyClausesOnOneLineStayUnstructured(): void
@@ -434,19 +439,24 @@ final class ExceptionStructurerTest extends TestCase
 
     public function testAStructuredTryDoesNotFlattenAFollowingFinally(): void
     {
-        [, , $structured] = $this->prepare('sibling');
-        $try = $this->onlyTry($structured->statements);
-        $calls = $this->calls($structured->statements);
+        [, $reconstruction, $structured] = $this->prepare('sibling');
+        $tries = $this->tries($structured->statements);
+        $this->assertCount(2, $tries);
+        $caught = $tries[0];
+        $finished = $tries[1];
 
-        $this->assertSame('recover', $this->onlyCall($try->catches[0]->body, 'recover')->name);
-        $this->assertSame(['operation', 'recover', 'operation', 'cleanup'], array_map(
-            static fn (FunctionCall $call): string => $call->name,
-            $calls,
+        $this->assertNull($caught->finally);
+        $this->assertSame('recover', $this->onlyCall($caught->catches[0]->body, 'recover')->name);
+        $this->assertSame([], $finished->catches);
+        $this->assertFinallyCall($finished->finally, 'cleanup', $reconstruction);
+        $operations = array_values(array_filter(
+            $this->calls($this->flat($reconstruction)),
+            static fn (FunctionCall $call): bool => $call->name === 'operation',
         ));
-        $this->assertSame($calls[0], $this->onlyCall($try->body, 'operation'));
-        $this->assertSame($calls[2]->name, 'operation');
-        $this->assertReason($structured, 'finally is not reconstructed.');
-        $this->assertNotContains('CATCH', $this->opcodes($structured));
+        $this->assertSame($operations[0], $this->onlyCall($caught->body, 'operation'));
+        $this->assertSame($operations[1], $this->onlyCall($finished->body, 'operation'));
+        $this->assertNoUnstructured($structured);
+        $this->assertNoFinallyMachinery($structured);
     }
 
     public function testLoopStructurerDoesNotTurnATryIntoAConditional(): void
@@ -465,12 +475,479 @@ final class ExceptionStructurerTest extends TestCase
         $this->assertContains('CATCH', $this->opcodes($structured));
     }
 
+    public function testLoopStructurerDoesNotTurnFinallyIntoATry(): void
+    {
+        $opArray = $this->document('Finally')->opArrayNamed('simple');
+        $this->assertNotNull($opArray);
+        $graph = (new Builder())->build($opArray);
+        $expressions = (new ExpressionReconstructor())->reconstruct($opArray, $graph);
+        $reconstruction = (new Reconstructor())->reconstruct($opArray, $graph, $expressions);
+        $structured = (new LoopStructurer())->structure($graph, (new LoopAnalyzer())->analyze($graph, $opArray), $reconstruction);
+
+        $this->assertSame([], $this->tries($structured->statements));
+        $this->assertReason($structured, 'FAST_CALL is not structured as a conditional.');
+    }
+
+    public function testASimpleFinallyKeepsOneCleanup(): void
+    {
+        [$graph, $reconstruction, $structured] = $this->prepare('simple', true, 'Finally');
+        $try = $this->onlyTry($structured->statements);
+
+        $this->assertSame([], $try->catches);
+        $this->assertNull($try->catchOpline);
+        $this->assertSame($this->originalCall($reconstruction, 'operation'), $this->onlyCall($try->body, 'operation'));
+        $this->assertFinallyCall($try->finally, 'cleanup', $reconstruction);
+        $this->assertInstanceOf(ReturnStatement::class, $structured->statements[1]);
+        $this->assertSame(1, $this->finallyReturns($graph));
+        $this->assertNoUnstructured($structured);
+        $this->assertNoFinallyMachinery($structured);
+    }
+
+    public function testTryCatchFinallyKeepsEveryClauseAndOneCleanup(): void
+    {
+        [$graph, $reconstruction, $structured] = $this->prepare('caught', true, 'Finally');
+        $try = $this->onlyTry($structured->statements);
+
+        $this->assertSame(['RuntimeException'], $try->catches[0]->types);
+        $this->assertSame('exception', $try->catches[0]->variable);
+        $this->assertSame($this->originalCall($reconstruction, 'recover'), $this->onlyCall($try->catches[0]->body, 'recover'));
+        $this->assertFinallyCall($try->finally, 'cleanup', $reconstruction);
+        $this->assertSame(1, $this->finallyReturns($graph));
+        $this->assertNoFinallyMachinery($structured);
+    }
+
+    public function testMultipleCatchesStayOrderedBesideOneFinally(): void
+    {
+        [, $reconstruction, $structured] = $this->prepare('multi', true, 'Finally');
+        $try = $this->onlyTry($structured->statements);
+
+        $this->assertCount(2, $try->catches);
+        $this->assertSame(['RuntimeException'], $try->catches[0]->types);
+        $this->assertSame(['LogicException'], $try->catches[1]->types);
+        $this->assertLessThan($try->catches[1]->opline, $try->catches[0]->opline);
+        $this->assertSame('recover', $this->onlyCall($try->catches[0]->body, 'recover')->name);
+        $this->assertSame('report', $this->onlyCall($try->catches[1]->body, 'report')->name);
+        $this->assertFinallyCall($try->finally, 'cleanup', $reconstruction);
+        $this->assertNoFinallyMachinery($structured);
+    }
+
+    public function testAUnionCatchWithFinallyIsOneClause(): void
+    {
+        [, $reconstruction, $structured] = $this->prepare('union', true, 'Finally');
+        $try = $this->onlyTry($structured->statements);
+
+        $this->assertCount(1, $try->catches);
+        $this->assertSame(['RuntimeException', 'LogicException'], $try->catches[0]->types);
+        $this->assertSame([5, 7], $try->catches[0]->catchOplines);
+        $this->assertFinallyCall($try->finally, 'cleanup', $reconstruction);
+        $this->assertNoFinallyMachinery($structured);
+    }
+
+    public function testAReturnInsideTryStaysThereAndTheCleanupRunsOnce(): void
+    {
+        [$graph, $reconstruction, $structured] = $this->prepare('returnInTry', true, 'Finally');
+        $try = $this->onlyTry($structured->statements);
+        $returned = $this->onlyInstance($try->body, ReturnStatement::class);
+
+        $this->assertSame($this->onlyInstance($this->flat($reconstruction), ReturnStatement::class), $returned);
+        $this->assertInstanceOf(Unresolved::class, $returned->value);
+        $this->assertFinallyCall($try->finally, 'cleanup', $reconstruction);
+        $this->assertSame(2, $this->finallyReturns($graph));
+        $this->assertCount(1, $this->ofType($structured->statements, ReturnStatement::class));
+        $this->assertNoFinallyMachinery($structured);
+    }
+
+    public function testAReturnInsideCatchStillRunsFinally(): void
+    {
+        [, $reconstruction, $structured] = $this->prepare('returnInCatch', true, 'Finally');
+        $try = $this->onlyTry($structured->statements);
+        $returned = $try->catches[0]->body[0];
+
+        $this->assertInstanceOf(ReturnStatement::class, $returned);
+        $this->assertInstanceOf(Literal::class, $returned->value);
+        $this->assertSame(1, $returned->value->value);
+        $this->assertInstanceOf(ReturnStatement::class, $structured->statements[1]);
+        $this->assertInstanceOf(Literal::class, $structured->statements[1]->value);
+        $this->assertSame(0, $structured->statements[1]->value->value);
+        $this->assertNotSame($returned, $structured->statements[1]);
+        $this->assertFinallyCall($try->finally, 'cleanup', $reconstruction);
+        $this->assertNoFinallyMachinery($structured);
+    }
+
+    public function testAnExplicitThrowStaysInsideTryAndCleanupStaysInFinally(): void
+    {
+        [, $reconstruction, $structured] = $this->prepare('throwInTry', true, 'Finally');
+        $try = $this->onlyTry($structured->statements);
+
+        $this->assertSame([], $try->catches);
+        $this->assertSame($this->onlyInstance($this->flat($reconstruction), ThrowStatement::class), $this->onlyInstance($try->body, ThrowStatement::class));
+        $this->assertFinallyCall($try->finally, 'cleanup', $reconstruction);
+        $this->assertNoFinallyMachinery($structured);
+    }
+
+    public function testARethrowStaysInTheCatch(): void
+    {
+        [, $reconstruction, $structured] = $this->prepare('rethrow', true, 'Finally');
+        $try = $this->onlyTry($structured->statements);
+
+        $this->assertInstanceOf(ThrowStatement::class, $try->catches[0]->body[array_key_last($try->catches[0]->body)]);
+        $this->assertSame($this->onlyInstance($this->flat($reconstruction), ThrowStatement::class), $this->onlyInstance($try->catches[0]->body, ThrowStatement::class));
+        $this->assertFinallyCall($try->finally, 'cleanup', $reconstruction);
+        $this->assertNoFinallyMachinery($structured);
+    }
+
+    public function testAnImplicitThrowStaysInsideTry(): void
+    {
+        [, $reconstruction, $structured] = $this->prepare('implicit', true, 'Finally');
+        $try = $this->onlyTry($structured->statements);
+        $assignment = $try->body[0];
+
+        $this->assertInstanceOf(ExpressionStatement::class, $assignment);
+        $this->assertInstanceOf(Assignment::class, $assignment->expression);
+        $this->assertInstanceOf(Binary::class, $assignment->expression->value);
+        $this->assertSame('/', $assignment->expression->value->operator);
+        $this->assertFinallyCall($try->finally, 'cleanup', $reconstruction);
+        $this->assertNoFinallyMachinery($structured);
+    }
+
+    public function testAReturnInsideFinallyOverridesThePendingReturn(): void
+    {
+        [, , $structured] = $this->prepare('returnInFinally', true, 'Finally');
+        $try = $this->onlyTry($structured->statements);
+        $pending = $this->onlyInstance($try->body, ReturnStatement::class);
+        $finished = $try->finally;
+
+        $this->assertInstanceOf(FinallyClause::class, $finished);
+        $override = $this->onlyInstance($finished->body, ReturnStatement::class);
+        $this->assertInstanceOf(Unresolved::class, $pending->value);
+        $this->assertInstanceOf(Literal::class, $override->value);
+        $this->assertSame(1, $override->value->value);
+        $this->assertNotSame($pending, $override);
+        $this->assertCount(2, $this->ofType($structured->statements, ReturnStatement::class));
+        $this->assertNoFinallyMachinery($structured);
+    }
+
+    public function testAThrowInsideFinallyStaysInTheFinally(): void
+    {
+        [, $reconstruction, $structured] = $this->prepare('throwInFinally', true, 'Finally');
+        $try = $this->onlyTry($structured->statements);
+
+        $this->assertSame($this->originalCall($reconstruction, 'operation'), $this->onlyCall($try->body, 'operation'));
+        $this->assertInstanceOf(FinallyClause::class, $try->finally);
+        $this->assertSame(
+            $this->onlyInstance($this->flat($reconstruction), ThrowStatement::class),
+            $this->onlyInstance($try->finally->body, ThrowStatement::class),
+        );
+        $this->assertCount(1, $this->ofType($structured->statements, ThrowStatement::class));
+        $this->assertNoFinallyMachinery($structured);
+    }
+
+    public function testSeveralFastCallsShareOneFinally(): void
+    {
+        [$graph, $reconstruction, $structured] = $this->prepare('multipleCalls', true, 'Finally');
+        $try = $this->onlyTry($structured->statements);
+        $conditional = $try->body[0];
+        $returns = $this->ofType($try->body, ReturnStatement::class);
+
+        $this->assertInstanceOf(IfStatement::class, $conditional);
+        $this->assertNull($conditional->elseStatements);
+        $this->assertInstanceOf(ReturnStatement::class, $conditional->branches[0]->statements[0]);
+        $this->assertInstanceOf(Literal::class, $conditional->branches[0]->statements[0]->value);
+        $this->assertSame(1, $conditional->branches[0]->statements[0]->value->value);
+        $this->assertSame($this->originalCall($reconstruction, 'operation'), $this->onlyCall($try->body, 'operation'));
+        $this->assertCount(2, $returns);
+        $this->assertSame($conditional->branches[0]->statements[0], $returns[0]);
+        $this->assertInstanceOf(Literal::class, $returns[1]->value);
+        $this->assertSame(0, $returns[1]->value->value);
+        $this->assertFinallyCall($try->finally, 'cleanup', $reconstruction);
+        $this->assertSame(3, $this->finallyReturns($graph));
+        $this->assertNoFinallyMachinery($structured);
+    }
+
+    public function testBreakThroughFinallyKeepsTheLoopTarget(): void
+    {
+        [$graph, $reconstruction, $structured] = $this->prepare('breakThrough', true, 'Finally');
+        $loop = $structured->statements[0];
+
+        $this->assertInstanceOf(WhileStatement::class, $loop);
+        $try = $loop->body[0];
+        $this->assertInstanceOf(TryStatement::class, $try);
+        $break = $this->onlyInstance($try->body, BreakStatement::class);
+        $this->assertSame(1, $break->level);
+        $this->assertSame($loop->loopId, $break->loopId);
+        $this->assertFinallyCall($try->finally, 'cleanup', $reconstruction);
+        $this->assertSame(2, $this->finallyReturns($graph));
+        $this->assertNoFinallyMachinery($structured);
+    }
+
+    public function testContinueThroughFinallyKeepsTheLoopTarget(): void
+    {
+        [, $reconstruction, $structured] = $this->prepare('continueThrough', true, 'Finally');
+        $loop = $structured->statements[0];
+
+        $this->assertInstanceOf(WhileStatement::class, $loop);
+        $try = $loop->body[0];
+        $this->assertInstanceOf(TryStatement::class, $try);
+        $continue = $this->onlyInstance($try->body, ContinueStatement::class);
+        $this->assertSame(1, $continue->level);
+        $this->assertSame($loop->loopId, $continue->loopId);
+        $this->assertFinallyCall($try->finally, 'cleanup', $reconstruction);
+        $this->assertNoFinallyMachinery($structured);
+    }
+
+    public function testBreakTwoThroughFinallyLeavesTheOuterLoop(): void
+    {
+        [, $reconstruction, $structured] = $this->prepare('breakTwo', true, 'Finally');
+        $outer = $structured->statements[0];
+
+        $this->assertInstanceOf(WhileStatement::class, $outer);
+        $inner = $outer->body[0];
+        $this->assertInstanceOf(WhileStatement::class, $inner);
+        $try = $inner->body[0];
+        $this->assertInstanceOf(TryStatement::class, $try);
+        $break = $this->onlyInstance($try->body, BreakStatement::class);
+        $this->assertSame(2, $break->level);
+        $this->assertSame($outer->loopId, $break->loopId);
+        $this->assertNotSame($inner->loopId, $break->loopId);
+        $this->assertFinallyCall($try->finally, 'cleanup', $reconstruction);
+        $this->assertNoFinallyMachinery($structured);
+    }
+
+    public function testContinueTwoThroughFinallyTargetsTheOuterLoop(): void
+    {
+        [, $reconstruction, $structured] = $this->prepare('continueTwo', true, 'Finally');
+        $outer = $structured->statements[0];
+
+        $this->assertInstanceOf(WhileStatement::class, $outer);
+        $inner = $outer->body[0];
+        $this->assertInstanceOf(WhileStatement::class, $inner);
+        $try = $inner->body[0];
+        $this->assertInstanceOf(TryStatement::class, $try);
+        $continue = $this->onlyInstance($try->body, ContinueStatement::class);
+        $this->assertSame(2, $continue->level);
+        $this->assertSame($outer->loopId, $continue->loopId);
+        $this->assertNotSame($inner->loopId, $continue->loopId);
+        $this->assertFinallyCall($try->finally, 'cleanup', $reconstruction);
+        $this->assertNoFinallyMachinery($structured);
+    }
+
+    public function testAConditionalInsideFinallyStaysInsideIt(): void
+    {
+        [, $reconstruction, $structured] = $this->prepare('condInFinally', true, 'Finally');
+        $try = $this->onlyTry($structured->statements);
+        $finished = $try->finally;
+
+        $this->assertInstanceOf(FinallyClause::class, $finished);
+        $conditional = $finished->body[0];
+        $this->assertInstanceOf(IfStatement::class, $conditional);
+        $this->assertNotNull($conditional->elseStatements);
+        $this->assertSame($this->originalCall($reconstruction, 'recover'), $this->onlyCall($conditional->branches[0]->statements, 'recover'));
+        $this->assertSame($this->originalCall($reconstruction, 'report'), $this->onlyCall($conditional->elseStatements, 'report'));
+        $this->assertSame($this->originalCall($reconstruction, 'operation'), $this->onlyCall($try->body, 'operation'));
+        $this->assertNoFinallyMachinery($structured);
+    }
+
+    public function testALoopInsideFinallyKeepsItsOwnBreak(): void
+    {
+        [, $reconstruction, $structured] = $this->prepare('loopInFinally', true, 'Finally');
+        $try = $this->onlyTry($structured->statements);
+        $finished = $try->finally;
+
+        $this->assertInstanceOf(FinallyClause::class, $finished);
+        $loop = $finished->body[0];
+        $this->assertInstanceOf(WhileStatement::class, $loop);
+        $this->assertSame($this->originalCall($reconstruction, 'cleanup'), $this->onlyCall($loop->body, 'cleanup'));
+        $break = $this->onlyInstance($loop->body, BreakStatement::class);
+        $this->assertSame(1, $break->level);
+        $this->assertSame($loop->loopId, $break->loopId);
+        $this->assertSame($this->originalCall($reconstruction, 'operation'), $this->onlyCall($try->body, 'operation'));
+        $this->assertNoFinallyMachinery($structured);
+    }
+
+    public function testAFinallyLoopThatNeverReachesItsHeaderStaysUnstructured(): void
+    {
+        [, $reconstruction, $structured] = $this->prepare('alwaysBreakInFinally', true, 'Finally');
+
+        $this->assertSame([], $this->tries($structured->statements));
+        $this->assertSame(
+            [$this->originalCall($reconstruction, 'operation'), $this->originalCall($reconstruction, 'cleanup')],
+            $this->calls($structured->statements),
+        );
+        $this->assertReason($structured, 'The branch target is not a forward edge.');
+    }
+
+    public function testNestedFinallyBelongsToTheInnerTry(): void
+    {
+        [, $reconstruction, $structured] = $this->prepare('nested', true, 'Finally');
+        $tries = $this->tries($structured->statements);
+        $this->assertCount(2, $tries);
+        $outer = $tries[0];
+        $inner = $outer->body[0];
+
+        $this->assertSame($inner, $tries[1]);
+        $this->assertInstanceOf(TryStatement::class, $inner);
+        $this->assertSame([], $inner->catches);
+        $this->assertSame(['RuntimeException'], $outer->catches[0]->types);
+        $this->assertSame($this->originalCall($reconstruction, 'operation'), $this->onlyCall($inner->body, 'operation'));
+        $this->assertFinallyCall($inner->finally, 'innerCleanup', $reconstruction);
+        $this->assertSame($this->originalCall($reconstruction, 'recover'), $this->onlyCall($outer->catches[0]->body, 'recover'));
+        $this->assertFinallyCall($outer->finally, 'outerCleanup', $reconstruction);
+        $this->assertNotSame($inner->finally, $outer->finally);
+        $this->assertNoFinallyMachinery($structured);
+    }
+
+    public function testNestedCatchAndFinallyStayOnTheirOwnRows(): void
+    {
+        [, $reconstruction, $structured] = $this->prepare('nestedCaught', true, 'Finally');
+        $tries = $this->tries($structured->statements);
+        $outer = $tries[0];
+        $inner = $outer->body[0];
+
+        $this->assertInstanceOf(TryStatement::class, $inner);
+        $this->assertSame(['RuntimeException'], $inner->catches[0]->types);
+        $this->assertSame(['LogicException'], $outer->catches[0]->types);
+        $this->assertSame($this->originalCall($reconstruction, 'recover'), $this->onlyCall($inner->catches[0]->body, 'recover'));
+        $this->assertFinallyCall($inner->finally, 'innerCleanup', $reconstruction);
+        $this->assertSame($this->originalCall($reconstruction, 'report'), $this->onlyCall($outer->catches[0]->body, 'report'));
+        $this->assertFinallyCall($outer->finally, 'outerCleanup', $reconstruction);
+        $this->assertNoFinallyMachinery($structured);
+    }
+
+    public function testANestedReturnCallsEachFinallyOnce(): void
+    {
+        [$graph, $reconstruction, $structured] = $this->prepare('chained', true, 'Finally');
+        $tries = $this->tries($structured->statements);
+        $outer = $tries[0];
+        $inner = $outer->body[0];
+
+        $this->assertInstanceOf(TryStatement::class, $inner);
+        $returned = $this->onlyInstance($inner->body, ReturnStatement::class);
+        $this->assertInstanceOf(Unresolved::class, $returned->value);
+        $this->assertSame([$returned], $this->ofType($structured->statements, ReturnStatement::class));
+        $this->assertSame([], $this->ofType($outer->finally?->body ?? [], ReturnStatement::class));
+        $this->assertFinallyCall($inner->finally, 'innerCleanup', $reconstruction);
+        $this->assertFinallyCall($outer->finally, 'outerCleanup', $reconstruction);
+        $this->assertSame(4, $this->finallyReturns($graph));
+        $this->assertNoFinallyMachinery($structured);
+    }
+
+    public function testFinallyInsideALoopStaysInsideTheLoop(): void
+    {
+        [, $reconstruction, $structured] = $this->prepare('tryInLoop', true, 'Finally');
+        $loop = $structured->statements[0];
+
+        $this->assertInstanceOf(WhileStatement::class, $loop);
+        $try = $loop->body[0];
+        $this->assertInstanceOf(TryStatement::class, $try);
+        $this->assertSame($this->originalCall($reconstruction, 'operation'), $this->onlyCall($try->body, 'operation'));
+        $this->assertFinallyCall($try->finally, 'cleanup', $reconstruction);
+        $this->assertSame($try->continuationOpline, $loop->body[1]->opline);
+        $this->assertSame($loop->body[1], $this->statementAt($reconstruction, $loop->body[1]->opline));
+        $this->assertNoFinallyMachinery($structured);
+    }
+
+    public function testALoopInsideTryStaysInsideTheTry(): void
+    {
+        [, $reconstruction, $structured] = $this->prepare('loopInTry', true, 'Finally');
+        $try = $this->onlyTry($structured->statements);
+        $loop = $try->body[0];
+
+        $this->assertInstanceOf(WhileStatement::class, $loop);
+        $this->assertSame($this->originalCall($reconstruction, 'operation'), $this->onlyCall($loop->body, 'operation'));
+        $this->assertFinallyCall($try->finally, 'cleanup', $reconstruction);
+        $this->assertNoFinallyMachinery($structured);
+    }
+
+    public function testTryCatchInsideFinallyBelongsToTheFinally(): void
+    {
+        [, $reconstruction, $structured] = $this->prepare('tryInFinally', true, 'Finally');
+        $tries = $this->tries($structured->statements);
+        $outer = $tries[0];
+        $this->assertInstanceOf(TryStatement::class, $outer);
+        $finished = $outer->finally;
+
+        $this->assertInstanceOf(FinallyClause::class, $finished);
+        $inner = $finished->body[0];
+        $this->assertInstanceOf(TryStatement::class, $inner);
+        $this->assertNull($inner->finally);
+        $this->assertSame(['RuntimeException'], $inner->catches[0]->types);
+        $this->assertSame($this->originalCall($reconstruction, 'operation'), $this->onlyCall($outer->body, 'operation'));
+        $this->assertSame($this->originalCall($reconstruction, 'recover'), $this->onlyCall($inner->body, 'recover'));
+        $this->assertSame($this->originalCall($reconstruction, 'report'), $this->onlyCall($inner->catches[0]->body, 'report'));
+        $this->assertCount(2, $this->tries($structured->statements));
+        $this->assertNoFinallyMachinery($structured);
+    }
+
+    public function testAnExceptionInAnInnerFinallyReachesTheOuterCatch(): void
+    {
+        [$graph, $reconstruction, $structured] = $this->prepare('innerFinallyToOuterCatch', true, 'Finally');
+        $tries = $this->tries($structured->statements);
+        $outer = $tries[0];
+        $inner = $outer->body[0];
+
+        $this->assertInstanceOf(TryStatement::class, $inner);
+        $this->assertNull($outer->finally);
+        $this->assertInstanceOf(FinallyClause::class, $inner->finally);
+        $thrown = $this->onlyInstance($inner->finally->body, ThrowStatement::class);
+        $this->assertSame($this->onlyInstance($this->flat($reconstruction), ThrowStatement::class), $thrown);
+        $this->assertSame($this->originalCall($reconstruction, 'recover'), $this->onlyCall($outer->catches[0]->body, 'recover'));
+        $this->assertNotNull($outer->catchOpline);
+        $this->assertExceptionTarget($graph, $inner->finally->opline, $inner->finally->endOpline, $outer->catchOpline);
+        $this->assertNoFinallyMachinery($structured);
+    }
+
+    public function testAMismatchedFinallyJumpStaysUnstructured(): void
+    {
+        [, $reconstruction, $structured] = $this->structureEdited('simple', function (array &$instruction): void {
+            if ($instruction['opcode'] !== 'JMP' || ($instruction['index'] ?? null) !== 5) {
+                return;
+            }
+            $instruction['op1']['target'] = 6;
+        });
+
+        $this->assertSame([], $this->tries($structured->statements));
+        $this->assertSame(
+            [$this->originalCall($reconstruction, 'operation'), $this->originalCall($reconstruction, 'cleanup')],
+            $this->calls($structured->statements),
+        );
+        $this->assertReason($structured, 'The jump after FAST_CALL at opline 4 does not target the continuation.');
+    }
+
+    public function testAMismatchedFastReturnTemporaryStaysUnstructured(): void
+    {
+        [, $reconstruction, $structured] = $this->structureEdited('simple', function (array &$instruction): void {
+            if ($instruction['opcode'] !== 'FAST_RET') {
+                return;
+            }
+            $instruction['op1']['index'] = 1;
+        });
+
+        $this->assertSame([], $this->tries($structured->statements));
+        $this->assertSame(
+            [$this->originalCall($reconstruction, 'operation'), $this->originalCall($reconstruction, 'cleanup')],
+            $this->calls($structured->statements),
+        );
+        $this->assertReason($structured, 'FAST_RET at opline 9 does not return through the FAST_CALL temporary.');
+    }
+
+    public function testAFastCallWithoutAFinallyRowIsRejectedByTheCfg(): void
+    {
+        $this->expectException(CfgException::class);
+        $this->expectExceptionMessage('does not point at a finally handler');
+        $this->structureEdited('simple', function (array &$instruction): void {
+            if ($instruction['opcode'] !== 'FAST_CALL') {
+                return;
+            }
+            $instruction['op1']['index'] = 99;
+        });
+    }
+
     /**
      * @return array{0: Graph, 1: Reconstruction, 2: StructuredStatements}
      */
-    private function prepare(string $name, bool $catchConsumed = true): array
+    private function prepare(string $name, bool $catchConsumed = true, string $fixture = 'TryCatch'): array
     {
-        $opArray = $this->document()->opArrayNamed($name);
+        $opArray = $this->document($fixture)->opArrayNamed($name);
         $this->assertNotNull($opArray);
         $graph = (new Builder())->build($opArray);
         $expressions = (new ExpressionReconstructor())->reconstruct($opArray, $graph);
@@ -500,9 +977,9 @@ final class ExceptionStructurerTest extends TestCase
         return [$graph, $reconstruction, $structured];
     }
 
-    private function document(): Document
+    private function document(string $fixture = 'TryCatch'): Document
     {
-        $json = (string) file_get_contents(dirname(__DIR__, 2) . '/Expected/PHP/8.4/Common/TryCatch.json');
+        $json = (string) file_get_contents(dirname(__DIR__, 2) . '/Expected/PHP/8.4/Common/' . $fixture . '.json');
         $json = str_replace('"version": "PHP_VERSION"', '"version": "8.4.27"', $json);
         $json = str_replace('"version_id": 0', '"version_id": 80427', $json);
 
@@ -723,6 +1200,9 @@ final class ExceptionStructurerTest extends TestCase
                     $children[] = $child;
                 }
             }
+            foreach ($statement->finally->body ?? [] as $child) {
+                $children[] = $child;
+            }
 
             return $children;
         }
@@ -754,6 +1234,112 @@ final class ExceptionStructurerTest extends TestCase
         }
 
         return [];
+    }
+
+    private function assertFinallyCall(?FinallyClause $finally, string $name, Reconstruction $reconstruction): void
+    {
+        $this->assertInstanceOf(FinallyClause::class, $finally);
+        $this->assertSame($this->originalCall($reconstruction, $name), $this->onlyCall($finally->body, $name));
+        $this->assertLessThan($finally->endOpline, $finally->opline);
+        $this->assertLessThan($finally->opline, $finally->callOpline);
+    }
+
+    private function assertNoFinallyMachinery(StructuredStatements $structured): void
+    {
+        foreach ($this->walk($structured->statements) as $statement) {
+            if (!$statement instanceof OpaqueStatement) {
+                continue;
+            }
+            $this->assertNotContains($statement->instruction->opcode, ['FAST_CALL', 'FAST_RET', 'DISCARD_EXCEPTION', 'CATCH']);
+        }
+        foreach ($structured->diagnostics as $diagnostic) {
+            $this->assertNotContains($diagnostic->opcode, ['FAST_CALL', 'FAST_RET', 'DISCARD_EXCEPTION', 'CATCH']);
+            $this->assertNotSame('unstructured', $diagnostic->kind, $diagnostic->reason);
+        }
+    }
+
+    private function finallyReturns(Graph $graph): int
+    {
+        $count = 0;
+        foreach ($graph->blocks as $block) {
+            foreach ($block->successors as $edge) {
+                if ($edge->kind === 'finally_return') {
+                    $count++;
+                }
+            }
+        }
+
+        return $count;
+    }
+
+    private function statementAt(Reconstruction $reconstruction, int $opline): Statement
+    {
+        $found = null;
+        foreach ($this->flat($reconstruction) as $statement) {
+            if ($statement->opline !== $opline) {
+                continue;
+            }
+            $this->assertNull($found);
+            $found = $statement;
+        }
+        $this->assertInstanceOf(Statement::class, $found);
+
+        return $found;
+    }
+
+    /**
+     * @param callable(array<string, mixed>): void $edit
+     * @return array{0: Graph, 1: Reconstruction, 2: StructuredStatements}
+     */
+    private function structureEdited(string $name, callable $edit): array
+    {
+        $decoded = json_decode($this->fixtureJson('Finally'), true, 512, JSON_THROW_ON_ERROR);
+        $this->assertIsArray($decoded);
+        $arrays = $decoded['op_arrays'] ?? null;
+        $this->assertIsArray($arrays);
+        $found = false;
+        foreach ($arrays as &$opArray) {
+            if (!is_array($opArray) || ($opArray['name'] ?? null) !== $name) {
+                continue;
+            }
+            $instructions = $opArray['instructions'] ?? null;
+            $this->assertIsArray($instructions);
+            foreach ($instructions as &$instruction) {
+                $this->assertIsArray($instruction);
+                $edit($instruction);
+            }
+            unset($instruction);
+            $opArray['instructions'] = $instructions;
+            $found = true;
+            break;
+        }
+        unset($opArray);
+        $this->assertTrue($found);
+        $decoded['op_arrays'] = $arrays;
+        $document = (new Reader())->readString((string) json_encode($decoded, JSON_THROW_ON_ERROR));
+        $opArray = $document->opArrayNamed($name);
+        $this->assertNotNull($opArray);
+        $graph = (new Builder())->build($opArray);
+        $edges = $this->edgeSnapshot($graph);
+        $expressions = (new ExpressionReconstructor())->reconstruct($opArray, $graph);
+        $reconstruction = (new Reconstructor())->reconstruct($opArray, $graph, $expressions);
+        $structured = (new ExceptionStructurer())->structure(
+            $opArray,
+            $graph,
+            (new LoopAnalyzer())->analyze($graph, $opArray),
+            $reconstruction,
+        );
+        $this->assertSame($edges, $this->edgeSnapshot($graph));
+
+        return [$graph, $reconstruction, $structured];
+    }
+
+    private function fixtureJson(string $fixture): string
+    {
+        $json = (string) file_get_contents(dirname(__DIR__, 2) . '/Expected/PHP/8.4/Common/' . $fixture . '.json');
+        $json = str_replace('"version": "PHP_VERSION"', '"version": "8.4.27"', $json);
+
+        return str_replace('"version_id": 0', '"version_id": 80427', $json);
     }
 
     private function assertNoUnstructured(StructuredStatements $structured): void

@@ -9,16 +9,17 @@ use Rephper\Ir\OpArray;
 use Rephper\Ir\TryCatch;
 
 /**
- * Locates try/catch regions from try/catch rows, CATCH instructions, and
- * catch_next jumps.
+ * Locates try/catch/finally regions from try/catch rows, CATCH instructions,
+ * catch_next jumps, and the normal FAST_CALL/JMP/FAST_RET sequence.
  *
  * The exception edge on a block is only the VM handler boundary. The matching
  * class names come from the CATCH operands, in order. A union catch is a run
  * of CATCH instructions that jump to one body. Separate clauses each own a
  * body. An empty chain whose CATCH instructions share one line and one
  * variable is left unstructured: the compiler emits the same pattern for one
- * empty union and for several empty clauses. A row that has a finally
- * handler, and a try/catch that contains such a row, is not reconstructed.
+ * empty union and for several empty clauses. A finally handler is the row's
+ * finally body, entered by the normal FAST_CALL two instructions before it
+ * and left by FAST_RET. Catch clauses are kept when that handler is present.
  * The CFG is not modified. Exception edges are not read as successors.
  */
 final class ExceptionRegions
@@ -45,22 +46,6 @@ final class ExceptionRegions
         foreach ($opArray->tryCatch as $index => $row) {
             $regions[] = self::region($opArray, $graph, $index, $row);
         }
-        foreach ($regions as $index => $region) {
-            if (!$region->isStructured()) {
-                continue;
-            }
-            foreach ($regions as $other) {
-                if (!$other->hasFinally || $other->index === $region->index) {
-                    continue;
-                }
-                if ($other->try >= $region->try && $other->try < $region->spanEnd) {
-                    $regions[$index] = $region->unstructured(
-                        'The region contains a finally handler, which is not reconstructed.'
-                    );
-                    break;
-                }
-            }
-        }
 
         return new self($regions);
     }
@@ -86,7 +71,7 @@ final class ExceptionRegions
     }
 
     /**
-     * Catch bodies that the ordinary CFG does not reach from the entry.
+     * Catch and finally bodies that the ordinary CFG may not reach from the entry.
      *
      * @return list<array{entry: int, end: int}>
      */
@@ -102,6 +87,9 @@ final class ExceptionRegions
                     $ranges[] = ['entry' => $clause->bodyStart, 'end' => $clause->bodyEnd];
                 }
             }
+            if ($region->hasFinally && $region->finally !== null && $region->finallyEnd !== null && $region->finally < $region->finallyEnd) {
+                $ranges[] = ['entry' => $region->finally, 'end' => $region->finallyEnd];
+            }
         }
 
         return $ranges;
@@ -114,17 +102,7 @@ final class ExceptionRegions
         $finallyEnd = $row->hasFinally() ? $row->finallyEnd : null;
         $catch = $row->hasCatch() ? $row->catch : null;
         if ($row->hasFinally()) {
-            return new ExceptionRegion(
-                $index,
-                $row->try,
-                $spanEnd,
-                true,
-                $finally,
-                $finallyEnd,
-                $catch,
-                null,
-                'finally is not reconstructed.',
-            );
+            return self::finallyRegion($opArray, $graph, $index, $row, $spanEnd, $finally, $finallyEnd, $catch);
         }
         if ($catch === null) {
             return new ExceptionRegion(
@@ -132,6 +110,7 @@ final class ExceptionRegions
                 $row->try,
                 $spanEnd,
                 false,
+                null,
                 null,
                 null,
                 null,
@@ -149,6 +128,7 @@ final class ExceptionRegions
                 false,
                 null,
                 null,
+                null,
                 $catch,
                 null,
                 'The try at opline ' . $row->try . ' does not end with a jump to the continuation.',
@@ -161,6 +141,7 @@ final class ExceptionRegions
                 $row->try,
                 $spanEnd,
                 false,
+                null,
                 null,
                 null,
                 $catch,
@@ -176,6 +157,7 @@ final class ExceptionRegions
                 false,
                 null,
                 null,
+                null,
                 $catch,
                 null,
                 'The try at opline ' . $row->try . ' does not begin on a block boundary.',
@@ -187,6 +169,7 @@ final class ExceptionRegions
                 $row->try,
                 $continuation,
                 false,
+                null,
                 null,
                 null,
                 $catch,
@@ -204,6 +187,7 @@ final class ExceptionRegions
                 false,
                 null,
                 null,
+                null,
                 $catch,
                 null,
                 $clauses,
@@ -217,10 +201,239 @@ final class ExceptionRegions
             false,
             null,
             null,
+            null,
             $catch,
             $clauses,
             null,
         );
+    }
+
+    private static function finallyRegion(
+        OpArray $opArray,
+        Graph $graph,
+        int $index,
+        TryCatch $row,
+        int $spanEnd,
+        ?int $finally,
+        ?int $finallyEnd,
+        ?int $catch,
+    ): ExceptionRegion {
+        if ($finally === null || $finallyEnd === null) {
+            return new ExceptionRegion(
+                $index,
+                $row->try,
+                $spanEnd,
+                true,
+                $finally,
+                $finallyEnd,
+                null,
+                $catch,
+                null,
+                'Finally at try opline ' . $row->try . ' has no handler bounds.',
+            );
+        }
+        $call = $finally - 2;
+        $continuation = $finallyEnd + 1;
+        if ($call < $row->try) {
+            return new ExceptionRegion(
+                $index,
+                $row->try,
+                $spanEnd,
+                true,
+                $finally,
+                $finallyEnd,
+                null,
+                $catch,
+                null,
+                'The finally at opline ' . $finally . ' has no FAST_CALL before it.',
+            );
+        }
+        $entered = $opArray->instruction($call);
+        if (
+            $entered === null
+            || $entered->opcode !== 'FAST_CALL'
+            || $entered->op1->kind !== 'try_catch'
+            || $entered->op1->index !== $index
+        ) {
+            return new ExceptionRegion(
+                $index,
+                $row->try,
+                $spanEnd,
+                true,
+                $finally,
+                $finallyEnd,
+                null,
+                $catch,
+                null,
+                'The finally at opline ' . $finally . ' is not entered by FAST_CALL for try/catch row ' . $index . '.',
+            );
+        }
+        $jump = $opArray->instruction($call + 1);
+        if ($jump === null || $jump->opcode !== 'JMP' || $jump->op1->kind !== 'jump' || $jump->op1->target !== $continuation) {
+            return new ExceptionRegion(
+                $index,
+                $row->try,
+                $spanEnd,
+                true,
+                $finally,
+                $finallyEnd,
+                $call,
+                $catch,
+                null,
+                'The jump after FAST_CALL at opline ' . $call . ' does not target the continuation.',
+            );
+        }
+        $ret = $opArray->instruction($finallyEnd);
+        if ($ret === null || $ret->opcode !== 'FAST_RET') {
+            return new ExceptionRegion(
+                $index,
+                $row->try,
+                $spanEnd,
+                true,
+                $finally,
+                $finallyEnd,
+                $call,
+                $catch,
+                null,
+                'Finally end ' . $finallyEnd . ' is not FAST_RET.',
+            );
+        }
+        if (!is_int($entered->result->index) || $ret->op1->kind !== $entered->result->kind || $ret->op1->index !== $entered->result->index) {
+            return new ExceptionRegion(
+                $index,
+                $row->try,
+                $spanEnd,
+                true,
+                $finally,
+                $finallyEnd,
+                $call,
+                $catch,
+                null,
+                'FAST_RET at opline ' . $finallyEnd . ' does not return through the FAST_CALL temporary.',
+            );
+        }
+        $consistent = self::callConsistency($opArray, $index, $row->try, $continuation, $entered);
+        if ($consistent !== null) {
+            return new ExceptionRegion(
+                $index,
+                $row->try,
+                $spanEnd,
+                true,
+                $finally,
+                $finallyEnd,
+                $call,
+                $catch,
+                null,
+                $consistent,
+            );
+        }
+
+        $clauses = [];
+        if ($catch !== null) {
+            $exit = $opArray->instruction($catch - 1);
+            if ($exit === null || $exit->opcode !== 'JMP' || $exit->op1->kind !== 'jump' || $exit->op1->target !== $call) {
+                return new ExceptionRegion(
+                    $index,
+                    $row->try,
+                    $spanEnd,
+                    true,
+                    $finally,
+                    $finallyEnd,
+                    $call,
+                    $catch,
+                    null,
+                    'The try at opline ' . $row->try . ' does not jump to the finally call.',
+                );
+            }
+            $parsed = self::clauses($opArray, $catch, $call);
+            if (is_string($parsed)) {
+                return new ExceptionRegion(
+                    $index,
+                    $row->try,
+                    $spanEnd,
+                    true,
+                    $finally,
+                    $finallyEnd,
+                    $call,
+                    $catch,
+                    null,
+                    $parsed,
+                );
+            }
+            $clauses = $parsed;
+        }
+
+        if (
+            $graph->blockStartingAt($row->try) === null
+            || $graph->blockStartingAt($finally) === null
+            || ($catch !== null && $graph->blockStartingAt($catch) === null)
+        ) {
+            return new ExceptionRegion(
+                $index,
+                $row->try,
+                $spanEnd,
+                true,
+                $finally,
+                $finallyEnd,
+                $call,
+                $catch,
+                null,
+                'The try at opline ' . $row->try . ' does not begin on a block boundary.',
+            );
+        }
+        if ($continuation < $opArray->instructionCount() && $graph->blockStartingAt($continuation) === null) {
+            return new ExceptionRegion(
+                $index,
+                $row->try,
+                $spanEnd,
+                true,
+                $finally,
+                $finallyEnd,
+                $call,
+                $catch,
+                null,
+                'The continuation after try at opline ' . $row->try . ' is not a block boundary.',
+            );
+        }
+
+        return new ExceptionRegion(
+            $index,
+            $row->try,
+            $continuation,
+            true,
+            $finally,
+            $finallyEnd,
+            $call,
+            $catch,
+            $clauses,
+            null,
+        );
+    }
+
+    private static function callConsistency(OpArray $opArray, int $index, int $try, int $continuation, Instruction $normal): ?string
+    {
+        foreach ($opArray->instructions as $instruction) {
+            if ($instruction->opcode !== 'FAST_CALL' || $instruction->op1->kind !== 'try_catch' || $instruction->op1->index !== $index) {
+                continue;
+            }
+            if ($instruction->index < $try || $instruction->index >= $continuation) {
+                return 'FAST_CALL at opline ' . $instruction->index . ' is outside try/catch row ' . $index . '.';
+            }
+            if ($instruction->result->kind !== $normal->result->kind || $instruction->result->index !== $normal->result->index) {
+                return 'FAST_CALL at opline ' . $instruction->index . ' does not share the finally return address.';
+            }
+            if ($instruction->index === $normal->index) {
+                continue;
+            }
+            $next = $opArray->instruction($instruction->index + 1);
+            if (!$next instanceof Instruction || !in_array($next->opcode, ['RETURN', 'RETURN_BY_REF', 'BRK', 'CONT', 'THROW', 'FAST_CALL'], true)) {
+                $followed = $next instanceof Instruction ? $next->opcode : 'nothing';
+
+                return 'FAST_CALL at opline ' . $instruction->index . ' is followed by ' . $followed . ', which is not a return, throw, break, continue, or finally call.';
+            }
+        }
+
+        return null;
     }
 
     private static function spanEnd(OpArray $opArray, int $index, TryCatch $row): int

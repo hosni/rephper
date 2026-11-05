@@ -34,10 +34,11 @@ use Rephper\Ir\Operand;
  * SWITCH_STRING become a SwitchStatement when the type-mismatch path restates
  * the jump table. A jump-table match is a MatchExpression. This walk skips
  * that region and continues at its result merge, so an if or a loop that
- * contains it stays structured. When an ExceptionStructurer supplies try/catch
- * regions, a block that starts one of those regions is returned to that
- * structurer; the region analysis does not live here. Destructuring, a
- * comparison-chain match, a comparison-chain switch, and an unknown loop stay
+ * contains it stays structured. When an ExceptionStructurer supplies try,
+ * catch, and finally regions, a block that starts one of those regions is
+ * returned to that structurer; the region analysis does not live here.
+ * Destructuring, a comparison-chain match, a comparison-chain switch, and an
+ * unknown loop stay
  * in their original statements with a diagnostic. The graph and the per-block
  * reconstruction are not modified.
  *
@@ -342,6 +343,12 @@ final class LoopStructurer
 
         $this->refuse($block);
         $last = $this->last($block);
+        if ($this->exceptions !== null) {
+            $finished = $this->exceptions->finishInstruction($block, $last, $stops);
+            if ($finished !== null) {
+                return $finished;
+            }
+        }
         if ($last->opcode === 'JMP' && count($block->successors) === 1) {
             $entered = $this->loopsByHeader[$block->successors[0]->to] ?? null;
             if (
@@ -2486,6 +2493,9 @@ final class LoopStructurer
             if ($floor > 0 && $instruction->index < $floor) {
                 continue;
             }
+            if ($this->exceptions !== null && $this->exceptions->keeps($instruction)) {
+                continue;
+            }
             $reason = self::REFUSED[$instruction->opcode] ?? null;
             if ($reason !== null) {
                 $this->fail($block, $instruction, $reason);
@@ -2836,6 +2846,34 @@ final class LoopStructurer
     /**
      * @return array{0: array<string, true>, 1: list<int>, 2: list<Diagnostic>, 3: array<int, true>, 4: array<int, string>}
      */
+    public function hide(int $opline): void
+    {
+        $this->hiddenOplines[$opline] = true;
+        $this->structuredOplines[] = $opline;
+    }
+
+    /**
+     * @template T
+     * @param list<string> $blockIds
+     * @param callable(): T $callback
+     * @return T
+     */
+    public function withBoundary(array $blockIds, callable $callback): mixed
+    {
+        $boundary = $this->boundary;
+        $post = $this->post;
+        foreach ($blockIds as $id) {
+            $this->boundary[$id] = true;
+        }
+        $this->post = $this->postDominators();
+        try {
+            return $callback();
+        } finally {
+            $this->boundary = $boundary;
+            $this->post = $post;
+        }
+    }
+
     public function capture(): array
     {
         return $this->snapshot();
