@@ -73,6 +73,168 @@ final class LoopAnalyzer
     }
 
     /**
+     * Adds natural loops that are reachable from catch bodies.
+     *
+     * Catch bodies have no ordinary path from the function entry, so the main
+     * analysis does not see them. Each handler is its own entry. Blocks the
+     * main entry already reaches are not entered, and exception edges are not
+     * followed. The graph is not modified. The dominators on the returned
+     * analysis are the original ones.
+     *
+     * @param list<array{entry: string, end: int}> $handlers
+     */
+    public function includeHandlers(Graph $graph, OpArray $opArray, LoopAnalysis $base, array $handlers): LoopAnalysis
+    {
+        if ($handlers === []) {
+            return $base;
+        }
+        if ($graph->opArrayId !== $opArray->id) {
+            throw new CfgException(
+                'Control-flow graph ' . $graph->opArrayId . ' does not match op array ' . $opArray->id
+            );
+        }
+
+        $this->graph = $graph;
+        $this->opArray = $opArray;
+        $this->byId = [];
+        foreach ($graph->blocks as $block) {
+            $this->byId[$block->id] = $block;
+        }
+        $main = array_fill_keys($base->dominators->reachable, true);
+        $loops = $base->loops;
+        $controls = $base->controls;
+        $offset = count($loops);
+        foreach ($handlers as $handler) {
+            $local = $this->handlerDominators($handler['entry'], $handler['end'], $main);
+            if (!$local instanceof Dominators) {
+                continue;
+            }
+            $this->dominators = $local;
+            $drafts = $this->drafts();
+            $this->nest($drafts);
+            $found = $this->renumberLoops($this->finish($drafts), $offset);
+            $offset += count($found);
+            $loops = array_merge($loops, $found);
+            $controls = array_merge($controls, $this->controls($found));
+        }
+
+        return new LoopAnalysis($base->dominators, $loops, $controls, $base->breaks);
+    }
+
+    /**
+     * @param array<string, true> $main
+     */
+    private function handlerDominators(string $entry, int $end, array $main): ?Dominators
+    {
+        if (!isset($this->byId[$entry]) || isset($main[$entry])) {
+            return null;
+        }
+
+        $reachable = [];
+        $stack = [$entry];
+        while ($stack !== []) {
+            $id = array_pop($stack);
+            if (!is_string($id) || isset($reachable[$id]) || isset($main[$id]) || !isset($this->byId[$id])) {
+                continue;
+            }
+            if ($this->byId[$id]->start >= $end) {
+                continue;
+            }
+            $reachable[$id] = true;
+            foreach ($this->byId[$id]->successors as $edge) {
+                $stack[] = $edge->to;
+            }
+        }
+        if ($reachable === []) {
+            return null;
+        }
+
+        $sets = [$entry => [$entry => true]];
+        foreach ($reachable as $id => $_) {
+            if ($id !== $entry) {
+                $sets[$id] = $reachable;
+            }
+        }
+        $limit = count($reachable) * count($reachable) + 1;
+        for ($round = 0; $round < $limit; $round++) {
+            $changed = false;
+            foreach ($reachable as $id => $_) {
+                if ($id === $entry) {
+                    continue;
+                }
+                $next = [$id => true];
+                $intersection = null;
+                foreach ($this->byId[$id]->predecessors as $predecessor) {
+                    if (!isset($reachable[$predecessor])) {
+                        continue;
+                    }
+                    $intersection = $intersection === null
+                        ? $sets[$predecessor]
+                        : array_intersect_key($intersection, $sets[$predecessor]);
+                }
+                foreach ($intersection ?? [] as $candidate => $_) {
+                    $next[$candidate] = true;
+                }
+                if (count($next) !== count($sets[$id]) || array_diff_key($next, $sets[$id]) !== []) {
+                    $sets[$id] = $next;
+                    $changed = true;
+                }
+            }
+            if (!$changed) {
+                break;
+            }
+        }
+
+        $lists = [];
+        foreach ($sets as $id => $set) {
+            $lists[$id] = array_keys($set);
+        }
+
+        return new Dominators($entry, array_keys($reachable), [], $lists, []);
+    }
+
+    /**
+     * @param list<NaturalLoop> $loops
+     * @return list<NaturalLoop>
+     */
+    private function renumberLoops(array $loops, int $offset): array
+    {
+        if ($offset === 0) {
+            return $loops;
+        }
+        $renumbered = [];
+        foreach ($loops as $loop) {
+            $renumbered[] = new NaturalLoop(
+                $this->shiftLoopId($loop->id, $offset),
+                $loop->headerId,
+                $loop->headerOpline,
+                $loop->headerLine,
+                $loop->backEdges,
+                $loop->blocks,
+                $loop->entries,
+                $loop->exits,
+                $loop->parentId === null ? null : $this->shiftLoopId($loop->parentId, $offset),
+                array_map(fn (string $id): string => $this->shiftLoopId($id, $offset), $loop->childIds),
+                $loop->kind,
+                $loop->reason,
+                $loop->oplines,
+                $loop->continueOpline,
+            );
+        }
+
+        return $renumbered;
+    }
+
+    private function shiftLoopId(string $id, int $offset): string
+    {
+        if (!str_starts_with($id, 'L') || !ctype_digit(substr($id, 1))) {
+            return $id;
+        }
+
+        return 'L' . ((int) substr($id, 1) + $offset);
+    }
+
+    /**
      * @return list<array{
      *     header: Block,
      *     backEdges: list<LoopEdge>,

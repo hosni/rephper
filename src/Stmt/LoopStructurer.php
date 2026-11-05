@@ -6,6 +6,8 @@ namespace Rephper\Stmt;
 
 use Rephper\Cfg\Block;
 use Rephper\Cfg\Edge;
+use Rephper\Cfg\ExceptionRegion;
+use Rephper\Cfg\ExceptionRegions;
 use Rephper\Cfg\Graph;
 use Rephper\Cfg\LoopAnalysis;
 use Rephper\Cfg\LoopControl;
@@ -32,10 +34,12 @@ use Rephper\Ir\Operand;
  * SWITCH_STRING become a SwitchStatement when the type-mismatch path restates
  * the jump table. A jump-table match is a MatchExpression. This walk skips
  * that region and continues at its result merge, so an if or a loop that
- * contains it stays structured. Destructuring, a comparison-chain match, a
- * comparison-chain switch, and an unknown loop stay in their original
- * statements with a diagnostic. The graph and the per-block reconstruction
- * are not modified.
+ * contains it stays structured. When an ExceptionStructurer supplies try/catch
+ * regions, a block that starts one of those regions is returned to that
+ * structurer; the region analysis does not live here. Destructuring, a
+ * comparison-chain match, a comparison-chain switch, and an unknown loop stay
+ * in their original statements with a diagnostic. The graph and the per-block
+ * reconstruction are not modified.
  *
  * ConditionalStructurer::structure() is unchanged. It still refuses a loop
  * and a jump-table switch. This walk structures an if inside a supported
@@ -156,8 +160,36 @@ final class LoopStructurer
      */
     private array $stack = [];
 
-    public function structure(Graph $graph, LoopAnalysis $analysis, Reconstruction $statements): StructuredStatements
-    {
+    private ?ExceptionRegions $exceptionRegions = null;
+
+    private ?ExceptionStructurer $exceptions = null;
+
+    private bool $tolerateExceptions = false;
+
+    /**
+     * @var array<int, true>
+     */
+    private array $openRegions = [];
+
+    /**
+     * Oplines before this floor belong to catch dispatch, not the catch body.
+     *
+     * @var array<string, int>
+     */
+    private array $floors = [];
+
+    public function structure(
+        Graph $graph,
+        LoopAnalysis $analysis,
+        Reconstruction $statements,
+        ?ExceptionRegions $exceptionRegions = null,
+        ?ExceptionStructurer $exceptions = null,
+    ): StructuredStatements {
+        $this->exceptionRegions = $exceptionRegions;
+        $this->exceptions = $exceptions;
+        $this->tolerateExceptions = false;
+        $this->openRegions = [];
+        $this->floors = [];
         $this->bind($graph, $analysis, $statements);
         $entry = $graph->blockStartingAt(0);
         if ($entry === null) {
@@ -267,6 +299,16 @@ final class LoopStructurer
         if ($this->latchId !== null && $block->id === $this->latchId) {
             return $this->latchStatements($block);
         }
+        if ($this->exceptionRegions !== null && $this->exceptions !== null) {
+            $region = $this->exceptionRegions->startingAt($block->start, $this->openRegions);
+            if ($region instanceof ExceptionRegion) {
+                if (isset($this->visited[$block->id])) {
+                    $this->fail($block, $this->last($block), 'The block is reached by more than one structured path.');
+                }
+
+                return $this->exceptions->emit($region, $stops);
+            }
+        }
 
         $loop = $this->loopsByHeader[$block->id] ?? null;
         if ($loop instanceof NaturalLoop && $block->id !== $this->activeHeader) {
@@ -320,7 +362,7 @@ final class LoopStructurer
 
             return $this->controlStatements($block, $last);
         }
-        if ($block->exceptions !== []) {
+        if ($block->exceptions !== [] && !$this->tolerateExceptions) {
             $this->fail($block, $last, 'The region contains an exception edge.');
         }
         if (count($block->successors) > 1) {
@@ -1925,7 +1967,7 @@ final class LoopStructurer
      */
     private function buildConditional(Block $header, Instruction $branch): array
     {
-        if ($header->exceptions !== []) {
+        if ($header->exceptions !== [] && !$this->tolerateExceptions) {
             $this->fail($header, $branch, 'The conditional region contains an exception edge.');
         }
 
@@ -2054,6 +2096,7 @@ final class LoopStructurer
         }
 
         $region = [];
+        $collapsed = [];
         $queue = [$entry];
         while ($queue !== []) {
             $block = array_shift($queue);
@@ -2061,7 +2104,24 @@ final class LoopStructurer
                 continue;
             }
             $region[$block->id] = $block;
-            if ($block->exceptions !== []) {
+            $nested = $this->exceptionRegions?->startingAt($block->start, $this->openRegions);
+            if ($nested instanceof ExceptionRegion) {
+                $collapsed[$block->id] = [$nested->try, $nested->spanEnd];
+                $next = $this->byStart[$nested->spanEnd] ?? null;
+                if (
+                    $next instanceof Block
+                    && $next->id !== $stop->id
+                    && !isset($this->boundary[$next->id])
+                    && !isset($region[$next->id])
+                ) {
+                    if ($next->start <= $entry->start) {
+                        $this->fail($entry, $this->last($entry), 'The branch target is not a forward edge.');
+                    }
+                    $queue[] = $next;
+                }
+                continue;
+            }
+            if ($block->exceptions !== [] && !$this->tolerateExceptions) {
                 $this->fail($block, $this->last($block), 'The conditional region contains an exception edge.');
             }
             $this->refuse($block);
@@ -2082,7 +2142,27 @@ final class LoopStructurer
                 if ($predecessor === $header->id || isset($region[$predecessor]) || isset($this->boundary[$predecessor])) {
                     continue;
                 }
+                $owner = $this->byId[$predecessor] ?? null;
+                if ($owner instanceof Block && $this->insideCollapsed($owner->start, $collapsed)) {
+                    continue;
+                }
                 $this->fail($block, $this->last($block), 'The branch is entered from outside the conditional.');
+            }
+            if (isset($collapsed[$block->id])) {
+                foreach ($block->successors as $edge) {
+                    $target = $this->byId[$edge->to] ?? null;
+                    if (
+                        $edge->to === $stop->id
+                        || isset($region[$edge->to])
+                        || isset($this->boundary[$edge->to])
+                        || $edge->to === $this->updateBlockId
+                        || ($target instanceof Block && $target->start >= $collapsed[$block->id][0] && $target->start < $collapsed[$block->id][1])
+                    ) {
+                        continue;
+                    }
+                    $this->fail($block, $this->last($block), 'The branch leaves the conditional without reaching the merge point.');
+                }
+                continue;
             }
             foreach ($block->successors as $edge) {
                 if (
@@ -2096,6 +2176,20 @@ final class LoopStructurer
                 $this->fail($block, $this->last($block), 'The branch leaves the conditional without reaching the merge point.');
             }
         }
+    }
+
+    /**
+     * @param array<string, array{0: int, 1: int}> $collapsed
+     */
+    private function insideCollapsed(int $opline, array $collapsed): bool
+    {
+        foreach ($collapsed as $span) {
+            if ($opline >= $span[0] && $opline < $span[1]) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function deadJoin(Block $header, Instruction $branch, Block $true, Block $false): ?Block
@@ -2339,12 +2433,13 @@ final class LoopStructurer
     private function blockStatements(Block $block): array
     {
         $statements = $this->statementBlocks[$block->id]->statements;
-        if ($this->hiddenOplines === []) {
+        $floor = $this->floors[$block->id] ?? 0;
+        if ($this->hiddenOplines === [] && $floor === 0) {
             return $statements;
         }
         $visible = [];
         foreach ($statements as $statement) {
-            if (isset($this->hiddenOplines[$statement->opline])) {
+            if (isset($this->hiddenOplines[$statement->opline]) || ($floor > 0 && $statement->opline < $floor)) {
                 continue;
             }
             $visible[] = $statement;
@@ -2385,6 +2480,10 @@ final class LoopStructurer
                 || $this->keepsSwitchOpcode($instruction)
                 || $this->keepsMatchOpcode($instruction)
             ) {
+                continue;
+            }
+            $floor = $this->floors[$block->id] ?? 0;
+            if ($floor > 0 && $instruction->index < $floor) {
                 continue;
             }
             $reason = self::REFUSED[$instruction->opcode] ?? null;
@@ -2645,5 +2744,108 @@ final class LoopStructurer
     private function fail(Block $block, Instruction $instruction, string $reason): never
     {
         throw new UnstructuredFlow($block->id, $instruction->index, $instruction->line, $instruction->opcode, $reason);
+    }
+
+    /**
+     * Structures a try or catch body. Exception edges in that body are the
+     * handler boundary and are not followed.
+     *
+     * @param list<string> $stopIds
+     * @return list<Statement>
+     */
+    public function emitGuarded(Block $entry, array $stopIds, int $fromOpline = 0): array
+    {
+        if ($fromOpline > $entry->start) {
+            $this->floors[$entry->id] = $fromOpline;
+        }
+        $previous = $this->tolerateExceptions;
+        $this->tolerateExceptions = true;
+        try {
+            return $this->emit($entry, $stopIds);
+        } finally {
+            $this->tolerateExceptions = $previous;
+        }
+    }
+
+    public function blockCovering(int $opline): ?Block
+    {
+        return $this->graph->blockContaining($opline);
+    }
+
+    public function blockByStart(int $opline): ?Block
+    {
+        return $this->byStart[$opline] ?? null;
+    }
+
+    /**
+     * @return list<Block>
+     */
+    public function blocks(): array
+    {
+        return $this->graph->blocks;
+    }
+
+    /**
+     * @return list<Statement>
+     */
+    public function statementsOf(Block $block): array
+    {
+        return $this->blockStatements($block);
+    }
+
+    public function visit(string $blockId): void
+    {
+        $this->visited[$blockId] = true;
+    }
+
+    public function visited(string $blockId): bool
+    {
+        return isset($this->visited[$blockId]);
+    }
+
+    public function consume(int $opline): void
+    {
+        $this->structuredOplines[] = $opline;
+    }
+
+    public function diagnose(Diagnostic $diagnostic): void
+    {
+        $this->diagnostics[] = $diagnostic;
+    }
+
+    public function open(int $index): void
+    {
+        $this->openRegions[$index] = true;
+    }
+
+    public function close(int $index): void
+    {
+        unset($this->openRegions[$index]);
+    }
+
+    /**
+     * @param list<Statement> $statements
+     * @param list<string> $stops
+     * @return list<Statement>
+     */
+    public function appendFrom(array $statements, Block $next, array $stops): array
+    {
+        return $this->appendWalk($statements, $next, $stops);
+    }
+
+    /**
+     * @return array{0: array<string, true>, 1: list<int>, 2: list<Diagnostic>, 3: array<int, true>, 4: array<int, string>}
+     */
+    public function capture(): array
+    {
+        return $this->snapshot();
+    }
+
+    /**
+     * @param array{0: array<string, true>, 1: list<int>, 2: list<Diagnostic>, 3: array<int, true>, 4: array<int, string>} $snapshot
+     */
+    public function recall(array $snapshot): void
+    {
+        $this->restore($snapshot);
     }
 }
