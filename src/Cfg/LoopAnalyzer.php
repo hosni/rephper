@@ -32,9 +32,11 @@ use Rephper\Ir\OpArray;
  * instruction's op2 depth is kept as the level and is not recomputed from
  * block order. A break's loop is the outermost related loop that does not
  * contain the target. A continue's loop is the one whose continue block is
- * that target. A switch break, or a switch continue that does not land on a
- * loop's continue block, has no loop id. An edge out of an unreachable block
- * is not a loop entry.
+ * that target. A switch break whose target stays inside the innermost loop
+ * has no loop id. A continue records a loop whenever its target is that
+ * loop's continue block, including a continue whose breaks[] row is still a
+ * switch that ends on that block. An edge out of an unreachable block is not
+ * a loop entry.
  */
 final class LoopAnalyzer
 {
@@ -67,7 +69,7 @@ final class LoopAnalyzer
         $this->nest($drafts);
         $loops = $this->finish($drafts);
 
-        return new LoopAnalysis($this->dominators, $loops, $this->controls($loops));
+        return new LoopAnalysis($this->dominators, $loops, $this->controls($loops), $this->opArray->breaks);
     }
 
     /**

@@ -426,7 +426,7 @@ final class LoopStructurerTest extends TestCase
         $this->assertSame(1, count($this->fors($structured->statements)));
     }
 
-    public function testUnsupportedLoopsStayUnstructured(): void
+    public function testSupportedLoopsAreStructuredAndUnknownLoopsStayUnstructured(): void
     {
         [, , $forAnalysis, $forStructured] = $this->prepare('LoopAnalysis.json', 'simpleFor');
         $this->assertSame(NaturalLoop::FOR, $this->onlyLoop($forAnalysis)->kind);

@@ -11,28 +11,33 @@ use Rephper\Cfg\LoopAnalysis;
 use Rephper\Cfg\LoopControl;
 use Rephper\Cfg\NaturalLoop;
 use Rephper\Expr\Assignment;
+use Rephper\Expr\Binary;
 use Rephper\Expr\Diagnostic;
 use Rephper\Expr\Expression;
 use Rephper\Expr\Literal;
 use Rephper\Expr\Opaque;
 use Rephper\Expr\Unary;
 use Rephper\Expr\Unresolved;
+use Rephper\Expr\VariableRead;
+use Rephper\Ir\BreakContinue;
 use Rephper\Ir\Instruction;
 use Rephper\Ir\Operand;
 
 /**
- * Rebuilds while, do-while, for, and foreach loops from a CFG, natural-loop
- * analysis, and statement lists.
+ * Rebuilds while, do-while, for, foreach, and jump-table switch statements
+ * from a CFG, natural-loop analysis, and statement lists.
  *
  * Expressions and straight-line statements are reused. A foreach whose value
- * is one compiled variable becomes a ForeachStatement. Destructuring and any
- * other writable target stay in their original statements with a diagnostic.
- * Unknown loops stay unstructured. The graph and the per-block reconstruction
- * are not modified.
+ * is one compiled variable becomes a ForeachStatement. SWITCH_LONG and
+ * SWITCH_STRING become a SwitchStatement when the type-mismatch path restates
+ * the jump table. Destructuring, match, a comparison-chain switch, and an
+ * unknown loop stay in their original statements with a diagnostic. The graph
+ * and the per-block reconstruction are not modified.
  *
- * ConditionalStructurer::structure() is unchanged and still refuses a loop.
- * This walk structures an if inside a supported loop, and a supported loop
- * inside an if, by stopping at the loop header and at the block after the loop.
+ * ConditionalStructurer::structure() is unchanged. It still refuses a loop
+ * and a jump-table switch. This walk structures an if inside a supported
+ * region, and a supported region inside an if, by stopping at that region's
+ * boundary.
  */
 final class LoopStructurer
 {
@@ -98,6 +103,20 @@ final class LoopStructurer
      * @var array<int, true>
      */
     private array $hiddenOplines = [];
+
+    /**
+     * Switch ids in opline order. The key is the SWITCH_* opline.
+     *
+     * @var array<int, string>
+     */
+    private array $switchIds = [];
+
+    /**
+     * Break-target opline of a switch that was structured, keyed to its id.
+     *
+     * @var array<int, string>
+     */
+    private array $switchBreakTargets = [];
 
     /** @var list<Diagnostic> */
     private array $diagnostics = [];
@@ -207,6 +226,17 @@ final class LoopStructurer
         $this->visited = [];
         $this->structuredOplines = [];
         $this->hiddenOplines = [];
+        $this->switchBreakTargets = [];
+        $this->switchIds = [];
+        $switchCount = 0;
+        foreach ($graph->blocks as $block) {
+            foreach ($block->instructions as $instruction) {
+                if ($instruction->opcode === 'SWITCH_LONG' || $instruction->opcode === 'SWITCH_STRING') {
+                    $this->switchIds[$instruction->index] = 'S' . $switchCount;
+                    $switchCount++;
+                }
+            }
+        }
         $this->originalDiagnostics = $statements->diagnostics;
         $this->diagnostics = $statements->diagnostics;
         $this->boundary = [];
@@ -254,6 +284,9 @@ final class LoopStructurer
             && !isset($this->visited[$resetLoop->headerId])
         ) {
             return $this->enterForeach($block, $resetLoop, $stops);
+        }
+        if ($this->isSwitchBlock($block)) {
+            return $this->enterSwitch($block, $stops);
         }
 
         $this->refuse($block);
@@ -1198,6 +1231,482 @@ final class LoopStructurer
         return $operand->kind === $kind && $operand->index === $index;
     }
 
+    private function isSwitchBlock(Block $block): bool
+    {
+        if ($block->instructions === []) {
+            return false;
+        }
+        $opcode = $this->last($block)->opcode;
+
+        return $opcode === 'SWITCH_LONG' || $opcode === 'SWITCH_STRING';
+    }
+
+    private function keepsSwitchOpcode(Instruction $instruction): bool
+    {
+        return $instruction->opcode === 'SWITCH_LONG' || $instruction->opcode === 'SWITCH_STRING';
+    }
+
+    /**
+     * @param list<string> $stops
+     * @return list<Statement>
+     */
+    private function enterSwitch(Block $block, array $stops): array
+    {
+        $saved = $this->snapshot();
+        try {
+            [$leading, $statement, $end] = $this->buildSwitch($block, $stops);
+        } catch (UnstructuredFlow $failure) {
+            $this->restore($saved);
+            $end = $this->switchEnd($block);
+            if (!$end instanceof Block) {
+                throw $failure;
+            }
+            $this->diagnostics[] = $this->flowDiagnostic($failure);
+
+            return $this->emitSwitchFallback($block, $end, $stops);
+        }
+        $this->visited[$block->id] = true;
+
+        return $this->appendContinuation(array_merge($leading, [$statement]), $end, $stops);
+    }
+
+    /**
+     * @param list<string> $stops
+     * @return array{list<Statement>, SwitchStatement, Block}
+     */
+    private function buildSwitch(Block $block, array $stops): array
+    {
+        $switch = $this->last($block);
+        if (!$this->keepsSwitchOpcode($switch)) {
+            $this->fail($block, $switch, 'switch opcode is not a jump table.');
+        }
+        $switchId = $this->switchIds[$switch->index] ?? null;
+        if (!is_string($switchId)) {
+            $this->fail($block, $switch, 'switch identifier is missing.');
+        }
+
+        $table = [];
+        foreach ($block->successors as $edge) {
+            if ($edge->kind !== 'switch') {
+                continue;
+            }
+            if (!is_int($edge->case) && !is_string($edge->case)) {
+                $this->fail($block, $switch, 'switch case label is missing.');
+            }
+            $table[] = $edge;
+        }
+        if ($table === []) {
+            $this->fail($block, $switch, 'switch jump table is missing.');
+        }
+
+        $defaultEdge = $this->soleEdge($block, $switch, 'default');
+        $defaultBlock = $this->block($defaultEdge->to);
+        $targets = [];
+        foreach ($table as $edge) {
+            $targets[] = $this->block($edge->to)->start;
+        }
+        $row = $this->switchBreakRow($block, $switch, $targets, $defaultBlock->start);
+        $end = $this->graph->blockStartingAt($row->breakTarget);
+        if (!$end instanceof Block) {
+            $this->fail($block, $switch, 'switch break target is missing.');
+        }
+
+        $subject = $this->switchSubject($block, $switch);
+        $arms = $this->fallbackArms($block, $switch, $subject, $table, $defaultBlock);
+
+        $groups = [];
+        foreach ($arms as $arm) {
+            $id = $arm['target']->id;
+            if (!isset($groups[$id])) {
+                $groups[$id] = [
+                    'labels' => [],
+                    'block' => $arm['target'],
+                    'isDefault' => false,
+                ];
+            }
+            $groups[$id]['labels'][] = $arm['literal'];
+        }
+        if ($defaultBlock->id !== $end->id) {
+            if (!isset($groups[$defaultBlock->id])) {
+                $groups[$defaultBlock->id] = [
+                    'labels' => [],
+                    'block' => $defaultBlock,
+                    'isDefault' => true,
+                ];
+            } else {
+                $groups[$defaultBlock->id]['isDefault'] = true;
+            }
+        }
+        uasort($groups, static function (array $left, array $right): int {
+            return $left['block']->start <=> $right['block']->start;
+        });
+        $ordered = array_values($groups);
+        $indexOf = [];
+        foreach ($ordered as $index => $group) {
+            $indexOf[$group['block']->id] = $index;
+        }
+
+        $fallback = [];
+        foreach ($arms as $arm) {
+            $fallback[] = new SwitchFallbackArm(
+                $arm['opline'],
+                $arm['line'],
+                $arm['literal'],
+                $indexOf[$arm['target']->id],
+            );
+        }
+
+        $this->switchBreakTargets[$row->breakTarget] = $switchId;
+        $this->structuredOplines[] = $switch->index;
+        $this->hideSubjectFrees($switch, $row->breakTarget);
+
+        $cases = [];
+        $count = count($ordered);
+        for ($i = 0; $i < $count; $i++) {
+            $group = $ordered[$i];
+            $caseStops = $stops;
+            $caseStops[] = $end->id;
+            for ($next = $i + 1; $next < $count; $next++) {
+                $caseStops[] = $ordered[$next]['block']->id;
+            }
+            $before = $this->visited;
+            $body = $this->emit($group['block'], array_values(array_unique($caseStops)));
+            $fallsThrough = false;
+            if ($i + 1 < $count) {
+                $nextId = $ordered[$i + 1]['block']->id;
+                foreach (array_keys($this->visited) as $id) {
+                    if (isset($before[$id])) {
+                        continue;
+                    }
+                    foreach ($this->block($id)->successors as $edge) {
+                        if ($edge->to === $nextId) {
+                            $fallsThrough = true;
+                        }
+                    }
+                }
+            }
+            $line = $group['labels'] !== []
+                ? $group['labels'][0]->line
+                : $group['block']->instructions[0]->line;
+            $cases[] = new SwitchCase(
+                $group['block']->start,
+                $line,
+                $group['labels'],
+                $body,
+                $group['isDefault'],
+                $fallsThrough,
+            );
+        }
+
+        $leading = [];
+        foreach ($this->blockStatements($block) as $statement) {
+            if ($statement instanceof OpaqueStatement && $statement->opline === $switch->index) {
+                continue;
+            }
+            $leading[] = $statement;
+        }
+
+        return [
+            $leading,
+            new SwitchStatement($switch->index, $switch->line, $subject, $cases, $fallback, $switchId),
+            $end,
+        ];
+    }
+
+    /**
+     * @param list<int> $targets
+     */
+    private function switchBreakRow(Block $block, Instruction $switch, array $targets, int $defaultTarget): BreakContinue
+    {
+        $breaks = $this->analysis->breaks;
+        if ($breaks === null) {
+            $this->fail($block, $switch, 'switch breaks table is missing.');
+        }
+
+        $best = null;
+        foreach ($breaks as $row) {
+            if (!$row->switch || $row->breakTarget <= $switch->index) {
+                continue;
+            }
+            if ($defaultTarget < $switch->index || $defaultTarget > $row->breakTarget) {
+                continue;
+            }
+            $covers = true;
+            foreach ($targets as $target) {
+                if ($target <= $switch->index || $target >= $row->breakTarget) {
+                    $covers = false;
+                    break;
+                }
+            }
+            if (!$covers) {
+                continue;
+            }
+            if ($best === null || $row->breakTarget < $best->breakTarget) {
+                $best = $row;
+            }
+        }
+        if (!$best instanceof BreakContinue) {
+            $this->fail($block, $switch, 'switch break target is missing.');
+        }
+
+        return $best;
+    }
+
+    private function switchEnd(Block $block): ?Block
+    {
+        try {
+            $switch = $this->last($block);
+            if (!$this->keepsSwitchOpcode($switch)) {
+                return null;
+            }
+            $targets = [];
+            foreach ($block->successors as $edge) {
+                if ($edge->kind !== 'switch') {
+                    continue;
+                }
+                $targets[] = $this->block($edge->to)->start;
+            }
+            $default = $this->block($this->soleEdge($block, $switch, 'default')->to);
+            $row = $this->switchBreakRow($block, $switch, $targets, $default->start);
+
+            return $this->graph->blockStartingAt($row->breakTarget);
+        } catch (UnstructuredFlow) {
+            return null;
+        }
+    }
+
+    private function switchSubject(Block $block, Instruction $switch): Expression
+    {
+        foreach ($this->blockStatements($block) as $statement) {
+            if (!$statement instanceof OpaqueStatement || $statement->opline !== $switch->index) {
+                continue;
+            }
+            $resolved = $statement->instruction->op1->resolved;
+            if ($resolved instanceof Expression && !$resolved instanceof Unresolved) {
+                return $resolved;
+            }
+            $this->fail($block, $switch, 'switch subject expression is missing.');
+        }
+
+        $this->fail($block, $switch, 'switch subject expression is missing.');
+    }
+
+    /**
+     * @param list<Edge> $table
+     * @return list<array{literal: Literal, target: Block, opline: int, line: int}>
+     */
+    private function fallbackArms(
+        Block $block,
+        Instruction $switch,
+        Expression $subject,
+        array $table,
+        Block $defaultBlock,
+    ): array {
+        $cursor = $this->block($this->soleEdge($block, $switch, 'fallthrough')->to);
+        $arms = [];
+        $seen = [];
+        foreach ($table as $edge) {
+            if (isset($seen[$cursor->id])) {
+                $this->fail($cursor, $this->last($cursor), 'switch type fallback does not match the jump table.');
+            }
+            $seen[$cursor->id] = true;
+            $jump = $this->last($cursor);
+            if ($jump->opcode !== 'JMPNZ') {
+                $this->fail($cursor, $jump, 'switch type fallback is not a comparison of the subject.');
+            }
+            $true = $this->soleEdge($cursor, $jump, 'true');
+            $false = $this->soleEdge($cursor, $jump, 'false');
+            $target = $this->block($edge->to);
+            if ($true->to !== $target->id) {
+                $this->fail($cursor, $jump, 'switch type fallback does not match the jump table.');
+            }
+            $literal = $this->fallbackLiteral($cursor, $jump, $switch, $subject);
+            if (!$this->sameLabel($literal, $edge->case, $switch->opcode)) {
+                $this->fail($cursor, $jump, 'switch type fallback does not match the jump table.');
+            }
+            $this->visited[$cursor->id] = true;
+            $this->structuredOplines[] = $jump->index;
+            $this->structuredOplines[] = $literal->opline;
+            $arms[] = [
+                'literal' => $literal,
+                'target' => $target,
+                'opline' => $literal->opline,
+                'line' => $literal->line,
+            ];
+            $cursor = $this->block($false->to);
+        }
+
+        $jump = $this->last($cursor);
+        if ($jump->opcode !== 'JMP' || count($cursor->successors) !== 1 || $cursor->successors[0]->kind !== 'jump') {
+            $this->fail($cursor, $jump, 'switch type fallback does not match the jump table.');
+        }
+        if ($cursor->successors[0]->to !== $defaultBlock->id) {
+            $this->fail($cursor, $jump, 'switch type fallback does not match the jump table.');
+        }
+        $this->visited[$cursor->id] = true;
+        $this->structuredOplines[] = $jump->index;
+
+        return $arms;
+    }
+
+    private function fallbackLiteral(Block $block, Instruction $jump, Instruction $switch, Expression $subject): Literal
+    {
+        $comparison = null;
+        foreach ($this->blockStatements($block) as $statement) {
+            if ($statement instanceof OpaqueStatement && $statement->opline === $jump->index) {
+                $comparison = $statement->instruction->op1->resolved;
+                break;
+            }
+        }
+        if ($comparison instanceof Binary && $comparison->operator === '==') {
+            if ($comparison->right instanceof Literal && $this->sameSubject($subject, $switch, $comparison->left)) {
+                return $comparison->right;
+            }
+            $this->fail($block, $jump, 'switch type fallback is not a comparison of the subject.');
+        }
+        if ($comparison instanceof Opaque && $comparison->opcode === 'CASE') {
+            $value = $comparison->op2->resolved;
+            $operand = $comparison->op1->resolved;
+            if (
+                $value instanceof Literal
+                && $operand instanceof Expression
+                && $this->sameSubject($subject, $switch, $operand)
+            ) {
+                return $value;
+            }
+            $this->fail($block, $jump, 'switch type fallback is not a comparison of the subject.');
+        }
+
+        $this->fail($block, $jump, 'switch type fallback is not a comparison of the subject.');
+    }
+
+    private function sameSubject(Expression $subject, Instruction $switch, Expression $operand): bool
+    {
+        if ($subject instanceof VariableRead && $operand instanceof VariableRead) {
+            return $operand->name === $subject->name && $operand->index === $subject->index;
+        }
+        if (
+            $operand instanceof Unresolved
+            && $switch->op1->index !== null
+            && ($switch->op1->kind === 'tmp' || $switch->op1->kind === 'var')
+        ) {
+            return $operand->kind === $switch->op1->kind && $operand->index === $switch->op1->index;
+        }
+        if ($subject instanceof Literal && $operand instanceof Literal) {
+            return $subject->type === $operand->type && $subject->value === $operand->value;
+        }
+
+        return $operand === $subject;
+    }
+
+    private function sameLabel(Literal $literal, mixed $case, string $opcode): bool
+    {
+        if ($opcode === 'SWITCH_LONG') {
+            return $literal->type === 'int' && is_int($case) && $literal->value === $case;
+        }
+
+        return $opcode === 'SWITCH_STRING'
+            && $literal->type === 'string'
+            && is_string($case)
+            && $literal->value === $case;
+    }
+
+    private function hideSubjectFrees(Instruction $switch, int $breakTarget): void
+    {
+        if (
+            ($switch->op1->kind !== 'tmp' && $switch->op1->kind !== 'var')
+            || $switch->op1->index === null
+        ) {
+            return;
+        }
+        foreach ($this->graph->blocks as $block) {
+            foreach ($block->instructions as $instruction) {
+                if ($instruction->opcode !== 'FREE' || $instruction->index <= $switch->index || $instruction->index > $breakTarget) {
+                    continue;
+                }
+                if (!$this->sameSlot($instruction->op1, $switch->op1->kind, $switch->op1->index)) {
+                    continue;
+                }
+                if (($instruction->extendedValue & 3) === 0) {
+                    continue;
+                }
+                $this->hiddenOplines[$instruction->index] = true;
+                $this->structuredOplines[] = $instruction->index;
+            }
+        }
+    }
+
+    private function soleEdge(Block $block, Instruction $instruction, string $kind): Edge
+    {
+        $found = null;
+        foreach ($block->successors as $edge) {
+            if ($edge->kind !== $kind) {
+                continue;
+            }
+            if ($found instanceof Edge) {
+                $this->fail($block, $instruction, 'switch has more than one ' . $kind . ' edge.');
+            }
+            $found = $edge;
+        }
+        if (!$found instanceof Edge) {
+            $this->fail($block, $instruction, 'switch has no ' . $kind . ' edge.');
+        }
+
+        return $found;
+    }
+
+    /**
+     * @param list<string> $stops
+     * @return list<Statement>
+     */
+    private function emitSwitchFallback(Block $switchBlock, Block $end, array $stops): array
+    {
+        $statements = [];
+        foreach ($this->graph->blocks as $block) {
+            if ($block->start < $switchBlock->start || $block->start >= $end->start) {
+                continue;
+            }
+            if (isset($this->visited[$block->id])) {
+                continue;
+            }
+            $this->visited[$block->id] = true;
+            $last = $this->last($block);
+            if ($last->opcode === 'BRK' || $last->opcode === 'CONT') {
+                foreach ($this->controlStatements($block, $last) as $statement) {
+                    $statements[] = $statement;
+                }
+                continue;
+            }
+            foreach ($this->blockStatements($block) as $statement) {
+                $statements[] = $statement;
+            }
+        }
+
+        return $this->appendContinuation($statements, $end, $stops);
+    }
+
+    private function resolvedBreak(Instruction $instruction): ?BreakContinue
+    {
+        $breaks = $this->analysis->breaks;
+        if ($breaks === null || $instruction->op1->kind !== 'level' || !is_int($instruction->op1->value)) {
+            return null;
+        }
+        if (!is_int($instruction->op2->value) || $instruction->op2->value < 1) {
+            return null;
+        }
+
+        $slot = $instruction->op1->value;
+        for ($remaining = $instruction->op2->value; $remaining > 1; $remaining--) {
+            $row = $breaks[$slot] ?? null;
+            if (!$row instanceof BreakContinue || $row->parent < 0) {
+                return null;
+            }
+            $slot = $row->parent;
+        }
+
+        return $breaks[$slot] ?? null;
+    }
+
     private function bodyEdge(Block $header, NaturalLoop $loop): Edge
     {
         $staying = [];
@@ -1596,6 +2105,13 @@ final class LoopStructurer
     private function controlStatements(Block $block, Instruction $instruction): array
     {
         $statements = $this->statementsBefore($block, $instruction->index);
+        $row = $this->resolvedBreak($instruction);
+        if ($row instanceof BreakContinue && $row->switch) {
+            $statements[] = $this->switchControl($block, $instruction, $row);
+
+            return $statements;
+        }
+
         $control = $this->controls[$instruction->index] ?? null;
         if (!$control instanceof LoopControl || $control->opcode !== $instruction->opcode || $control->loopId === null) {
             $this->diagnostics[] = new Diagnostic(
@@ -1616,6 +2132,39 @@ final class LoopStructurer
             : new ContinueStatement($instruction->index, $instruction->line, $control->level, $control->loopId);
 
         return $statements;
+    }
+
+    /**
+     * A breaks[] row with the switch flag is a switch break or continue.
+     * LoopControl may still name a loop when the switch ends on that loop's
+     * continue block. The row decides, and an unregistered switch stays opaque.
+     */
+    private function switchControl(Block $block, Instruction $instruction, BreakContinue $row): Statement
+    {
+        $target = $instruction->opcode === 'BRK' ? $row->breakTarget : $row->continueTarget;
+        $switchId = $this->switchBreakTargets[$row->breakTarget] ?? null;
+        $control = $this->controls[$instruction->index] ?? null;
+        if (
+            is_string($switchId)
+            && $control instanceof LoopControl
+            && $control->opcode === $instruction->opcode
+            && $control->targetOpline === $target
+        ) {
+            return $instruction->opcode === 'BRK'
+                ? new SwitchBreakStatement($instruction->index, $instruction->line, $control->level, $switchId)
+                : new SwitchContinueStatement($instruction->index, $instruction->line, $control->level, $switchId);
+        }
+
+        $this->diagnostics[] = new Diagnostic(
+            'unresolved',
+            $block->id,
+            $instruction->index,
+            $instruction->line,
+            $instruction->opcode,
+            $instruction->opcode . ' does not resolve to a loop.',
+        );
+
+        return new OpaqueStatement($instruction->index, $instruction->line, $this->opaque($instruction));
     }
 
     private function opaque(Instruction $instruction): Opaque
@@ -1735,7 +2284,7 @@ final class LoopStructurer
     private function refuse(Block $block): void
     {
         foreach ($block->instructions as $instruction) {
-            if ($this->keepsForeachOpcode($block, $instruction)) {
+            if ($this->keepsForeachOpcode($block, $instruction) || $this->keepsSwitchOpcode($instruction)) {
                 continue;
             }
             $reason = self::REFUSED[$instruction->opcode] ?? null;
@@ -1768,15 +2317,15 @@ final class LoopStructurer
     }
 
     /**
-     * @return array{0: array<string, true>, 1: list<int>, 2: list<Diagnostic>, 3: array<int, true>}
+     * @return array{0: array<string, true>, 1: list<int>, 2: list<Diagnostic>, 3: array<int, true>, 4: array<int, string>}
      */
     private function snapshot(): array
     {
-        return [$this->visited, $this->structuredOplines, $this->diagnostics, $this->hiddenOplines];
+        return [$this->visited, $this->structuredOplines, $this->diagnostics, $this->hiddenOplines, $this->switchBreakTargets];
     }
 
     /**
-     * @param array{0: array<string, true>, 1: list<int>, 2: list<Diagnostic>, 3: array<int, true>} $snapshot
+     * @param array{0: array<string, true>, 1: list<int>, 2: list<Diagnostic>, 3: array<int, true>, 4: array<int, string>} $snapshot
      */
     private function restore(array $snapshot): void
     {
@@ -1784,6 +2333,7 @@ final class LoopStructurer
         $this->structuredOplines = $snapshot[1];
         $this->diagnostics = $snapshot[2];
         $this->hiddenOplines = $snapshot[3];
+        $this->switchBreakTargets = $snapshot[4];
     }
 
     /**
