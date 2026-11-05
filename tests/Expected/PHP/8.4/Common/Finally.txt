@@ -1,0 +1,1369 @@
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Finally.php
+Function: simple
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 14
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 3
+Literals: 5
+Return type: int
+Lines: 3-12
+
+Compiled variables:
+0 $n
+
+Literals:
+0 string("operation")
+1 string("operation")
+2 string("cleanup")
+3 string("cleanup")
+4 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=3 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 INIT_FCALL_BY_NAME line=6 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+2 SEND_VAR_EX line=6 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+3 DO_FCALL_BY_NAME line=6 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 FAST_CALL line=7 op1=TRY_CATCH(0) op2=UNUSED result=TMP(0) ext=-
+5 JMP line=7 op1=JMP(10) op2=UNUSED result=UNUSED ext=-
+6 INIT_FCALL_BY_NAME line=8 op1=UNUSED op2=CONST(string("cleanup")) result=UNUSED(8) ext=1
+7 SEND_VAR_EX line=8 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+8 DO_FCALL_BY_NAME line=8 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+9 FAST_RET line=8 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+10 VERIFY_RETURN_TYPE line=11 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+11 RETURN line=11 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+12 VERIFY_RETURN_TYPE line=12 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+13 RETURN line=12 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Finally.php
+Function: caught
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 19
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 4
+Literals: 9
+Return type: int
+Lines: 14-25
+
+Compiled variables:
+0 $n
+1 $exception
+
+Literals:
+0 string("operation")
+1 string("operation")
+2 string("RuntimeException")
+3 string("runtimeexception")
+4 string("recover")
+5 string("recover")
+6 string("cleanup")
+7 string("cleanup")
+8 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=14 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 INIT_FCALL_BY_NAME line=17 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+2 SEND_VAR_EX line=17 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+3 DO_FCALL_BY_NAME line=17 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 JMP line=17 op1=JMP(9) op2=UNUSED result=UNUSED ext=-
+5 CATCH line=18 op1=CONST(string("RuntimeException")) op2=UNUSED result=CV(1:$exception) ext=9
+6 INIT_FCALL_BY_NAME line=19 op1=UNUSED op2=CONST(string("recover")) result=UNUSED(16) ext=1
+7 SEND_VAR_EX line=19 op1=CV(1:$exception) op2=UNUSED(1) result=UNUSED(80) ext=-
+8 DO_FCALL_BY_NAME line=19 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+9 FAST_CALL line=20 op1=TRY_CATCH(0) op2=UNUSED result=TMP(0) ext=-
+10 JMP line=20 op1=JMP(15) op2=UNUSED result=UNUSED ext=-
+11 INIT_FCALL_BY_NAME line=21 op1=UNUSED op2=CONST(string("cleanup")) result=UNUSED(24) ext=1
+12 SEND_VAR_EX line=21 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+13 DO_FCALL_BY_NAME line=21 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+14 FAST_RET line=21 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+15 VERIFY_RETURN_TYPE line=24 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+16 RETURN line=24 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+17 VERIFY_RETURN_TYPE line=25 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+18 RETURN line=25 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Finally.php
+Function: multi
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 24
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 5
+Literals: 13
+Return type: int
+Lines: 27-40
+
+Compiled variables:
+0 $n
+1 $exception
+
+Literals:
+0 string("operation")
+1 string("operation")
+2 string("RuntimeException")
+3 string("runtimeexception")
+4 string("recover")
+5 string("recover")
+6 string("LogicException")
+7 string("logicexception")
+8 string("report")
+9 string("report")
+10 string("cleanup")
+11 string("cleanup")
+12 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=27 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 INIT_FCALL_BY_NAME line=30 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+2 SEND_VAR_EX line=30 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+3 DO_FCALL_BY_NAME line=30 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 JMP line=30 op1=JMP(14) op2=UNUSED result=UNUSED ext=-
+5 CATCH line=31 op1=CONST(string("RuntimeException")) op2=JMP(10) result=CV(1:$exception) ext=8
+6 INIT_FCALL_BY_NAME line=32 op1=UNUSED op2=CONST(string("recover")) result=UNUSED(16) ext=1
+7 SEND_VAR_EX line=32 op1=CV(1:$exception) op2=UNUSED(1) result=UNUSED(80) ext=-
+8 DO_FCALL_BY_NAME line=32 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+9 JMP line=32 op1=JMP(14) op2=UNUSED result=UNUSED ext=-
+10 CATCH line=33 op1=CONST(string("LogicException")) op2=UNUSED result=CV(1:$exception) ext=25
+11 INIT_FCALL_BY_NAME line=34 op1=UNUSED op2=CONST(string("report")) result=UNUSED(32) ext=1
+12 SEND_VAR_EX line=34 op1=CV(1:$exception) op2=UNUSED(1) result=UNUSED(80) ext=-
+13 DO_FCALL_BY_NAME line=34 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+14 FAST_CALL line=35 op1=TRY_CATCH(0) op2=UNUSED result=TMP(0) ext=-
+15 JMP line=35 op1=JMP(20) op2=UNUSED result=UNUSED ext=-
+16 INIT_FCALL_BY_NAME line=36 op1=UNUSED op2=CONST(string("cleanup")) result=UNUSED(40) ext=1
+17 SEND_VAR_EX line=36 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+18 DO_FCALL_BY_NAME line=36 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+19 FAST_RET line=36 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+20 VERIFY_RETURN_TYPE line=39 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+21 RETURN line=39 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+22 VERIFY_RETURN_TYPE line=40 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+23 RETURN line=40 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Finally.php
+Function: union
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 21
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 4
+Literals: 11
+Return type: int
+Lines: 42-53
+
+Compiled variables:
+0 $n
+1 $exception
+
+Literals:
+0 string("operation")
+1 string("operation")
+2 string("RuntimeException")
+3 string("runtimeexception")
+4 string("LogicException")
+5 string("logicexception")
+6 string("recover")
+7 string("recover")
+8 string("cleanup")
+9 string("cleanup")
+10 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=42 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 INIT_FCALL_BY_NAME line=45 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+2 SEND_VAR_EX line=45 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+3 DO_FCALL_BY_NAME line=45 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 JMP line=45 op1=JMP(11) op2=UNUSED result=UNUSED ext=-
+5 CATCH line=46 op1=CONST(string("RuntimeException")) op2=JMP(7) result=CV(1:$exception) ext=8
+6 JMP line=46 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+7 CATCH line=46 op1=CONST(string("LogicException")) op2=UNUSED result=CV(1:$exception) ext=17
+8 INIT_FCALL_BY_NAME line=47 op1=UNUSED op2=CONST(string("recover")) result=UNUSED(24) ext=1
+9 SEND_VAR_EX line=47 op1=CV(1:$exception) op2=UNUSED(1) result=UNUSED(80) ext=-
+10 DO_FCALL_BY_NAME line=47 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+11 FAST_CALL line=48 op1=TRY_CATCH(0) op2=UNUSED result=TMP(0) ext=-
+12 JMP line=48 op1=JMP(17) op2=UNUSED result=UNUSED ext=-
+13 INIT_FCALL_BY_NAME line=49 op1=UNUSED op2=CONST(string("cleanup")) result=UNUSED(32) ext=1
+14 SEND_VAR_EX line=49 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+15 DO_FCALL_BY_NAME line=49 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+16 FAST_RET line=49 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+17 VERIFY_RETURN_TYPE line=52 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+18 RETURN line=52 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+19 VERIFY_RETURN_TYPE line=53 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+20 RETURN line=53 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Finally.php
+Function: returnInTry
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 13
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 3
+Literals: 3
+Return type: int
+Lines: 55-62
+
+Compiled variables:
+0 $n
+
+Literals:
+0 string("cleanup")
+1 string("cleanup")
+2 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=55 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 QM_ASSIGN line=58 op1=CV(0:$n) op2=UNUSED result=TMP(1) ext=-
+2 VERIFY_RETURN_TYPE line=58 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+3 FAST_CALL line=58 op1=TRY_CATCH(0) op2=TMP(1) result=TMP(0) ext=-
+4 RETURN line=58 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+5 FAST_CALL line=59 op1=TRY_CATCH(0) op2=UNUSED result=TMP(0) ext=-
+6 JMP line=59 op1=JMP(11) op2=UNUSED result=UNUSED ext=-
+7 INIT_FCALL_BY_NAME line=60 op1=UNUSED op2=CONST(string("cleanup")) result=UNUSED ext=1
+8 SEND_VAR_EX line=60 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+9 DO_FCALL_BY_NAME line=60 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+10 FAST_RET line=60 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+11 VERIFY_RETURN_TYPE line=62 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+12 RETURN line=62 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Finally.php
+Function: returnInCatch
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 17
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 3
+Literals: 9
+Return type: int
+Lines: 64-75
+
+Compiled variables:
+0 $n
+1 $exception
+
+Literals:
+0 string("operation")
+1 string("operation")
+2 string("RuntimeException")
+3 string("runtimeexception")
+4 int(1)
+5 string("cleanup")
+6 string("cleanup")
+7 int(0)
+8 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=64 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 INIT_FCALL_BY_NAME line=67 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+2 SEND_VAR_EX line=67 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+3 DO_FCALL_BY_NAME line=67 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 JMP line=67 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+5 CATCH line=68 op1=CONST(string("RuntimeException")) op2=UNUSED result=CV(1:$exception) ext=9
+6 FAST_CALL line=69 op1=TRY_CATCH(0) op2=UNUSED result=TMP(0) ext=-
+7 RETURN line=69 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+8 FAST_CALL line=70 op1=TRY_CATCH(0) op2=UNUSED result=TMP(0) ext=-
+9 JMP line=70 op1=JMP(14) op2=UNUSED result=UNUSED ext=-
+10 INIT_FCALL_BY_NAME line=71 op1=UNUSED op2=CONST(string("cleanup")) result=UNUSED(16) ext=1
+11 SEND_VAR_EX line=71 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+12 DO_FCALL_BY_NAME line=71 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+13 FAST_RET line=71 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+14 RETURN line=74 op1=CONST(int(0)) op2=UNUSED result=UNUSED ext=-
+15 VERIFY_RETURN_TYPE line=75 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+16 RETURN line=75 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Finally.php
+Function: throwInTry
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 13
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 4
+Literals: 6
+Return type: int
+Lines: 77-84
+
+Compiled variables:
+0 $n
+
+Literals:
+0 string("RuntimeException")
+1 string("runtimeexception")
+2 string("bad")
+3 string("cleanup")
+4 string("cleanup")
+5 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=77 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 NEW line=80 op1=CONST(string("RuntimeException")) op2=UNUSED result=VAR(1) ext=1
+2 SEND_VAL_EX line=80 op1=CONST(string("bad")) op2=UNUSED(1) result=UNUSED(80) ext=-
+3 DO_FCALL line=80 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 THROW line=80 op1=VAR(1) op2=UNUSED result=UNUSED ext=-
+5 FAST_CALL line=81 op1=TRY_CATCH(0) op2=UNUSED result=TMP(0) ext=-
+6 JMP line=81 op1=JMP(11) op2=UNUSED result=UNUSED ext=-
+7 INIT_FCALL_BY_NAME line=82 op1=UNUSED op2=CONST(string("cleanup")) result=UNUSED(8) ext=1
+8 SEND_VAR_EX line=82 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+9 DO_FCALL_BY_NAME line=82 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+10 FAST_RET line=82 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+11 VERIFY_RETURN_TYPE line=84 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+12 RETURN line=84 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Finally.php
+Function: rethrow
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 15
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 3
+Literals: 7
+Return type: int
+Lines: 86-95
+
+Compiled variables:
+0 $n
+1 $exception
+
+Literals:
+0 string("operation")
+1 string("operation")
+2 string("RuntimeException")
+3 string("runtimeexception")
+4 string("cleanup")
+5 string("cleanup")
+6 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=86 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 INIT_FCALL_BY_NAME line=89 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+2 SEND_VAR_EX line=89 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+3 DO_FCALL_BY_NAME line=89 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 JMP line=89 op1=JMP(7) op2=UNUSED result=UNUSED ext=-
+5 CATCH line=90 op1=CONST(string("RuntimeException")) op2=UNUSED result=CV(1:$exception) ext=9
+6 THROW line=91 op1=CV(1:$exception) op2=UNUSED result=UNUSED ext=-
+7 FAST_CALL line=92 op1=TRY_CATCH(0) op2=UNUSED result=TMP(0) ext=-
+8 JMP line=92 op1=JMP(13) op2=UNUSED result=UNUSED ext=-
+9 INIT_FCALL_BY_NAME line=93 op1=UNUSED op2=CONST(string("cleanup")) result=UNUSED(16) ext=1
+10 SEND_VAR_EX line=93 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+11 DO_FCALL_BY_NAME line=93 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+12 FAST_RET line=93 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+13 VERIFY_RETURN_TYPE line=95 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+14 RETURN line=95 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Finally.php
+Function: implicit
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 13
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 4
+Literals: 4
+Return type: int
+Lines: 97-106
+
+Compiled variables:
+0 $n
+1 $value
+
+Literals:
+0 int(0)
+1 string("cleanup")
+2 string("cleanup")
+3 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=97 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 DIV line=100 op1=CV(0:$n) op2=CONST(int(0)) result=TMP(1) ext=-
+2 ASSIGN line=100 op1=CV(1:$value) op2=TMP(1) result=UNUSED ext=-
+3 FAST_CALL line=101 op1=TRY_CATCH(0) op2=UNUSED result=TMP(0) ext=-
+4 JMP line=101 op1=JMP(9) op2=UNUSED result=UNUSED ext=-
+5 INIT_FCALL_BY_NAME line=102 op1=UNUSED op2=CONST(string("cleanup")) result=UNUSED ext=1
+6 SEND_VAR_EX line=102 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+7 DO_FCALL_BY_NAME line=102 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+8 FAST_RET line=102 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+9 VERIFY_RETURN_TYPE line=105 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+10 RETURN line=105 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+11 VERIFY_RETURN_TYPE line=106 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+12 RETURN line=106 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Finally.php
+Function: returnInFinally
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 12
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 2
+Literals: 2
+Return type: int
+Lines: 108-115
+
+Compiled variables:
+0 $n
+
+Literals:
+0 int(1)
+1 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=108 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 QM_ASSIGN line=111 op1=CV(0:$n) op2=UNUSED result=TMP(1) ext=-
+2 VERIFY_RETURN_TYPE line=111 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+3 FAST_CALL line=111 op1=TRY_CATCH(0) op2=TMP(1) result=TMP(0) ext=-
+4 RETURN line=111 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+5 FAST_CALL line=112 op1=TRY_CATCH(0) op2=UNUSED result=TMP(0) ext=-
+6 JMP line=112 op1=JMP(10) op2=UNUSED result=UNUSED ext=-
+7 DISCARD_EXCEPTION line=113 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+8 RETURN line=113 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+9 FAST_RET line=113 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+10 VERIFY_RETURN_TYPE line=115 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+11 RETURN line=115 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Finally.php
+Function: throwInFinally
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 13
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 4
+Literals: 6
+Return type: int
+Lines: 117-124
+
+Compiled variables:
+0 $n
+
+Literals:
+0 string("operation")
+1 string("operation")
+2 string("LogicException")
+3 string("logicexception")
+4 string("from-finally")
+5 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=117 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 INIT_FCALL_BY_NAME line=120 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+2 SEND_VAR_EX line=120 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+3 DO_FCALL_BY_NAME line=120 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 FAST_CALL line=121 op1=TRY_CATCH(0) op2=UNUSED result=TMP(0) ext=-
+5 JMP line=121 op1=JMP(11) op2=UNUSED result=UNUSED ext=-
+6 NEW line=122 op1=CONST(string("LogicException")) op2=UNUSED(8) result=VAR(2) ext=1
+7 SEND_VAL_EX line=122 op1=CONST(string("from-finally")) op2=UNUSED(1) result=UNUSED(80) ext=-
+8 DO_FCALL line=122 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+9 THROW line=122 op1=VAR(2) op2=UNUSED result=UNUSED ext=-
+10 FAST_RET line=122 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+11 VERIFY_RETURN_TYPE line=124 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+12 RETURN line=124 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Finally.php
+Function: multipleCalls
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 18
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 4
+Literals: 8
+Return type: int
+Lines: 126-138
+
+Compiled variables:
+0 $n
+
+Literals:
+0 int(0)
+1 int(1)
+2 string("operation")
+3 string("operation")
+4 int(0)
+5 string("cleanup")
+6 string("cleanup")
+7 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=126 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 IS_SMALLER line=129 op1=CV(0:$n) op2=CONST(int(0)) result=TMP(1)|SMART_JMPZ ext=-
+2 JMPZ line=129 op1=TMP(1) op2=JMP(5) result=UNUSED ext=-
+3 FAST_CALL line=130 op1=TRY_CATCH(0) op2=UNUSED result=TMP(0) ext=-
+4 RETURN line=130 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+5 INIT_FCALL_BY_NAME line=132 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+6 SEND_VAR_EX line=132 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+7 DO_FCALL_BY_NAME line=132 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+8 FAST_CALL line=134 op1=TRY_CATCH(0) op2=UNUSED result=TMP(0) ext=-
+9 RETURN line=134 op1=CONST(int(0)) op2=UNUSED result=UNUSED ext=-
+10 FAST_CALL line=135 op1=TRY_CATCH(0) op2=UNUSED result=TMP(0) ext=-
+11 JMP line=135 op1=JMP(16) op2=UNUSED result=UNUSED ext=-
+12 INIT_FCALL_BY_NAME line=136 op1=UNUSED op2=CONST(string("cleanup")) result=UNUSED(8) ext=1
+13 SEND_VAR_EX line=136 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+14 DO_FCALL_BY_NAME line=136 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+15 FAST_RET line=136 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+16 VERIFY_RETURN_TYPE line=138 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+17 RETURN line=138 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Finally.php
+Function: breakThrough
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 16
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 3
+Literals: 4
+Return type: int
+Lines: 140-151
+
+Compiled variables:
+0 $n
+
+Literals:
+0 string("cleanup")
+1 string("cleanup")
+2 int(0)
+3 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=140 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 JMP line=142 op1=JMP(10) op2=UNUSED result=UNUSED ext=-
+2 FAST_CALL line=144 op1=TRY_CATCH(0) op2=UNUSED result=TMP(0) ext=-
+3 BRK line=144 op1=LEVEL(0) op2=UNUSED(1) result=UNUSED ext=-
+4 FAST_CALL line=145 op1=TRY_CATCH(0) op2=UNUSED result=TMP(0) ext=-
+5 JMP line=145 op1=JMP(10) op2=UNUSED result=UNUSED ext=-
+6 INIT_FCALL_BY_NAME line=146 op1=UNUSED op2=CONST(string("cleanup")) result=UNUSED ext=1
+7 SEND_VAR_EX line=146 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+8 DO_FCALL_BY_NAME line=146 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+9 FAST_RET line=146 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+10 IS_SMALLER line=142 op1=CONST(int(0)) op2=CV(0:$n) result=TMP(2)|SMART_JMPNZ ext=-
+11 JMPNZ line=142 op1=TMP(2) op2=JMP(2) result=UNUSED ext=-
+12 VERIFY_RETURN_TYPE line=150 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+13 RETURN line=150 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+14 VERIFY_RETURN_TYPE line=151 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+15 RETURN line=151 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Finally.php
+Function: continueThrough
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 16
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 3
+Literals: 4
+Return type: int
+Lines: 153-164
+
+Compiled variables:
+0 $n
+
+Literals:
+0 string("cleanup")
+1 string("cleanup")
+2 int(0)
+3 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=153 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 JMP line=155 op1=JMP(10) op2=UNUSED result=UNUSED ext=-
+2 FAST_CALL line=157 op1=TRY_CATCH(0) op2=UNUSED result=TMP(0) ext=-
+3 CONT line=157 op1=LEVEL(0) op2=UNUSED(1) result=UNUSED ext=-
+4 FAST_CALL line=158 op1=TRY_CATCH(0) op2=UNUSED result=TMP(0) ext=-
+5 JMP line=158 op1=JMP(10) op2=UNUSED result=UNUSED ext=-
+6 INIT_FCALL_BY_NAME line=159 op1=UNUSED op2=CONST(string("cleanup")) result=UNUSED ext=1
+7 SEND_VAR_EX line=159 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+8 DO_FCALL_BY_NAME line=159 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+9 FAST_RET line=159 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+10 IS_SMALLER line=155 op1=CONST(int(0)) op2=CV(0:$n) result=TMP(2)|SMART_JMPNZ ext=-
+11 JMPNZ line=155 op1=TMP(2) op2=JMP(2) result=UNUSED ext=-
+12 VERIFY_RETURN_TYPE line=163 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+13 RETURN line=163 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+14 VERIFY_RETURN_TYPE line=164 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+15 RETURN line=164 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Finally.php
+Function: breakTwo
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 19
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 4
+Literals: 5
+Return type: int
+Lines: 166-179
+
+Compiled variables:
+0 $n
+
+Literals:
+0 string("cleanup")
+1 string("cleanup")
+2 int(0)
+3 int(0)
+4 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=166 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 JMP line=168 op1=JMP(13) op2=UNUSED result=UNUSED ext=-
+2 JMP line=169 op1=JMP(11) op2=UNUSED result=UNUSED ext=-
+3 FAST_CALL line=171 op1=TRY_CATCH(0) op2=UNUSED result=TMP(0) ext=-
+4 BRK line=171 op1=LEVEL(1) op2=UNUSED(2) result=UNUSED ext=-
+5 FAST_CALL line=172 op1=TRY_CATCH(0) op2=UNUSED result=TMP(0) ext=-
+6 JMP line=172 op1=JMP(11) op2=UNUSED result=UNUSED ext=-
+7 INIT_FCALL_BY_NAME line=173 op1=UNUSED op2=CONST(string("cleanup")) result=UNUSED ext=1
+8 SEND_VAR_EX line=173 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+9 DO_FCALL_BY_NAME line=173 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+10 FAST_RET line=173 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+11 IS_SMALLER line=169 op1=CONST(int(0)) op2=CV(0:$n) result=TMP(2)|SMART_JMPNZ ext=-
+12 JMPNZ line=169 op1=TMP(2) op2=JMP(3) result=UNUSED ext=-
+13 IS_SMALLER line=168 op1=CONST(int(0)) op2=CV(0:$n) result=TMP(3)|SMART_JMPNZ ext=-
+14 JMPNZ line=168 op1=TMP(3) op2=JMP(2) result=UNUSED ext=-
+15 VERIFY_RETURN_TYPE line=178 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+16 RETURN line=178 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+17 VERIFY_RETURN_TYPE line=179 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+18 RETURN line=179 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Finally.php
+Function: continueTwo
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 19
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 4
+Literals: 5
+Return type: int
+Lines: 181-194
+
+Compiled variables:
+0 $n
+
+Literals:
+0 string("cleanup")
+1 string("cleanup")
+2 int(0)
+3 int(0)
+4 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=181 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 JMP line=183 op1=JMP(13) op2=UNUSED result=UNUSED ext=-
+2 JMP line=184 op1=JMP(11) op2=UNUSED result=UNUSED ext=-
+3 FAST_CALL line=186 op1=TRY_CATCH(0) op2=UNUSED result=TMP(0) ext=-
+4 CONT line=186 op1=LEVEL(1) op2=UNUSED(2) result=UNUSED ext=-
+5 FAST_CALL line=187 op1=TRY_CATCH(0) op2=UNUSED result=TMP(0) ext=-
+6 JMP line=187 op1=JMP(11) op2=UNUSED result=UNUSED ext=-
+7 INIT_FCALL_BY_NAME line=188 op1=UNUSED op2=CONST(string("cleanup")) result=UNUSED ext=1
+8 SEND_VAR_EX line=188 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+9 DO_FCALL_BY_NAME line=188 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+10 FAST_RET line=188 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+11 IS_SMALLER line=184 op1=CONST(int(0)) op2=CV(0:$n) result=TMP(2)|SMART_JMPNZ ext=-
+12 JMPNZ line=184 op1=TMP(2) op2=JMP(3) result=UNUSED ext=-
+13 IS_SMALLER line=183 op1=CONST(int(0)) op2=CV(0:$n) result=TMP(3)|SMART_JMPNZ ext=-
+14 JMPNZ line=183 op1=TMP(3) op2=JMP(2) result=UNUSED ext=-
+15 VERIFY_RETURN_TYPE line=193 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+16 RETURN line=193 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+17 VERIFY_RETURN_TYPE line=194 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+18 RETURN line=194 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Finally.php
+Function: condInFinally
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 20
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 5
+Literals: 8
+Return type: int
+Lines: 196-209
+
+Compiled variables:
+0 $n
+
+Literals:
+0 string("operation")
+1 string("operation")
+2 int(0)
+3 string("recover")
+4 string("recover")
+5 string("report")
+6 string("report")
+7 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=196 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 INIT_FCALL_BY_NAME line=199 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+2 SEND_VAR_EX line=199 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+3 DO_FCALL_BY_NAME line=199 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 FAST_CALL line=200 op1=TRY_CATCH(0) op2=UNUSED result=TMP(0) ext=-
+5 JMP line=200 op1=JMP(16) op2=UNUSED result=UNUSED ext=-
+6 IS_SMALLER line=201 op1=CV(0:$n) op2=CONST(int(0)) result=TMP(2)|SMART_JMPZ ext=-
+7 JMPZ line=201 op1=TMP(2) op2=JMP(12) result=UNUSED ext=-
+8 INIT_FCALL_BY_NAME line=202 op1=UNUSED op2=CONST(string("recover")) result=UNUSED(8) ext=1
+9 SEND_VAR_EX line=202 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+10 DO_FCALL_BY_NAME line=202 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+11 JMP line=201 op1=JMP(15) op2=UNUSED result=UNUSED ext=-
+12 INIT_FCALL_BY_NAME line=204 op1=UNUSED op2=CONST(string("report")) result=UNUSED(16) ext=1
+13 SEND_VAR_EX line=204 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+14 DO_FCALL_BY_NAME line=204 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+15 FAST_RET line=204 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+16 VERIFY_RETURN_TYPE line=208 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+17 RETURN line=208 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+18 VERIFY_RETURN_TYPE line=209 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+19 RETURN line=209 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Finally.php
+Function: loopInFinally
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 21
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 6
+Literals: 7
+Return type: int
+Lines: 211-226
+
+Compiled variables:
+0 $n
+
+Literals:
+0 string("operation")
+1 string("operation")
+2 string("cleanup")
+3 string("cleanup")
+4 int(10)
+5 int(0)
+6 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=211 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 INIT_FCALL_BY_NAME line=214 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+2 SEND_VAR_EX line=214 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+3 DO_FCALL_BY_NAME line=214 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 FAST_CALL line=215 op1=TRY_CATCH(0) op2=UNUSED result=TMP(0) ext=-
+5 JMP line=215 op1=JMP(17) op2=UNUSED result=UNUSED ext=-
+6 JMP line=216 op1=JMP(14) op2=UNUSED result=UNUSED ext=-
+7 INIT_FCALL_BY_NAME line=217 op1=UNUSED op2=CONST(string("cleanup")) result=UNUSED(8) ext=1
+8 SEND_VAR_EX line=217 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+9 DO_FCALL_BY_NAME line=217 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+10 IS_SMALLER line=218 op1=CONST(int(10)) op2=CV(0:$n) result=TMP(3)|SMART_JMPZ ext=-
+11 JMPZ line=218 op1=TMP(3) op2=JMP(13) result=UNUSED ext=-
+12 BRK line=219 op1=LEVEL(0) op2=UNUSED(1) result=UNUSED ext=-
+13 PRE_DEC line=221 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+14 IS_SMALLER line=216 op1=CONST(int(0)) op2=CV(0:$n) result=TMP(5)|SMART_JMPNZ ext=-
+15 JMPNZ line=216 op1=TMP(5) op2=JMP(7) result=UNUSED ext=-
+16 FAST_RET line=216 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+17 VERIFY_RETURN_TYPE line=225 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+18 RETURN line=225 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+19 VERIFY_RETURN_TYPE line=226 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+20 RETURN line=226 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Finally.php
+Function: alwaysBreakInFinally
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 18
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 4
+Literals: 6
+Return type: int
+Lines: 228-240
+
+Compiled variables:
+0 $n
+
+Literals:
+0 string("operation")
+1 string("operation")
+2 string("cleanup")
+3 string("cleanup")
+4 int(0)
+5 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=228 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 INIT_FCALL_BY_NAME line=231 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+2 SEND_VAR_EX line=231 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+3 DO_FCALL_BY_NAME line=231 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 FAST_CALL line=232 op1=TRY_CATCH(0) op2=UNUSED result=TMP(0) ext=-
+5 JMP line=232 op1=JMP(14) op2=UNUSED result=UNUSED ext=-
+6 JMP line=233 op1=JMP(11) op2=UNUSED result=UNUSED ext=-
+7 INIT_FCALL_BY_NAME line=234 op1=UNUSED op2=CONST(string("cleanup")) result=UNUSED(8) ext=1
+8 SEND_VAR_EX line=234 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+9 DO_FCALL_BY_NAME line=234 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+10 BRK line=235 op1=LEVEL(0) op2=UNUSED(1) result=UNUSED ext=-
+11 IS_SMALLER line=233 op1=CONST(int(0)) op2=CV(0:$n) result=TMP(3)|SMART_JMPNZ ext=-
+12 JMPNZ line=233 op1=TMP(3) op2=JMP(7) result=UNUSED ext=-
+13 FAST_RET line=233 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+14 VERIFY_RETURN_TYPE line=239 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+15 RETURN line=239 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+16 VERIFY_RETURN_TYPE line=240 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+17 RETURN line=240 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Finally.php
+Function: nested
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 25
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 6
+Literals: 11
+Return type: int
+Lines: 242-257
+
+Compiled variables:
+0 $n
+1 $exception
+
+Literals:
+0 string("operation")
+1 string("operation")
+2 string("innerCleanup")
+3 string("innercleanup")
+4 string("RuntimeException")
+5 string("runtimeexception")
+6 string("recover")
+7 string("recover")
+8 string("outerCleanup")
+9 string("outercleanup")
+10 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=242 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 INIT_FCALL_BY_NAME line=246 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+2 SEND_VAR_EX line=246 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+3 DO_FCALL_BY_NAME line=246 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 FAST_CALL line=247 op1=TRY_CATCH(1) op2=UNUSED result=TMP(1) ext=-
+5 JMP line=247 op1=JMP(10) op2=UNUSED result=UNUSED ext=-
+6 INIT_FCALL_BY_NAME line=248 op1=UNUSED op2=CONST(string("innerCleanup")) result=UNUSED(8) ext=1
+7 SEND_VAR_EX line=248 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+8 DO_FCALL_BY_NAME line=248 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+9 FAST_RET line=248 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+10 JMP line=248 op1=JMP(15) op2=UNUSED result=UNUSED ext=-
+11 CATCH line=250 op1=CONST(string("RuntimeException")) op2=UNUSED result=CV(1:$exception) ext=17
+12 INIT_FCALL_BY_NAME line=251 op1=UNUSED op2=CONST(string("recover")) result=UNUSED(24) ext=1
+13 SEND_VAR_EX line=251 op1=CV(1:$exception) op2=UNUSED(1) result=UNUSED(80) ext=-
+14 DO_FCALL_BY_NAME line=251 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+15 FAST_CALL line=252 op1=TRY_CATCH(0) op2=UNUSED result=TMP(0) ext=-
+16 JMP line=252 op1=JMP(21) op2=UNUSED result=UNUSED ext=-
+17 INIT_FCALL_BY_NAME line=253 op1=UNUSED op2=CONST(string("outerCleanup")) result=UNUSED(32) ext=1
+18 SEND_VAR_EX line=253 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+19 DO_FCALL_BY_NAME line=253 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+20 FAST_RET line=253 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+21 VERIFY_RETURN_TYPE line=256 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+22 RETURN line=256 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+23 VERIFY_RETURN_TYPE line=257 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+24 RETURN line=257 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Finally.php
+Function: nestedCaught
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 30
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 7
+Literals: 15
+Return type: int
+Lines: 259-276
+
+Compiled variables:
+0 $n
+1 $exception
+
+Literals:
+0 string("operation")
+1 string("operation")
+2 string("RuntimeException")
+3 string("runtimeexception")
+4 string("recover")
+5 string("recover")
+6 string("innerCleanup")
+7 string("innercleanup")
+8 string("LogicException")
+9 string("logicexception")
+10 string("report")
+11 string("report")
+12 string("outerCleanup")
+13 string("outercleanup")
+14 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=259 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 INIT_FCALL_BY_NAME line=263 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+2 SEND_VAR_EX line=263 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+3 DO_FCALL_BY_NAME line=263 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 JMP line=263 op1=JMP(9) op2=UNUSED result=UNUSED ext=-
+5 CATCH line=264 op1=CONST(string("RuntimeException")) op2=UNUSED result=CV(1:$exception) ext=9
+6 INIT_FCALL_BY_NAME line=265 op1=UNUSED op2=CONST(string("recover")) result=UNUSED(16) ext=1
+7 SEND_VAR_EX line=265 op1=CV(1:$exception) op2=UNUSED(1) result=UNUSED(80) ext=-
+8 DO_FCALL_BY_NAME line=265 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+9 FAST_CALL line=266 op1=TRY_CATCH(1) op2=UNUSED result=TMP(1) ext=-
+10 JMP line=266 op1=JMP(15) op2=UNUSED result=UNUSED ext=-
+11 INIT_FCALL_BY_NAME line=267 op1=UNUSED op2=CONST(string("innerCleanup")) result=UNUSED(24) ext=1
+12 SEND_VAR_EX line=267 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+13 DO_FCALL_BY_NAME line=267 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+14 FAST_RET line=267 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+15 JMP line=267 op1=JMP(20) op2=UNUSED result=UNUSED ext=-
+16 CATCH line=269 op1=CONST(string("LogicException")) op2=UNUSED result=CV(1:$exception) ext=33
+17 INIT_FCALL_BY_NAME line=270 op1=UNUSED op2=CONST(string("report")) result=UNUSED(40) ext=1
+18 SEND_VAR_EX line=270 op1=CV(1:$exception) op2=UNUSED(1) result=UNUSED(80) ext=-
+19 DO_FCALL_BY_NAME line=270 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+20 FAST_CALL line=271 op1=TRY_CATCH(0) op2=UNUSED result=TMP(0) ext=-
+21 JMP line=271 op1=JMP(26) op2=UNUSED result=UNUSED ext=-
+22 INIT_FCALL_BY_NAME line=272 op1=UNUSED op2=CONST(string("outerCleanup")) result=UNUSED(48) ext=1
+23 SEND_VAR_EX line=272 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+24 DO_FCALL_BY_NAME line=272 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+25 FAST_RET line=272 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+26 VERIFY_RETURN_TYPE line=275 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+27 RETURN line=275 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+28 VERIFY_RETURN_TYPE line=276 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+29 RETURN line=276 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Finally.php
+Function: chained
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 20
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 5
+Literals: 5
+Return type: int
+Lines: 278-289
+
+Compiled variables:
+0 $n
+
+Literals:
+0 string("innerCleanup")
+1 string("innercleanup")
+2 string("outerCleanup")
+3 string("outercleanup")
+4 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=278 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 QM_ASSIGN line=282 op1=CV(0:$n) op2=UNUSED result=TMP(2) ext=-
+2 VERIFY_RETURN_TYPE line=282 op1=TMP(2) op2=UNUSED result=UNUSED ext=-
+3 FAST_CALL line=282 op1=TRY_CATCH(1) op2=TMP(2) result=TMP(1) ext=-
+4 FAST_CALL line=282 op1=TRY_CATCH(0) op2=TMP(2) result=TMP(0) ext=-
+5 RETURN line=282 op1=TMP(2) op2=UNUSED result=UNUSED ext=-
+6 FAST_CALL line=283 op1=TRY_CATCH(1) op2=UNUSED result=TMP(1) ext=-
+7 JMP line=283 op1=JMP(12) op2=UNUSED result=UNUSED ext=-
+8 INIT_FCALL_BY_NAME line=284 op1=UNUSED op2=CONST(string("innerCleanup")) result=UNUSED ext=1
+9 SEND_VAR_EX line=284 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+10 DO_FCALL_BY_NAME line=284 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+11 FAST_RET line=284 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+12 FAST_CALL line=286 op1=TRY_CATCH(0) op2=UNUSED result=TMP(0) ext=-
+13 JMP line=286 op1=JMP(18) op2=UNUSED result=UNUSED ext=-
+14 INIT_FCALL_BY_NAME line=287 op1=UNUSED op2=CONST(string("outerCleanup")) result=UNUSED(8) ext=1
+15 SEND_VAR_EX line=287 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+16 DO_FCALL_BY_NAME line=287 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+17 FAST_RET line=287 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+18 VERIFY_RETURN_TYPE line=289 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+19 RETURN line=289 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Finally.php
+Function: tryInLoop
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 18
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 5
+Literals: 6
+Return type: int
+Lines: 291-303
+
+Compiled variables:
+0 $n
+
+Literals:
+0 string("operation")
+1 string("operation")
+2 string("cleanup")
+3 string("cleanup")
+4 int(0)
+5 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=291 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 JMP line=293 op1=JMP(12) op2=UNUSED result=UNUSED ext=-
+2 INIT_FCALL_BY_NAME line=295 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+3 SEND_VAR_EX line=295 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+4 DO_FCALL_BY_NAME line=295 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+5 FAST_CALL line=296 op1=TRY_CATCH(0) op2=UNUSED result=TMP(0) ext=-
+6 JMP line=296 op1=JMP(11) op2=UNUSED result=UNUSED ext=-
+7 INIT_FCALL_BY_NAME line=297 op1=UNUSED op2=CONST(string("cleanup")) result=UNUSED(8) ext=1
+8 SEND_VAR_EX line=297 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+9 DO_FCALL_BY_NAME line=297 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+10 FAST_RET line=297 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+11 PRE_DEC line=299 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+12 IS_SMALLER line=293 op1=CONST(int(0)) op2=CV(0:$n) result=TMP(4)|SMART_JMPNZ ext=-
+13 JMPNZ line=293 op1=TMP(4) op2=JMP(2) result=UNUSED ext=-
+14 VERIFY_RETURN_TYPE line=302 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+15 RETURN line=302 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+16 VERIFY_RETURN_TYPE line=303 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+17 RETURN line=303 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Finally.php
+Function: loopInTry
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 18
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 5
+Literals: 6
+Return type: int
+Lines: 305-317
+
+Compiled variables:
+0 $n
+
+Literals:
+0 string("operation")
+1 string("operation")
+2 int(0)
+3 string("cleanup")
+4 string("cleanup")
+5 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=305 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 JMP line=308 op1=JMP(6) op2=UNUSED result=UNUSED ext=-
+2 INIT_FCALL_BY_NAME line=309 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+3 SEND_VAR_EX line=309 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+4 DO_FCALL_BY_NAME line=309 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+5 PRE_DEC line=310 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+6 IS_SMALLER line=308 op1=CONST(int(0)) op2=CV(0:$n) result=TMP(3)|SMART_JMPNZ ext=-
+7 JMPNZ line=308 op1=TMP(3) op2=JMP(2) result=UNUSED ext=-
+8 FAST_CALL line=312 op1=TRY_CATCH(0) op2=UNUSED result=TMP(0) ext=-
+9 JMP line=312 op1=JMP(14) op2=UNUSED result=UNUSED ext=-
+10 INIT_FCALL_BY_NAME line=313 op1=UNUSED op2=CONST(string("cleanup")) result=UNUSED(8) ext=1
+11 SEND_VAR_EX line=313 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+12 DO_FCALL_BY_NAME line=313 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+13 FAST_RET line=313 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+14 VERIFY_RETURN_TYPE line=316 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+15 RETURN line=316 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+16 VERIFY_RETURN_TYPE line=317 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+17 RETURN line=317 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Finally.php
+Function: tryInFinally
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 19
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 4
+Literals: 9
+Return type: int
+Lines: 319-332
+
+Compiled variables:
+0 $n
+1 $exception
+
+Literals:
+0 string("operation")
+1 string("operation")
+2 string("recover")
+3 string("recover")
+4 string("RuntimeException")
+5 string("runtimeexception")
+6 string("report")
+7 string("report")
+8 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=319 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 INIT_FCALL_BY_NAME line=322 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+2 SEND_VAR_EX line=322 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+3 DO_FCALL_BY_NAME line=322 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 FAST_CALL line=323 op1=TRY_CATCH(0) op2=UNUSED result=TMP(0) ext=-
+5 JMP line=323 op1=JMP(15) op2=UNUSED result=UNUSED ext=-
+6 INIT_FCALL_BY_NAME line=325 op1=UNUSED op2=CONST(string("recover")) result=UNUSED(8) ext=1
+7 SEND_VAR_EX line=325 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+8 DO_FCALL_BY_NAME line=325 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+9 JMP line=325 op1=JMP(14) op2=UNUSED result=UNUSED ext=-
+10 CATCH line=326 op1=CONST(string("RuntimeException")) op2=UNUSED result=CV(1:$exception) ext=17
+11 INIT_FCALL_BY_NAME line=327 op1=UNUSED op2=CONST(string("report")) result=UNUSED(24) ext=1
+12 SEND_VAR_EX line=327 op1=CV(1:$exception) op2=UNUSED(1) result=UNUSED(80) ext=-
+13 DO_FCALL_BY_NAME line=327 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+14 FAST_RET line=327 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+15 VERIFY_RETURN_TYPE line=331 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+16 RETURN line=331 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+17 VERIFY_RETURN_TYPE line=332 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+18 RETURN line=332 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Finally.php
+Function: innerFinallyToOuterCatch
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 20
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 5
+Literals: 10
+Return type: int
+Lines: 334-347
+
+Compiled variables:
+0 $n
+1 $exception
+
+Literals:
+0 string("operation")
+1 string("operation")
+2 string("RuntimeException")
+3 string("runtimeexception")
+4 string("inner")
+5 string("RuntimeException")
+6 string("runtimeexception")
+7 string("recover")
+8 string("recover")
+9 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=334 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 INIT_FCALL_BY_NAME line=338 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+2 SEND_VAR_EX line=338 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+3 DO_FCALL_BY_NAME line=338 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 FAST_CALL line=339 op1=TRY_CATCH(1) op2=UNUSED result=TMP(0) ext=-
+5 JMP line=339 op1=JMP(11) op2=UNUSED result=UNUSED ext=-
+6 NEW line=340 op1=CONST(string("RuntimeException")) op2=UNUSED(8) result=VAR(2) ext=1
+7 SEND_VAL_EX line=340 op1=CONST(string("inner")) op2=UNUSED(1) result=UNUSED(80) ext=-
+8 DO_FCALL line=340 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+9 THROW line=340 op1=VAR(2) op2=UNUSED result=UNUSED ext=-
+10 FAST_RET line=340 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+11 JMP line=340 op1=JMP(16) op2=UNUSED result=UNUSED ext=-
+12 CATCH line=342 op1=CONST(string("RuntimeException")) op2=UNUSED result=CV(1:$exception) ext=17
+13 INIT_FCALL_BY_NAME line=343 op1=UNUSED op2=CONST(string("recover")) result=UNUSED(24) ext=1
+14 SEND_VAR_EX line=343 op1=CV(1:$exception) op2=UNUSED(1) result=UNUSED(80) ext=-
+15 DO_FCALL_BY_NAME line=343 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+16 VERIFY_RETURN_TYPE line=346 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+17 RETURN line=346 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+18 VERIFY_RETURN_TYPE line=347 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+19 RETURN line=347 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/Finally.php
+Function: <main>
+Class: -
+Kind: main
+Property: -
+Hook: -
+Opcodes: 1
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 1
+Return type: -
+Lines: 1-348
+
+Compiled variables:
+(none)
+
+Literals:
+0 int(1)
+
+Argument details:
+(none)
+
+Opcodes:
+0 RETURN line=348 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+

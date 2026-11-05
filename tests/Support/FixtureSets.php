@@ -133,6 +133,7 @@ final class FixtureSets
             'Common/Switches.php' => ['Function: simpleInt', 'Function: simpleString', ' SWITCH_LONG ', ' SWITCH_STRING ', ' BRK ', ' CONT '],
             'Common/MatchExpressions.php' => ['Function: simpleInt', 'Function: withoutDefault', ' MATCH ', ' MATCH_ERROR '],
             'Common/TryCatch.php' => ['Function: simple', 'Function: ambiguous', ' CATCH ', ' FAST_RET '],
+            'Common/Finally.php' => ['Function: simple', 'Function: chained', ' FAST_CALL ', ' FAST_RET '],
         ];
     }
 }
