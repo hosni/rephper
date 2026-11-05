@@ -12,9 +12,11 @@ if (!is_file($autoload)) {
 require $autoload;
 
 use Rephper\Command\GraphCommand;
+use Rephper\Command\SourceCommand;
 use Symfony\Component\Console\Application;
 
 $application = new Application('rephper');
 $application->addCommand(new GraphCommand());
+$application->addCommand(new SourceCommand());
 
 exit($application->run());
