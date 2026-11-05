@@ -1,0 +1,1667 @@
+Rephper: Compiled op array
+File: tests/Fixtures/Common/TryCatch.php
+Function: simple
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 13
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 2
+Literals: 7
+Return type: int
+Lines: 3-12
+
+Compiled variables:
+0 $n
+1 $exception
+
+Literals:
+0 string("operation")
+1 string("operation")
+2 string("RuntimeException")
+3 string("runtimeexception")
+4 string("recover")
+5 string("recover")
+6 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=3 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 INIT_FCALL_BY_NAME line=6 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+2 SEND_VAR_EX line=6 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+3 DO_FCALL_BY_NAME line=6 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 JMP line=6 op1=JMP(9) op2=UNUSED result=UNUSED ext=-
+5 CATCH line=7 op1=CONST(string("RuntimeException")) op2=UNUSED result=CV(1:$exception) ext=9
+6 INIT_FCALL_BY_NAME line=8 op1=UNUSED op2=CONST(string("recover")) result=UNUSED(16) ext=1
+7 SEND_VAR_EX line=8 op1=CV(1:$exception) op2=UNUSED(1) result=UNUSED(80) ext=-
+8 DO_FCALL_BY_NAME line=8 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+9 VERIFY_RETURN_TYPE line=11 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+10 RETURN line=11 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+11 VERIFY_RETURN_TYPE line=12 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+12 RETURN line=12 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/TryCatch.php
+Function: multi
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 18
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 3
+Literals: 11
+Return type: int
+Lines: 14-25
+
+Compiled variables:
+0 $n
+1 $exception
+
+Literals:
+0 string("operation")
+1 string("operation")
+2 string("RuntimeException")
+3 string("runtimeexception")
+4 string("recover")
+5 string("recover")
+6 string("LogicException")
+7 string("logicexception")
+8 string("report")
+9 string("report")
+10 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=14 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 INIT_FCALL_BY_NAME line=17 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+2 SEND_VAR_EX line=17 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+3 DO_FCALL_BY_NAME line=17 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 JMP line=17 op1=JMP(14) op2=UNUSED result=UNUSED ext=-
+5 CATCH line=18 op1=CONST(string("RuntimeException")) op2=JMP(10) result=CV(1:$exception) ext=8
+6 INIT_FCALL_BY_NAME line=19 op1=UNUSED op2=CONST(string("recover")) result=UNUSED(16) ext=1
+7 SEND_VAR_EX line=19 op1=CV(1:$exception) op2=UNUSED(1) result=UNUSED(80) ext=-
+8 DO_FCALL_BY_NAME line=19 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+9 JMP line=19 op1=JMP(14) op2=UNUSED result=UNUSED ext=-
+10 CATCH line=20 op1=CONST(string("LogicException")) op2=UNUSED result=CV(1:$exception) ext=25
+11 INIT_FCALL_BY_NAME line=21 op1=UNUSED op2=CONST(string("report")) result=UNUSED(32) ext=1
+12 SEND_VAR_EX line=21 op1=CV(1:$exception) op2=UNUSED(1) result=UNUSED(80) ext=-
+13 DO_FCALL_BY_NAME line=21 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+14 VERIFY_RETURN_TYPE line=24 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+15 RETURN line=24 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+16 VERIFY_RETURN_TYPE line=25 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+17 RETURN line=25 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/TryCatch.php
+Function: union
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 15
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 2
+Literals: 9
+Return type: int
+Lines: 27-36
+
+Compiled variables:
+0 $n
+1 $exception
+
+Literals:
+0 string("operation")
+1 string("operation")
+2 string("RuntimeException")
+3 string("runtimeexception")
+4 string("LogicException")
+5 string("logicexception")
+6 string("recover")
+7 string("recover")
+8 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=27 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 INIT_FCALL_BY_NAME line=30 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+2 SEND_VAR_EX line=30 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+3 DO_FCALL_BY_NAME line=30 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 JMP line=30 op1=JMP(11) op2=UNUSED result=UNUSED ext=-
+5 CATCH line=31 op1=CONST(string("RuntimeException")) op2=JMP(7) result=CV(1:$exception) ext=8
+6 JMP line=31 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+7 CATCH line=31 op1=CONST(string("LogicException")) op2=UNUSED result=CV(1:$exception) ext=17
+8 INIT_FCALL_BY_NAME line=32 op1=UNUSED op2=CONST(string("recover")) result=UNUSED(24) ext=1
+9 SEND_VAR_EX line=32 op1=CV(1:$exception) op2=UNUSED(1) result=UNUSED(80) ext=-
+10 DO_FCALL_BY_NAME line=32 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+11 VERIFY_RETURN_TYPE line=35 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+12 RETURN line=35 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+13 VERIFY_RETURN_TYPE line=36 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+14 RETURN line=36 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/TryCatch.php
+Function: mixed
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 20
+Arguments: 1
+Required arguments: 1
+Compiled variables: 3
+Temporary variables: 3
+Literals: 13
+Return type: int
+Lines: 38-49
+
+Compiled variables:
+0 $n
+1 $exception
+2 $error
+
+Literals:
+0 string("operation")
+1 string("operation")
+2 string("RuntimeException")
+3 string("runtimeexception")
+4 string("LogicException")
+5 string("logicexception")
+6 string("recover")
+7 string("recover")
+8 string("Error")
+9 string("error")
+10 string("report")
+11 string("report")
+12 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=38 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 INIT_FCALL_BY_NAME line=41 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+2 SEND_VAR_EX line=41 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+3 DO_FCALL_BY_NAME line=41 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 JMP line=41 op1=JMP(16) op2=UNUSED result=UNUSED ext=-
+5 CATCH line=42 op1=CONST(string("RuntimeException")) op2=JMP(7) result=CV(1:$exception) ext=8
+6 JMP line=42 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+7 CATCH line=42 op1=CONST(string("LogicException")) op2=JMP(12) result=CV(1:$exception) ext=16
+8 INIT_FCALL_BY_NAME line=43 op1=UNUSED op2=CONST(string("recover")) result=UNUSED(24) ext=1
+9 SEND_VAR_EX line=43 op1=CV(1:$exception) op2=UNUSED(1) result=UNUSED(80) ext=-
+10 DO_FCALL_BY_NAME line=43 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+11 JMP line=43 op1=JMP(16) op2=UNUSED result=UNUSED ext=-
+12 CATCH line=44 op1=CONST(string("Error")) op2=UNUSED result=CV(2:$error) ext=33
+13 INIT_FCALL_BY_NAME line=45 op1=UNUSED op2=CONST(string("report")) result=UNUSED(40) ext=1
+14 SEND_VAR_EX line=45 op1=CV(2:$error) op2=UNUSED(1) result=UNUSED(80) ext=-
+15 DO_FCALL_BY_NAME line=45 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+16 VERIFY_RETURN_TYPE line=48 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+17 RETURN line=48 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+18 VERIFY_RETURN_TYPE line=49 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+19 RETURN line=49 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/TryCatch.php
+Function: noVar
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 12
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 2
+Literals: 7
+Return type: int
+Lines: 51-60
+
+Compiled variables:
+0 $n
+
+Literals:
+0 string("operation")
+1 string("operation")
+2 string("RuntimeException")
+3 string("runtimeexception")
+4 string("recover")
+5 string("recover")
+6 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=51 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 INIT_FCALL_BY_NAME line=54 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+2 SEND_VAR_EX line=54 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+3 DO_FCALL_BY_NAME line=54 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 JMP line=54 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+5 CATCH line=55 op1=CONST(string("RuntimeException")) op2=UNUSED result=UNUSED ext=9
+6 INIT_FCALL_BY_NAME line=56 op1=UNUSED op2=CONST(string("recover")) result=UNUSED(16) ext=-
+7 DO_FCALL_BY_NAME line=56 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+8 VERIFY_RETURN_TYPE line=59 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+9 RETURN line=59 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+10 VERIFY_RETURN_TYPE line=60 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+11 RETURN line=60 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/TryCatch.php
+Function: emptyCatch
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 10
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 1
+Literals: 5
+Return type: int
+Lines: 62-70
+
+Compiled variables:
+0 $n
+
+Literals:
+0 string("operation")
+1 string("operation")
+2 string("RuntimeException")
+3 string("runtimeexception")
+4 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=62 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 INIT_FCALL_BY_NAME line=65 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+2 SEND_VAR_EX line=65 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+3 DO_FCALL_BY_NAME line=65 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 JMP line=65 op1=JMP(6) op2=UNUSED result=UNUSED ext=-
+5 CATCH line=66 op1=CONST(string("RuntimeException")) op2=UNUSED result=UNUSED ext=9
+6 VERIFY_RETURN_TYPE line=69 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+7 RETURN line=69 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+8 VERIFY_RETURN_TYPE line=70 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+9 RETURN line=70 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/TryCatch.php
+Function: splitEmpty
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 12
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 1
+Literals: 7
+Return type: int
+Lines: 72-81
+
+Compiled variables:
+0 $n
+
+Literals:
+0 string("operation")
+1 string("operation")
+2 string("RuntimeException")
+3 string("runtimeexception")
+4 string("LogicException")
+5 string("logicexception")
+6 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=72 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 INIT_FCALL_BY_NAME line=75 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+2 SEND_VAR_EX line=75 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+3 DO_FCALL_BY_NAME line=75 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 JMP line=75 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+5 CATCH line=76 op1=CONST(string("RuntimeException")) op2=JMP(7) result=UNUSED ext=8
+6 JMP line=76 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+7 CATCH line=77 op1=CONST(string("LogicException")) op2=UNUSED result=UNUSED ext=17
+8 VERIFY_RETURN_TYPE line=80 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+9 RETURN line=80 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+10 VERIFY_RETURN_TYPE line=81 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+11 RETURN line=81 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/TryCatch.php
+Function: throwableCatch
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 13
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 2
+Literals: 7
+Return type: int
+Lines: 83-92
+
+Compiled variables:
+0 $n
+1 $exception
+
+Literals:
+0 string("operation")
+1 string("operation")
+2 string("Throwable")
+3 string("throwable")
+4 string("recover")
+5 string("recover")
+6 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=83 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 INIT_FCALL_BY_NAME line=86 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+2 SEND_VAR_EX line=86 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+3 DO_FCALL_BY_NAME line=86 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 JMP line=86 op1=JMP(9) op2=UNUSED result=UNUSED ext=-
+5 CATCH line=87 op1=CONST(string("Throwable")) op2=UNUSED result=CV(1:$exception) ext=9
+6 INIT_FCALL_BY_NAME line=88 op1=UNUSED op2=CONST(string("recover")) result=UNUSED(16) ext=1
+7 SEND_VAR_EX line=88 op1=CV(1:$exception) op2=UNUSED(1) result=UNUSED(80) ext=-
+8 DO_FCALL_BY_NAME line=88 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+9 VERIFY_RETURN_TYPE line=91 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+10 RETURN line=91 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+11 VERIFY_RETURN_TYPE line=92 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+12 RETURN line=92 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/TryCatch.php
+Function: explicitThrow
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 14
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 3
+Literals: 8
+Return type: int
+Lines: 94-103
+
+Compiled variables:
+0 $n
+1 $exception
+
+Literals:
+0 string("RuntimeException")
+1 string("runtimeexception")
+2 string("bad")
+3 string("RuntimeException")
+4 string("runtimeexception")
+5 string("recover")
+6 string("recover")
+7 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=94 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 NEW line=97 op1=CONST(string("RuntimeException")) op2=UNUSED result=VAR(0) ext=1
+2 SEND_VAL_EX line=97 op1=CONST(string("bad")) op2=UNUSED(1) result=UNUSED(80) ext=-
+3 DO_FCALL line=97 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 THROW line=97 op1=VAR(0) op2=UNUSED result=UNUSED ext=-
+5 JMP line=97 op1=JMP(10) op2=UNUSED result=UNUSED ext=-
+6 CATCH line=98 op1=CONST(string("RuntimeException")) op2=UNUSED result=CV(1:$exception) ext=9
+7 INIT_FCALL_BY_NAME line=99 op1=UNUSED op2=CONST(string("recover")) result=UNUSED(16) ext=1
+8 SEND_VAR_EX line=99 op1=CV(1:$exception) op2=UNUSED(1) result=UNUSED(80) ext=-
+9 DO_FCALL_BY_NAME line=99 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+10 VERIFY_RETURN_TYPE line=102 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+11 RETURN line=102 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+12 VERIFY_RETURN_TYPE line=103 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+13 RETURN line=103 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/TryCatch.php
+Function: implicit
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 14
+Arguments: 1
+Required arguments: 1
+Compiled variables: 3
+Temporary variables: 4
+Literals: 6
+Return type: int
+Lines: 105-115
+
+Compiled variables:
+0 $n
+1 $value
+2 $exception
+
+Literals:
+0 int(0)
+1 string("DivisionByZeroError")
+2 string("divisionbyzeroerror")
+3 string("recover")
+4 string("recover")
+5 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=105 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 DIV line=108 op1=CV(0:$n) op2=CONST(int(0)) result=TMP(0) ext=-
+2 ASSIGN line=108 op1=CV(1:$value) op2=TMP(0) result=UNUSED ext=-
+3 STRLEN line=109 op1=CV(1:$value) op2=UNUSED result=TMP(2) ext=-
+4 FREE line=109 op1=TMP(2) op2=UNUSED result=UNUSED ext=-
+5 JMP line=109 op1=JMP(10) op2=UNUSED result=UNUSED ext=-
+6 CATCH line=110 op1=CONST(string("DivisionByZeroError")) op2=UNUSED result=CV(2:$exception) ext=1
+7 INIT_FCALL_BY_NAME line=111 op1=UNUSED op2=CONST(string("recover")) result=UNUSED(8) ext=1
+8 SEND_VAR_EX line=111 op1=CV(2:$exception) op2=UNUSED(1) result=UNUSED(80) ext=-
+9 DO_FCALL_BY_NAME line=111 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+10 VERIFY_RETURN_TYPE line=114 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+11 RETURN line=114 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+12 VERIFY_RETURN_TYPE line=115 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+13 RETURN line=115 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/TryCatch.php
+Function: returnInTry
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 15
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 3
+Literals: 10
+Return type: int
+Lines: 117-129
+
+Compiled variables:
+0 $n
+1 $exception
+
+Literals:
+0 int(0)
+1 int(1)
+2 string("operation")
+3 string("operation")
+4 string("RuntimeException")
+5 string("runtimeexception")
+6 string("recover")
+7 string("recover")
+8 int(0)
+9 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=117 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 IS_SMALLER line=120 op1=CV(0:$n) op2=CONST(int(0)) result=TMP(0)|SMART_JMPZ ext=-
+2 JMPZ line=120 op1=TMP(0) op2=JMP(4) result=UNUSED ext=-
+3 RETURN line=121 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+4 INIT_FCALL_BY_NAME line=123 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+5 SEND_VAR_EX line=123 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+6 DO_FCALL_BY_NAME line=123 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+7 JMP line=123 op1=JMP(12) op2=UNUSED result=UNUSED ext=-
+8 CATCH line=124 op1=CONST(string("RuntimeException")) op2=UNUSED result=CV(1:$exception) ext=9
+9 INIT_FCALL_BY_NAME line=125 op1=UNUSED op2=CONST(string("recover")) result=UNUSED(16) ext=1
+10 SEND_VAR_EX line=125 op1=CV(1:$exception) op2=UNUSED(1) result=UNUSED(80) ext=-
+11 DO_FCALL_BY_NAME line=125 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+12 RETURN line=128 op1=CONST(int(0)) op2=UNUSED result=UNUSED ext=-
+13 VERIFY_RETURN_TYPE line=129 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+14 RETURN line=129 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/TryCatch.php
+Function: returnInCatch
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 10
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 1
+Literals: 7
+Return type: int
+Lines: 131-140
+
+Compiled variables:
+0 $n
+1 $exception
+
+Literals:
+0 string("operation")
+1 string("operation")
+2 string("RuntimeException")
+3 string("runtimeexception")
+4 int(1)
+5 int(0)
+6 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=131 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 INIT_FCALL_BY_NAME line=134 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+2 SEND_VAR_EX line=134 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+3 DO_FCALL_BY_NAME line=134 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 JMP line=134 op1=JMP(7) op2=UNUSED result=UNUSED ext=-
+5 CATCH line=135 op1=CONST(string("RuntimeException")) op2=UNUSED result=CV(1:$exception) ext=9
+6 RETURN line=136 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+7 RETURN line=139 op1=CONST(int(0)) op2=UNUSED result=UNUSED ext=-
+8 VERIFY_RETURN_TYPE line=140 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+9 RETURN line=140 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/TryCatch.php
+Function: throwInCatch
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 14
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 3
+Literals: 8
+Return type: int
+Lines: 142-151
+
+Compiled variables:
+0 $n
+1 $exception
+
+Literals:
+0 string("operation")
+1 string("operation")
+2 string("RuntimeException")
+3 string("runtimeexception")
+4 string("LogicException")
+5 string("logicexception")
+6 string("again")
+7 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=142 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 INIT_FCALL_BY_NAME line=145 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+2 SEND_VAR_EX line=145 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+3 DO_FCALL_BY_NAME line=145 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 JMP line=145 op1=JMP(10) op2=UNUSED result=UNUSED ext=-
+5 CATCH line=146 op1=CONST(string("RuntimeException")) op2=UNUSED result=CV(1:$exception) ext=9
+6 NEW line=147 op1=CONST(string("LogicException")) op2=UNUSED(16) result=VAR(1) ext=1
+7 SEND_VAL_EX line=147 op1=CONST(string("again")) op2=UNUSED(1) result=UNUSED(80) ext=-
+8 DO_FCALL line=147 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+9 THROW line=147 op1=VAR(1) op2=UNUSED result=UNUSED ext=-
+10 VERIFY_RETURN_TYPE line=150 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+11 RETURN line=150 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+12 VERIFY_RETURN_TYPE line=151 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+13 RETURN line=151 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/TryCatch.php
+Function: rethrow
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 11
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 1
+Literals: 5
+Return type: int
+Lines: 153-162
+
+Compiled variables:
+0 $n
+1 $exception
+
+Literals:
+0 string("operation")
+1 string("operation")
+2 string("RuntimeException")
+3 string("runtimeexception")
+4 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=153 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 INIT_FCALL_BY_NAME line=156 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+2 SEND_VAR_EX line=156 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+3 DO_FCALL_BY_NAME line=156 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 JMP line=156 op1=JMP(7) op2=UNUSED result=UNUSED ext=-
+5 CATCH line=157 op1=CONST(string("RuntimeException")) op2=UNUSED result=CV(1:$exception) ext=9
+6 THROW line=158 op1=CV(1:$exception) op2=UNUSED result=UNUSED ext=-
+7 VERIFY_RETURN_TYPE line=161 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+8 RETURN line=161 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+9 VERIFY_RETURN_TYPE line=162 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+10 RETURN line=162 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/TryCatch.php
+Function: condInTry
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 19
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 4
+Literals: 10
+Return type: int
+Lines: 164-177
+
+Compiled variables:
+0 $n
+1 $exception
+
+Literals:
+0 int(0)
+1 string("operation")
+2 string("operation")
+3 string("recover")
+4 string("recover")
+5 string("RuntimeException")
+6 string("runtimeexception")
+7 string("report")
+8 string("report")
+9 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=164 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 IS_SMALLER line=167 op1=CV(0:$n) op2=CONST(int(0)) result=TMP(0)|SMART_JMPZ ext=-
+2 JMPZ line=167 op1=TMP(0) op2=JMP(7) result=UNUSED ext=-
+3 INIT_FCALL_BY_NAME line=168 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+4 SEND_VAR_EX line=168 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+5 DO_FCALL_BY_NAME line=168 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+6 JMP line=167 op1=JMP(10) op2=UNUSED result=UNUSED ext=-
+7 INIT_FCALL_BY_NAME line=170 op1=UNUSED op2=CONST(string("recover")) result=UNUSED(8) ext=1
+8 SEND_VAR_EX line=170 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+9 DO_FCALL_BY_NAME line=170 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+10 JMP line=170 op1=JMP(15) op2=UNUSED result=UNUSED ext=-
+11 CATCH line=172 op1=CONST(string("RuntimeException")) op2=UNUSED result=CV(1:$exception) ext=17
+12 INIT_FCALL_BY_NAME line=173 op1=UNUSED op2=CONST(string("report")) result=UNUSED(24) ext=1
+13 SEND_VAR_EX line=173 op1=CV(1:$exception) op2=UNUSED(1) result=UNUSED(80) ext=-
+14 DO_FCALL_BY_NAME line=173 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+15 VERIFY_RETURN_TYPE line=176 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+16 RETURN line=176 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+17 VERIFY_RETURN_TYPE line=177 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+18 RETURN line=177 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/TryCatch.php
+Function: condInCatch
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 19
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 4
+Literals: 10
+Return type: int
+Lines: 179-192
+
+Compiled variables:
+0 $n
+1 $exception
+
+Literals:
+0 string("operation")
+1 string("operation")
+2 string("RuntimeException")
+3 string("runtimeexception")
+4 int(0)
+5 string("recover")
+6 string("recover")
+7 string("report")
+8 string("report")
+9 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=179 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 INIT_FCALL_BY_NAME line=182 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+2 SEND_VAR_EX line=182 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+3 DO_FCALL_BY_NAME line=182 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 JMP line=182 op1=JMP(15) op2=UNUSED result=UNUSED ext=-
+5 CATCH line=183 op1=CONST(string("RuntimeException")) op2=UNUSED result=CV(1:$exception) ext=9
+6 IS_SMALLER line=184 op1=CV(0:$n) op2=CONST(int(0)) result=TMP(1)|SMART_JMPZ ext=-
+7 JMPZ line=184 op1=TMP(1) op2=JMP(12) result=UNUSED ext=-
+8 INIT_FCALL_BY_NAME line=185 op1=UNUSED op2=CONST(string("recover")) result=UNUSED(16) ext=1
+9 SEND_VAR_EX line=185 op1=CV(1:$exception) op2=UNUSED(1) result=UNUSED(80) ext=-
+10 DO_FCALL_BY_NAME line=185 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+11 JMP line=184 op1=JMP(15) op2=UNUSED result=UNUSED ext=-
+12 INIT_FCALL_BY_NAME line=187 op1=UNUSED op2=CONST(string("report")) result=UNUSED(24) ext=1
+13 SEND_VAR_EX line=187 op1=CV(1:$exception) op2=UNUSED(1) result=UNUSED(80) ext=-
+14 DO_FCALL_BY_NAME line=187 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+15 VERIFY_RETURN_TYPE line=191 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+16 RETURN line=191 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+17 VERIFY_RETURN_TYPE line=192 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+18 RETURN line=192 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/TryCatch.php
+Function: ifAroundTry
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 19
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 4
+Literals: 10
+Return type: int
+Lines: 194-207
+
+Compiled variables:
+0 $n
+1 $exception
+
+Literals:
+0 int(0)
+1 string("operation")
+2 string("operation")
+3 string("RuntimeException")
+4 string("runtimeexception")
+5 string("recover")
+6 string("recover")
+7 string("report")
+8 string("report")
+9 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=194 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 IS_SMALLER line=196 op1=CV(0:$n) op2=CONST(int(0)) result=TMP(0)|SMART_JMPZ ext=-
+2 JMPZ line=196 op1=TMP(0) op2=JMP(12) result=UNUSED ext=-
+3 INIT_FCALL_BY_NAME line=198 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+4 SEND_VAR_EX line=198 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+5 DO_FCALL_BY_NAME line=198 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+6 JMP line=198 op1=JMP(11) op2=UNUSED result=UNUSED ext=-
+7 CATCH line=199 op1=CONST(string("RuntimeException")) op2=UNUSED result=CV(1:$exception) ext=9
+8 INIT_FCALL_BY_NAME line=200 op1=UNUSED op2=CONST(string("recover")) result=UNUSED(16) ext=1
+9 SEND_VAR_EX line=200 op1=CV(1:$exception) op2=UNUSED(1) result=UNUSED(80) ext=-
+10 DO_FCALL_BY_NAME line=200 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+11 JMP line=196 op1=JMP(15) op2=UNUSED result=UNUSED ext=-
+12 INIT_FCALL_BY_NAME line=203 op1=UNUSED op2=CONST(string("report")) result=UNUSED(24) ext=1
+13 SEND_VAR_EX line=203 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+14 DO_FCALL_BY_NAME line=203 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+15 VERIFY_RETURN_TYPE line=206 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+16 RETURN line=206 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+17 VERIFY_RETURN_TYPE line=207 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+18 RETURN line=207 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/TryCatch.php
+Function: loopInTry
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 17
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 4
+Literals: 8
+Return type: int
+Lines: 209-221
+
+Compiled variables:
+0 $n
+1 $exception
+
+Literals:
+0 string("operation")
+1 string("operation")
+2 int(0)
+3 string("RuntimeException")
+4 string("runtimeexception")
+5 string("recover")
+6 string("recover")
+7 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=209 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 JMP line=212 op1=JMP(6) op2=UNUSED result=UNUSED ext=-
+2 INIT_FCALL_BY_NAME line=213 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+3 SEND_VAR_EX line=213 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+4 DO_FCALL_BY_NAME line=213 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+5 PRE_DEC line=214 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+6 IS_SMALLER line=212 op1=CONST(int(0)) op2=CV(0:$n) result=TMP(2)|SMART_JMPNZ ext=-
+7 JMPNZ line=212 op1=TMP(2) op2=JMP(2) result=UNUSED ext=-
+8 JMP line=212 op1=JMP(13) op2=UNUSED result=UNUSED ext=-
+9 CATCH line=216 op1=CONST(string("RuntimeException")) op2=UNUSED result=CV(1:$exception) ext=9
+10 INIT_FCALL_BY_NAME line=217 op1=UNUSED op2=CONST(string("recover")) result=UNUSED(16) ext=1
+11 SEND_VAR_EX line=217 op1=CV(1:$exception) op2=UNUSED(1) result=UNUSED(80) ext=-
+12 DO_FCALL_BY_NAME line=217 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+13 VERIFY_RETURN_TYPE line=220 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+14 RETURN line=220 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+15 VERIFY_RETURN_TYPE line=221 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+16 RETURN line=221 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/TryCatch.php
+Function: loopInCatch
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 17
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 4
+Literals: 8
+Return type: int
+Lines: 223-235
+
+Compiled variables:
+0 $n
+1 $exception
+
+Literals:
+0 string("operation")
+1 string("operation")
+2 string("RuntimeException")
+3 string("runtimeexception")
+4 string("recover")
+5 string("recover")
+6 int(0)
+7 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=223 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 INIT_FCALL_BY_NAME line=226 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+2 SEND_VAR_EX line=226 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+3 DO_FCALL_BY_NAME line=226 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 JMP line=226 op1=JMP(13) op2=UNUSED result=UNUSED ext=-
+5 CATCH line=227 op1=CONST(string("RuntimeException")) op2=UNUSED result=CV(1:$exception) ext=9
+6 JMP line=228 op1=JMP(11) op2=UNUSED result=UNUSED ext=-
+7 INIT_FCALL_BY_NAME line=229 op1=UNUSED op2=CONST(string("recover")) result=UNUSED(16) ext=1
+8 SEND_VAR_EX line=229 op1=CV(1:$exception) op2=UNUSED(1) result=UNUSED(80) ext=-
+9 DO_FCALL_BY_NAME line=229 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+10 PRE_DEC line=230 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+11 IS_SMALLER line=228 op1=CONST(int(0)) op2=CV(0:$n) result=TMP(3)|SMART_JMPNZ ext=-
+12 JMPNZ line=228 op1=TMP(3) op2=JMP(7) result=UNUSED ext=-
+13 VERIFY_RETURN_TYPE line=234 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+14 RETURN line=234 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+15 VERIFY_RETURN_TYPE line=235 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+16 RETURN line=235 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/TryCatch.php
+Function: tryInWhile
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 17
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 4
+Literals: 8
+Return type: int
+Lines: 237-249
+
+Compiled variables:
+0 $n
+1 $exception
+
+Literals:
+0 string("operation")
+1 string("operation")
+2 string("RuntimeException")
+3 string("runtimeexception")
+4 string("recover")
+5 string("recover")
+6 int(0)
+7 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=237 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 JMP line=239 op1=JMP(11) op2=UNUSED result=UNUSED ext=-
+2 INIT_FCALL_BY_NAME line=241 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+3 SEND_VAR_EX line=241 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+4 DO_FCALL_BY_NAME line=241 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+5 JMP line=241 op1=JMP(10) op2=UNUSED result=UNUSED ext=-
+6 CATCH line=242 op1=CONST(string("RuntimeException")) op2=UNUSED result=CV(1:$exception) ext=9
+7 INIT_FCALL_BY_NAME line=243 op1=UNUSED op2=CONST(string("recover")) result=UNUSED(16) ext=1
+8 SEND_VAR_EX line=243 op1=CV(1:$exception) op2=UNUSED(1) result=UNUSED(80) ext=-
+9 DO_FCALL_BY_NAME line=243 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+10 PRE_DEC line=245 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+11 IS_SMALLER line=239 op1=CONST(int(0)) op2=CV(0:$n) result=TMP(3)|SMART_JMPNZ ext=-
+12 JMPNZ line=239 op1=TMP(3) op2=JMP(2) result=UNUSED ext=-
+13 VERIFY_RETURN_TYPE line=248 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+14 RETURN line=248 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+15 VERIFY_RETURN_TYPE line=249 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+16 RETURN line=249 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/TryCatch.php
+Function: tryInFor
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 18
+Arguments: 1
+Required arguments: 1
+Compiled variables: 3
+Temporary variables: 5
+Literals: 8
+Return type: int
+Lines: 251-262
+
+Compiled variables:
+0 $n
+1 $i
+2 $exception
+
+Literals:
+0 int(0)
+1 string("operation")
+2 string("operation")
+3 string("RuntimeException")
+4 string("runtimeexception")
+5 string("recover")
+6 string("recover")
+7 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=251 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 ASSIGN line=253 op1=CV(1:$i) op2=CONST(int(0)) result=UNUSED ext=-
+2 JMP line=253 op1=JMP(12) op2=UNUSED result=UNUSED ext=-
+3 INIT_FCALL_BY_NAME line=255 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+4 SEND_VAR_EX line=255 op1=CV(1:$i) op2=UNUSED(1) result=UNUSED(80) ext=-
+5 DO_FCALL_BY_NAME line=255 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+6 JMP line=255 op1=JMP(11) op2=UNUSED result=UNUSED ext=-
+7 CATCH line=256 op1=CONST(string("RuntimeException")) op2=UNUSED result=CV(2:$exception) ext=9
+8 INIT_FCALL_BY_NAME line=257 op1=UNUSED op2=CONST(string("recover")) result=UNUSED(16) ext=1
+9 SEND_VAR_EX line=257 op1=CV(2:$exception) op2=UNUSED(1) result=UNUSED(80) ext=-
+10 DO_FCALL_BY_NAME line=257 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+11 PRE_INC line=253 op1=CV(1:$i) op2=UNUSED result=UNUSED ext=-
+12 IS_SMALLER line=253 op1=CV(1:$i) op2=CV(0:$n) result=TMP(4)|SMART_JMPNZ ext=-
+13 JMPNZ line=253 op1=TMP(4) op2=JMP(3) result=UNUSED ext=-
+14 VERIFY_RETURN_TYPE line=261 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+15 RETURN line=261 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+16 VERIFY_RETURN_TYPE line=262 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+17 RETURN line=262 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/TryCatch.php
+Function: tryInForeach
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 18
+Arguments: 1
+Required arguments: 1
+Compiled variables: 3
+Temporary variables: 4
+Literals: 7
+Return type: int
+Lines: 264-275
+
+Compiled variables:
+0 $items
+1 $item
+2 $exception
+
+Literals:
+0 string("operation")
+1 string("operation")
+2 string("RuntimeException")
+3 string("runtimeexception")
+4 string("recover")
+5 string("recover")
+6 null
+
+Argument details:
+0 $items array
+
+Opcodes:
+0 RECV line=264 op1=UNUSED(1) op2=UNUSED(128) result=CV(0:$items) ext=-
+1 FE_RESET_R line=266 op1=CV(0:$items) op2=JMP(12) result=VAR(0) ext=-
+2 FE_FETCH_R line=266 op1=VAR(0) op2=CV(1:$item) result=UNUSED ext=jmp:12
+3 INIT_FCALL_BY_NAME line=268 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+4 SEND_VAR_EX line=268 op1=CV(1:$item) op2=UNUSED(1) result=UNUSED(80) ext=-
+5 DO_FCALL_BY_NAME line=268 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+6 JMP line=268 op1=JMP(11) op2=UNUSED result=UNUSED ext=-
+7 CATCH line=269 op1=CONST(string("RuntimeException")) op2=UNUSED result=CV(2:$exception) ext=9
+8 INIT_FCALL_BY_NAME line=270 op1=UNUSED op2=CONST(string("recover")) result=UNUSED(16) ext=1
+9 SEND_VAR_EX line=270 op1=CV(2:$exception) op2=UNUSED(1) result=UNUSED(80) ext=-
+10 DO_FCALL_BY_NAME line=270 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+11 JMP line=266 op1=JMP(2) op2=UNUSED result=UNUSED ext=-
+12 FE_FREE line=266 op1=VAR(0) op2=UNUSED result=UNUSED ext=-
+13 COUNT line=274 op1=CV(0:$items) op2=UNUSED result=TMP(3) ext=-
+14 VERIFY_RETURN_TYPE line=274 op1=TMP(3) op2=UNUSED result=UNUSED ext=-
+15 RETURN line=274 op1=TMP(3) op2=UNUSED result=UNUSED ext=-
+16 VERIFY_RETURN_TYPE line=275 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+17 RETURN line=275 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/TryCatch.php
+Function: nested
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 18
+Arguments: 1
+Required arguments: 1
+Compiled variables: 3
+Temporary variables: 3
+Literals: 11
+Return type: int
+Lines: 277-290
+
+Compiled variables:
+0 $n
+1 $inner
+2 $outer
+
+Literals:
+0 string("operation")
+1 string("operation")
+2 string("RuntimeException")
+3 string("runtimeexception")
+4 string("recover")
+5 string("recover")
+6 string("LogicException")
+7 string("logicexception")
+8 string("report")
+9 string("report")
+10 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=277 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 INIT_FCALL_BY_NAME line=281 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+2 SEND_VAR_EX line=281 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+3 DO_FCALL_BY_NAME line=281 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 JMP line=281 op1=JMP(9) op2=UNUSED result=UNUSED ext=-
+5 CATCH line=282 op1=CONST(string("RuntimeException")) op2=UNUSED result=CV(1:$inner) ext=9
+6 INIT_FCALL_BY_NAME line=283 op1=UNUSED op2=CONST(string("recover")) result=UNUSED(16) ext=1
+7 SEND_VAR_EX line=283 op1=CV(1:$inner) op2=UNUSED(1) result=UNUSED(80) ext=-
+8 DO_FCALL_BY_NAME line=283 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+9 JMP line=283 op1=JMP(14) op2=UNUSED result=UNUSED ext=-
+10 CATCH line=285 op1=CONST(string("LogicException")) op2=UNUSED result=CV(2:$outer) ext=25
+11 INIT_FCALL_BY_NAME line=286 op1=UNUSED op2=CONST(string("report")) result=UNUSED(32) ext=1
+12 SEND_VAR_EX line=286 op1=CV(2:$outer) op2=UNUSED(1) result=UNUSED(80) ext=-
+13 DO_FCALL_BY_NAME line=286 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+14 VERIFY_RETURN_TYPE line=289 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+15 RETURN line=289 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+16 VERIFY_RETURN_TYPE line=290 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+17 RETURN line=290 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/TryCatch.php
+Function: innerToOuter
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 19
+Arguments: 1
+Required arguments: 1
+Compiled variables: 3
+Temporary variables: 4
+Literals: 12
+Return type: int
+Lines: 292-305
+
+Compiled variables:
+0 $n
+1 $inner
+2 $outer
+
+Literals:
+0 string("operation")
+1 string("operation")
+2 string("RuntimeException")
+3 string("runtimeexception")
+4 string("LogicException")
+5 string("logicexception")
+6 string("wrapped")
+7 string("LogicException")
+8 string("logicexception")
+9 string("report")
+10 string("report")
+11 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=292 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 INIT_FCALL_BY_NAME line=296 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+2 SEND_VAR_EX line=296 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+3 DO_FCALL_BY_NAME line=296 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 JMP line=296 op1=JMP(10) op2=UNUSED result=UNUSED ext=-
+5 CATCH line=297 op1=CONST(string("RuntimeException")) op2=UNUSED result=CV(1:$inner) ext=9
+6 NEW line=298 op1=CONST(string("LogicException")) op2=UNUSED(16) result=VAR(1) ext=1
+7 SEND_VAL_EX line=298 op1=CONST(string("wrapped")) op2=UNUSED(1) result=UNUSED(80) ext=-
+8 DO_FCALL line=298 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+9 THROW line=298 op1=VAR(1) op2=UNUSED result=UNUSED ext=-
+10 JMP line=298 op1=JMP(15) op2=UNUSED result=UNUSED ext=-
+11 CATCH line=300 op1=CONST(string("LogicException")) op2=UNUSED result=CV(2:$outer) ext=25
+12 INIT_FCALL_BY_NAME line=301 op1=UNUSED op2=CONST(string("report")) result=UNUSED(32) ext=1
+13 SEND_VAR_EX line=301 op1=CV(2:$outer) op2=UNUSED(1) result=UNUSED(80) ext=-
+14 DO_FCALL_BY_NAME line=301 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+15 VERIFY_RETURN_TYPE line=304 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+16 RETURN line=304 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+17 VERIFY_RETURN_TYPE line=305 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+18 RETURN line=305 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/TryCatch.php
+Function: switchInCatch
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 46
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 8
+Literals: 21
+Return type: int
+Lines: 307-335
+
+Compiled variables:
+0 $n
+1 $exception
+
+Literals:
+0 string("operation")
+1 string("operation")
+2 string("RuntimeException")
+3 string("runtimeexception")
+4 array(5: [1=>int(18), 2=>int(22), 3=>int(26), 4=>int(30), 5=>int(34)])
+5 int(1)
+6 int(2)
+7 int(3)
+8 int(4)
+9 int(5)
+10 string("recover")
+11 string("recover")
+12 string("report")
+13 string("report")
+14 string("log")
+15 string("recover")
+16 string("recover")
+17 string("report")
+18 string("report")
+19 string("log")
+20 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=307 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 INIT_FCALL_BY_NAME line=310 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+2 SEND_VAR_EX line=310 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+3 DO_FCALL_BY_NAME line=310 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 JMP line=310 op1=JMP(42) op2=UNUSED result=UNUSED ext=-
+5 CATCH line=311 op1=CONST(string("RuntimeException")) op2=UNUSED result=CV(1:$exception) ext=9
+6 SWITCH_LONG line=312 op1=CV(0:$n) op2=CONST(array(5: [1=>int(18), 2=>int(22), 3=>int(26), 4=>int(30), 5=>int(34)])) result=UNUSED ext=jmp:38
+7 IS_EQUAL line=313 op1=CV(0:$n) op2=CONST(int(1)) result=TMP(1)|SMART_JMPNZ ext=-
+8 JMPNZ line=313 op1=TMP(1) op2=JMP(18) result=UNUSED ext=-
+9 IS_EQUAL line=316 op1=CV(0:$n) op2=CONST(int(2)) result=TMP(1)|SMART_JMPNZ ext=-
+10 JMPNZ line=316 op1=TMP(1) op2=JMP(22) result=UNUSED ext=-
+11 IS_EQUAL line=319 op1=CV(0:$n) op2=CONST(int(3)) result=TMP(1)|SMART_JMPNZ ext=-
+12 JMPNZ line=319 op1=TMP(1) op2=JMP(26) result=UNUSED ext=-
+13 IS_EQUAL line=322 op1=CV(0:$n) op2=CONST(int(4)) result=TMP(1)|SMART_JMPNZ ext=-
+14 JMPNZ line=322 op1=TMP(1) op2=JMP(30) result=UNUSED ext=-
+15 IS_EQUAL line=325 op1=CV(0:$n) op2=CONST(int(5)) result=TMP(1)|SMART_JMPNZ ext=-
+16 JMPNZ line=325 op1=TMP(1) op2=JMP(34) result=UNUSED ext=-
+17 JMP line=325 op1=JMP(38) op2=UNUSED result=UNUSED ext=-
+18 INIT_FCALL_BY_NAME line=314 op1=UNUSED op2=CONST(string("recover")) result=UNUSED(16) ext=1
+19 SEND_VAR_EX line=314 op1=CV(1:$exception) op2=UNUSED(1) result=UNUSED(80) ext=-
+20 DO_FCALL_BY_NAME line=314 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+21 BRK line=315 op1=LEVEL(0) op2=UNUSED(1) result=UNUSED ext=-
+22 INIT_FCALL_BY_NAME line=317 op1=UNUSED op2=CONST(string("report")) result=UNUSED(24) ext=1
+23 SEND_VAR_EX line=317 op1=CV(1:$exception) op2=UNUSED(1) result=UNUSED(80) ext=-
+24 DO_FCALL_BY_NAME line=317 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+25 BRK line=318 op1=LEVEL(0) op2=UNUSED(1) result=UNUSED ext=-
+26 INIT_FCALL line=320 op1=UNUSED(96) op2=CONST(string("log")) result=UNUSED(32) ext=1
+27 SEND_VAR line=320 op1=CV(1:$exception) op2=UNUSED(1) result=UNUSED(80) ext=-
+28 DO_ICALL line=320 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+29 BRK line=321 op1=LEVEL(0) op2=UNUSED(1) result=UNUSED ext=-
+30 INIT_FCALL_BY_NAME line=323 op1=UNUSED op2=CONST(string("recover")) result=UNUSED(40) ext=1
+31 SEND_VAR_EX line=323 op1=CV(1:$exception) op2=UNUSED(1) result=UNUSED(80) ext=-
+32 DO_FCALL_BY_NAME line=323 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+33 BRK line=324 op1=LEVEL(0) op2=UNUSED(1) result=UNUSED ext=-
+34 INIT_FCALL_BY_NAME line=326 op1=UNUSED op2=CONST(string("report")) result=UNUSED(48) ext=1
+35 SEND_VAR_EX line=326 op1=CV(1:$exception) op2=UNUSED(1) result=UNUSED(80) ext=-
+36 DO_FCALL_BY_NAME line=326 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+37 BRK line=327 op1=LEVEL(0) op2=UNUSED(1) result=UNUSED ext=-
+38 INIT_FCALL line=329 op1=UNUSED(96) op2=CONST(string("log")) result=UNUSED(56) ext=1
+39 SEND_VAR line=329 op1=CV(1:$exception) op2=UNUSED(1) result=UNUSED(80) ext=-
+40 DO_ICALL line=329 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+41 BRK line=330 op1=LEVEL(0) op2=UNUSED(1) result=UNUSED ext=-
+42 VERIFY_RETURN_TYPE line=334 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+43 RETURN line=334 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+44 VERIFY_RETURN_TYPE line=335 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+45 RETURN line=335 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/TryCatch.php
+Function: matchInCatch
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 21
+Arguments: 1
+Required arguments: 1
+Compiled variables: 3
+Temporary variables: 5
+Literals: 11
+Return type: int
+Lines: 337-351
+
+Compiled variables:
+0 $n
+1 $exception
+2 $label
+
+Literals:
+0 string("operation")
+1 string("operation")
+2 string("RuntimeException")
+3 string("runtimeexception")
+4 array(2: [1=>int(7), 2=>int(9)])
+5 string("one")
+6 string("two")
+7 string("other")
+8 string("recover")
+9 string("recover")
+10 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=337 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 INIT_FCALL_BY_NAME line=340 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+2 SEND_VAR_EX line=340 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+3 DO_FCALL_BY_NAME line=340 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 JMP line=340 op1=JMP(17) op2=UNUSED result=UNUSED ext=-
+5 CATCH line=341 op1=CONST(string("RuntimeException")) op2=UNUSED result=CV(1:$exception) ext=9
+6 MATCH line=342 op1=CV(0:$n) op2=CONST(array(2: [1=>int(7), 2=>int(9)])) result=UNUSED ext=jmp:11
+7 QM_ASSIGN line=343 op1=CONST(string("one")) op2=UNUSED result=TMP(2) ext=-
+8 JMP line=343 op1=JMP(13) op2=UNUSED result=UNUSED ext=-
+9 QM_ASSIGN line=344 op1=CONST(string("two")) op2=UNUSED result=TMP(2) ext=-
+10 JMP line=344 op1=JMP(13) op2=UNUSED result=UNUSED ext=-
+11 QM_ASSIGN line=345 op1=CONST(string("other")) op2=UNUSED result=TMP(2) ext=-
+12 JMP line=345 op1=JMP(13) op2=UNUSED result=UNUSED ext=-
+13 ASSIGN line=342 op1=CV(2:$label) op2=TMP(2) result=UNUSED ext=-
+14 INIT_FCALL_BY_NAME line=347 op1=UNUSED op2=CONST(string("recover")) result=UNUSED(16) ext=1
+15 SEND_VAR_EX line=347 op1=CV(2:$label) op2=UNUSED(1) result=UNUSED(80) ext=-
+16 DO_FCALL_BY_NAME line=347 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+17 VERIFY_RETURN_TYPE line=350 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+18 RETURN line=350 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+19 VERIFY_RETURN_TYPE line=351 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+20 RETURN line=351 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/TryCatch.php
+Function: tryFinally
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 14
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 3
+Literals: 5
+Return type: int
+Lines: 353-362
+
+Compiled variables:
+0 $n
+
+Literals:
+0 string("operation")
+1 string("operation")
+2 string("cleanup")
+3 string("cleanup")
+4 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=353 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 INIT_FCALL_BY_NAME line=356 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+2 SEND_VAR_EX line=356 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+3 DO_FCALL_BY_NAME line=356 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 FAST_CALL line=357 op1=TRY_CATCH(0) op2=UNUSED result=TMP(0) ext=-
+5 JMP line=357 op1=JMP(10) op2=UNUSED result=UNUSED ext=-
+6 INIT_FCALL_BY_NAME line=358 op1=UNUSED op2=CONST(string("cleanup")) result=UNUSED(8) ext=1
+7 SEND_VAR_EX line=358 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+8 DO_FCALL_BY_NAME line=358 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+9 FAST_RET line=358 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+10 VERIFY_RETURN_TYPE line=361 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+11 RETURN line=361 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+12 VERIFY_RETURN_TYPE line=362 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+13 RETURN line=362 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/TryCatch.php
+Function: tryCatchFinally
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 19
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 4
+Literals: 9
+Return type: int
+Lines: 364-375
+
+Compiled variables:
+0 $n
+1 $exception
+
+Literals:
+0 string("operation")
+1 string("operation")
+2 string("RuntimeException")
+3 string("runtimeexception")
+4 string("recover")
+5 string("recover")
+6 string("cleanup")
+7 string("cleanup")
+8 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=364 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 INIT_FCALL_BY_NAME line=367 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+2 SEND_VAR_EX line=367 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+3 DO_FCALL_BY_NAME line=367 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 JMP line=367 op1=JMP(9) op2=UNUSED result=UNUSED ext=-
+5 CATCH line=368 op1=CONST(string("RuntimeException")) op2=UNUSED result=CV(1:$exception) ext=9
+6 INIT_FCALL_BY_NAME line=369 op1=UNUSED op2=CONST(string("recover")) result=UNUSED(16) ext=1
+7 SEND_VAR_EX line=369 op1=CV(1:$exception) op2=UNUSED(1) result=UNUSED(80) ext=-
+8 DO_FCALL_BY_NAME line=369 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+9 FAST_CALL line=370 op1=TRY_CATCH(0) op2=UNUSED result=TMP(0) ext=-
+10 JMP line=370 op1=JMP(15) op2=UNUSED result=UNUSED ext=-
+11 INIT_FCALL_BY_NAME line=371 op1=UNUSED op2=CONST(string("cleanup")) result=UNUSED(24) ext=1
+12 SEND_VAR_EX line=371 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+13 DO_FCALL_BY_NAME line=371 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+14 FAST_RET line=371 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+15 VERIFY_RETURN_TYPE line=374 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+16 RETURN line=374 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+17 VERIFY_RETURN_TYPE line=375 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+18 RETURN line=375 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/TryCatch.php
+Function: ambiguous
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 12
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 1
+Literals: 7
+Return type: int
+Lines: 377-384
+
+Compiled variables:
+0 $n
+
+Literals:
+0 string("operation")
+1 string("operation")
+2 string("RuntimeException")
+3 string("runtimeexception")
+4 string("LogicException")
+5 string("logicexception")
+6 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=377 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 INIT_FCALL_BY_NAME line=380 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+2 SEND_VAR_EX line=380 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+3 DO_FCALL_BY_NAME line=380 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 JMP line=380 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+5 CATCH line=381 op1=CONST(string("RuntimeException")) op2=JMP(7) result=UNUSED ext=8
+6 JMP line=381 op1=JMP(8) op2=UNUSED result=UNUSED ext=-
+7 CATCH line=381 op1=CONST(string("LogicException")) op2=UNUSED result=UNUSED ext=17
+8 VERIFY_RETURN_TYPE line=383 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+9 RETURN line=383 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+10 VERIFY_RETURN_TYPE line=384 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+11 RETURN line=384 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/TryCatch.php
+Function: containsFinally
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 19
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 4
+Literals: 9
+Return type: int
+Lines: 386-399
+
+Compiled variables:
+0 $n
+1 $exception
+
+Literals:
+0 string("operation")
+1 string("operation")
+2 string("cleanup")
+3 string("cleanup")
+4 string("RuntimeException")
+5 string("runtimeexception")
+6 string("recover")
+7 string("recover")
+8 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=386 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 INIT_FCALL_BY_NAME line=390 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+2 SEND_VAR_EX line=390 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+3 DO_FCALL_BY_NAME line=390 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 FAST_CALL line=391 op1=TRY_CATCH(1) op2=UNUSED result=TMP(0) ext=-
+5 JMP line=391 op1=JMP(10) op2=UNUSED result=UNUSED ext=-
+6 INIT_FCALL_BY_NAME line=392 op1=UNUSED op2=CONST(string("cleanup")) result=UNUSED(8) ext=1
+7 SEND_VAR_EX line=392 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+8 DO_FCALL_BY_NAME line=392 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+9 FAST_RET line=392 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+10 JMP line=392 op1=JMP(15) op2=UNUSED result=UNUSED ext=-
+11 CATCH line=394 op1=CONST(string("RuntimeException")) op2=UNUSED result=CV(1:$exception) ext=17
+12 INIT_FCALL_BY_NAME line=395 op1=UNUSED op2=CONST(string("recover")) result=UNUSED(24) ext=1
+13 SEND_VAR_EX line=395 op1=CV(1:$exception) op2=UNUSED(1) result=UNUSED(80) ext=-
+14 DO_FCALL_BY_NAME line=395 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+15 VERIFY_RETURN_TYPE line=398 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+16 RETURN line=398 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+17 VERIFY_RETURN_TYPE line=399 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+18 RETURN line=399 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/TryCatch.php
+Function: sibling
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 22
+Arguments: 1
+Required arguments: 1
+Compiled variables: 2
+Temporary variables: 5
+Literals: 11
+Return type: int
+Lines: 401-415
+
+Compiled variables:
+0 $n
+1 $exception
+
+Literals:
+0 string("operation")
+1 string("operation")
+2 string("RuntimeException")
+3 string("runtimeexception")
+4 string("recover")
+5 string("recover")
+6 string("operation")
+7 string("operation")
+8 string("cleanup")
+9 string("cleanup")
+10 null
+
+Argument details:
+0 $n int
+
+Opcodes:
+0 RECV line=401 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$n) ext=-
+1 INIT_FCALL_BY_NAME line=404 op1=UNUSED op2=CONST(string("operation")) result=UNUSED ext=1
+2 SEND_VAR_EX line=404 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+3 DO_FCALL_BY_NAME line=404 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 JMP line=404 op1=JMP(9) op2=UNUSED result=UNUSED ext=-
+5 CATCH line=405 op1=CONST(string("RuntimeException")) op2=UNUSED result=CV(1:$exception) ext=9
+6 INIT_FCALL_BY_NAME line=406 op1=UNUSED op2=CONST(string("recover")) result=UNUSED(16) ext=1
+7 SEND_VAR_EX line=406 op1=CV(1:$exception) op2=UNUSED(1) result=UNUSED(80) ext=-
+8 DO_FCALL_BY_NAME line=406 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+9 INIT_FCALL_BY_NAME line=409 op1=UNUSED op2=CONST(string("operation")) result=UNUSED(24) ext=1
+10 SEND_VAR_EX line=409 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+11 DO_FCALL_BY_NAME line=409 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+12 FAST_CALL line=410 op1=TRY_CATCH(1) op2=UNUSED result=TMP(2) ext=-
+13 JMP line=410 op1=JMP(18) op2=UNUSED result=UNUSED ext=-
+14 INIT_FCALL_BY_NAME line=411 op1=UNUSED op2=CONST(string("cleanup")) result=UNUSED(32) ext=1
+15 SEND_VAR_EX line=411 op1=CV(0:$n) op2=UNUSED(1) result=UNUSED(80) ext=-
+16 DO_FCALL_BY_NAME line=411 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+17 FAST_RET line=411 op1=TMP(2) op2=UNUSED result=UNUSED ext=-
+18 VERIFY_RETURN_TYPE line=414 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+19 RETURN line=414 op1=CV(0:$n) op2=UNUSED result=UNUSED ext=-
+20 VERIFY_RETURN_TYPE line=415 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+21 RETURN line=415 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/TryCatch.php
+Function: <main>
+Class: -
+Kind: main
+Property: -
+Hook: -
+Opcodes: 1
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 1
+Return type: -
+Lines: 1-416
+
+Compiled variables:
+(none)
+
+Literals:
+0 int(1)
+
+Argument details:
+(none)
+
+Opcodes:
+0 RETURN line=416 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+
