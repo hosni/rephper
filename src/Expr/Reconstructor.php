@@ -7,6 +7,7 @@ namespace Rephper\Expr;
 use Rephper\Cfg\Block;
 use Rephper\Cfg\Graph;
 use Rephper\Ir\Instruction;
+use Rephper\Ir\Literal as IrLiteral;
 use Rephper\Ir\OpArray;
 use Rephper\Ir\Operand;
 
@@ -503,6 +504,38 @@ final class Reconstructor
         }
     }
 
+    private function literal(int $opline, int $line, IrLiteral $literal): Literal
+    {
+        return new Literal(
+            $opline,
+            $line,
+            $literal->type,
+            $literal->value,
+            $this->literalElements($opline, $line, $literal),
+            $literal->binary,
+        );
+    }
+
+    /**
+     * @return list<array{key: Literal, value: Literal}>|null
+     */
+    private function literalElements(int $opline, int $line, IrLiteral $literal): ?array
+    {
+        if ($literal->type !== 'array' || $literal->recursive) {
+            return null;
+        }
+
+        $elements = [];
+        foreach ($literal->elements as $element) {
+            $elements[] = [
+                'key' => $this->literal($opline, $line, $element['key']),
+                'value' => $this->literal($opline, $line, $element['value']),
+            ];
+        }
+
+        return $elements;
+    }
+
     private function literalString(OpArray $opArray, Instruction $instruction, Operand $operand): ?string
     {
         if ($operand->kind !== 'const') {
@@ -556,7 +589,7 @@ final class Reconstructor
                 );
             }
 
-            return new Literal($instruction->index, $instruction->line, $literal->type, $literal->value);
+            return $this->literal($instruction->index, $instruction->line, $literal);
         }
         if ($operand->kind === 'cv') {
             if ($operand->name === null || $operand->index === null) {
