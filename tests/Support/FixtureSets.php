@@ -134,6 +134,14 @@ final class FixtureSets
             'Common/MatchExpressions.php' => ['Function: simpleInt', 'Function: withoutDefault', ' MATCH ', ' MATCH_ERROR '],
             'Common/TryCatch.php' => ['Function: simple', 'Function: ambiguous', ' CATCH ', ' FAST_RET '],
             'Common/Finally.php' => ['Function: simple', 'Function: chained', ' FAST_CALL ', ' FAST_RET '],
+            'Common/Calculatror.php' => ['Function: calculatror', 'Kind: main', ' ADD '],
+            'Common/FunctionSignatures.php' => ['Function: calculatror', 'Function: refReturn', ' RECV_VARIADIC ', ' RETURN_BY_REF ', ' MATCH ', ' SWITCH_LONG ', ' CATCH ', ' FAST_RET ', ' VERIFY_NEVER_TYPE '],
+            'Common/FunctionStrict.php' => ['Function: calculatror', 'Kind: main'],
+            'Common/FunctionNamespace.php' => ['Function: App\\\\calculatror', 'Kind: main'],
+            'Common/NamespaceStatement.php' => ['Kind: main', ' ASSIGN '],
+            'Common/FunctionConditional.php' => ['Function: hidden', ' DECLARE_FUNCTION '],
+            'Common/FunctionNested.php' => ['Function: inner', 'Function: outer', ' DECLARE_FUNCTION '],
+            'Common/FileConstant.php' => ['Function: scale', ' DECLARE_CONST '],
         ];
     }
 }

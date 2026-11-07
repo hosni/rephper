@@ -482,6 +482,52 @@ final class ExporterTest extends TestCase
                 }
                 $this->assertTrue($promoted);
                 break;
+            case 'Common/Calculatror.php':
+                $calculatror = $find('function', 'calculatror');
+                $this->assertSame('int', $calculatror['return_type']['display'] ?? null);
+                $this->assertSame('int', $calculatror['arguments'][0]['type']['display'] ?? null);
+                $this->assertSame('value', $calculatror['arguments'][0]['send'] ?? null);
+                $this->assertContains('top_level', $calculatror['flags'] ?? []);
+                $this->assertArrayNotHasKey('namespace', $calculatror);
+                break;
+            case 'Common/FunctionSignatures.php':
+                $marked = $find('function', 'marked');
+                $this->assertSame(0, $marked['attributes'][0]['offset'] ?? null);
+                $this->assertSame(1, $marked['attributes'][1]['offset'] ?? null);
+                $this->assertSame('SensitiveParameter', $marked['attributes'][1]['name'] ?? null);
+                $dnf = $find('function', 'dnf');
+                $this->assertSame('(Traversable&Countable)|int', $dnf['arguments'][0]['type']['display'] ?? null);
+                $this->assertSame('union', $dnf['arguments'][0]['type']['kind'] ?? null);
+                $returned = $find('function', 'refReturn');
+                $this->assertContains('return_reference', $returned['flags'] ?? []);
+                $this->assertSame('reference', $returned['arguments'][0]['send'] ?? null);
+                break;
+            case 'Common/FunctionStrict.php':
+                $strict = $find('function', 'calculatror');
+                $main = $find('main', null);
+                $this->assertContains('strict_types', $strict['flags'] ?? []);
+                $this->assertContains('strict_types', $main['flags'] ?? []);
+                break;
+            case 'Common/FunctionNamespace.php':
+                $namespaced = $find('function', 'App\\calculatror');
+                $this->assertSame('App', $namespaced['namespace'] ?? null);
+                $this->assertSame('App', $find('main', null)['namespace'] ?? null);
+                break;
+            case 'Common/NamespaceStatement.php':
+                $this->assertSame('App', $find('main', null)['namespace'] ?? null);
+                break;
+            case 'Common/FunctionConditional.php':
+                $hidden = $find('function', 'hidden');
+                $this->assertNotContains('top_level', $hidden['flags'] ?? []);
+                $this->assertTrue($this->hasOpcode($find('main', null), 'DECLARE_FUNCTION'));
+                break;
+            case 'Common/FunctionNested.php':
+                $this->assertNotContains('top_level', $find('function', 'inner')['flags'] ?? []);
+                $this->assertContains('top_level', $find('function', 'outer')['flags'] ?? []);
+                break;
+            case 'Common/FileConstant.php':
+                $this->assertTrue($this->hasOpcode($find('main', null), 'DECLARE_CONST'));
+                break;
             case 'PHP/8.4/PropertyHooks.php':
                 $get = $find('property-hook', '$value::get');
                 $set = $find('property-hook', '$value::set');
