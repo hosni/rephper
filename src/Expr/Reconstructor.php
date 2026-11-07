@@ -62,7 +62,7 @@ final class Reconstructor
     private const RECORDED = ['RECV', 'RECV_INIT', 'RECV_VARIADIC', 'VERIFY_RETURN_TYPE', 'VERIFY_NEVER_TYPE'];
 
     /** @var list<string> */
-    private const NAMED_INIT = ['INIT_FCALL', 'INIT_FCALL_BY_NAME'];
+    private const NAMED_INIT = ['INIT_FCALL', 'INIT_FCALL_BY_NAME', 'INIT_NS_FCALL_BY_NAME'];
 
     /**
      * Call initiators this pass does not turn into a FunctionCall.
@@ -75,7 +75,6 @@ final class Reconstructor
         'INIT_DYNAMIC_CALL',
         'INIT_METHOD_CALL',
         'INIT_STATIC_METHOD_CALL',
-        'INIT_NS_FCALL_BY_NAME',
         'INIT_USER_CALL',
     ];
 
@@ -456,7 +455,7 @@ final class Reconstructor
     {
         return match ($init) {
             'INIT_FCALL' => $execute === 'DO_ICALL' || $execute === 'DO_UCALL',
-            'INIT_FCALL_BY_NAME' => $execute === 'DO_FCALL_BY_NAME',
+            'INIT_FCALL_BY_NAME', 'INIT_NS_FCALL_BY_NAME' => $execute === 'DO_FCALL_BY_NAME',
             default => false,
         };
     }

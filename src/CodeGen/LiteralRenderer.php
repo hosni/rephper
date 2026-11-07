@@ -15,6 +15,8 @@ use Rephper\Ir\Literal as IrLiteral;
  */
 final class LiteralRenderer
 {
+    private ?NameQualifier $names = null;
+
     private const IDENTIFIER = '/\A[A-Za-z_\x80-\xff][A-Za-z0-9_\x80-\xff]*\z/';
 
     private const QUALIFIED_NAME = '/\A\\\\?[A-Za-z_\x80-\xff][A-Za-z0-9_\x80-\xff]*(?:\\\\[A-Za-z_\x80-\xff][A-Za-z0-9_\x80-\xff]*)*\z/';
@@ -51,28 +53,34 @@ final class LiteralRenderer
         'UNARY_MINUS' => ['-', 80, 'right'],
     ];
 
-    public function renderLiteral(IrLiteral $literal, int $line): string
+    public function renderLiteral(IrLiteral $literal, int $line, ?NameQualifier $names = null): string
     {
-        if ($literal->type === 'constant_ast') {
-            if (!is_array($literal->ast)) {
-                throw SourceGenerationException::at('constant expression is missing', 0, $line);
+        $previous = $this->names;
+        $this->names = $names;
+        try {
+            if ($literal->type === 'constant_ast') {
+                if (!is_array($literal->ast)) {
+                    throw SourceGenerationException::at('constant expression is missing', 0, $line);
+                }
+
+                return $this->node($literal->ast, $line)[0];
+            }
+            if ($literal->type === 'undef' || $literal->type === 'unsupported') {
+                throw SourceGenerationException::at($literal->type . ' literals cannot be rendered', 0, $line);
             }
 
-            return $this->node($literal->ast, $line)[0];
+            return (new ExpressionRenderer())->render($this->expression($literal, $line));
+        } finally {
+            $this->names = $previous;
         }
-        if ($literal->type === 'undef' || $literal->type === 'unsupported') {
-            throw SourceGenerationException::at($literal->type . ' literals cannot be rendered', 0, $line);
-        }
-
-        return (new ExpressionRenderer())->render($this->expression($literal, $line));
     }
 
     /**
      * @param array<mixed> $data
      */
-    public function renderStored(array $data, int $line): string
+    public function renderStored(array $data, int $line, ?NameQualifier $names = null): string
     {
-        return $this->renderLiteral($this->stored($data, $line), $line);
+        return $this->renderLiteral($this->stored($data, $line), $line, $names);
     }
 
     /**
@@ -136,11 +144,27 @@ final class LiteralRenderer
         if (!is_array($value) || ($value['type'] ?? null) !== 'string' || !is_string($value['value'] ?? null)) {
             throw SourceGenerationException::at('constant name is missing', 0, $line);
         }
-        if (preg_match(self::QUALIFIED_NAME, $value['value']) !== 1) {
+        $text = $value['value'];
+        $attr = $node['attr'] ?? 0;
+        if (!is_int($attr)) {
+            throw SourceGenerationException::at('constant name cannot be rendered', 0, $line);
+        }
+        if ($this->names !== null) {
+            $qualified = $this->names->constant($text, $attr);
+            if ($qualified === null) {
+                throw SourceGenerationException::at(
+                    'constant ' . $text . ' is not in namespace ' . $this->names->namespace,
+                    0,
+                    $line,
+                );
+            }
+            $text = $qualified;
+        }
+        if (preg_match(self::QUALIFIED_NAME, $text) !== 1) {
             throw SourceGenerationException::at('constant name cannot be rendered', 0, $line);
         }
 
-        return [$value['value'], self::PRIMARY];
+        return [$text, self::PRIMARY];
     }
 
     /**
@@ -236,7 +260,12 @@ final class LiteralRenderer
             throw SourceGenerationException::at('class constant cannot be rendered', 0, $line);
         }
 
-        return [$this->nameValue($children[0], $line, true) . '::' . $this->nameValue($children[1], $line, false), self::PRIMARY];
+        $class = $this->nameValue($children[0], $line, true);
+        if ($this->names !== null) {
+            $class = $this->names->symbol($class);
+        }
+
+        return [$class . '::' . $this->nameValue($children[1], $line, false), self::PRIMARY];
     }
 
     /**

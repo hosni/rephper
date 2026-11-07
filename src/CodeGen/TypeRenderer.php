@@ -30,7 +30,7 @@ final class TypeRenderer
 
     private int $offset = 0;
 
-    public function render(mixed $type, string $subject, int $depth = 0): ?string
+    public function render(mixed $type, string $subject, int $depth = 0, ?NameQualifier $names = null): ?string
     {
         if ($type === null) {
             return null;
@@ -79,6 +79,10 @@ final class TypeRenderer
             'union' => $this->assertUnion($members, $parsed, $subject, $depth),
             default => $this->fail('kind ' . $kind . ' is not a PHP type'),
         };
+
+        if ($depth === 0 && $names !== null) {
+            return $names->type($display);
+        }
 
         return $display;
     }

@@ -229,8 +229,7 @@ PHP, $this->generate('Common/Functions.json'));
             'closure' => ['Common/Closures.json', 'closure '],
             'arrow' => ['Common/ArrowFunctions.json', 'closure '],
             'generator' => ['Common/Generators.json', 'generator function sequence is not supported'],
-            'namespace function' => ['Common/FunctionNamespace.json', 'namespace App is not supported'],
-            'namespace statement' => ['Common/NamespaceStatement.json', 'namespace App is not supported'],
+            'namespaced static call' => ['Common/NamespaceStaticCall.json', 'INIT_STATIC_METHOD_CALL'],
             'conditional' => ['Common/FunctionConditional.json', 'function hidden is nested or conditional'],
             'nested' => ['Common/FunctionNested.json', 'function inner is nested or conditional'],
             'const' => ['Common/FileConstant.json', 'const declaration in the main script is not supported'],
@@ -280,6 +279,303 @@ PHP, $this->generate('Common/Functions.json'));
         $this->assertGenerationFails($disagreement, 'strict_types is not the same');
     }
 
+    #[DataProvider('namespaceFiles')]
+    public function testNamespaceFilesAreGeneratedFromTheIr(string $fixture, string $source): void
+    {
+        $generated = $this->generate($fixture);
+
+        $this->assertSame($source, $generated);
+        $this->assertSame($generated, $this->generate($fixture));
+        $this->assertSame(1, substr_count($generated, '<?php'));
+        $this->assertStringNotContainsString('?>', $generated);
+        $this->assertStringNotContainsString('use ', $generated);
+    }
+
+    /**
+     * @return array<string, array{string, string}>
+     */
+    public static function namespaceFiles(): array
+    {
+        return [
+            'unbracketed function' => ['Common/FunctionNamespace.json', <<<'PHP'
+<?php
+
+namespace App;
+
+function calculator(int $a, int $b): int
+{
+    return $a + $b;
+}
+
+PHP],
+            'unbracketed statement' => ['Common/NamespaceStatement.json', <<<'PHP'
+<?php
+
+namespace App;
+
+$x = 1;
+
+PHP],
+            'bracketed function' => ['Common/NamespaceBracketed.json', <<<'PHP'
+<?php
+
+namespace App;
+
+function calculator(int $a, int $b): int
+{
+    return $a + $b;
+}
+
+PHP],
+            'bracketed statements' => ['Common/NamespaceBracketedStatements.json', <<<'PHP'
+<?php
+
+namespace App;
+
+$x = 1;
+
+if ($x) {
+    $y = 2;
+}
+
+$z = $x + 1;
+
+PHP],
+            'multiple namespaces' => ['Common/NamespaceMultiple.json', <<<'PHP'
+<?php
+
+namespace App {
+    function alpha(int $value): int
+    {
+        return $value + 1;
+    }
+}
+
+namespace Other {
+    function beta(int $value): int
+    {
+        return $value + 2;
+    }
+}
+
+PHP],
+            'global and named' => ['Common/NamespaceGlobal.json', <<<'PHP'
+<?php
+
+namespace {
+    function alpha(int $value): int
+    {
+        return $value + 1;
+    }
+
+    $global = alpha(1);
+}
+
+namespace App {
+    function beta(int $value): int
+    {
+        return $value + 2;
+    }
+
+    $named = beta(1);
+}
+
+PHP],
+            'reopened namespace' => ['Common/NamespaceReopen.json', <<<'PHP'
+<?php
+
+namespace App {
+    function alpha(): int
+    {
+        return 1;
+    }
+}
+
+namespace Other {
+    function beta(): int
+    {
+        return 2;
+    }
+}
+
+namespace App {
+    function delta(): int
+    {
+        return 4;
+    }
+
+    $value = delta();
+}
+
+PHP],
+            'function and statement' => ['Common/NamespaceMixed.json', <<<'PHP'
+<?php
+
+namespace App;
+
+function calculator(int $a, int $b): int
+{
+    return $a + $b;
+}
+
+$result = calculator(1, 2);
+
+PHP],
+            'empty namespace' => ['Common/NamespaceEmpty.json', <<<'PHP'
+<?php
+
+namespace App;
+
+PHP],
+            'resolved calls' => ['Common/NamespaceCalls.json', <<<'PHP'
+<?php
+
+namespace App;
+
+function add(int $a, int $b): int
+{
+    return $a + $b;
+}
+
+function calculate(int $a, int $b): int
+{
+    return add($a, $b);
+}
+
+function absolute(int $a, int $b): int
+{
+    return \app\add($a, $b);
+}
+
+function aliased(int $a, int $b): int
+{
+    return \app\add($a, $b);
+}
+
+PHP],
+            'aliased type' => ['Common/NamespaceAlias.json', <<<'PHP'
+<?php
+
+namespace App;
+
+function calculate(\App\Services\Calculator $value): int
+{
+    return 1;
+}
+
+PHP],
+            'types' => ['Common/NamespaceTypes.json', <<<'PHP'
+<?php
+
+namespace App;
+
+function take(\stdClass $value): \RuntimeException
+{
+    return $value;
+}
+
+function local(\App\Widget $value): \App\Widget
+{
+    return $value;
+}
+
+PHP],
+            'signature' => ['Common/NamespaceSignature.json', <<<'PHP'
+<?php
+
+namespace App;
+
+#[\Deprecated]
+function &ref(#[\SensitiveParameter] array &$items, int $max = PHP_INT_MAX, int $full = \PHP_INT_MAX, int $flag = \ArrayObject::STD_PROP_LIST): array
+{
+    return $items;
+}
+
+PHP],
+            'strict types' => ['Common/NamespaceStrict.json', <<<'PHP'
+<?php
+
+declare(strict_types=1);
+
+namespace App;
+
+function calculator(int $a, int $b): int
+{
+    return $a + $b;
+}
+
+PHP],
+            'two unbracketed namespaces' => ['Common/NamespaceUnbracketedMultiple.json', <<<'PHP'
+<?php
+
+namespace App {
+    $first = 1;
+}
+
+namespace Other {
+    $second = 2;
+}
+
+PHP],
+            'same line' => ['Common/NamespaceSameLine.json', <<<'PHP'
+<?php
+
+namespace A {
+    $x = 1;
+}
+
+namespace B {
+    $y = 2;
+}
+
+PHP],
+        ];
+    }
+
+    public function testNamespaceMetadataMustAgree(): void
+    {
+        $missing = $this->mutate('Common/FunctionNamespace.json', static function (array &$data): void {
+            unset($data['namespaces']);
+        });
+        $disagrees = $this->mutate('Common/FunctionNamespace.json', static function (array &$data): void {
+            $data['op_arrays'][0]['namespace'] = 'Other';
+        });
+        $unowned = $this->mutate('Common/NamespaceStatement.json', static function (array &$data): void {
+            $data['namespaces'][0]['statements'] = [[99]];
+        });
+        $extra = $this->mutate('Common/NamespaceStatement.json', static function (array &$data): void {
+            $data['namespaces'][0]['statements'] = [];
+        });
+        $missingFunction = $this->mutate('Common/FunctionNamespace.json', static function (array &$data): void {
+            $data['namespaces'][0]['functions'][] = 'missing';
+        });
+
+        $this->assertGenerationFails($missing, 'namespace App is not recorded as a namespace region');
+        $this->assertGenerationFails($disagrees, 'does not match namespace App at line');
+        $this->assertGenerationFails($unowned, 'cannot own the statement at line');
+        $this->assertGenerationFails($extra, 'is not in a namespace region');
+        $this->assertGenerationFails($missingFunction, 'lists function missing, which is not in the IR');
+    }
+
+    public function testNamespacedFunctionsKeepTheirResults(): void
+    {
+        $this->assertSameBehavior('Common/NamespaceMixed.php', 'echo $result;');
+        $this->assertSameBehavior(
+            'Common/NamespaceCalls.php',
+            'echo \\App\\add(2, 3), " ", \\App\\calculate(2, 3), " ", \\App\\absolute(2, 3), " ", \\App\\aliased(2, 3);',
+        );
+        $this->assertSameBehavior('Common/NamespaceGlobal.php', 'echo $global, " ", $named, " ", \\alpha(4), " ", \\App\\beta(4);');
+        $this->assertSameBehavior('Common/NamespaceMultiple.php', 'echo \\App\\alpha(10), " ", \\Other\\beta(10);');
+        $this->assertSameBehavior('Common/NamespaceReopen.php', 'echo \\App\\alpha(), " ", \\Other\\beta(), " ", \\App\\delta(), " ", $value;');
+        $this->assertSameBehavior('Common/NamespaceSameLine.php', 'echo $x, " ", $y;');
+        $this->assertSameBehavior('Common/NamespaceBracketedStatements.php', 'echo $x, " ", $y, " ", $z;');
+        $call = "try { \\App\\calculator('1', 2); echo 'coerced'; } catch (\\TypeError) { echo 'strict'; }\n";
+        $original = (string) file_get_contents(dirname(__DIR__, 3) . '/tests/Fixtures/Common/NamespaceStrict.php') . $call;
+        $generated = $this->generate('Common/NamespaceStrict.json') . $call;
+        $this->assertSame('strict', $this->executeSource($original));
+        $this->assertSame($this->executeSource($original), $this->executeSource($generated));
+    }
+
     private function assertGenerationFails(Document $document, string $message): void
     {
         try {
@@ -294,6 +590,61 @@ PHP, $this->generate('Common/Functions.json'));
     private function generate(string $fixture): string
     {
         return (new PhpFileGenerator())->generate($this->document($fixture));
+    }
+
+    private function assertSameBehavior(string $fixture, string $code): void
+    {
+        $original = dirname(__DIR__, 3) . '/tests/Fixtures/' . $fixture;
+        $generated = preg_replace('/\.php$/', '.json', 'Common/' . basename($fixture));
+        $this->assertIsString($generated);
+        $this->assertSame($this->executePath($original, $code), $this->execute($generated, $code));
+    }
+
+    private function execute(string $fixture, string $code): string
+    {
+        $file = $this->temporaryPhp($this->generate($fixture));
+        try {
+            return $this->executePath($file, $code);
+        } finally {
+            unlink($file);
+        }
+    }
+
+    private function executePath(string $path, string $code): string
+    {
+        $result = Process::run([
+            'php8.4',
+            '-n',
+            '-r',
+            'require ' . var_export($path, true) . '; ' . $code,
+        ]);
+        $this->assertSame(0, $result['exit'], $result['stderr'] . $result['stdout']);
+
+        return $result['stdout'];
+    }
+
+    private function executeSource(string $source): string
+    {
+        $file = $this->temporaryPhp($source);
+        try {
+            $result = Process::run(['php8.4', '-n', $file]);
+            $this->assertSame(0, $result['exit'], $result['stderr'] . $result['stdout']);
+
+            return $result['stdout'];
+        } finally {
+            unlink($file);
+        }
+    }
+
+    private function temporaryPhp(string $source): string
+    {
+        $file = tempnam(sys_get_temp_dir(), 'rephper-ns-');
+        $this->assertNotFalse($file);
+        $php = $file . '.php';
+        rename($file, $php);
+        file_put_contents($php, $source);
+
+        return $php;
     }
 
     private function document(string $fixture): Document

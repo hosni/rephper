@@ -72,6 +72,7 @@ final class ExpressionRenderer
 
     public function __construct(
         private readonly int $indent = 0,
+        private readonly ?NameQualifier $names = null,
     ) {
     }
 
@@ -695,7 +696,21 @@ final class ExpressionRenderer
 
     private function call(FunctionCall $expression): string
     {
-        if (preg_match(self::QUALIFIED_NAME, $expression->name) !== 1) {
+        $name = $expression->name;
+        if ($this->names !== null && $expression->initOpcode === 'INIT_NS_FCALL_BY_NAME') {
+            $short = $this->names->unqualifiedFunction($name);
+            if ($short === null) {
+                throw SourceGenerationException::at(
+                    'function call ' . $name . ' is not in namespace ' . $this->names->namespace,
+                    $expression->opline,
+                    $expression->line,
+                );
+            }
+            $name = $short;
+        } elseif ($this->names !== null) {
+            $name = $this->names->symbol($name);
+        }
+        if (preg_match(self::QUALIFIED_NAME, $name) !== 1) {
             throw SourceGenerationException::at(
                 'function name cannot be rendered',
                 $expression->opline,
@@ -714,7 +729,7 @@ final class ExpressionRenderer
             $arguments[] = $this->argument($argument);
         }
 
-        return $expression->name . '(' . implode(', ', $arguments) . ')';
+        return $name . '(' . implode(', ', $arguments) . ')';
     }
 
     private function argument(Argument $argument): string

@@ -20,6 +20,8 @@ final class FunctionRenderer
 
     private const QUALIFIED_NAME = '/\A\\\\?[A-Za-z_\x80-\xff][A-Za-z0-9_\x80-\xff]*(?:\\\\[A-Za-z_\x80-\xff][A-Za-z0-9_\x80-\xff]*)*\z/';
 
+    private ?NameQualifier $names = null;
+
     public function __construct(
         private readonly PhpSourceGenerator $source = new PhpSourceGenerator(),
         private readonly TypeRenderer $types = new TypeRenderer(),
@@ -27,37 +29,59 @@ final class FunctionRenderer
     ) {
     }
 
-    public function render(FunctionDeclaration $declaration): string
+    public function render(
+        FunctionDeclaration $declaration,
+        int $indent = 0,
+        ?string $declaredName = null,
+        ?NameQualifier $names = null,
+    ): string {
+        $previous = $this->names;
+        $this->names = $names;
+        try {
+            return $this->renderDeclaration($declaration, $indent, $declaredName);
+        } finally {
+            $this->names = $previous;
+        }
+    }
+
+    private function renderDeclaration(FunctionDeclaration $declaration, int $indent, ?string $declaredName): string
     {
         $opArray = $declaration->opArray;
-        $name = is_string($opArray->name) ? $opArray->name : '';
+        $stored = is_string($opArray->name) ? $opArray->name : '';
+        $name = $declaredName ?? $stored;
         if (preg_match(self::IDENTIFIER, $name) !== 1) {
-            $this->fail($name === '' ? (string) $opArray->id : $name, 'function name cannot be rendered');
+            $this->fail($stored === '' ? (string) $opArray->id : $stored, 'function name cannot be rendered');
         }
-        $this->assertShape($opArray, $name);
-        $this->assertAttributeTargets($opArray, $name);
+        $this->assertShape($opArray, $stored === '' ? $name : $stored);
+        $this->assertAttributeTargets($opArray, $stored === '' ? $name : $stored);
 
-        $header = $this->attributes($opArray, $name, 0);
+        $label = $stored === '' ? $name : $stored;
+        $pad = str_repeat('    ', $indent);
+        $header = $this->attributes($opArray, $label, 0);
         $reference = in_array('return_reference', $opArray->flags, true) ? '&' : '';
-        $signature = 'function ' . $reference . $name . '(' . $this->parameters($opArray, $name) . ')';
-        $return = $this->types->render($opArray->returnType, 'the return type of function ' . $name);
+        $signature = 'function ' . $reference . $name . '(' . $this->parameters($opArray, $label) . ')';
+        $return = $this->types->render($opArray->returnType, 'the return type of function ' . $label, 0, $this->names);
         if (in_array('has_return_type', $opArray->flags, true)) {
             if ($return === null) {
-                $this->fail($name, 'return type metadata is incomplete');
+                $this->fail($label, 'return type metadata is incomplete');
             }
             $signature .= ': ' . $return;
         } elseif ($return !== null) {
-            $this->fail($name, 'return type metadata is incomplete');
+            $this->fail($label, 'return type metadata is incomplete');
         }
 
-        $lines = $header;
-        $lines[] = $signature;
-        $body = $this->source->renderStatements($declaration->body->statements, 1);
-        $text = implode("\n", $lines) . "\n{\n";
+        $lines = [];
+        foreach ($header as $attribute) {
+            $lines[] = $pad . $attribute;
+        }
+        $lines[] = $pad . $signature;
+        $source = $this->names === null ? $this->source : new PhpSourceGenerator($this->names);
+        $body = $source->renderStatements($declaration->body->statements, $indent + 1);
+        $text = implode("\n", $lines) . "\n" . $pad . "{\n";
         if ($body !== '') {
             $text .= $body . "\n";
         }
-        $text .= '}';
+        $text .= $pad . '}';
 
         return $text;
     }
@@ -135,6 +159,9 @@ final class FunctionRenderer
         if (!is_string($name) || preg_match(self::QUALIFIED_NAME, $name) !== 1) {
             $this->fail($function, 'attribute name cannot be rendered');
         }
+        if ($this->names !== null) {
+            $name = $this->names->symbol($name);
+        }
         $arguments = $attribute['arguments'] ?? null;
         if (!is_array($arguments) || !array_is_list($arguments)) {
             $this->fail($function, 'attribute arguments are missing');
@@ -153,7 +180,7 @@ final class FunctionRenderer
                 $this->fail($function, 'attribute argument cannot be rendered');
             }
             try {
-                $text = $this->literals->renderStored($value, is_int($attribute['line'] ?? null) ? $attribute['line'] : $line);
+                $text = $this->literals->renderStored($value, is_int($attribute['line'] ?? null) ? $attribute['line'] : $line, $this->names);
             } catch (SourceGenerationException $exception) {
                 $this->fail($function, 'attribute argument cannot be rendered: ' . $exception->getMessage());
             }
@@ -217,7 +244,7 @@ final class FunctionRenderer
         }
 
         $attributes = $this->attributes($opArray, $function, $index + 1);
-        $type = $this->types->render($argument['type'], 'the type of parameter $' . $name . ' on function ' . $function);
+        $type = $this->types->render($argument['type'], 'the type of parameter $' . $name . ' on function ' . $function, 0, $this->names);
         $sigil = ($send === 'reference' ? '&' : '') . ($variadic ? '...' : '');
         $text = ($attributes === [] ? '' : implode(' ', $attributes) . ' ')
             . ($type === null ? '' : $type . ' ')
@@ -228,7 +255,7 @@ final class FunctionRenderer
                 $this->fail($function, 'default value of $' . $name . ' is outside the literal table');
             }
             try {
-                $value = $this->literals->renderLiteral($literal, $opArray->lineStart);
+                $value = $this->literals->renderLiteral($literal, $opArray->lineStart, $this->names);
             } catch (SourceGenerationException $exception) {
                 $this->fail($function, 'default value of $' . $name . ' cannot be rendered: ' . $exception->getMessage());
             }

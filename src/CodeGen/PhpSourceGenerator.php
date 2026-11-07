@@ -38,6 +38,11 @@ use Rephper\Stmt\WhileStatement;
  */
 final class PhpSourceGenerator
 {
+    public function __construct(
+        private readonly ?NameQualifier $names = null,
+    ) {
+    }
+
     private const IDENTIFIER = '/\A[A-Za-z_\x80-\xff][A-Za-z0-9_\x80-\xff]*\z/';
 
     private const QUALIFIED_NAME = '/\A\\\\?[A-Za-z_\x80-\xff][A-Za-z0-9_\x80-\xff]*(?:\\\\[A-Za-z_\x80-\xff][A-Za-z0-9_\x80-\xff]*)*\z/';
@@ -374,7 +379,7 @@ final class PhpSourceGenerator
 
     private function expression(Expression $expression, int $indent): string
     {
-        return (new ExpressionRenderer($indent))->render($expression);
+        return (new ExpressionRenderer($indent, $this->names))->render($expression);
     }
 
     private function terminated(int $indent, string $code): string

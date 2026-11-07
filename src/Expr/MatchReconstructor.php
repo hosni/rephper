@@ -693,7 +693,7 @@ final class MatchReconstructor
         foreach ($this->roots[$matchBlock->id] as $expression) {
             if (
                 $expression instanceof Opaque
-                && ($expression->opcode === 'INIT_FCALL' || $expression->opcode === 'INIT_FCALL_BY_NAME')
+                && ($expression->opcode === 'INIT_FCALL' || $expression->opcode === 'INIT_FCALL_BY_NAME' || $expression->opcode === 'INIT_NS_FCALL_BY_NAME')
                 && $expression->opline < $match->index
                 && $expression->reason === 'function call was interrupted by MATCH'
             ) {
@@ -755,7 +755,7 @@ final class MatchReconstructor
     {
         return match ($init) {
             'INIT_FCALL' => $execute === 'DO_ICALL' || $execute === 'DO_UCALL',
-            'INIT_FCALL_BY_NAME' => $execute === 'DO_FCALL_BY_NAME',
+            'INIT_FCALL_BY_NAME', 'INIT_NS_FCALL_BY_NAME' => $execute === 'DO_FCALL_BY_NAME',
             default => false,
         };
     }

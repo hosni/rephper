@@ -41,6 +41,22 @@ final class FunctionFileTest extends TestCase
             'parameters' => ['Common/Parameters.json'],
             'functions' => ['Common/Functions.json'],
             'minimal' => ['Common/Minimal.json'],
+            'namespace function' => ['Common/FunctionNamespace.json'],
+            'namespace statement' => ['Common/NamespaceStatement.json'],
+            'bracketed namespace' => ['Common/NamespaceBracketed.json'],
+            'bracketed statements' => ['Common/NamespaceBracketedStatements.json'],
+            'multiple namespaces' => ['Common/NamespaceMultiple.json'],
+            'global and named' => ['Common/NamespaceGlobal.json'],
+            'reopened namespace' => ['Common/NamespaceReopen.json'],
+            'namespace mixed' => ['Common/NamespaceMixed.json'],
+            'empty namespace' => ['Common/NamespaceEmpty.json'],
+            'namespace types' => ['Common/NamespaceTypes.json'],
+            'namespace calls' => ['Common/NamespaceCalls.json'],
+            'namespace alias' => ['Common/NamespaceAlias.json'],
+            'namespace signature' => ['Common/NamespaceSignature.json'],
+            'namespace strict' => ['Common/NamespaceStrict.json'],
+            'unbracketed namespaces' => ['Common/NamespaceUnbracketedMultiple.json'],
+            'same line namespaces' => ['Common/NamespaceSameLine.json'],
         ];
     }
 

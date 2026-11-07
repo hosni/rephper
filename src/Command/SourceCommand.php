@@ -48,7 +48,7 @@ final class SourceCommand extends Command
                 'Read an IR JSON file and generate PHP. '
                 . 'Without --file, an integer --op-array value selects that id. Any other value selects the op array name, and "main" selects the script body. '
                 . 'That result is an opening tag and one op array\'s statements. It is not a function, class, namespace, or the original file. '
-                . 'With --file, the result is a PHP file: ordinary top-level functions in IR order, then the main script statements. '
+                . 'With --file, the result is a PHP file: ordinary top-level functions, including functions inside namespace regions, then the statements that belong to each region. '
                 . '--file and --op-array are separate modes. '
                 . 'This command does not load the Zend extension and does not execute the original PHP file.'
             );
