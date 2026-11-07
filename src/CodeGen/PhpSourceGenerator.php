@@ -44,20 +44,35 @@ final class PhpSourceGenerator
 
     public function generate(StructuredStatements $structured): string
     {
-        $chunks = [];
-        foreach ($structured->statements as $statement) {
-            if (!$statement instanceof Statement) {
-                throw new SourceGenerationException('Cannot generate PHP: a statement list contains a value that is not a statement.');
-            }
-            $chunks[] = $this->statement($statement, 0);
-        }
-
+        $body = $this->renderStatements($structured->statements, 0);
         $source = "<?php\n";
-        if ($chunks !== []) {
-            $source .= implode("\n\n", $chunks) . "\n";
+        if ($body !== '') {
+            $source .= $body . "\n";
         }
 
         return $source;
+    }
+
+    /**
+     * Renders statements without an opening tag.
+     *
+     * Indent 0 separates statements with a blank line, which is the file and
+     * op-array body layout. A nested list uses one newline, which is the
+     * layout inside a brace.
+     *
+     * @param list<Statement> $statements
+     */
+    public function renderStatements(array $statements, int $indent): string
+    {
+        $chunks = [];
+        foreach ($statements as $statement) {
+            if (!$statement instanceof Statement) {
+                throw new SourceGenerationException('Cannot generate PHP: a statement list contains a value that is not a statement.');
+            }
+            $chunks[] = $this->statement($statement, $indent);
+        }
+
+        return implode($indent === 0 ? "\n\n" : "\n", $chunks);
     }
 
     private function statement(Statement $statement, int $indent): string
