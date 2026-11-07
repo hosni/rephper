@@ -9,12 +9,15 @@ namespace Rephper\Ir;
  *
  * The value is the zval or constant AST captured at `pass_two()`. Enum cases
  * are constants too, and their values can still be `CONST_ENUM_INIT` nodes.
+ * `attributes` use the same object as a class attribute, with offset 0.
+ * `docComment` is the raw comment, delimiters included, or null.
  */
 final class ClassConstant
 {
     /**
      * @param list<string> $flags
      * @param array<string, mixed>|null $type
+     * @param list<array<string, mixed>> $attributes
      * @param array<string, mixed> $extra
      */
     public function __construct(
@@ -22,6 +25,8 @@ final class ClassConstant
         public readonly array $flags,
         public readonly ?array $type,
         public readonly Literal $value,
+        public readonly array $attributes,
+        public readonly ?string $docComment,
         public readonly array $extra,
     ) {
     }

@@ -309,13 +309,16 @@
     "parent": null,
     "interfaces": [],
     "traits": [],
+    "trait_aliases": [],
+    "trait_precedences": [],
     "filename": "tests/Fixtures/PHP/8.1/Enums.php",
     "line_start": 3,
     "line_end": 6,
     "enum_backing": null,
     "properties": [],
     "constants": [],
-    "attributes": []
+    "attributes": [],
+    "doc_comment": null
   },
   {
     "name": "Status",
@@ -330,6 +333,8 @@
       "BackedEnum"
     ],
     "traits": [],
+    "trait_aliases": [],
+    "trait_precedences": [],
     "filename": "tests/Fixtures/PHP/8.1/Enums.php",
     "line_start": 8,
     "line_end": 17,
@@ -348,7 +353,9 @@
           "kind": "builtin"
         },
         "default": null,
-        "hooks": []
+        "hooks": [],
+        "attributes": [],
+        "doc_comment": null
       },
       {
         "name": "value",
@@ -363,7 +370,9 @@
           "kind": "builtin"
         },
         "default": null,
-        "hooks": []
+        "hooks": [],
+        "attributes": [],
+        "doc_comment": null
       }
     ],
     "constants": [
@@ -414,7 +423,9 @@
               }
             ]
           }
-        }
+        },
+        "attributes": [],
+        "doc_comment": null
       },
       {
         "name": "Closed",
@@ -463,10 +474,13 @@
               }
             ]
           }
-        }
+        },
+        "attributes": [],
+        "doc_comment": null
       }
     ],
-    "attributes": []
+    "attributes": [],
+    "doc_comment": null
   }
 ]
 }

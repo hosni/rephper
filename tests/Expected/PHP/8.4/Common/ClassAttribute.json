@@ -223,6 +223,8 @@
     "parent": null,
     "interfaces": [],
     "traits": [],
+    "trait_aliases": [],
+    "trait_precedences": [],
     "filename": "tests/Fixtures/Common/ClassAttribute.php",
     "line_start": 4,
     "line_end": 10,
@@ -236,7 +238,8 @@
         "offset": 0,
         "arguments": []
       }
-    ]
+    ],
+    "doc_comment": null
   }
 ]
 }

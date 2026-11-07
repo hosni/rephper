@@ -546,6 +546,46 @@ final class ExporterTest extends TestCase
                 $this->assertIsArray($box);
                 $this->assertSame(['get', 'set'], $box['properties'][0]['hooks'] ?? null);
                 break;
+            case 'Common/ClassTraitMetadata.php':
+                $classes = [];
+                foreach ($document['classes'] as $class) {
+                    $this->assertIsArray($class);
+                    $classes[$class['name']] = $class;
+                }
+                $item = $classes['Item'] ?? null;
+                $alpha = $classes['Alpha'] ?? null;
+                $base = $classes['Base'] ?? null;
+                $this->assertIsArray($item);
+                $this->assertIsArray($alpha);
+                $this->assertIsArray($base);
+                $this->assertSame([], $item['flags']);
+                $this->assertSame('Base', $item['parent']);
+                $this->assertSame(['Alpha', 'Beta'], $item['traits']);
+                $this->assertSame([
+                    ['trait' => null, 'method' => 'label', 'alias' => 'title', 'modifiers' => []],
+                    ['trait' => 'Beta', 'method' => 'id', 'alias' => null, 'modifiers' => ['private']],
+                ], $item['trait_aliases']);
+                $this->assertSame([
+                    ['trait' => 'Alpha', 'method' => 'name', 'instead_of' => ['Beta', 'Alpha']],
+                ], $item['trait_precedences']);
+                $this->assertSame('/** The composed item. */', $item['doc_comment']);
+                $this->assertSame(['title'], array_column($item['properties'], 'name'));
+                $this->assertSame('/** The item title. */', $item['properties'][0]['doc_comment']);
+                $this->assertSame('Note', $item['properties'][0]['attributes'][0]['name']);
+                $this->assertSame(0, $item['properties'][0]['attributes'][0]['offset']);
+                $this->assertNull($item['properties'][0]['attributes'][0]['arguments'][0]['name']);
+                $this->assertSame('use name()', $item['properties'][0]['attributes'][0]['arguments'][0]['value']['value']);
+                $this->assertSame(['SCALE'], array_column($item['constants'], 'name'));
+                $this->assertSame('/** The scale. */', $item['constants'][0]['doc_comment']);
+                $this->assertSame('Note', $item['constants'][0]['attributes'][0]['name']);
+                $this->assertSame(0, $item['constants'][0]['attributes'][0]['offset']);
+                $this->assertSame('unused', $item['constants'][0]['attributes'][0]['arguments'][0]['value']['value']);
+                $this->assertSame(['id'], array_column($base['properties'], 'name'));
+                $this->assertSame(['fromTrait'], array_column($alpha['properties'], 'name'));
+                $this->assertContains('linked', $alpha['flags']);
+                $this->assertSame([], $alpha['trait_aliases']);
+                $this->assertSame([], $alpha['trait_precedences']);
+                break;
         }
     }
 

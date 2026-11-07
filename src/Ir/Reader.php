@@ -8,7 +8,9 @@ namespace Rephper\Ir;
  * Reads IR JSON produced by the Rephper Zend extension.
  *
  * The reader does not build a control-flow graph and does not load the extension.
- * Unknown object keys are kept. Missing required keys and wrong types throw.
+ * Unknown object keys are kept. A trait adaptation is closed: an unknown field
+ * is rejected. Missing required keys and wrong types throw. Trait adaptations,
+ * member attributes, and doc comments may be absent in an older IR 1 document.
  */
 final class Reader
 {
@@ -37,6 +39,15 @@ final class Reader
         'label',
         'unknown',
     ];
+
+    /** @var list<string> */
+    private const TRAIT_ALIAS_FIELDS = ['trait', 'method', 'alias', 'modifiers'];
+
+    /** @var list<string> */
+    private const TRAIT_ALIAS_MODIFIERS = ['public', 'protected', 'private', 'final'];
+
+    /** @var list<string> */
+    private const TRAIT_PRECEDENCE_FIELDS = ['trait', 'method', 'instead_of'];
 
     public function readFile(string $path): Document
     {
@@ -639,6 +650,20 @@ final class Reader
             }
             $constants[] = $this->classConstant($constant, $path . '.constants[' . $index . ']');
         }
+        $traitAliases = [];
+        foreach ($this->optionalList($data, 'trait_aliases', $path . '.trait_aliases') as $index => $alias) {
+            if (!$this->isObject($alias)) {
+                throw new IrException($path . '.trait_aliases[' . $index . '] must be an object');
+            }
+            $traitAliases[] = $this->traitAlias($alias, $path . '.trait_aliases[' . $index . ']');
+        }
+        $traitPrecedences = [];
+        foreach ($this->optionalList($data, 'trait_precedences', $path . '.trait_precedences') as $index => $precedence) {
+            if (!$this->isObject($precedence)) {
+                throw new IrException($path . '.trait_precedences[' . $index . '] must be an object');
+            }
+            $traitPrecedences[] = $this->traitPrecedence($precedence, $path . '.trait_precedences[' . $index . ']');
+        }
 
         return new ClassDeclaration(
             $name,
@@ -647,6 +672,8 @@ final class Reader
             $parent,
             $this->strings($data, 'interfaces', $path . '.interfaces'),
             $this->strings($data, 'traits', $path . '.traits'),
+            $traitAliases,
+            $traitPrecedences,
             $filename,
             $lineStart,
             $lineEnd,
@@ -654,11 +681,82 @@ final class Reader
             $properties,
             $constants,
             $this->objectList($data, 'attributes', $path . '.attributes'),
+            $this->optionalNullableString($data, 'doc_comment', $path . '.doc_comment'),
             $this->extra($data, [
-                'name', 'kind', 'flags', 'parent', 'interfaces', 'traits', 'filename',
-                'line_start', 'line_end', 'enum_backing', 'properties', 'constants', 'attributes',
+                'name', 'kind', 'flags', 'parent', 'interfaces', 'traits', 'trait_aliases',
+                'trait_precedences', 'filename', 'line_start', 'line_end', 'enum_backing',
+                'properties', 'constants', 'attributes', 'doc_comment',
             ]),
         );
+    }
+
+    /**
+     * @param array<mixed> $data
+     */
+    private function traitAlias(array $data, string $path): TraitAlias
+    {
+        $this->rejectUnknownFields($data, self::TRAIT_ALIAS_FIELDS, $path, 'trait alias');
+        $trait = $this->nullableString($data, 'trait', $path . '.trait');
+        if ($trait === '') {
+            throw new IrException($path . '.trait must not be empty');
+        }
+        $method = $this->string($data, 'method', $path . '.method');
+        if ($method === '') {
+            throw new IrException($path . '.method must not be empty');
+        }
+        $alias = $this->nullableString($data, 'alias', $path . '.alias');
+        if ($alias === '') {
+            throw new IrException($path . '.alias must not be empty');
+        }
+
+        $modifiers = [];
+        foreach ($this->list($data, 'modifiers', $path . '.modifiers') as $index => $modifier) {
+            if (!is_string($modifier) || !in_array($modifier, self::TRAIT_ALIAS_MODIFIERS, true)) {
+                throw new IrException($path . '.modifiers[' . $index . '] must be public, protected, private, or final');
+            }
+            $modifiers[] = $modifier;
+        }
+        if (count($modifiers) > 1) {
+            throw new IrException($path . '.modifiers must contain at most one modifier');
+        }
+
+        return new TraitAlias($trait, $method, $alias, $modifiers);
+    }
+
+    /**
+     * @param array<mixed> $data
+     */
+    private function traitPrecedence(array $data, string $path): TraitPrecedence
+    {
+        $this->rejectUnknownFields($data, self::TRAIT_PRECEDENCE_FIELDS, $path, 'trait precedence');
+        $trait = $this->string($data, 'trait', $path . '.trait');
+        if ($trait === '') {
+            throw new IrException($path . '.trait must not be empty');
+        }
+        $method = $this->string($data, 'method', $path . '.method');
+        if ($method === '') {
+            throw new IrException($path . '.method must not be empty');
+        }
+        $insteadOf = $this->strings($data, 'instead_of', $path . '.instead_of');
+        if ($insteadOf === []) {
+            throw new IrException($path . '.instead_of must not be empty');
+        }
+
+        return new TraitPrecedence($trait, $method, $insteadOf);
+    }
+
+    /**
+     * @param array<mixed> $data
+     * @param list<string> $allowed
+     */
+    private function rejectUnknownFields(array $data, array $allowed, string $path, string $kind): void
+    {
+        foreach (array_keys($data) as $key) {
+            if (!is_string($key) || !in_array($key, $allowed, true)) {
+                $name = is_string($key) ? $key : 'index';
+                throw new IrException($path . '.' . $name . ' is not a ' . $kind . ' field');
+            }
+        }
     }
 
     /**
@@ -687,7 +785,9 @@ final class Reader
             $this->typeOrNull($data, 'type', $path . '.type'),
             $default,
             $this->strings($data, 'hooks', $path . '.hooks'),
-            $this->extra($data, ['name', 'flags', 'type', 'default', 'hooks']),
+            $this->optionalObjectList($data, 'attributes', $path . '.attributes'),
+            $this->optionalNullableString($data, 'doc_comment', $path . '.doc_comment'),
+            $this->extra($data, ['name', 'flags', 'type', 'default', 'hooks', 'attributes', 'doc_comment']),
         );
     }
 
@@ -712,7 +812,9 @@ final class Reader
             $this->strings($data, 'flags', $path . '.flags'),
             $this->typeOrNull($data, 'type', $path . '.type'),
             $this->literal($data['value'], $path . '.value'),
-            $this->extra($data, ['name', 'flags', 'type', 'value']),
+            $this->optionalObjectList($data, 'attributes', $path . '.attributes'),
+            $this->optionalNullableString($data, 'doc_comment', $path . '.doc_comment'),
+            $this->extra($data, ['name', 'flags', 'type', 'value', 'attributes', 'doc_comment']),
         );
     }
 
@@ -793,6 +895,44 @@ final class Reader
         }
 
         return $value;
+    }
+
+    /**
+     * @param array<mixed> $data
+     * @return list<mixed>
+     */
+    private function optionalList(array $data, string $key, string $path): array
+    {
+        if (!array_key_exists($key, $data)) {
+            return [];
+        }
+
+        return $this->list($data, $key, $path);
+    }
+
+    /**
+     * @param array<mixed> $data
+     * @return list<array<mixed>>
+     */
+    private function optionalObjectList(array $data, string $key, string $path): array
+    {
+        if (!array_key_exists($key, $data)) {
+            return [];
+        }
+
+        return $this->objectList($data, $key, $path);
+    }
+
+    /**
+     * @param array<mixed> $data
+     */
+    private function optionalNullableString(array $data, string $key, string $path): ?string
+    {
+        if (!array_key_exists($key, $data)) {
+            return null;
+        }
+
+        return $this->nullableString($data, $key, $path);
     }
 
     /**

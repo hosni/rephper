@@ -269,6 +269,8 @@
     "parent": null,
     "interfaces": [],
     "traits": [],
+    "trait_aliases": [],
+    "trait_precedences": [],
     "filename": "tests/Fixtures/Common/ClassProperties.php",
     "line_start": 3,
     "line_end": 25,
@@ -283,7 +285,9 @@
         "default": {
           "type": "null"
         },
-        "hooks": []
+        "hooks": [],
+        "attributes": [],
+        "doc_comment": null
       },
       {
         "name": "openNull",
@@ -294,7 +298,9 @@
         "default": {
           "type": "null"
         },
-        "hooks": []
+        "hooks": [],
+        "attributes": [],
+        "doc_comment": null
       },
       {
         "name": "count",
@@ -310,7 +316,9 @@
           "type": "int",
           "value": 2
         },
-        "hooks": []
+        "hooks": [],
+        "attributes": [],
+        "doc_comment": null
       },
       {
         "name": "label",
@@ -326,7 +334,9 @@
           "type": "string",
           "value": "bucket"
         },
-        "hooks": []
+        "hooks": [],
+        "attributes": [],
+        "doc_comment": null
       },
       {
         "name": "ready",
@@ -342,7 +352,9 @@
           "type": "bool",
           "value": true
         },
-        "hooks": []
+        "hooks": [],
+        "attributes": [],
+        "doc_comment": null
       },
       {
         "name": "total",
@@ -359,7 +371,9 @@
           "type": "int",
           "value": 4
         },
-        "hooks": []
+        "hooks": [],
+        "attributes": [],
+        "doc_comment": null
       },
       {
         "name": "maybe",
@@ -374,7 +388,9 @@
         "default": {
           "type": "null"
         },
-        "hooks": []
+        "hooks": [],
+        "attributes": [],
+        "doc_comment": null
       },
       {
         "name": "bare",
@@ -387,11 +403,14 @@
           "kind": "builtin"
         },
         "default": null,
-        "hooks": []
+        "hooks": [],
+        "attributes": [],
+        "doc_comment": null
       }
     ],
     "constants": [],
-    "attributes": []
+    "attributes": [],
+    "doc_comment": null
   }
 ]
 }

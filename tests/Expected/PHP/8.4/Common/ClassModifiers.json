@@ -418,13 +418,16 @@
     "parent": null,
     "interfaces": [],
     "traits": [],
+    "trait_aliases": [],
+    "trait_precedences": [],
     "filename": "tests/Fixtures/Common/ClassModifiers.php",
     "line_start": 3,
     "line_end": 11,
     "enum_backing": null,
     "properties": [],
     "constants": [],
-    "attributes": []
+    "attributes": [],
+    "doc_comment": null
   },
   {
     "name": "Square",
@@ -436,13 +439,16 @@
     "parent": "Shape",
     "interfaces": [],
     "traits": [],
+    "trait_aliases": [],
+    "trait_precedences": [],
     "filename": "tests/Fixtures/Common/ClassModifiers.php",
     "line_start": 13,
     "line_end": 19,
     "enum_backing": null,
     "properties": [],
     "constants": [],
-    "attributes": []
+    "attributes": [],
+    "doc_comment": null
   }
 ]
 }

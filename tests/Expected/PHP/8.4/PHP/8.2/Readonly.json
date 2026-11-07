@@ -409,6 +409,8 @@
     "parent": null,
     "interfaces": [],
     "traits": [],
+    "trait_aliases": [],
+    "trait_precedences": [],
     "filename": "tests/Fixtures/PHP/8.2/Readonly.php",
     "line_start": 3,
     "line_end": 8,
@@ -428,7 +430,9 @@
           "kind": "builtin"
         },
         "default": null,
-        "hooks": []
+        "hooks": [],
+        "attributes": [],
+        "doc_comment": null
       },
       {
         "name": "y",
@@ -444,11 +448,14 @@
           "kind": "builtin"
         },
         "default": null,
-        "hooks": []
+        "hooks": [],
+        "attributes": [],
+        "doc_comment": null
       }
     ],
     "constants": [],
-    "attributes": []
+    "attributes": [],
+    "doc_comment": null
   },
   {
     "name": "Measured",
@@ -459,6 +466,8 @@
     "parent": null,
     "interfaces": [],
     "traits": [],
+    "trait_aliases": [],
+    "trait_precedences": [],
     "filename": "tests/Fixtures/PHP/8.2/Readonly.php",
     "line_start": 10,
     "line_end": 18,
@@ -477,11 +486,14 @@
           "kind": "builtin"
         },
         "default": null,
-        "hooks": []
+        "hooks": [],
+        "attributes": [],
+        "doc_comment": null
       }
     ],
     "constants": [],
-    "attributes": []
+    "attributes": [],
+    "doc_comment": null
   }
 ]
 }

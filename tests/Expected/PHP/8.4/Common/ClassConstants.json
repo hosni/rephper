@@ -244,6 +244,8 @@
     "parent": null,
     "interfaces": [],
     "traits": [],
+    "trait_aliases": [],
+    "trait_precedences": [],
     "filename": "tests/Fixtures/Common/ClassConstants.php",
     "line_start": 3,
     "line_end": 15,
@@ -263,7 +265,9 @@
         "value": {
           "type": "int",
           "value": 10
-        }
+        },
+        "attributes": [],
+        "doc_comment": null
       },
       {
         "name": "NAME",
@@ -278,7 +282,9 @@
         "value": {
           "type": "string",
           "value": "scale"
-        }
+        },
+        "attributes": [],
+        "doc_comment": null
       },
       {
         "name": "FLAG",
@@ -289,10 +295,13 @@
         "value": {
           "type": "bool",
           "value": true
-        }
+        },
+        "attributes": [],
+        "doc_comment": null
       }
     ],
-    "attributes": []
+    "attributes": [],
+    "doc_comment": null
   }
 ]
 }

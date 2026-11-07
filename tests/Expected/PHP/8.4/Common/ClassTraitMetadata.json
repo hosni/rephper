@@ -1,0 +1,1096 @@
+{
+  "ir_version": 1,
+  "php": {
+    "version": "PHP_VERSION",
+    "version_id": 0,
+    "api": 20240924,
+    "zend_module_api": 20240924,
+    "zend_extension_api": 420240924,
+    "zts": false,
+    "debug": false
+  },
+  "compilation": {
+    "stage": "pre_pass_two",
+    "jumps": "absolute_opline"
+  },
+  "op_arrays": [
+    {
+      "id": 0,
+      "kind": "method",
+      "name": "__construct",
+      "filename": "tests/Fixtures/Common/ClassTraitMetadata.php",
+      "line_start": 6,
+      "line_end": 8,
+      "scope": {
+        "name": "Note",
+        "kind": "class"
+      },
+      "property_hook": null,
+      "flags": [
+        "public",
+        "has_type_hints",
+        "constructor"
+      ],
+      "num_args": 1,
+      "required_num_args": 1,
+      "return_type": null,
+      "arguments": [
+        {
+          "name": "message",
+          "type": {
+            "display": "string",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": true,
+          "default_literal": null
+        }
+      ],
+      "variables": [
+        "message"
+      ],
+      "temporary_variables": 0,
+      "literals": [
+        {
+          "type": "string",
+          "value": "message"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 6,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 268435520
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "message"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "ASSIGN_OBJ",
+          "opcode_number": 24,
+          "line": 6,
+          "op1": {
+            "kind": "this"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "OP_DATA",
+          "opcode_number": 137,
+          "line": 6,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "message"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 8,
+          "op1": {
+            "kind": "const",
+            "index": 1
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "kind": "method",
+      "name": "label",
+      "filename": "tests/Fixtures/Common/ClassTraitMetadata.php",
+      "line_start": 20,
+      "line_end": 23,
+      "scope": {
+        "name": "Alpha",
+        "kind": "trait"
+      },
+      "property_hook": null,
+      "flags": [
+        "public",
+        "has_return_type"
+      ],
+      "num_args": 0,
+      "required_num_args": 0,
+      "return_type": {
+        "display": "string",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [],
+      "variables": [],
+      "temporary_variables": 0,
+      "literals": [
+        {
+          "type": "string",
+          "value": "alpha"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 22,
+          "op1": {
+            "kind": "const",
+            "index": 0
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 23,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 23,
+          "op1": {
+            "kind": "const",
+            "index": 1
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "kind": "method",
+      "name": "name",
+      "filename": "tests/Fixtures/Common/ClassTraitMetadata.php",
+      "line_start": 25,
+      "line_end": 28,
+      "scope": {
+        "name": "Alpha",
+        "kind": "trait"
+      },
+      "property_hook": null,
+      "flags": [
+        "public",
+        "has_return_type"
+      ],
+      "num_args": 0,
+      "required_num_args": 0,
+      "return_type": {
+        "display": "string",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [],
+      "variables": [],
+      "temporary_variables": 0,
+      "literals": [
+        {
+          "type": "string",
+          "value": "alpha"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 27,
+          "op1": {
+            "kind": "const",
+            "index": 0
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 28,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 28,
+          "op1": {
+            "kind": "const",
+            "index": 1
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "kind": "method",
+      "name": "label",
+      "filename": "tests/Fixtures/Common/ClassTraitMetadata.php",
+      "line_start": 33,
+      "line_end": 36,
+      "scope": {
+        "name": "Beta",
+        "kind": "trait"
+      },
+      "property_hook": null,
+      "flags": [
+        "public",
+        "has_return_type"
+      ],
+      "num_args": 0,
+      "required_num_args": 0,
+      "return_type": {
+        "display": "string",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [],
+      "variables": [],
+      "temporary_variables": 0,
+      "literals": [
+        {
+          "type": "string",
+          "value": "beta"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 35,
+          "op1": {
+            "kind": "const",
+            "index": 0
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 36,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 36,
+          "op1": {
+            "kind": "const",
+            "index": 1
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "kind": "method",
+      "name": "name",
+      "filename": "tests/Fixtures/Common/ClassTraitMetadata.php",
+      "line_start": 38,
+      "line_end": 41,
+      "scope": {
+        "name": "Beta",
+        "kind": "trait"
+      },
+      "property_hook": null,
+      "flags": [
+        "public",
+        "has_return_type"
+      ],
+      "num_args": 0,
+      "required_num_args": 0,
+      "return_type": {
+        "display": "string",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [],
+      "variables": [],
+      "temporary_variables": 0,
+      "literals": [
+        {
+          "type": "string",
+          "value": "beta"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 40,
+          "op1": {
+            "kind": "const",
+            "index": 0
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 41,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 41,
+          "op1": {
+            "kind": "const",
+            "index": 1
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "kind": "method",
+      "name": "id",
+      "filename": "tests/Fixtures/Common/ClassTraitMetadata.php",
+      "line_start": 43,
+      "line_end": 46,
+      "scope": {
+        "name": "Beta",
+        "kind": "trait"
+      },
+      "property_hook": null,
+      "flags": [
+        "public",
+        "has_return_type"
+      ],
+      "num_args": 0,
+      "required_num_args": 0,
+      "return_type": {
+        "display": "int",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [],
+      "variables": [],
+      "temporary_variables": 0,
+      "literals": [
+        {
+          "type": "int",
+          "value": 2
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 45,
+          "op1": {
+            "kind": "const",
+            "index": 0
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 46,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 46,
+          "op1": {
+            "kind": "const",
+            "index": 1
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "kind": "method",
+      "name": "name",
+      "filename": "tests/Fixtures/Common/ClassTraitMetadata.php",
+      "line_start": 66,
+      "line_end": 69,
+      "scope": {
+        "name": "Item",
+        "kind": "class"
+      },
+      "property_hook": null,
+      "flags": [
+        "public",
+        "has_return_type",
+        "uses_this"
+      ],
+      "num_args": 0,
+      "required_num_args": 0,
+      "return_type": {
+        "display": "string",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [],
+      "variables": [],
+      "temporary_variables": 1,
+      "literals": [
+        {
+          "type": "string",
+          "value": "title"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "FETCH_OBJ_R",
+          "opcode_number": 82,
+          "line": 68,
+          "op1": {
+            "kind": "this"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 0
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 68,
+          "op1": {
+            "kind": "tmp",
+            "index": 0
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 68,
+          "op1": {
+            "kind": "tmp",
+            "index": 0
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 69,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 4,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 69,
+          "op1": {
+            "kind": "const",
+            "index": 1
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "kind": "main",
+      "name": null,
+      "filename": "tests/Fixtures/Common/ClassTraitMetadata.php",
+      "line_start": 1,
+      "line_end": 71,
+      "scope": null,
+      "property_hook": null,
+      "flags": [],
+      "num_args": 0,
+      "required_num_args": 0,
+      "return_type": null,
+      "arguments": [],
+      "variables": [],
+      "temporary_variables": 0,
+      "literals": [
+        {
+          "type": "string",
+          "value": "base"
+        },
+        {
+          "type": "string",
+          "value": "item"
+        },
+        {
+          "type": "string",
+          "value": "\u0000itemtests/Fixtures/Common/ClassTraitMetadata.php:50$0"
+        },
+        {
+          "type": "int",
+          "value": 1
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "DECLARE_CLASS",
+          "opcode_number": 144,
+          "line": 50,
+          "op1": {
+            "kind": "const",
+            "index": 1
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 71,
+          "op1": {
+            "kind": "const",
+            "index": 3
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    }
+  ],
+  "classes": [
+  {
+    "name": "Note",
+    "kind": "class",
+    "flags": [
+      "linked"
+    ],
+    "parent": null,
+    "interfaces": [],
+    "traits": [],
+    "trait_aliases": [],
+    "trait_precedences": [],
+    "filename": "tests/Fixtures/Common/ClassTraitMetadata.php",
+    "line_start": 4,
+    "line_end": 9,
+    "enum_backing": null,
+    "properties": [
+      {
+        "name": "message",
+        "flags": [
+          "public",
+          "promoted"
+        ],
+        "type": {
+          "display": "string",
+          "nullable": false,
+          "kind": "builtin"
+        },
+        "default": null,
+        "hooks": [],
+        "attributes": [],
+        "doc_comment": null
+      }
+    ],
+    "constants": [],
+    "attributes": [
+      {
+        "name": "Attribute",
+        "line": 3,
+        "offset": 0,
+        "arguments": []
+      }
+    ],
+    "doc_comment": null
+  },
+  {
+    "name": "Base",
+    "kind": "class",
+    "flags": [
+      "linked"
+    ],
+    "parent": null,
+    "interfaces": [],
+    "traits": [],
+    "trait_aliases": [],
+    "trait_precedences": [],
+    "filename": "tests/Fixtures/Common/ClassTraitMetadata.php",
+    "line_start": 11,
+    "line_end": 14,
+    "enum_backing": null,
+    "properties": [
+      {
+        "name": "id",
+        "flags": [
+          "public"
+        ],
+        "type": {
+          "display": "int",
+          "nullable": false,
+          "kind": "builtin"
+        },
+        "default": {
+          "type": "int",
+          "value": 1
+        },
+        "hooks": [],
+        "attributes": [],
+        "doc_comment": null
+      }
+    ],
+    "constants": [],
+    "attributes": [],
+    "doc_comment": null
+  },
+  {
+    "name": "Alpha",
+    "kind": "trait",
+    "flags": [
+      "linked"
+    ],
+    "parent": null,
+    "interfaces": [],
+    "traits": [],
+    "trait_aliases": [],
+    "trait_precedences": [],
+    "filename": "tests/Fixtures/Common/ClassTraitMetadata.php",
+    "line_start": 16,
+    "line_end": 29,
+    "enum_backing": null,
+    "properties": [
+      {
+        "name": "fromTrait",
+        "flags": [
+          "public"
+        ],
+        "type": {
+          "display": "string",
+          "nullable": false,
+          "kind": "builtin"
+        },
+        "default": {
+          "type": "string",
+          "value": "alpha"
+        },
+        "hooks": [],
+        "attributes": [],
+        "doc_comment": null
+      }
+    ],
+    "constants": [],
+    "attributes": [],
+    "doc_comment": null
+  },
+  {
+    "name": "Beta",
+    "kind": "trait",
+    "flags": [
+      "linked"
+    ],
+    "parent": null,
+    "interfaces": [],
+    "traits": [],
+    "trait_aliases": [],
+    "trait_precedences": [],
+    "filename": "tests/Fixtures/Common/ClassTraitMetadata.php",
+    "line_start": 31,
+    "line_end": 47,
+    "enum_backing": null,
+    "properties": [],
+    "constants": [],
+    "attributes": [],
+    "doc_comment": null
+  },
+  {
+    "name": "Item",
+    "kind": "class",
+    "flags": [],
+    "parent": "Base",
+    "interfaces": [],
+    "traits": [
+      "Alpha",
+      "Beta"
+    ],
+    "trait_aliases": [
+      {
+        "trait": null,
+        "method": "label",
+        "alias": "title",
+        "modifiers": []
+      },
+      {
+        "trait": "Beta",
+        "method": "id",
+        "alias": null,
+        "modifiers": [
+          "private"
+        ]
+      }
+    ],
+    "trait_precedences": [
+      {
+        "trait": "Alpha",
+        "method": "name",
+        "instead_of": [
+          "Beta",
+          "Alpha"
+        ]
+      }
+    ],
+    "filename": "tests/Fixtures/Common/ClassTraitMetadata.php",
+    "line_start": 50,
+    "line_end": 70,
+    "enum_backing": null,
+    "properties": [
+      {
+        "name": "title",
+        "flags": [
+          "public"
+        ],
+        "type": {
+          "display": "string",
+          "nullable": false,
+          "kind": "builtin"
+        },
+        "default": {
+          "type": "string",
+          "value": "item"
+        },
+        "hooks": [],
+        "attributes": [
+          {
+            "name": "Note",
+            "line": 59,
+            "offset": 0,
+            "arguments": [
+              {
+                "name": null,
+                "value": {
+                  "type": "string",
+                  "value": "use name()"
+                }
+              }
+            ]
+          }
+        ],
+        "doc_comment": "/** The item title. */"
+      }
+    ],
+    "constants": [
+      {
+        "name": "SCALE",
+        "flags": [
+          "public"
+        ],
+        "type": {
+          "display": "int",
+          "nullable": false,
+          "kind": "builtin"
+        },
+        "value": {
+          "type": "int",
+          "value": 1
+        },
+        "attributes": [
+          {
+            "name": "Note",
+            "line": 63,
+            "offset": 0,
+            "arguments": [
+              {
+                "name": null,
+                "value": {
+                  "type": "string",
+                  "value": "unused"
+                }
+              }
+            ]
+          }
+        ],
+        "doc_comment": "/** The scale. */"
+      }
+    ],
+    "attributes": [],
+    "doc_comment": "/** The composed item. */"
+  }
+]
+}

@@ -542,13 +542,16 @@
     "parent": null,
     "interfaces": [],
     "traits": [],
+    "trait_aliases": [],
+    "trait_precedences": [],
     "filename": "tests/Fixtures/Common/Oop.php",
     "line_start": 3,
     "line_end": 6,
     "enum_backing": null,
     "properties": [],
     "constants": [],
-    "attributes": []
+    "attributes": [],
+    "doc_comment": null
   },
   {
     "name": "Label",
@@ -559,13 +562,16 @@
     "parent": null,
     "interfaces": [],
     "traits": [],
+    "trait_aliases": [],
+    "trait_precedences": [],
     "filename": "tests/Fixtures/Common/Oop.php",
     "line_start": 8,
     "line_end": 14,
     "enum_backing": null,
     "properties": [],
     "constants": [],
-    "attributes": []
+    "attributes": [],
+    "doc_comment": null
   },
   {
     "name": "Base",
@@ -576,6 +582,8 @@
     "parent": null,
     "interfaces": [],
     "traits": [],
+    "trait_aliases": [],
+    "trait_precedences": [],
     "filename": "tests/Fixtures/Common/Oop.php",
     "line_start": 16,
     "line_end": 24,
@@ -595,11 +603,14 @@
           "type": "int",
           "value": 1
         },
-        "hooks": []
+        "hooks": [],
+        "attributes": [],
+        "doc_comment": null
       }
     ],
     "constants": [],
-    "attributes": []
+    "attributes": [],
+    "doc_comment": null
   },
   {
     "name": "Item",
@@ -612,6 +623,8 @@
     "traits": [
       "Label"
     ],
+    "trait_aliases": [],
+    "trait_precedences": [],
     "filename": "tests/Fixtures/Common/Oop.php",
     "line_start": 26,
     "line_end": 36,
@@ -631,11 +644,14 @@
           "type": "string",
           "value": "item"
         },
-        "hooks": []
+        "hooks": [],
+        "attributes": [],
+        "doc_comment": null
       }
     ],
     "constants": [],
-    "attributes": []
+    "attributes": [],
+    "doc_comment": null
   }
 ]
 }

@@ -526,6 +526,8 @@
     "parent": null,
     "interfaces": [],
     "traits": [],
+    "trait_aliases": [],
+    "trait_precedences": [],
     "filename": "tests/Fixtures/Common/ClassPromotion.php",
     "line_start": 3,
     "line_end": 13,
@@ -545,7 +547,9 @@
           "kind": "builtin"
         },
         "default": null,
-        "hooks": []
+        "hooks": [],
+        "attributes": [],
+        "doc_comment": null
       },
       {
         "name": "y",
@@ -559,7 +563,9 @@
           "kind": "builtin"
         },
         "default": null,
-        "hooks": []
+        "hooks": [],
+        "attributes": [],
+        "doc_comment": null
       },
       {
         "name": "z",
@@ -573,11 +579,14 @@
           "kind": "builtin"
         },
         "default": null,
-        "hooks": []
+        "hooks": [],
+        "attributes": [],
+        "doc_comment": null
       }
     ],
     "constants": [],
-    "attributes": []
+    "attributes": [],
+    "doc_comment": null
   }
 ]
 }

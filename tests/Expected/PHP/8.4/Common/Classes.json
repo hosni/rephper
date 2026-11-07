@@ -274,13 +274,16 @@
     "parent": null,
     "interfaces": [],
     "traits": [],
+    "trait_aliases": [],
+    "trait_precedences": [],
     "filename": "tests/Fixtures/Common/Classes.php",
     "line_start": 3,
     "line_end": 9,
     "enum_backing": null,
     "properties": [],
     "constants": [],
-    "attributes": []
+    "attributes": [],
+    "doc_comment": null
   }
 ]
 }

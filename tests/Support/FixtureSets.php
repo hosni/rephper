@@ -114,6 +114,7 @@ final class FixtureSets
             'Common/ClassNamespace.php' => ['Function: id', 'Function: label', 'Kind: main'],
             'Common/ClassPromotion.php' => ['Class: Point', 'Function: __construct', ' ASSIGN_OBJ '],
             'Common/ClassAttribute.php' => ['Class: Bag', 'Function: size'],
+            'Common/ClassTraitMetadata.php' => ['Class: Item', 'Class: Alpha', 'Class: Beta', ' DECLARE_CLASS '],
             'Common/Closures.php' => ['Kind: closure', 'Kind: main'],
             'Common/AnonymousClass.php' => ['Kind: method', 'class@anonymous'],
             'PHP/8.4/PropertyHooks.php' => ['Kind: property-hook', '$value::get', '$value::set', 'Class: Box'],

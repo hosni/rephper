@@ -9,7 +9,9 @@ namespace Rephper\Ir;
  *
  * `defaultValue` is null when the slot is uninitialized. A PHP null default
  * is a literal of type `null`, including the implicit null of an untyped
- * property. Inherited properties are not stored on the child.
+ * property. Inherited properties are not stored on the child. `attributes`
+ * use the same object as a class attribute, with offset 0. `docComment` is
+ * the raw comment, delimiters included, or null.
  */
 final class ClassProperty
 {
@@ -17,6 +19,7 @@ final class ClassProperty
      * @param list<string> $flags
      * @param array<string, mixed>|null $type
      * @param list<string> $hooks
+     * @param list<array<string, mixed>> $attributes
      * @param array<string, mixed> $extra
      */
     public function __construct(
@@ -25,6 +28,8 @@ final class ClassProperty
         public readonly ?array $type,
         public readonly ?Literal $defaultValue,
         public readonly array $hooks,
+        public readonly array $attributes,
+        public readonly ?string $docComment,
         public readonly array $extra,
     ) {
     }

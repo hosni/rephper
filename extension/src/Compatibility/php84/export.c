@@ -613,6 +613,14 @@ static const rephper_flag rephper_property_flags[] = {
 	{ZEND_ACC_PRIVATE_SET, "private_set"},
 };
 
+/* A trait alias stores at most one of these. Zero means the adaptation wrote none. */
+static const rephper_flag rephper_trait_alias_flags[] = {
+	{ZEND_ACC_PUBLIC, "public"},
+	{ZEND_ACC_PROTECTED, "protected"},
+	{ZEND_ACC_PRIVATE, "private"},
+	{ZEND_ACC_FINAL, "final"},
+};
+
 static const char *rephper_class_kind(const zend_class_entry *ce)
 {
 	if (ce->ce_flags & ZEND_ACC_ENUM) {
@@ -678,6 +686,83 @@ static void rephper_write_attributes(rephper_json *json, HashTable *attributes)
 		rephper_json_array_end(json);
 		rephper_json_object_end(json);
 	} ZEND_HASH_FOREACH_END();
+	rephper_json_array_end(json);
+}
+
+static void rephper_write_zend_string(rephper_json *json, zend_string *value)
+{
+	if (value == NULL) {
+		rephper_json_null(json);
+		return;
+	}
+
+	(void) rephper_json_bytes(json, ZSTR_VAL(value), ZSTR_LEN(value));
+}
+
+/*
+ * trait_aliases and trait_precedences are NULL-terminated. trait_names is
+ * counted by num_traits and has no sentinel. exclude_class_names is counted
+ * by num_excludes. The bytes are copied into the JSON buffer.
+ */
+static void rephper_write_trait_aliases(rephper_json *json, zend_class_entry *ce)
+{
+	zend_trait_alias **alias;
+
+	rephper_json_array_begin(json);
+	if (ce->trait_aliases == NULL) {
+		rephper_json_array_end(json);
+		return;
+	}
+
+	for (alias = ce->trait_aliases; *alias != NULL; alias++) {
+		rephper_json_element(json);
+		rephper_json_object_begin(json);
+		rephper_json_key(json, "trait");
+		rephper_write_zend_string(json, (*alias)->trait_method.class_name);
+		rephper_json_key(json, "method");
+		rephper_write_zend_string(json, (*alias)->trait_method.method_name);
+		rephper_json_key(json, "alias");
+		rephper_write_zend_string(json, (*alias)->alias);
+		rephper_json_key(json, "modifiers");
+		rephper_write_flags(
+			json,
+			(*alias)->modifiers,
+			rephper_trait_alias_flags,
+			sizeof(rephper_trait_alias_flags) / sizeof(rephper_trait_alias_flags[0])
+		);
+		rephper_json_object_end(json);
+	}
+	rephper_json_array_end(json);
+}
+
+static void rephper_write_trait_precedences(rephper_json *json, zend_class_entry *ce)
+{
+	zend_trait_precedence **precedence;
+
+	rephper_json_array_begin(json);
+	if (ce->trait_precedences == NULL) {
+		rephper_json_array_end(json);
+		return;
+	}
+
+	for (precedence = ce->trait_precedences; *precedence != NULL; precedence++) {
+		uint32_t i;
+
+		rephper_json_element(json);
+		rephper_json_object_begin(json);
+		rephper_json_key(json, "trait");
+		rephper_write_zend_string(json, (*precedence)->trait_method.class_name);
+		rephper_json_key(json, "method");
+		rephper_write_zend_string(json, (*precedence)->trait_method.method_name);
+		rephper_json_key(json, "instead_of");
+		rephper_json_array_begin(json);
+		for (i = 0; i < (*precedence)->num_excludes; i++) {
+			rephper_json_element(json);
+			rephper_write_zend_string(json, (*precedence)->exclude_class_names[i]);
+		}
+		rephper_json_array_end(json);
+		rephper_json_object_end(json);
+	}
 	rephper_json_array_end(json);
 }
 
@@ -768,6 +853,11 @@ static void rephper_write_class(rephper_json *json, zend_class_entry *ce)
 	}
 	rephper_json_array_end(json);
 
+	rephper_json_key(json, "trait_aliases");
+	rephper_write_trait_aliases(json, ce);
+	rephper_json_key(json, "trait_precedences");
+	rephper_write_trait_precedences(json, ce);
+
 	rephper_json_key(json, "filename");
 	if (ce->info.user.filename == NULL) {
 		rephper_json_null(json);
@@ -836,6 +926,10 @@ static void rephper_write_class(rephper_json *json, zend_class_entry *ce)
 			}
 		}
 		rephper_json_array_end(json);
+		rephper_json_key(json, "attributes");
+		rephper_write_attributes(json, property->attributes);
+		rephper_json_key(json, "doc_comment");
+		rephper_write_zend_string(json, property->doc_comment);
 		rephper_json_object_end(json);
 	} ZEND_HASH_FOREACH_END();
 	rephper_json_array_end(json);
@@ -860,12 +954,18 @@ static void rephper_write_class(rephper_json *json, zend_class_entry *ce)
 		rephper_write_type(json, constant->type, 0);
 		rephper_json_key(json, "value");
 		rephper_write_zval(json, &constant->value, &walk);
+		rephper_json_key(json, "attributes");
+		rephper_write_attributes(json, constant->attributes);
+		rephper_json_key(json, "doc_comment");
+		rephper_write_zend_string(json, constant->doc_comment);
 		rephper_json_object_end(json);
 	} ZEND_HASH_FOREACH_END();
 	rephper_json_array_end(json);
 
 	rephper_json_key(json, "attributes");
 	rephper_write_attributes(json, ce->attributes);
+	rephper_json_key(json, "doc_comment");
+	rephper_write_zend_string(json, ce->doc_comment);
 	rephper_json_object_end(json);
 }
 

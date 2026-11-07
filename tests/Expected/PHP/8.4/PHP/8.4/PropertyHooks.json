@@ -371,6 +371,8 @@
     "parent": null,
     "interfaces": [],
     "traits": [],
+    "trait_aliases": [],
+    "trait_precedences": [],
     "filename": "tests/Fixtures/PHP/8.4/PropertyHooks.php",
     "line_start": 3,
     "line_end": 9,
@@ -393,11 +395,14 @@
         "hooks": [
           "get",
           "set"
-        ]
+        ],
+        "attributes": [],
+        "doc_comment": null
       }
     ],
     "constants": [],
-    "attributes": []
+    "attributes": [],
+    "doc_comment": null
   }
 ]
 }

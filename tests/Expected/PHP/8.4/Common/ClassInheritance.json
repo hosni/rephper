@@ -745,13 +745,16 @@
     "parent": null,
     "interfaces": [],
     "traits": [],
+    "trait_aliases": [],
+    "trait_precedences": [],
     "filename": "tests/Fixtures/Common/ClassInheritance.php",
     "line_start": 5,
     "line_end": 8,
     "enum_backing": null,
     "properties": [],
     "constants": [],
-    "attributes": []
+    "attributes": [],
+    "doc_comment": null
   },
   {
     "name": "Base",
@@ -762,13 +765,16 @@
     "parent": null,
     "interfaces": [],
     "traits": [],
+    "trait_aliases": [],
+    "trait_precedences": [],
     "filename": "tests/Fixtures/Common/ClassInheritance.php",
     "line_start": 10,
     "line_end": 16,
     "enum_backing": null,
     "properties": [],
     "constants": [],
-    "attributes": []
+    "attributes": [],
+    "doc_comment": null
   },
   {
     "name": "Item",
@@ -779,13 +785,16 @@
       "Named"
     ],
     "traits": [],
+    "trait_aliases": [],
+    "trait_precedences": [],
     "filename": "tests/Fixtures/Common/ClassInheritance.php",
     "line_start": 18,
     "line_end": 29,
     "enum_backing": null,
     "properties": [],
     "constants": [],
-    "attributes": []
+    "attributes": [],
+    "doc_comment": null
   }
 ]
 }
