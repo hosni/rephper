@@ -605,6 +605,9 @@ static void rephper_write_attributes(rephper_json *json, HashTable *attributes)
 		}
 		rephper_json_key(json, "line");
 		rephper_json_u32(json, attribute->lineno);
+		/* 0 is the function or class. Parameter offsets are 1-based. */
+		rephper_json_key(json, "offset");
+		rephper_json_u32(json, attribute->offset);
 		rephper_json_key(json, "arguments");
 		rephper_json_array_begin(json);
 		for (i = 0; i < attribute->argc; i++) {
@@ -1090,6 +1093,18 @@ static void rephper_write_op_array(const zend_op_array *op_array, uint32_t id)
 		rephper_json_null(json);
 	} else {
 		(void) rephper_json_bytes(json, ZSTR_VAL(op_array->function_name), ZSTR_LEN(op_array->function_name));
+	}
+	/*
+	 * Omitted for the global namespace so an IR 1 file without this key stays
+	 * valid. pass_two() still sees the file context for this op array.
+	 */
+	if (CG(file_context).current_namespace != NULL && ZSTR_LEN(CG(file_context).current_namespace) > 0) {
+		rephper_json_key(json, "namespace");
+		(void) rephper_json_bytes(
+			json,
+			ZSTR_VAL(CG(file_context).current_namespace),
+			ZSTR_LEN(CG(file_context).current_namespace)
+		);
 	}
 	rephper_json_key(json, "filename");
 	if (op_array->filename == NULL) {

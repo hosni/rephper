@@ -70,6 +70,39 @@ final class ReaderTest extends TestCase
         $this->reader->readString('{"ir_version":"1"}');
     }
 
+    public function testAMissingNamespaceMeansTheGlobalNamespace(): void
+    {
+        $document = $this->reader->readFile(dirname(__DIR__, 3) . '/tests/Expected/PHP/8.4/Common/Calculatror.json');
+        $function = $document->opArrayNamed('calculatror');
+
+        $this->assertNotNull($function);
+        $this->assertNull($function->namespace);
+        $this->assertArrayNotHasKey('namespace', $function->extra);
+    }
+
+    public function testANamespaceIsReadWithoutBecomingExtra(): void
+    {
+        $json = (string) file_get_contents(dirname(__DIR__, 3) . '/tests/Expected/PHP/8.4/Common/Calculatror.json');
+        $json = preg_replace('/"name": "calculatror"/', '"name": "calculatror", "namespace": "App"', $json, 1);
+        $this->assertIsString($json);
+        $function = $this->reader->readString($json)->opArrayNamed('calculatror');
+
+        $this->assertNotNull($function);
+        $this->assertSame('App', $function->namespace);
+        $this->assertArrayNotHasKey('namespace', $function->extra);
+    }
+
+    public function testAnEmptyNamespaceIsRejected(): void
+    {
+        $json = (string) file_get_contents(dirname(__DIR__, 3) . '/tests/Expected/PHP/8.4/Common/Calculatror.json');
+        $json = preg_replace('/"name": "calculatror"/', '"name": "calculatror", "namespace": ""', $json, 1);
+        $this->assertIsString($json);
+        $this->expectException(IrException::class);
+        $this->expectExceptionMessage('namespace');
+
+        $this->reader->readString($json);
+    }
+
     public function testUnsupportedIrVersionIsDistinct(): void
     {
         $this->expectException(UnsupportedIrVersionException::class);

@@ -254,10 +254,19 @@ final class Reader
             $this->string($returnType, 'kind', $path . '.return_type.kind');
         }
 
+        $namespace = null;
+        if (array_key_exists('namespace', $data)) {
+            $namespace = $this->nullableString($data, 'namespace', $path . '.namespace');
+            if ($namespace === '') {
+                throw new IrException($path . '.namespace must not be empty');
+            }
+        }
+
         return new OpArray(
             $this->int($data, 'id', $path . '.id'),
             $this->string($data, 'kind', $path . '.kind'),
             $this->nullableString($data, 'name', $path . '.name'),
+            $namespace,
             $this->string($data, 'filename', $path . '.filename'),
             $this->int($data, 'line_start', $path . '.line_start'),
             $this->int($data, 'line_end', $path . '.line_end'),
@@ -281,7 +290,7 @@ final class Reader
             $this->nullableString($data, 'doc_comment', $path . '.doc_comment'),
             $parsedInstructions,
             $this->extra($data, [
-                'id', 'kind', 'name', 'filename', 'line_start', 'line_end', 'scope', 'property_hook',
+                'id', 'kind', 'name', 'namespace', 'filename', 'line_start', 'line_end', 'scope', 'property_hook',
                 'flags', 'num_args', 'required_num_args', 'return_type', 'arguments', 'variables',
                 'temporary_variables', 'literals', 'static_variables', 'try_catch', 'live_ranges',
                 'breaks', 'labels', 'dynamic_functions', 'attributes', 'doc_comment', 'instructions',

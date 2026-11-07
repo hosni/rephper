@@ -25,6 +25,7 @@ final class OpArray
         public readonly int $id,
         public readonly string $kind,
         public readonly ?string $name,
+        public readonly ?string $namespace,
         public readonly string $filename,
         public readonly int $lineStart,
         public readonly int $lineEnd,
