@@ -59,7 +59,7 @@ final class Reconstructor
     ];
 
     /** @var list<string> */
-    private const RECORDED = ['RECV', 'RECV_INIT', 'VERIFY_RETURN_TYPE'];
+    private const RECORDED = ['RECV', 'RECV_INIT', 'RECV_VARIADIC', 'VERIFY_RETURN_TYPE', 'VERIFY_NEVER_TYPE'];
 
     /** @var list<string> */
     private const NAMED_INIT = ['INIT_FCALL', 'INIT_FCALL_BY_NAME'];
@@ -206,7 +206,7 @@ final class Reconstructor
         match ($instruction->opcode) {
             'ASSIGN' => $this->assign($opArray, $instruction, null),
             'ASSIGN_OP' => $this->assignOp($opArray, $instruction),
-            'RETURN' => $this->roots[] = new ReturnValue(
+            'RETURN', 'RETURN_BY_REF' => $this->roots[] = new ReturnValue(
                 $instruction->index,
                 $instruction->line,
                 $this->value($opArray, $instruction, $instruction->op1),

@@ -81,7 +81,7 @@ final class Semantics
             'BRK' => [$this->breakContinue($opArray, $instruction, true)],
             'CONT' => [$this->breakContinue($opArray, $instruction, false)],
             'GOTO' => [$this->goto($opArray, $instruction)],
-            'RETURN', 'RETURN_BY_REF', 'GENERATOR_RETURN', 'THROW', 'MATCH_ERROR' => [],
+            'RETURN', 'RETURN_BY_REF', 'GENERATOR_RETURN', 'THROW', 'MATCH_ERROR', 'VERIFY_NEVER_TYPE' => [],
             'FAST_CALL' => [$this->fastCall($opArray, $instruction)],
             'FAST_RET' => $this->fastReturn($opArray, $instruction),
             'CATCH' => $this->catch($instruction, $next),

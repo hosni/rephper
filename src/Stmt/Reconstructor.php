@@ -23,7 +23,7 @@ use Rephper\Ir\OpArray;
 final class Reconstructor
 {
     /** @var list<string> */
-    private const COMPILER_ONLY = ['RECV', 'RECV_INIT', 'VERIFY_RETURN_TYPE'];
+    private const COMPILER_ONLY = ['RECV', 'RECV_INIT', 'RECV_VARIADIC', 'VERIFY_RETURN_TYPE', 'VERIFY_NEVER_TYPE'];
 
     /**
      * Control transfers. A transfer that still carries a value is kept.
@@ -100,7 +100,7 @@ final class Reconstructor
     private function returnStatement(OpArray $opArray, ReturnValue $expression): ?ReturnStatement
     {
         $instruction = $opArray->instruction($expression->opline);
-        if ($instruction === null || $instruction->opcode !== 'RETURN') {
+        if ($instruction === null || ($instruction->opcode !== 'RETURN' && $instruction->opcode !== 'RETURN_BY_REF')) {
             throw new StatementException('Return at opline ' . $expression->opline . ' does not match a RETURN instruction');
         }
         if ($instruction->extendedValue === self::EPILOGUE_RETURN) {
