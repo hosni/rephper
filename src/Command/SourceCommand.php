@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Rephper\Command;
 
 use Rephper\Application\OpArrayPipeline;
+use Rephper\Application\PhpFileGenerator;
 use Rephper\Cfg\CfgException;
 use Rephper\CodeGen\PhpSourceGenerator;
 use Rephper\CodeGen\SourceGenerationException;
@@ -23,7 +24,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 #[AsCommand(
     name: 'source',
-    description: 'Generate a PHP body for one op array in an IR file.',
+    description: 'Generate PHP from an IR file.',
 )]
 final class SourceCommand extends Command
 {
@@ -31,6 +32,7 @@ final class SourceCommand extends Command
         private readonly Reader $reader = new Reader(),
         private readonly OpArrayPipeline $pipeline = new OpArrayPipeline(),
         private readonly PhpSourceGenerator $generator = new PhpSourceGenerator(),
+        private readonly PhpFileGenerator $files = new PhpFileGenerator(),
     ) {
         parent::__construct();
     }
@@ -40,11 +42,14 @@ final class SourceCommand extends Command
         $this
             ->addArgument('file', InputArgument::REQUIRED, 'IR JSON file')
             ->addOption('op-array', null, InputOption::VALUE_REQUIRED, 'Op array id or name. An integer selects the id. "main" selects the script body.')
+            ->addOption('file', null, InputOption::VALUE_NONE, 'Generate a complete PHP file of ordinary functions instead of one op-array body.')
             ->addOption('output', null, InputOption::VALUE_REQUIRED, 'Write the generated PHP to this file instead of stdout.')
             ->setHelp(
-                'Read an IR JSON file and generate the PHP body of one op array. '
-                . 'An integer --op-array value selects that id. Any other value selects the op array name, and "main" selects the script body. '
-                . 'The result is an opening tag and that op array\'s statements. It is not a function, class, namespace, or the original file. '
+                'Read an IR JSON file and generate PHP. '
+                . 'Without --file, an integer --op-array value selects that id. Any other value selects the op array name, and "main" selects the script body. '
+                . 'That result is an opening tag and one op array\'s statements. It is not a function, class, namespace, or the original file. '
+                . 'With --file, the result is a PHP file: ordinary top-level functions in IR order, then the main script statements. '
+                . '--file and --op-array are separate modes. '
                 . 'This command does not load the Zend extension and does not execute the original PHP file.'
             );
     }
@@ -53,13 +58,19 @@ final class SourceCommand extends Command
     {
         $file = $input->getArgument('file');
         $selector = $input->getOption('op-array');
+        $fileMode = $input->getOption('file') === true;
         $destination = $input->getOption('output');
         if (!is_string($file) || ($destination !== null && !is_string($destination))) {
             $output->getErrorOutput()->writeln('Invalid source arguments.');
 
             return Command::FAILURE;
         }
-        if (!is_string($selector)) {
+        if ($fileMode && $selector !== null) {
+            $output->getErrorOutput()->writeln('Use either --file or --op-array.');
+
+            return Command::FAILURE;
+        }
+        if (!$fileMode && !is_string($selector)) {
             $output->getErrorOutput()->writeln('The --op-array option is required.');
 
             return Command::FAILURE;
@@ -67,13 +78,17 @@ final class SourceCommand extends Command
 
         try {
             $document = $this->reader->readFile($file);
-            $opArray = $this->select($document, $selector);
-            if (!$opArray instanceof OpArray) {
-                $output->getErrorOutput()->writeln($this->missing($selector));
+            if ($fileMode) {
+                $source = $this->files->generate($document);
+            } else {
+                $opArray = $this->select($document, $selector);
+                if (!$opArray instanceof OpArray) {
+                    $output->getErrorOutput()->writeln($this->missing($selector));
 
-                return Command::FAILURE;
+                    return Command::FAILURE;
+                }
+                $source = $this->generator->generate($this->pipeline->structure($document, $opArray));
             }
-            $source = $this->generator->generate($this->pipeline->structure($document, $opArray));
         } catch (IrException | CfgException | ExpressionException | StatementException | SourceGenerationException $exception) {
             $output->getErrorOutput()->writeln($exception->getMessage());
 

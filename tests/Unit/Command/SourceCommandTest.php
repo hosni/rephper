@@ -64,7 +64,71 @@ final class SourceCommandTest extends TestCase
         $this->assertStringContainsString('does not load the Zend extension', $display);
         $this->assertStringContainsString('does not execute the original PHP file', $display);
         $this->assertStringContainsString('--op-array', $display);
+        $this->assertStringContainsString('--file', $display);
         $this->assertStringContainsString('--output', $display);
+    }
+
+    public function testFileModePrintsOrdinaryFunctions(): void
+    {
+        $tester = $this->tester();
+        $status = $tester->execute([
+            'file' => dirname(__DIR__, 3) . '/tests/Expected/PHP/8.4/Common/Calculatror.json',
+            '--file' => true,
+        ]);
+
+        $this->assertSame(0, $status, $tester->getDisplay());
+        $this->assertSame(<<<'PHP'
+<?php
+
+function calculatror(int $a, int $b): int
+{
+    return $a + $b;
+}
+
+PHP, $tester->getDisplay());
+    }
+
+    public function testFileModeAndOpArrayAreNotCombined(): void
+    {
+        $tester = $this->tester();
+        $status = $tester->execute([
+            'file' => dirname(__DIR__, 3) . '/tests/Expected/PHP/8.4/Common/Calculatror.json',
+            '--file' => true,
+            '--op-array' => '0',
+        ], ['capture_stderr_separately' => true]);
+
+        $this->assertSame(1, $status);
+        $this->assertStringContainsString('--file', $tester->getErrorOutput());
+        $this->assertSame('', $tester->getDisplay());
+    }
+
+    public function testFileModeDoesNotWriteAPartialFile(): void
+    {
+        $output = tempnam(sys_get_temp_dir(), 'rephper-file-');
+        $this->assertNotFalse($output);
+        file_put_contents($output, 'original');
+        $missing = $output . '-missing';
+        $tester = $this->tester();
+        $status = $tester->execute([
+            'file' => dirname(__DIR__, 3) . '/tests/Expected/PHP/8.4/Common/Classes.json',
+            '--file' => true,
+            '--output' => $missing,
+        ], ['capture_stderr_separately' => true]);
+
+        $this->assertSame(1, $status);
+        $this->assertStringContainsString('class Calculator', $tester->getErrorOutput());
+        $this->assertFileDoesNotExist($missing);
+        $this->assertSame('', $tester->getDisplay());
+
+        $status = $tester->execute([
+            'file' => dirname(__DIR__, 3) . '/tests/Expected/PHP/8.4/Common/Classes.json',
+            '--file' => true,
+            '--output' => $output,
+        ], ['capture_stderr_separately' => true]);
+
+        $this->assertSame(1, $status);
+        $this->assertSame('original', (string) file_get_contents($output));
+        unlink($output);
     }
 
     public function testAMissingOpArrayOptionFails(): void
