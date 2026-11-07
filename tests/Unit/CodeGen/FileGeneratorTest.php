@@ -225,7 +225,10 @@ PHP, $this->generate('Common/Functions.json'));
     public static function rejectedFiles(): array
     {
         return [
-            'class' => ['Common/Classes.json', 'class Calculator is not supported'],
+            'trait' => ['Common/Oop.json', 'trait Label is not supported'],
+            'enum' => ['PHP/8.1/Enums.json', 'enum Status is not supported'],
+            'anonymous class' => ['Common/AnonymousClass.json', 'anonymous class at line 3 is not supported'],
+            'property hook' => ['PHP/8.4/PropertyHooks.json', 'property hook value::get is not supported'],
             'closure' => ['Common/Closures.json', 'closure '],
             'arrow' => ['Common/ArrowFunctions.json', 'closure '],
             'generator' => ['Common/Generators.json', 'generator function sequence is not supported'],
@@ -530,6 +533,293 @@ namespace B {
 
 PHP],
         ];
+    }
+
+    #[DataProvider('classFiles')]
+    public function testClassesAreReconstructedFromTheIr(string $fixture, string $source): void
+    {
+        $generated = $this->generate($fixture);
+        $again = $this->generate($fixture);
+
+        $this->assertSame($source, $generated);
+        $this->assertSame($generated, $again);
+        $this->assertSame(1, substr_count($generated, '<?php'));
+        $this->assertStringNotContainsString('?>', $generated);
+        $this->assertStringNotContainsString("\r", $generated);
+        $file = $this->temporaryPhp($generated);
+        try {
+            $result = Process::run(['php8.4', '-n', '-l', $file]);
+        } finally {
+            unlink($file);
+        }
+        $this->assertSame(0, $result['exit'], $generated . "\n" . $result['stderr']);
+        $this->assertStringContainsString('No syntax errors detected', $result['stdout']);
+    }
+
+    /**
+     * @return array<string, array{string, string}>
+     */
+    public static function classFiles(): array
+    {
+        return [
+            'method' => ['Common/Classes.json', <<<'PHP'
+<?php
+
+class Calculator
+{
+    public function add(int $a, int $b): int
+    {
+        return $a + $b;
+    }
+}
+
+PHP],
+            'empty' => ['Common/ClassEmpty.json', <<<'PHP'
+<?php
+
+class EmptyBox
+{
+}
+
+PHP],
+            'properties' => ['Common/ClassProperties.json', <<<'PHP'
+<?php
+
+class Bucket
+{
+    public $open = null;
+
+    public $openNull = null;
+
+    public int $count = 2;
+
+    protected string $label = 'bucket';
+
+    private bool $ready = true;
+
+    public static int $total = 4;
+
+    public ?int $maybe = null;
+
+    public int $bare;
+
+    public function extra(int $value): int
+    {
+        return $value + 1;
+    }
+}
+
+$mark = 1;
+
+PHP],
+            'constants' => ['Common/ClassConstants.json', <<<'PHP'
+<?php
+
+class Scale
+{
+    public const int BASE = 10;
+
+    protected const string NAME = 'scale';
+
+    private const FLAG = true;
+
+    public function apply(int $value): int
+    {
+        return $value + 1;
+    }
+}
+
+PHP],
+            'inheritance' => ['Common/ClassInheritance.json', <<<'PHP'
+<?php
+
+$before = 1;
+
+interface Named
+{
+    public function name(): string;
+}
+
+class Base
+{
+    public function add(int $a, int $b): int
+    {
+        return $a + $b;
+    }
+}
+
+class Item extends Base implements Named
+{
+    public function name(): string
+    {
+        return 'item';
+    }
+
+    public function mul(int $a, int $b): int
+    {
+        return $a * $b;
+    }
+}
+
+$after = $before + 1;
+
+PHP],
+            'modifiers' => ['Common/ClassModifiers.json', <<<'PHP'
+<?php
+
+abstract class Shape
+{
+    abstract public function area(): int;
+
+    public function scale(int $factor): int
+    {
+        return $factor + 1;
+    }
+}
+
+final class Square extends Shape
+{
+    public function area(): int
+    {
+        return 4;
+    }
+}
+
+PHP],
+            'namespace' => ['Common/ClassNamespace.json', <<<'PHP'
+<?php
+
+namespace App\Shapes;
+
+class Widget
+{
+    public function id(): int
+    {
+        return 7;
+    }
+}
+
+class Box extends \stdClass
+{
+    public \App\Shapes\Widget $widget;
+
+    public function label(int $n): int
+    {
+        return $n + 1;
+    }
+}
+
+PHP],
+            'promotion' => ['Common/ClassPromotion.json', <<<'PHP'
+<?php
+
+class Point
+{
+    public function __construct(public readonly int $x, public int $y = 2, private int $z = 3)
+    {
+    }
+
+    public function extra(int $value): int
+    {
+        return $value + 1;
+    }
+}
+
+PHP],
+            'attribute' => ['Common/ClassAttribute.json', <<<'PHP'
+<?php
+
+#[AllowDynamicProperties]
+class Bag
+{
+    public function size(int $n): int
+    {
+        return $n;
+    }
+}
+
+PHP],
+            'readonly' => ['PHP/8.2/Readonly.json', <<<'PHP'
+<?php
+
+readonly class Point
+{
+    public function __construct(public readonly int $x, public readonly int $y)
+    {
+    }
+}
+
+class Measured
+{
+    public readonly int $width;
+
+    public function __construct(int $width)
+    {
+        $this->width = $width;
+    }
+}
+
+PHP],
+        ];
+    }
+
+    public function testGeneratedClassesKeepTheirBehavior(): void
+    {
+        $this->assertSameBehavior('Common/Classes.php', 'echo (new Calculator())->add(1, 2), " ", (new Calculator())->add(10, 20);');
+        $this->assertSameBehavior('Common/ClassEmpty.php', 'echo class_exists(EmptyBox::class) ? "yes" : "no";');
+        $this->assertSameBehavior(
+            'Common/ClassProperties.php',
+            '$bucket = new Bucket(); $mirror = new ReflectionClass(Bucket::class); $bucket->bare = 5; echo ($bucket->open === null ? "n" : "x"), ($bucket->openNull === null ? "n" : "x"), $bucket->count, " ", $mirror->getProperty("label")->getValue($bucket), " ", ($mirror->getProperty("ready")->getValue($bucket) ? "y" : "n"), " ", Bucket::$total, " ", ($bucket->maybe === null ? "n" : "x"), " ", $bucket->bare, " ", $bucket->extra(3), " ", $mark;',
+        );
+        $this->assertSameBehavior(
+            'Common/ClassConstants.php',
+            '$scale = new Scale(); $mirror = new ReflectionClass(Scale::class); echo Scale::BASE, " ", $mirror->getReflectionConstant("NAME")->getValue(), " ", ($mirror->getReflectionConstant("FLAG")->getValue() ? "y" : "n"), " ", $scale->apply(4);',
+        );
+        $this->assertSameBehavior(
+            'Common/ClassInheritance.php',
+            '$item = new Item(); echo $before, " ", $item->add(2, 3), " ", $item->mul(2, 3), " ", $item->name(), " ", ($item instanceof Named ? "y" : "n"), " ", ($item instanceof Base ? "y" : "n"), " ", $after;',
+        );
+        $this->assertSameBehavior(
+            'Common/ClassModifiers.php',
+            '$square = new Square(); try { new Shape(); $made = "made"; } catch (Error) { $made = "abstract"; } echo $square->area(), " ", $square->scale(3), " ", $made, " ", ((new ReflectionClass(Square::class))->isFinal() ? "final" : "open");',
+        );
+        $this->assertSameBehavior(
+            'Common/ClassNamespace.php',
+            '$box = new \\App\\Shapes\\Box(); echo (new \\App\\Shapes\\Widget())->id(), " ", $box->label(4), " ", ($box instanceof \\stdClass ? "y" : "n"), " ", (string) (new ReflectionProperty(\\App\\Shapes\\Box::class, "widget"))->getType();',
+        );
+        $this->assertSameBehavior(
+            'Common/ClassPromotion.php',
+            '$first = new Point(1); $second = new Point(4, 5, 6); echo $first->x, " ", (new ReflectionProperty(Point::class, "y"))->getValue($first), " ", (new ReflectionProperty(Point::class, "z"))->getValue($first), " ", $first->extra(5), " ", $second->x, " ", (new ReflectionProperty(Point::class, "y"))->getValue($second), " ", (new ReflectionProperty(Point::class, "z"))->getValue($second);',
+        );
+        $this->assertSameBehavior('Common/ClassAttribute.php', '$bag = new Bag(); $bag->extra = 5; echo $bag->extra, " ", $bag->size(2);');
+        $this->assertSame('3 4 8', $this->execute('PHP/8.2/Readonly.json', '$point = new Point(3, 4); $measured = new Measured(8); echo $point->x, " ", $point->y, " ", $measured->width;'));
+    }
+
+    public function testIncompleteClassMetadataFails(): void
+    {
+        $hooks = $this->mutate('Common/Classes.json', static function (array &$data): void {
+            $data['classes'][0]['properties'][] = [
+                'name' => 'value',
+                'flags' => ['public'],
+                'type' => ['display' => 'int', 'nullable' => false, 'kind' => 'builtin'],
+                'default' => null,
+                'hooks' => ['get'],
+            ];
+        });
+        $traits = $this->mutate('Common/Classes.json', static function (array &$data): void {
+            $data['classes'][0]['traits'][] = 'Label';
+        });
+        $conditional = $this->mutate('Common/ClassInheritance.json', static function (array &$data): void {
+            foreach ($data['op_arrays'] as &$opArray) {
+                if (($opArray['kind'] ?? null) === 'main') {
+                    $opArray['instructions'][0]['opcode'] = 'JMPZ';
+                }
+            }
+        });
+
+        $this->assertGenerationFails($hooks, 'property $value has hooks');
+        $this->assertGenerationFails($traits, 'uses traits');
+        $this->assertGenerationFails($conditional, 'conditional class declaration is not supported');
     }
 
     public function testNamespaceMetadataMustAgree(): void

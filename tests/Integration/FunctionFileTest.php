@@ -57,6 +57,16 @@ final class FunctionFileTest extends TestCase
             'namespace strict' => ['Common/NamespaceStrict.json'],
             'unbracketed namespaces' => ['Common/NamespaceUnbracketedMultiple.json'],
             'same line namespaces' => ['Common/NamespaceSameLine.json'],
+            'class' => ['Common/Classes.json'],
+            'empty class' => ['Common/ClassEmpty.json'],
+            'class properties' => ['Common/ClassProperties.json'],
+            'class constants' => ['Common/ClassConstants.json'],
+            'class inheritance' => ['Common/ClassInheritance.json'],
+            'class modifiers' => ['Common/ClassModifiers.json'],
+            'class namespace' => ['Common/ClassNamespace.json'],
+            'constructor promotion' => ['Common/ClassPromotion.json'],
+            'class attribute' => ['Common/ClassAttribute.json'],
+            'readonly class' => ['PHP/8.2/Readonly.json'],
         ];
     }
 
@@ -88,11 +98,11 @@ final class FunctionFileTest extends TestCase
         unlink($output);
 
         try {
-            $source = $this->generate('Common/Classes.json');
+            $source = $this->generate('Common/AnonymousClass.json');
             file_put_contents($output, $source);
-            $this->fail('Generated a file that omitted a class.');
+            $this->fail('Generated a file that omitted an anonymous class.');
         } catch (SourceGenerationException $exception) {
-            $this->assertStringContainsString('class Calculator is not supported', $exception->getMessage());
+            $this->assertStringContainsString('anonymous class at line 3 is not supported', $exception->getMessage());
             $this->assertFileDoesNotExist($output);
         }
     }

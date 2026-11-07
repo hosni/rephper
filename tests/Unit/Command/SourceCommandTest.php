@@ -110,18 +110,18 @@ PHP, $tester->getDisplay());
         $missing = $output . '-missing';
         $tester = $this->tester();
         $status = $tester->execute([
-            'file' => dirname(__DIR__, 3) . '/tests/Expected/PHP/8.4/Common/Classes.json',
+            'file' => dirname(__DIR__, 3) . '/tests/Expected/PHP/8.4/Common/AnonymousClass.json',
             '--file' => true,
             '--output' => $missing,
         ], ['capture_stderr_separately' => true]);
 
         $this->assertSame(1, $status);
-        $this->assertStringContainsString('class Calculator', $tester->getErrorOutput());
+        $this->assertStringContainsString('anonymous class', $tester->getErrorOutput());
         $this->assertFileDoesNotExist($missing);
         $this->assertSame('', $tester->getDisplay());
 
         $status = $tester->execute([
-            'file' => dirname(__DIR__, 3) . '/tests/Expected/PHP/8.4/Common/Classes.json',
+            'file' => dirname(__DIR__, 3) . '/tests/Expected/PHP/8.4/Common/AnonymousClass.json',
             '--file' => true,
             '--output' => $output,
         ], ['capture_stderr_separately' => true]);
