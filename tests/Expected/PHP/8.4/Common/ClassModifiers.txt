@@ -1,0 +1,122 @@
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ClassModifiers.php
+Function: area
+Class: Shape
+Kind: method
+Property: -
+Hook: -
+Opcodes: 2
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 1
+Return type: int
+Lines: 5-5
+
+Compiled variables:
+(none)
+
+Literals:
+0 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 VERIFY_RETURN_TYPE line=5 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+1 RETURN line=5 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ClassModifiers.php
+Function: scale
+Class: Shape
+Kind: method
+Property: -
+Hook: -
+Opcodes: 6
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 1
+Literals: 2
+Return type: int
+Lines: 7-10
+
+Compiled variables:
+0 $factor
+
+Literals:
+0 int(1)
+1 null
+
+Argument details:
+0 $factor int
+
+Opcodes:
+0 RECV line=7 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$factor) ext=-
+1 ADD line=9 op1=CV(0:$factor) op2=CONST(int(1)) result=TMP(0) ext=-
+2 VERIFY_RETURN_TYPE line=9 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+3 RETURN line=9 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+4 VERIFY_RETURN_TYPE line=10 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+5 RETURN line=10 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ClassModifiers.php
+Function: area
+Class: Square
+Kind: method
+Property: -
+Hook: -
+Opcodes: 3
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 2
+Return type: int
+Lines: 15-18
+
+Compiled variables:
+(none)
+
+Literals:
+0 int(4)
+1 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 RETURN line=17 op1=CONST(int(4)) op2=UNUSED result=UNUSED ext=-
+1 VERIFY_RETURN_TYPE line=18 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+2 RETURN line=18 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ClassModifiers.php
+Function: <main>
+Class: -
+Kind: main
+Property: -
+Hook: -
+Opcodes: 1
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 1
+Return type: -
+Lines: 1-20
+
+Compiled variables:
+(none)
+
+Literals:
+0 int(1)
+
+Argument details:
+(none)
+
+Opcodes:
+0 RETURN line=20 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+

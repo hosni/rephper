@@ -1,0 +1,170 @@
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ClassInheritance.php
+Function: name
+Class: Named
+Kind: method
+Property: -
+Hook: -
+Opcodes: 2
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 1
+Return type: string
+Lines: 7-7
+
+Compiled variables:
+(none)
+
+Literals:
+0 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 VERIFY_RETURN_TYPE line=7 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+1 RETURN line=7 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ClassInheritance.php
+Function: add
+Class: Base
+Kind: method
+Property: -
+Hook: -
+Opcodes: 7
+Arguments: 2
+Required arguments: 2
+Compiled variables: 2
+Temporary variables: 1
+Literals: 1
+Return type: int
+Lines: 12-15
+
+Compiled variables:
+0 $a
+1 $b
+
+Literals:
+0 null
+
+Argument details:
+0 $a int
+1 $b int
+
+Opcodes:
+0 RECV line=12 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$a) ext=-
+1 RECV line=12 op1=UNUSED(2) op2=UNUSED(16) result=CV(1:$b) ext=-
+2 ADD line=14 op1=CV(0:$a) op2=CV(1:$b) result=TMP(0) ext=-
+3 VERIFY_RETURN_TYPE line=14 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+4 RETURN line=14 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+5 VERIFY_RETURN_TYPE line=15 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+6 RETURN line=15 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ClassInheritance.php
+Function: name
+Class: Item
+Kind: method
+Property: -
+Hook: -
+Opcodes: 3
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 2
+Return type: string
+Lines: 20-23
+
+Compiled variables:
+(none)
+
+Literals:
+0 string("item")
+1 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 RETURN line=22 op1=CONST(string("item")) op2=UNUSED result=UNUSED ext=-
+1 VERIFY_RETURN_TYPE line=23 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+2 RETURN line=23 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ClassInheritance.php
+Function: mul
+Class: Item
+Kind: method
+Property: -
+Hook: -
+Opcodes: 7
+Arguments: 2
+Required arguments: 2
+Compiled variables: 2
+Temporary variables: 1
+Literals: 1
+Return type: int
+Lines: 25-28
+
+Compiled variables:
+0 $a
+1 $b
+
+Literals:
+0 null
+
+Argument details:
+0 $a int
+1 $b int
+
+Opcodes:
+0 RECV line=25 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$a) ext=-
+1 RECV line=25 op1=UNUSED(2) op2=UNUSED(16) result=CV(1:$b) ext=-
+2 MUL line=27 op1=CV(0:$a) op2=CV(1:$b) result=TMP(0) ext=-
+3 VERIFY_RETURN_TYPE line=27 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+4 RETURN line=27 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+5 VERIFY_RETURN_TYPE line=28 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+6 RETURN line=28 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ClassInheritance.php
+Function: <main>
+Class: -
+Kind: main
+Property: -
+Hook: -
+Opcodes: 5
+Arguments: 0
+Required arguments: 0
+Compiled variables: 2
+Temporary variables: 3
+Literals: 6
+Return type: -
+Lines: 1-32
+
+Compiled variables:
+0 $before
+1 $after
+
+Literals:
+0 int(1)
+1 string("base")
+2 string("item")
+3 string("\0itemtests/Fixtures/Common/ClassInheritance.php:18$0")
+4 int(1)
+5 int(1)
+
+Argument details:
+(none)
+
+Opcodes:
+0 ASSIGN line=3 op1=CV(0:$before) op2=CONST(int(1)) result=UNUSED ext=-
+1 DECLARE_CLASS line=18 op1=CONST(string("item")) op2=CONST(string("base")) result=UNUSED ext=-
+2 ADD line=31 op1=CV(0:$before) op2=CONST(int(1)) result=TMP(1) ext=-
+3 ASSIGN line=31 op1=CV(1:$after) op2=TMP(1) result=UNUSED ext=-
+4 RETURN line=32 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+

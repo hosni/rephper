@@ -1,0 +1,583 @@
+{
+  "ir_version": 1,
+  "php": {
+    "version": "PHP_VERSION",
+    "version_id": 0,
+    "api": 20240924,
+    "zend_module_api": 20240924,
+    "zend_extension_api": 420240924,
+    "zts": false,
+    "debug": false
+  },
+  "compilation": {
+    "stage": "pre_pass_two",
+    "jumps": "absolute_opline"
+  },
+  "op_arrays": [
+    {
+      "id": 0,
+      "kind": "method",
+      "name": "__construct",
+      "filename": "tests/Fixtures/Common/ClassPromotion.php",
+      "line_start": 5,
+      "line_end": 7,
+      "scope": {
+        "name": "Point",
+        "kind": "class"
+      },
+      "property_hook": null,
+      "flags": [
+        "public",
+        "has_type_hints",
+        "constructor"
+      ],
+      "num_args": 3,
+      "required_num_args": 1,
+      "return_type": null,
+      "arguments": [
+        {
+          "name": "x",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": true,
+          "default_literal": null
+        },
+        {
+          "name": "y",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": true,
+          "default_literal": 0
+        },
+        {
+          "name": "z",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": true,
+          "default_literal": 1
+        }
+      ],
+      "variables": [
+        "x",
+        "y",
+        "z"
+      ],
+      "temporary_variables": 0,
+      "literals": [
+        {
+          "type": "int",
+          "value": 2
+        },
+        {
+          "type": "int",
+          "value": 3
+        },
+        {
+          "type": "string",
+          "value": "x"
+        },
+        {
+          "type": "string",
+          "value": "y"
+        },
+        {
+          "type": "string",
+          "value": "z"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 5,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 268435472
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "x"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "RECV_INIT",
+          "opcode_number": 64,
+          "line": 5,
+          "op1": {
+            "kind": "unused",
+            "value": 2
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "cv",
+            "index": 1,
+            "name": "y"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "RECV_INIT",
+          "opcode_number": 64,
+          "line": 5,
+          "op1": {
+            "kind": "unused",
+            "value": 3
+          },
+          "op2": {
+            "kind": "const",
+            "index": 1
+          },
+          "result": {
+            "kind": "cv",
+            "index": 2,
+            "name": "z"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "ASSIGN_OBJ",
+          "opcode_number": 24,
+          "line": 5,
+          "op1": {
+            "kind": "this"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 2
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 4,
+          "opcode": "OP_DATA",
+          "opcode_number": 137,
+          "line": 5,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "x"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 5,
+          "opcode": "ASSIGN_OBJ",
+          "opcode_number": 24,
+          "line": 5,
+          "op1": {
+            "kind": "this"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 3
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 24
+        },
+        {
+          "index": 6,
+          "opcode": "OP_DATA",
+          "opcode_number": 137,
+          "line": 5,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "y"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 7,
+          "opcode": "ASSIGN_OBJ",
+          "opcode_number": 24,
+          "line": 5,
+          "op1": {
+            "kind": "this"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 4
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 48
+        },
+        {
+          "index": 8,
+          "opcode": "OP_DATA",
+          "opcode_number": 137,
+          "line": 5,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "z"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 9,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 7,
+          "op1": {
+            "kind": "const",
+            "index": 5
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "kind": "method",
+      "name": "extra",
+      "filename": "tests/Fixtures/Common/ClassPromotion.php",
+      "line_start": 9,
+      "line_end": 12,
+      "scope": {
+        "name": "Point",
+        "kind": "class"
+      },
+      "property_hook": null,
+      "flags": [
+        "public",
+        "has_type_hints",
+        "has_return_type"
+      ],
+      "num_args": 1,
+      "required_num_args": 1,
+      "return_type": {
+        "display": "int",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [
+        {
+          "name": "value",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        }
+      ],
+      "variables": [
+        "value"
+      ],
+      "temporary_variables": 1,
+      "literals": [
+        {
+          "type": "int",
+          "value": 1
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 9,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "value"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "ADD",
+          "opcode_number": 1,
+          "line": 11,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "value"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 0
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 11,
+          "op1": {
+            "kind": "tmp",
+            "index": 0
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 11,
+          "op1": {
+            "kind": "tmp",
+            "index": 0
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 4,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 12,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 5,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 12,
+          "op1": {
+            "kind": "const",
+            "index": 1
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "kind": "main",
+      "name": null,
+      "filename": "tests/Fixtures/Common/ClassPromotion.php",
+      "line_start": 1,
+      "line_end": 14,
+      "scope": null,
+      "property_hook": null,
+      "flags": [],
+      "num_args": 0,
+      "required_num_args": 0,
+      "return_type": null,
+      "arguments": [],
+      "variables": [],
+      "temporary_variables": 0,
+      "literals": [
+        {
+          "type": "int",
+          "value": 1
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 14,
+          "op1": {
+            "kind": "const",
+            "index": 0
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    }
+  ],
+  "classes": [
+  {
+    "name": "Point",
+    "kind": "class",
+    "flags": [
+      "linked"
+    ],
+    "parent": null,
+    "interfaces": [],
+    "traits": [],
+    "filename": "tests/Fixtures/Common/ClassPromotion.php",
+    "line_start": 3,
+    "line_end": 13,
+    "enum_backing": null,
+    "properties": [
+      {
+        "name": "x",
+        "flags": [
+          "public",
+          "readonly",
+          "promoted",
+          "protected_set"
+        ],
+        "type": {
+          "display": "int",
+          "nullable": false,
+          "kind": "builtin"
+        },
+        "default": null,
+        "hooks": []
+      },
+      {
+        "name": "y",
+        "flags": [
+          "public",
+          "promoted"
+        ],
+        "type": {
+          "display": "int",
+          "nullable": false,
+          "kind": "builtin"
+        },
+        "default": null,
+        "hooks": []
+      },
+      {
+        "name": "z",
+        "flags": [
+          "private",
+          "promoted"
+        ],
+        "type": {
+          "display": "int",
+          "nullable": false,
+          "kind": "builtin"
+        },
+        "default": null,
+        "hooks": []
+      }
+    ],
+    "constants": [],
+    "attributes": []
+  }
+]
+}

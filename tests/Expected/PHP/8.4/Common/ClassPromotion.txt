@@ -1,0 +1,108 @@
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ClassPromotion.php
+Function: __construct
+Class: Point
+Kind: method
+Property: -
+Hook: -
+Opcodes: 10
+Arguments: 3
+Required arguments: 1
+Compiled variables: 3
+Temporary variables: 0
+Literals: 6
+Return type: -
+Lines: 5-7
+
+Compiled variables:
+0 $x
+1 $y
+2 $z
+
+Literals:
+0 int(2)
+1 int(3)
+2 string("x")
+3 string("y")
+4 string("z")
+5 null
+
+Argument details:
+0 $x int
+1 $y int
+2 $z int
+
+Opcodes:
+0 RECV line=5 op1=UNUSED(1) op2=UNUSED(268435472) result=CV(0:$x) ext=-
+1 RECV_INIT line=5 op1=UNUSED(2) op2=CONST(int(2)) result=CV(1:$y) ext=-
+2 RECV_INIT line=5 op1=UNUSED(3) op2=CONST(int(3)) result=CV(2:$z) ext=-
+3 ASSIGN_OBJ line=5 op1=THIS op2=CONST(string("x")) result=UNUSED ext=-
+4 OP_DATA line=5 op1=CV(0:$x) op2=UNUSED result=UNUSED ext=-
+5 ASSIGN_OBJ line=5 op1=THIS op2=CONST(string("y")) result=UNUSED ext=24
+6 OP_DATA line=5 op1=CV(1:$y) op2=UNUSED result=UNUSED ext=-
+7 ASSIGN_OBJ line=5 op1=THIS op2=CONST(string("z")) result=UNUSED ext=48
+8 OP_DATA line=5 op1=CV(2:$z) op2=UNUSED result=UNUSED ext=-
+9 RETURN line=7 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ClassPromotion.php
+Function: extra
+Class: Point
+Kind: method
+Property: -
+Hook: -
+Opcodes: 6
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 1
+Literals: 2
+Return type: int
+Lines: 9-12
+
+Compiled variables:
+0 $value
+
+Literals:
+0 int(1)
+1 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=9 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 ADD line=11 op1=CV(0:$value) op2=CONST(int(1)) result=TMP(0) ext=-
+2 VERIFY_RETURN_TYPE line=11 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+3 RETURN line=11 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+4 VERIFY_RETURN_TYPE line=12 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+5 RETURN line=12 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ClassPromotion.php
+Function: <main>
+Class: -
+Kind: main
+Property: -
+Hook: -
+Opcodes: 1
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 1
+Return type: -
+Lines: 1-14
+
+Compiled variables:
+(none)
+
+Literals:
+0 int(1)
+
+Argument details:
+(none)
+
+Opcodes:
+0 RETURN line=14 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+
