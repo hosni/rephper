@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace Rephper\CodeGen;
 
+use Rephper\Expr\PropertyAssignment;
+use Rephper\Expr\VariableRead;
 use Rephper\Ir\Literal;
 use Rephper\Ir\OpArray;
+use Rephper\Stmt\ExpressionStatement;
+use Rephper\Stmt\Statement;
 
 /**
  * Renders one ordinary function from its op array and structured body.
@@ -18,14 +22,15 @@ final class FunctionRenderer
 {
     private const IDENTIFIER = '/\A[A-Za-z_\x80-\xff][A-Za-z0-9_\x80-\xff]*\z/';
 
-    private const QUALIFIED_NAME = '/\A\\\\?[A-Za-z_\x80-\xff][A-Za-z0-9_\x80-\xff]*(?:\\\\[A-Za-z_\x80-\xff][A-Za-z0-9_\x80-\xff]*)*\z/';
-
     private ?NameQualifier $names = null;
+
+    private ?MethodStyle $method = null;
 
     public function __construct(
         private readonly PhpSourceGenerator $source = new PhpSourceGenerator(),
         private readonly TypeRenderer $types = new TypeRenderer(),
         private readonly LiteralRenderer $literals = new LiteralRenderer(),
+        private readonly AttributeRenderer $attributes = new AttributeRenderer(),
     ) {
     }
 
@@ -34,13 +39,17 @@ final class FunctionRenderer
         int $indent = 0,
         ?string $declaredName = null,
         ?NameQualifier $names = null,
+        ?MethodStyle $method = null,
     ): string {
-        $previous = $this->names;
+        $previousNames = $this->names;
+        $previousMethod = $this->method;
         $this->names = $names;
+        $this->method = $method;
         try {
             return $this->renderDeclaration($declaration, $indent, $declaredName);
         } finally {
-            $this->names = $previous;
+            $this->names = $previousNames;
+            $this->method = $previousMethod;
         }
     }
 
@@ -57,10 +66,10 @@ final class FunctionRenderer
 
         $label = $stored === '' ? $name : $stored;
         $pad = str_repeat('    ', $indent);
-        $header = $this->attributes($opArray, $label, 0);
+        $header = $this->attributeLines($opArray, $label, 0);
         $reference = in_array('return_reference', $opArray->flags, true) ? '&' : '';
-        $signature = 'function ' . $reference . $name . '(' . $this->parameters($opArray, $label) . ')';
-        $return = $this->types->render($opArray->returnType, 'the return type of function ' . $label, 0, $this->names);
+        $signature = $this->prefix() . 'function ' . $reference . $name . '(' . $this->parameters($opArray, $label) . ')';
+        $return = $this->types->render($opArray->returnType, 'the return type of ' . $this->subject($label), 0, $this->names);
         if (in_array('has_return_type', $opArray->flags, true)) {
             if ($return === null) {
                 $this->fail($label, 'return type metadata is incomplete');
@@ -74,9 +83,24 @@ final class FunctionRenderer
         foreach ($header as $attribute) {
             $lines[] = $pad . $attribute;
         }
+        $statements = $declaration->body->statements;
+        if ($this->method !== null && $this->method->promoted !== []) {
+            if ($this->method->isAbstract) {
+                $this->fail($label, 'abstract method has a promoted parameter');
+            }
+            $statements = $this->stripPromoted($statements, $label);
+        }
+        if ($this->method !== null && $this->method->isAbstract) {
+            if ($statements !== []) {
+                $this->fail($label, 'abstract method has a body');
+            }
+            $lines[] = $pad . $signature . ';';
+
+            return implode("\n", $lines);
+        }
         $lines[] = $pad . $signature;
         $source = $this->names === null ? $this->source : new PhpSourceGenerator($this->names);
-        $body = $source->renderStatements($declaration->body->statements, $indent + 1);
+        $body = $source->renderStatements($statements, $indent + 1);
         $text = implode("\n", $lines) . "\n" . $pad . "{\n";
         if ($body !== '') {
             $text .= $body . "\n";
@@ -84,6 +108,51 @@ final class FunctionRenderer
         $text .= $pad . '}';
 
         return $text;
+    }
+
+    private function prefix(): string
+    {
+        if ($this->method === null) {
+            return '';
+        }
+        $parts = [];
+        if ($this->method->isFinal) {
+            $parts[] = 'final';
+        }
+        if ($this->method->printsAbstract) {
+            $parts[] = 'abstract';
+        }
+        $parts[] = $this->method->visibility;
+        if ($this->method->isStatic) {
+            $parts[] = 'static';
+        }
+
+        return implode(' ', $parts) . ' ';
+    }
+
+    /**
+     * @param list<Statement> $statements
+     * @return list<Statement>
+     */
+    private function stripPromoted(array $statements, string $name): array
+    {
+        $method = $this->method;
+        if ($method === null) {
+            $this->fail($name, 'promoted parameter is not supported');
+        }
+        foreach ($method->promoted as $index => $parameter) {
+            $statement = $statements[$index] ?? null;
+            $value = $statement instanceof ExpressionStatement ? $statement->expression : null;
+            if (!$value instanceof PropertyAssignment
+                || $value->property !== $parameter
+                || !$value->value instanceof VariableRead
+                || $value->value->name !== $parameter
+            ) {
+                $this->fail($name, 'promoted parameter $' . $parameter . ' has no matching assignment');
+            }
+        }
+
+        return array_slice($statements, count($method->promoted));
     }
 
     private function assertShape(OpArray $opArray, string $name): void
@@ -131,64 +200,16 @@ final class FunctionRenderer
     /**
      * @return list<string>
      */
-    private function attributes(OpArray $opArray, string $name, int $offset): array
+    private function attributeLines(OpArray $opArray, string $name, int $offset): array
     {
-        $rendered = [];
-        foreach ($opArray->attributes as $attribute) {
-            if (!is_array($attribute) || array_is_list($attribute) && $attribute !== []) {
-                $this->fail($name, 'attribute metadata is incomplete');
-            }
-            if (!array_key_exists('offset', $attribute) || !is_int($attribute['offset'])) {
-                $this->fail($name, 'attribute target is not in the IR');
-            }
-            if ($attribute['offset'] !== $offset) {
-                continue;
-            }
-            $rendered[] = $this->attribute($attribute, $name, $opArray->lineStart);
-        }
-
-        return $rendered;
-    }
-
-    /**
-     * @param array<mixed> $attribute
-     */
-    private function attribute(array $attribute, string $function, int $line): string
-    {
-        $name = $attribute['name'] ?? null;
-        if (!is_string($name) || preg_match(self::QUALIFIED_NAME, $name) !== 1) {
-            $this->fail($function, 'attribute name cannot be rendered');
-        }
-        if ($this->names !== null) {
-            $name = $this->names->symbol($name);
-        }
-        $arguments = $attribute['arguments'] ?? null;
-        if (!is_array($arguments) || !array_is_list($arguments)) {
-            $this->fail($function, 'attribute arguments are missing');
-        }
-        $rendered = [];
-        foreach ($arguments as $argument) {
-            if (!is_array($argument)) {
-                $this->fail($function, 'attribute argument cannot be rendered');
-            }
-            $argumentName = $argument['name'] ?? null;
-            if ($argumentName !== null && (!is_string($argumentName) || preg_match(self::IDENTIFIER, $argumentName) !== 1)) {
-                $this->fail($function, 'attribute argument name cannot be rendered');
-            }
-            $value = $argument['value'] ?? null;
-            if (!is_array($value)) {
-                $this->fail($function, 'attribute argument cannot be rendered');
-            }
-            try {
-                $text = $this->literals->renderStored($value, is_int($attribute['line'] ?? null) ? $attribute['line'] : $line, $this->names);
-            } catch (SourceGenerationException $exception) {
-                $this->fail($function, 'attribute argument cannot be rendered: ' . $exception->getMessage());
-            }
-            $rendered[] = $argumentName === null ? $text : $argumentName . ': ' . $text;
-        }
-        $inside = $rendered === [] ? '' : '(' . implode(', ', $rendered) . ')';
-
-        return '#[' . $name . $inside . ']';
+        return $this->attributes->render(
+            $opArray->attributes,
+            $offset,
+            $name,
+            $this->method === null ? 'function' : 'method',
+            $opArray->lineStart,
+            $this->names,
+        );
     }
 
     private function parameters(OpArray $opArray, string $name): string
@@ -218,11 +239,18 @@ final class FunctionRenderer
         if (!is_string($name) || preg_match(self::IDENTIFIER, $name) !== 1) {
             $this->fail($function, 'parameter name cannot be rendered');
         }
-        if ($argument['promoted'] !== false) {
-            $this->fail($function, 'promoted parameter $' . $name . ' is not supported');
+        if ($argument['promoted'] !== true && $argument['promoted'] !== false) {
+            $this->fail($function, 'promoted metadata is incomplete');
         }
         if ($argument['variadic'] !== true && $argument['variadic'] !== false) {
             $this->fail($function, 'variadic metadata is incomplete');
+        }
+        $promotion = null;
+        if ($argument['promoted'] === true) {
+            $promotion = $this->method?->promotions[$name] ?? null;
+            if (!$promotion instanceof PromotedProperty) {
+                $this->fail($function, 'promoted parameter $' . $name . ' is not supported');
+            }
         }
         $send = $argument['send'];
         if ($send !== 'value' && $send !== 'reference') {
@@ -243,11 +271,18 @@ final class FunctionRenderer
             $this->fail($function, 'parameter $' . $name . ' is missing its default value');
         }
 
-        $attributes = $this->attributes($opArray, $function, $index + 1);
-        $type = $this->types->render($argument['type'], 'the type of parameter $' . $name . ' on function ' . $function, 0, $this->names);
+        if ($promotion instanceof PromotedProperty && ($variadic || $send === 'reference')) {
+            $this->fail($function, 'promoted parameter $' . $name . ' cannot be variadic or passed by reference');
+        }
+        $attributes = $this->attributeLines($opArray, $function, $index + 1);
+        $type = $this->types->render($argument['type'], 'the type of parameter $' . $name . ' on ' . $this->subject($function), 0, $this->names);
         $sigil = ($send === 'reference' ? '&' : '') . ($variadic ? '...' : '');
+        $head = $type === null ? '' : $type . ' ';
+        if ($promotion instanceof PromotedProperty) {
+            $head = $promotion->modifiers . ' ' . $head;
+        }
         $text = ($attributes === [] ? '' : implode(' ', $attributes) . ' ')
-            . ($type === null ? '' : $type . ' ')
+            . $head
             . $sigil . '$' . $name;
         if ($default !== null) {
             $literal = $opArray->literal($default);
@@ -265,8 +300,13 @@ final class FunctionRenderer
         return $text;
     }
 
+    private function subject(string $name): string
+    {
+        return ($this->method === null ? 'function ' : 'method ') . $name;
+    }
+
     private function fail(string $name, string $reason): never
     {
-        throw new SourceGenerationException('Cannot generate PHP for function ' . $name . ': ' . $reason . '.');
+        throw new SourceGenerationException('Cannot generate PHP for ' . $this->subject($name) . ': ' . $reason . '.');
     }
 }
