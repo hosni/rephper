@@ -2,7 +2,7 @@
 
 namespace App;
 
-function calculatror(int $a, int $b): int
+function calculator(int $a, int $b): int
 {
     return $a + $b;
 }

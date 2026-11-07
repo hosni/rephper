@@ -17,7 +17,7 @@
     {
       "id": 0,
       "kind": "function",
-      "name": "calculatror",
+      "name": "calculator",
       "filename": "tests/Fixtures/Common/FunctionStrict.php",
       "line_start": 5,
       "line_end": 8,

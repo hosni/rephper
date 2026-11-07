@@ -482,13 +482,13 @@ final class ExporterTest extends TestCase
                 }
                 $this->assertTrue($promoted);
                 break;
-            case 'Common/Calculatror.php':
-                $calculatror = $find('function', 'calculatror');
-                $this->assertSame('int', $calculatror['return_type']['display'] ?? null);
-                $this->assertSame('int', $calculatror['arguments'][0]['type']['display'] ?? null);
-                $this->assertSame('value', $calculatror['arguments'][0]['send'] ?? null);
-                $this->assertContains('top_level', $calculatror['flags'] ?? []);
-                $this->assertArrayNotHasKey('namespace', $calculatror);
+            case 'Common/Calculator.php':
+                $calculator = $find('function', 'calculator');
+                $this->assertSame('int', $calculator['return_type']['display'] ?? null);
+                $this->assertSame('int', $calculator['arguments'][0]['type']['display'] ?? null);
+                $this->assertSame('value', $calculator['arguments'][0]['send'] ?? null);
+                $this->assertContains('top_level', $calculator['flags'] ?? []);
+                $this->assertArrayNotHasKey('namespace', $calculator);
                 break;
             case 'Common/FunctionSignatures.php':
                 $marked = $find('function', 'marked');
@@ -503,13 +503,13 @@ final class ExporterTest extends TestCase
                 $this->assertSame('reference', $returned['arguments'][0]['send'] ?? null);
                 break;
             case 'Common/FunctionStrict.php':
-                $strict = $find('function', 'calculatror');
+                $strict = $find('function', 'calculator');
                 $main = $find('main', null);
                 $this->assertContains('strict_types', $strict['flags'] ?? []);
                 $this->assertContains('strict_types', $main['flags'] ?? []);
                 break;
             case 'Common/FunctionNamespace.php':
-                $namespaced = $find('function', 'App\\calculatror');
+                $namespaced = $find('function', 'App\\calculator');
                 $this->assertSame('App', $namespaced['namespace'] ?? null);
                 $this->assertSame('App', $find('main', null)['namespace'] ?? null);
                 break;

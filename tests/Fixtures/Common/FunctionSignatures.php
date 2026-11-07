@@ -1,6 +1,6 @@
 <?php
 
-function calculatror(int $a, int $b): int
+function calculator(int $a, int $b): int
 {
     return $a + $b;
 }
@@ -114,7 +114,7 @@ function nestedFlow(int $n): int
 
 function calls(int $a, int $b): int
 {
-    return calculatror($a, $b);
+    return calculator($a, $b);
 }
 
 function matched(int $n): string
@@ -157,4 +157,4 @@ function handled(int $n): int
     return $n;
 }
 
-$result = calculatror(1, 2);
+$result = calculator(1, 2);

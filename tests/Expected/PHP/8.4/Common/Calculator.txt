@@ -1,6 +1,6 @@
 Rephper: Compiled op array
-File: tests/Fixtures/Common/Calculatror.php
-Function: calculatror
+File: tests/Fixtures/Common/Calculator.php
+Function: calculator
 Class: -
 Kind: function
 Property: -
@@ -35,7 +35,7 @@ Opcodes:
 6 RETURN line=6 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
 
 Rephper: Compiled op array
-File: tests/Fixtures/Common/Calculatror.php
+File: tests/Fixtures/Common/Calculator.php
 Function: <main>
 Class: -
 Kind: main

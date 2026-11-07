@@ -17,7 +17,7 @@
     {
       "id": 0,
       "kind": "function",
-      "name": "App\\calculatror",
+      "name": "App\\calculator",
       "namespace": "App",
       "filename": "tests/Fixtures/Common/FunctionNamespace.php",
       "line_start": 5,

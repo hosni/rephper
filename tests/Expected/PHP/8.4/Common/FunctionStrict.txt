@@ -1,6 +1,6 @@
 Rephper: Compiled op array
 File: tests/Fixtures/Common/FunctionStrict.php
-Function: calculatror
+Function: calculator
 Class: -
 Kind: function
 Property: -

@@ -34,7 +34,7 @@ final class FunctionFileTest extends TestCase
     public static function files(): array
     {
         return [
-            'calculatror' => ['Common/Calculatror.json'],
+            'calculator' => ['Common/Calculator.json'],
             'signatures' => ['Common/FunctionSignatures.json'],
             'strict' => ['Common/FunctionStrict.json'],
             'arithmetic' => ['Common/Arithmetic.json'],
@@ -44,9 +44,9 @@ final class FunctionFileTest extends TestCase
         ];
     }
 
-    public function testCalculatrorReturnsTheSum(): void
+    public function testCalculatorReturnsTheSum(): void
     {
-        $source = $this->generate('Common/Calculatror.json');
+        $source = $this->generate('Common/Calculator.json');
         $file = tempnam(sys_get_temp_dir(), 'rephper-calc-');
         $this->assertNotFalse($file);
         $php = $file . '.php';
@@ -56,7 +56,7 @@ final class FunctionFileTest extends TestCase
             'php8.4',
             '-n',
             '-r',
-            'require ' . var_export($php, true) . '; echo calculatror(1, 2);',
+            'require ' . var_export($php, true) . '; echo calculator(1, 2);',
         ]);
         unlink($php);
 

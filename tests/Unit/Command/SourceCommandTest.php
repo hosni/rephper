@@ -72,7 +72,7 @@ final class SourceCommandTest extends TestCase
     {
         $tester = $this->tester();
         $status = $tester->execute([
-            'file' => dirname(__DIR__, 3) . '/tests/Expected/PHP/8.4/Common/Calculatror.json',
+            'file' => dirname(__DIR__, 3) . '/tests/Expected/PHP/8.4/Common/Calculator.json',
             '--file' => true,
         ]);
 
@@ -80,7 +80,7 @@ final class SourceCommandTest extends TestCase
         $this->assertSame(<<<'PHP'
 <?php
 
-function calculatror(int $a, int $b): int
+function calculator(int $a, int $b): int
 {
     return $a + $b;
 }
@@ -92,7 +92,7 @@ PHP, $tester->getDisplay());
     {
         $tester = $this->tester();
         $status = $tester->execute([
-            'file' => dirname(__DIR__, 3) . '/tests/Expected/PHP/8.4/Common/Calculatror.json',
+            'file' => dirname(__DIR__, 3) . '/tests/Expected/PHP/8.4/Common/Calculator.json',
             '--file' => true,
             '--op-array' => '0',
         ], ['capture_stderr_separately' => true]);

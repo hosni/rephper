@@ -17,7 +17,7 @@
     {
       "id": 0,
       "kind": "function",
-      "name": "calculatror",
+      "name": "calculator",
       "filename": "tests/Fixtures/Common/FunctionSignatures.php",
       "line_start": 3,
       "line_end": 6,
@@ -3417,7 +3417,7 @@
       "literals": [
         {
           "type": "string",
-          "value": "calculatror"
+          "value": "calculator"
         },
         {
           "type": "null"
@@ -4909,7 +4909,7 @@
       "literals": [
         {
           "type": "string",
-          "value": "calculatror"
+          "value": "calculator"
         },
         {
           "type": "int",

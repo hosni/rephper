@@ -14,38 +14,38 @@ use Rephper\Tests\Support\Process;
 
 final class FileGeneratorTest extends TestCase
 {
-    public function testCalculatrorIsTheFunctionDeclaration(): void
+    public function testCalculatorIsTheFunctionDeclaration(): void
     {
-        $source = $this->generate('Common/Calculatror.json');
+        $source = $this->generate('Common/Calculator.json');
 
         $this->assertSame(<<<'PHP'
 <?php
 
-function calculatror(int $a, int $b): int
+function calculator(int $a, int $b): int
 {
     return $a + $b;
 }
 
 PHP, $source);
-        $this->assertSame($source, $this->generate('Common/Calculatror.json'));
+        $this->assertSame($source, $this->generate('Common/Calculator.json'));
         $this->assertSame(1, substr_count($source, '<?php'));
-        $this->assertSame(1, substr_count($source, 'function calculatror'));
+        $this->assertSame(1, substr_count($source, 'function calculator'));
         $this->assertStringNotContainsString('?>', $source);
     }
 
-    public function testCalculatrorReturnsTheSum(): void
+    public function testCalculatorReturnsTheSum(): void
     {
         $file = tempnam(sys_get_temp_dir(), 'rephper-calc-');
         $this->assertNotFalse($file);
         $php = $file . '.php';
         rename($file, $php);
-        file_put_contents($php, $this->generate('Common/Calculatror.json'));
+        file_put_contents($php, $this->generate('Common/Calculator.json'));
         try {
             $result = Process::run([
                 'php8.4',
                 '-n',
                 '-r',
-                'require ' . var_export($php, true) . '; echo calculatror(1, 2), " ", calculatror(10, 20), " ", calculatror(-1, 5);',
+                'require ' . var_export($php, true) . '; echo calculator(1, 2), " ", calculator(10, 20), " ", calculator(-1, 5);',
             ]);
         } finally {
             unlink($php);
@@ -64,7 +64,7 @@ PHP, $source);
 
 declare(strict_types=1);
 
-function calculatror(int $a, int $b): int
+function calculator(int $a, int $b): int
 {
     return $a + $b;
 }
@@ -74,7 +74,7 @@ PHP, $source);
         $this->assertNotFalse($file);
         $php = $file . '.php';
         rename($file, $php);
-        file_put_contents($php, $source . "try { calculatror('1', 2); echo 'coerced'; } catch (TypeError) { echo 'strict'; }\n");
+        file_put_contents($php, $source . "try { calculator('1', 2); echo 'coerced'; } catch (TypeError) { echo 'strict'; }\n");
         $result = Process::run(['php8.4', '-n', $php]);
         unlink($php);
 
@@ -85,7 +85,7 @@ PHP, $source);
         $this->assertNotFalse($weak);
         $weakPhp = $weak . '.php';
         rename($weak, $weakPhp);
-        file_put_contents($weakPhp, $this->generate('Common/Calculatror.json') . "echo calculatror('1', 2);\n");
+        file_put_contents($weakPhp, $this->generate('Common/Calculator.json') . "echo calculator('1', 2);\n");
         $coerced = Process::run(['php8.4', '-n', $weakPhp]);
         unlink($weakPhp);
         $this->assertSame(0, $coerced['exit'], $coerced['stderr']);
@@ -138,7 +138,7 @@ PHP, $this->generate('Common/Functions.json'));
         $this->assertStringNotContainsString('?>', $source);
         $this->assertStringNotContainsString("\r", $source);
         foreach ([
-            'function calculatror(int $a, int $b): int',
+            'function calculator(int $a, int $b): int',
             'function plain($a, $b)',
             'function nullable(?int $a, ?int $b): ?string',
             'function unions(string|int $value): string|int|null',
@@ -162,13 +162,13 @@ PHP, $this->generate('Common/Functions.json'));
             "#[Deprecated(message: 'old', since: '1.0')]\nfunction marked(#[SensitiveParameter] string \$secret = 'x'): void",
             'function nestedFlow(int $n): int',
             'function calls(int $a, int $b): int',
-            'return calculatror($a, $b);',
+            'return calculator($a, $b);',
             'return match ($n) {',
             'switch ($value) {',
             'try {',
             'catch (RuntimeException $exception) {',
             'finally {',
-            '$result = calculatror(1, 2);',
+            '$result = calculator(1, 2);',
         ] as $needle) {
             $this->assertStringContainsString($needle, $source, $needle);
             $this->assertSame(1, substr_count($source, $needle), $needle);
@@ -176,7 +176,7 @@ PHP, $this->generate('Common/Functions.json'));
 
         $position = -1;
         foreach ([
-            'function calculatror',
+            'function calculator',
             'function plain',
             'function nullable',
             'function unions',
@@ -199,7 +199,7 @@ PHP, $this->generate('Common/Functions.json'));
             'function matched',
             'function switched',
             'function handled',
-            '$result = calculatror(1, 2);',
+            '$result = calculator(1, 2);',
         ] as $needle) {
             $found = strpos($source, $needle);
             $this->assertNotFalse($found, $needle);
@@ -252,14 +252,14 @@ PHP, $this->generate('Common/Functions.json'));
         $unsupportedDefault = $this->mutate('Common/Parameters.json', static function (array &$data): void {
             $data['op_arrays'][0]['literals'][0] = ['type' => 'unsupported', 'zend_type' => 8];
         });
-        $missingTarget = $this->mutate('Common/Calculatror.json', static function (array &$data): void {
+        $missingTarget = $this->mutate('Common/Calculator.json', static function (array &$data): void {
             $data['op_arrays'][0]['attributes'] = [[
                 'name' => 'Deprecated',
                 'line' => 3,
                 'arguments' => [],
             ]];
         });
-        $duplicate = $this->mutate('Common/Calculatror.json', static function (array &$data): void {
+        $duplicate = $this->mutate('Common/Calculator.json', static function (array &$data): void {
             $copy = $data['op_arrays'][0];
             $copy['id'] = 2;
             array_splice($data['op_arrays'], 1, 0, [$copy]);
@@ -276,7 +276,7 @@ PHP, $this->generate('Common/Functions.json'));
         $this->assertGenerationFails($preferReference, 'prefer_reference');
         $this->assertGenerationFails($unsupportedDefault, 'default value of $times cannot be rendered');
         $this->assertGenerationFails($missingTarget, 'attribute target is not in the IR');
-        $this->assertGenerationFails($duplicate, 'function calculatror is declared more than once');
+        $this->assertGenerationFails($duplicate, 'function calculator is declared more than once');
         $this->assertGenerationFails($disagreement, 'strict_types is not the same');
     }
 

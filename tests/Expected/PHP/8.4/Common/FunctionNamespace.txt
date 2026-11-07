@@ -1,6 +1,6 @@
 Rephper: Compiled op array
 File: tests/Fixtures/Common/FunctionNamespace.php
-Function: App\\calculatror
+Function: App\\calculator
 Class: -
 Kind: function
 Property: -

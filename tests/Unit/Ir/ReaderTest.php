@@ -72,8 +72,8 @@ final class ReaderTest extends TestCase
 
     public function testAMissingNamespaceMeansTheGlobalNamespace(): void
     {
-        $document = $this->reader->readFile(dirname(__DIR__, 3) . '/tests/Expected/PHP/8.4/Common/Calculatror.json');
-        $function = $document->opArrayNamed('calculatror');
+        $document = $this->reader->readFile(dirname(__DIR__, 3) . '/tests/Expected/PHP/8.4/Common/Calculator.json');
+        $function = $document->opArrayNamed('calculator');
 
         $this->assertNotNull($function);
         $this->assertNull($function->namespace);
@@ -82,10 +82,10 @@ final class ReaderTest extends TestCase
 
     public function testANamespaceIsReadWithoutBecomingExtra(): void
     {
-        $json = (string) file_get_contents(dirname(__DIR__, 3) . '/tests/Expected/PHP/8.4/Common/Calculatror.json');
-        $json = preg_replace('/"name": "calculatror"/', '"name": "calculatror", "namespace": "App"', $json, 1);
+        $json = (string) file_get_contents(dirname(__DIR__, 3) . '/tests/Expected/PHP/8.4/Common/Calculator.json');
+        $json = preg_replace('/"name": "calculator"/', '"name": "calculator", "namespace": "App"', $json, 1);
         $this->assertIsString($json);
-        $function = $this->reader->readString($json)->opArrayNamed('calculatror');
+        $function = $this->reader->readString($json)->opArrayNamed('calculator');
 
         $this->assertNotNull($function);
         $this->assertSame('App', $function->namespace);
@@ -94,8 +94,8 @@ final class ReaderTest extends TestCase
 
     public function testAnEmptyNamespaceIsRejected(): void
     {
-        $json = (string) file_get_contents(dirname(__DIR__, 3) . '/tests/Expected/PHP/8.4/Common/Calculatror.json');
-        $json = preg_replace('/"name": "calculatror"/', '"name": "calculatror", "namespace": ""', $json, 1);
+        $json = (string) file_get_contents(dirname(__DIR__, 3) . '/tests/Expected/PHP/8.4/Common/Calculator.json');
+        $json = preg_replace('/"name": "calculator"/', '"name": "calculator", "namespace": ""', $json, 1);
         $this->assertIsString($json);
         $this->expectException(IrException::class);
         $this->expectExceptionMessage('namespace');
