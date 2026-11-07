@@ -13,6 +13,7 @@ use Rephper\Expr\Literal;
 use Rephper\Expr\MatchArm;
 use Rephper\Expr\MatchExpression;
 use Rephper\Expr\Opaque;
+use Rephper\Expr\PropertyAssignment;
 use Rephper\Expr\ReturnValue;
 use Rephper\Expr\Unary;
 use Rephper\Expr\Unresolved;
@@ -108,6 +109,9 @@ final class ExpressionRenderer
         if ($expression instanceof Assignment) {
             return $this->assignment($expression);
         }
+        if ($expression instanceof PropertyAssignment) {
+            return $this->propertyAssignment($expression);
+        }
         if ($expression instanceof Binary) {
             return $this->binary($expression);
         }
@@ -160,7 +164,7 @@ final class ExpressionRenderer
         if ($expression instanceof Unary) {
             return self::UNARY[$expression->operator] ?? self::PREC_ASSIGN;
         }
-        if ($expression instanceof Assignment) {
+        if ($expression instanceof Assignment || $expression instanceof PropertyAssignment) {
             return self::PREC_ASSIGN;
         }
 
@@ -644,6 +648,20 @@ final class ExpressionRenderer
         $value = $this->render($expression->value, self::PREC_ASSIGN, 'right', 'right');
 
         return $this->variable($expression->variable, $expression) . ' ' . $operator . ' ' . $value;
+    }
+
+    private function propertyAssignment(PropertyAssignment $expression): string
+    {
+        if (preg_match(self::IDENTIFIER, $expression->property) !== 1) {
+            throw SourceGenerationException::at(
+                'property name cannot be rendered',
+                $expression->opline,
+                $expression->line,
+            );
+        }
+        $value = $this->render($expression->value, self::PREC_ASSIGN, 'right', 'right');
+
+        return '$this->' . $expression->property . ' = ' . $value;
     }
 
     private function compound(Assignment $expression): string

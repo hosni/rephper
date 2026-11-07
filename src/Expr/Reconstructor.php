@@ -61,6 +61,8 @@ final class Reconstructor
     /** @var list<string> */
     private const RECORDED = ['RECV', 'RECV_INIT', 'RECV_VARIADIC', 'VERIFY_RETURN_TYPE', 'VERIFY_NEVER_TYPE'];
 
+    private const IDENTIFIER = '/\A[A-Za-z_\x80-\xff][A-Za-z0-9_\x80-\xff]*\z/';
+
     /** @var list<string> */
     private const NAMED_INIT = ['INIT_FCALL', 'INIT_FCALL_BY_NAME', 'INIT_NS_FCALL_BY_NAME'];
 
@@ -112,6 +114,8 @@ final class Reconstructor
 
     private string $blockId = '';
 
+    private int $skipIndex = -1;
+
     public function reconstruct(OpArray $opArray, Graph $graph): Reconstruction
     {
         if ($graph->opArrayId !== $opArray->id) {
@@ -140,8 +144,13 @@ final class Reconstructor
         $this->roots = [];
         $this->calls = [];
         $this->blockId = $block->id;
+        $this->skipIndex = -1;
 
         foreach ($block->instructions as $instruction) {
+            if ($instruction->index === $this->skipIndex) {
+                $this->skipIndex = -1;
+                continue;
+            }
             $this->instruction($opArray, $instruction);
         }
         $this->abandonCalls($opArray, 'function call does not finish in this block');
@@ -205,6 +214,7 @@ final class Reconstructor
         match ($instruction->opcode) {
             'ASSIGN' => $this->assign($opArray, $instruction, null),
             'ASSIGN_OP' => $this->assignOp($opArray, $instruction),
+            'ASSIGN_OBJ' => $this->assignObject($opArray, $instruction),
             'RETURN', 'RETURN_BY_REF' => $this->roots[] = new ReturnValue(
                 $instruction->index,
                 $instruction->line,
@@ -245,6 +255,35 @@ final class Reconstructor
         }
 
         $this->assign($opArray, $instruction, $operator);
+    }
+
+    private function assignObject(OpArray $opArray, Instruction $instruction): void
+    {
+        $next = $opArray->instruction($instruction->index + 1);
+        if ($next === null || $next->opcode !== 'OP_DATA') {
+            $this->opaque($opArray, $instruction, 'object assignment has no value');
+
+            return;
+        }
+        $this->skipIndex = $next->index;
+        if ($instruction->op1->kind !== 'this' || $instruction->result->kind !== 'unused') {
+            $this->opaque($opArray, $instruction, 'object assignment is not a write to $this');
+
+            return;
+        }
+        $name = $this->literalString($opArray, $instruction, $instruction->op2);
+        if (!is_string($name) || preg_match(self::IDENTIFIER, $name) !== 1) {
+            $this->opaque($opArray, $instruction, 'object property name cannot be reconstructed');
+
+            return;
+        }
+
+        $this->store($instruction, new PropertyAssignment(
+            $instruction->index,
+            $instruction->line,
+            $name,
+            $this->value($opArray, $next, $next->op1),
+        ));
     }
 
     private function isInitiator(string $opcode): bool
