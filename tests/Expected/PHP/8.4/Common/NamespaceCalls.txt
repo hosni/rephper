@@ -1,0 +1,186 @@
+Rephper: Compiled op array
+File: tests/Fixtures/Common/NamespaceCalls.php
+Function: App\\add
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 7
+Arguments: 2
+Required arguments: 2
+Compiled variables: 2
+Temporary variables: 1
+Literals: 1
+Return type: int
+Lines: 7-10
+
+Compiled variables:
+0 $a
+1 $b
+
+Literals:
+0 null
+
+Argument details:
+0 $a int
+1 $b int
+
+Opcodes:
+0 RECV line=7 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$a) ext=-
+1 RECV line=7 op1=UNUSED(2) op2=UNUSED(16) result=CV(1:$b) ext=-
+2 ADD line=9 op1=CV(0:$a) op2=CV(1:$b) result=TMP(0) ext=-
+3 VERIFY_RETURN_TYPE line=9 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+4 RETURN line=9 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+5 VERIFY_RETURN_TYPE line=10 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+6 RETURN line=10 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/NamespaceCalls.php
+Function: App\\calculate
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 10
+Arguments: 2
+Required arguments: 2
+Compiled variables: 2
+Temporary variables: 1
+Literals: 4
+Return type: int
+Lines: 12-15
+
+Compiled variables:
+0 $a
+1 $b
+
+Literals:
+0 string("App\\add")
+1 string("app\\add")
+2 string("add")
+3 null
+
+Argument details:
+0 $a int
+1 $b int
+
+Opcodes:
+0 RECV line=12 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$a) ext=-
+1 RECV line=12 op1=UNUSED(2) op2=UNUSED(16) result=CV(1:$b) ext=-
+2 INIT_NS_FCALL_BY_NAME line=14 op1=UNUSED op2=CONST(string("App\\add")) result=UNUSED ext=2
+3 SEND_VAR_EX line=14 op1=CV(0:$a) op2=UNUSED(1) result=UNUSED(80) ext=-
+4 SEND_VAR_EX line=14 op1=CV(1:$b) op2=UNUSED(2) result=UNUSED(96) ext=-
+5 DO_FCALL_BY_NAME line=14 op1=UNUSED op2=UNUSED result=VAR(0) ext=-
+6 VERIFY_RETURN_TYPE line=14 op1=VAR(0) op2=UNUSED result=UNUSED ext=-
+7 RETURN line=14 op1=VAR(0) op2=UNUSED result=UNUSED ext=-
+8 VERIFY_RETURN_TYPE line=15 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+9 RETURN line=15 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/NamespaceCalls.php
+Function: App\\absolute
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 10
+Arguments: 2
+Required arguments: 2
+Compiled variables: 2
+Temporary variables: 1
+Literals: 2
+Return type: int
+Lines: 17-20
+
+Compiled variables:
+0 $a
+1 $b
+
+Literals:
+0 string("app\\add")
+1 null
+
+Argument details:
+0 $a int
+1 $b int
+
+Opcodes:
+0 RECV line=17 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$a) ext=-
+1 RECV line=17 op1=UNUSED(2) op2=UNUSED(16) result=CV(1:$b) ext=-
+2 INIT_FCALL line=19 op1=UNUSED(128) op2=CONST(string("app\\add")) result=UNUSED ext=2
+3 SEND_VAR line=19 op1=CV(0:$a) op2=UNUSED(1) result=UNUSED(80) ext=-
+4 SEND_VAR line=19 op1=CV(1:$b) op2=UNUSED(2) result=UNUSED(96) ext=-
+5 DO_UCALL line=19 op1=UNUSED op2=UNUSED result=VAR(0) ext=-
+6 VERIFY_RETURN_TYPE line=19 op1=VAR(0) op2=UNUSED result=UNUSED ext=-
+7 RETURN line=19 op1=VAR(0) op2=UNUSED result=UNUSED ext=-
+8 VERIFY_RETURN_TYPE line=20 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+9 RETURN line=20 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/NamespaceCalls.php
+Function: App\\aliased
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 10
+Arguments: 2
+Required arguments: 2
+Compiled variables: 2
+Temporary variables: 1
+Literals: 2
+Return type: int
+Lines: 22-25
+
+Compiled variables:
+0 $a
+1 $b
+
+Literals:
+0 string("app\\add")
+1 null
+
+Argument details:
+0 $a int
+1 $b int
+
+Opcodes:
+0 RECV line=22 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$a) ext=-
+1 RECV line=22 op1=UNUSED(2) op2=UNUSED(16) result=CV(1:$b) ext=-
+2 INIT_FCALL line=24 op1=UNUSED(128) op2=CONST(string("app\\add")) result=UNUSED ext=2
+3 SEND_VAR line=24 op1=CV(0:$a) op2=UNUSED(1) result=UNUSED(80) ext=-
+4 SEND_VAR line=24 op1=CV(1:$b) op2=UNUSED(2) result=UNUSED(96) ext=-
+5 DO_UCALL line=24 op1=UNUSED op2=UNUSED result=VAR(0) ext=-
+6 VERIFY_RETURN_TYPE line=24 op1=VAR(0) op2=UNUSED result=UNUSED ext=-
+7 RETURN line=24 op1=VAR(0) op2=UNUSED result=UNUSED ext=-
+8 VERIFY_RETURN_TYPE line=25 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+9 RETURN line=25 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/NamespaceCalls.php
+Function: <main>
+Class: -
+Kind: main
+Property: -
+Hook: -
+Opcodes: 1
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 1
+Return type: -
+Lines: 1-26
+
+Compiled variables:
+(none)
+
+Literals:
+0 int(1)
+
+Argument details:
+(none)
+
+Opcodes:
+0 RETURN line=26 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+

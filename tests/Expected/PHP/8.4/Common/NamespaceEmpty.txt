@@ -1,0 +1,28 @@
+Rephper: Compiled op array
+File: tests/Fixtures/Common/NamespaceEmpty.php
+Function: <main>
+Class: -
+Kind: main
+Property: -
+Hook: -
+Opcodes: 1
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 1
+Return type: -
+Lines: 1-4
+
+Compiled variables:
+(none)
+
+Literals:
+0 int(1)
+
+Argument details:
+(none)
+
+Opcodes:
+0 RETURN line=4 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+

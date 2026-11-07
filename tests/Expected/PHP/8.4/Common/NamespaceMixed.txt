@@ -1,0 +1,74 @@
+Rephper: Compiled op array
+File: tests/Fixtures/Common/NamespaceMixed.php
+Function: App\\calculator
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 7
+Arguments: 2
+Required arguments: 2
+Compiled variables: 2
+Temporary variables: 1
+Literals: 1
+Return type: int
+Lines: 5-8
+
+Compiled variables:
+0 $a
+1 $b
+
+Literals:
+0 null
+
+Argument details:
+0 $a int
+1 $b int
+
+Opcodes:
+0 RECV line=5 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$a) ext=-
+1 RECV line=5 op1=UNUSED(2) op2=UNUSED(16) result=CV(1:$b) ext=-
+2 ADD line=7 op1=CV(0:$a) op2=CV(1:$b) result=TMP(0) ext=-
+3 VERIFY_RETURN_TYPE line=7 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+4 RETURN line=7 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+5 VERIFY_RETURN_TYPE line=8 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+6 RETURN line=8 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/NamespaceMixed.php
+Function: <main>
+Class: -
+Kind: main
+Property: -
+Hook: -
+Opcodes: 6
+Arguments: 0
+Required arguments: 0
+Compiled variables: 1
+Temporary variables: 2
+Literals: 6
+Return type: -
+Lines: 1-11
+
+Compiled variables:
+0 $result
+
+Literals:
+0 string("App\\calculator")
+1 string("app\\calculator")
+2 string("calculator")
+3 int(1)
+4 int(2)
+5 int(1)
+
+Argument details:
+(none)
+
+Opcodes:
+0 INIT_NS_FCALL_BY_NAME line=10 op1=UNUSED op2=CONST(string("App\\calculator")) result=UNUSED ext=2
+1 SEND_VAL_EX line=10 op1=CONST(int(1)) op2=UNUSED(1) result=UNUSED(80) ext=-
+2 SEND_VAL_EX line=10 op1=CONST(int(2)) op2=UNUSED(2) result=UNUSED(96) ext=-
+3 DO_FCALL_BY_NAME line=10 op1=UNUSED op2=UNUSED result=VAR(0) ext=-
+4 ASSIGN line=10 op1=CV(0:$result) op2=VAR(0) result=UNUSED ext=-
+5 RETURN line=11 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+

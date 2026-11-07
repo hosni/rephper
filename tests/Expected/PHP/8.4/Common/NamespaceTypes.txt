@@ -1,0 +1,92 @@
+Rephper: Compiled op array
+File: tests/Fixtures/Common/NamespaceTypes.php
+Function: App\\take
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 5
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 0
+Literals: 1
+Return type: RuntimeException
+Lines: 5-8
+
+Compiled variables:
+0 $value
+
+Literals:
+0 null
+
+Argument details:
+0 $value stdClass
+
+Opcodes:
+0 RECV line=5 op1=UNUSED(1) op2=UNUSED(16777216) result=CV(0:$value) ext=-
+1 VERIFY_RETURN_TYPE line=7 op1=CV(0:$value) op2=UNUSED(8) result=UNUSED ext=-
+2 RETURN line=7 op1=CV(0:$value) op2=UNUSED result=UNUSED ext=-
+3 VERIFY_RETURN_TYPE line=8 op1=UNUSED op2=UNUSED(16) result=UNUSED ext=-
+4 RETURN line=8 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/NamespaceTypes.php
+Function: App\\local
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 5
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 0
+Literals: 1
+Return type: App\\Widget
+Lines: 10-13
+
+Compiled variables:
+0 $value
+
+Literals:
+0 null
+
+Argument details:
+0 $value App\\Widget
+
+Opcodes:
+0 RECV line=10 op1=UNUSED(1) op2=UNUSED(16777216) result=CV(0:$value) ext=-
+1 VERIFY_RETURN_TYPE line=12 op1=CV(0:$value) op2=UNUSED(8) result=UNUSED ext=-
+2 RETURN line=12 op1=CV(0:$value) op2=UNUSED result=UNUSED ext=-
+3 VERIFY_RETURN_TYPE line=13 op1=UNUSED op2=UNUSED(16) result=UNUSED ext=-
+4 RETURN line=13 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/NamespaceTypes.php
+Function: <main>
+Class: -
+Kind: main
+Property: -
+Hook: -
+Opcodes: 1
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 1
+Return type: -
+Lines: 1-14
+
+Compiled variables:
+(none)
+
+Literals:
+0 int(1)
+
+Argument details:
+(none)
+
+Opcodes:
+0 RETURN line=14 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+

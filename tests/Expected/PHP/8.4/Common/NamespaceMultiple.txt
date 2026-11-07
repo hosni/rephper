@@ -1,0 +1,96 @@
+Rephper: Compiled op array
+File: tests/Fixtures/Common/NamespaceMultiple.php
+Function: App\\alpha
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 6
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 1
+Literals: 2
+Return type: int
+Lines: 4-7
+
+Compiled variables:
+0 $value
+
+Literals:
+0 int(1)
+1 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=4 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 ADD line=6 op1=CV(0:$value) op2=CONST(int(1)) result=TMP(0) ext=-
+2 VERIFY_RETURN_TYPE line=6 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+3 RETURN line=6 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+4 VERIFY_RETURN_TYPE line=7 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+5 RETURN line=7 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/NamespaceMultiple.php
+Function: Other\\beta
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 6
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 1
+Literals: 2
+Return type: int
+Lines: 11-14
+
+Compiled variables:
+0 $value
+
+Literals:
+0 int(2)
+1 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=11 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 ADD line=13 op1=CV(0:$value) op2=CONST(int(2)) result=TMP(0) ext=-
+2 VERIFY_RETURN_TYPE line=13 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+3 RETURN line=13 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+4 VERIFY_RETURN_TYPE line=14 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+5 RETURN line=14 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/NamespaceMultiple.php
+Function: <main>
+Class: -
+Kind: main
+Property: -
+Hook: -
+Opcodes: 1
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 1
+Return type: -
+Lines: 1-16
+
+Compiled variables:
+(none)
+
+Literals:
+0 int(1)
+
+Argument details:
+(none)
+
+Opcodes:
+0 RETURN line=16 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+

@@ -1,0 +1,72 @@
+Rephper: Compiled op array
+File: tests/Fixtures/Common/NamespaceSignature.php
+Function: App\\ref
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 8
+Arguments: 4
+Required arguments: 1
+Compiled variables: 4
+Temporary variables: 0
+Literals: 4
+Return type: array
+Lines: 6-9
+
+Compiled variables:
+0 $items
+1 $max
+2 $full
+3 $flag
+
+Literals:
+0 constant_ast
+1 constant_ast
+2 constant_ast
+3 null
+
+Argument details:
+0 $items array
+1 $max int
+2 $full int
+3 $flag int
+
+Opcodes:
+0 RECV line=6 op1=UNUSED(1) op2=UNUSED(33554560) result=CV(0:$items) ext=-
+1 RECV_INIT line=6 op1=UNUSED(2) op2=CONST(constant_ast) result=CV(1:$max) ext=-
+2 RECV_INIT line=6 op1=UNUSED(3) op2=CONST(constant_ast) result=CV(2:$full) ext=-
+3 RECV_INIT line=6 op1=UNUSED(4) op2=CONST(constant_ast) result=CV(3:$flag) ext=-
+4 VERIFY_RETURN_TYPE line=8 op1=CV(0:$items) op2=UNUSED result=UNUSED ext=-
+5 RETURN_BY_REF line=8 op1=CV(0:$items) op2=UNUSED result=UNUSED ext=-
+6 VERIFY_RETURN_TYPE line=9 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+7 RETURN_BY_REF line=9 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/NamespaceSignature.php
+Function: <main>
+Class: -
+Kind: main
+Property: -
+Hook: -
+Opcodes: 1
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 1
+Return type: -
+Lines: 1-10
+
+Compiled variables:
+(none)
+
+Literals:
+0 int(1)
+
+Argument details:
+(none)
+
+Opcodes:
+0 RETURN line=10 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+

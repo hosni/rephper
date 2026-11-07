@@ -1,0 +1,127 @@
+Rephper: Compiled op array
+File: tests/Fixtures/Common/NamespaceReopen.php
+Function: App\\alpha
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 3
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 2
+Return type: int
+Lines: 4-7
+
+Compiled variables:
+(none)
+
+Literals:
+0 int(1)
+1 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 RETURN line=6 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+1 VERIFY_RETURN_TYPE line=7 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+2 RETURN line=7 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/NamespaceReopen.php
+Function: Other\\beta
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 3
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 2
+Return type: int
+Lines: 11-14
+
+Compiled variables:
+(none)
+
+Literals:
+0 int(2)
+1 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 RETURN line=13 op1=CONST(int(2)) op2=UNUSED result=UNUSED ext=-
+1 VERIFY_RETURN_TYPE line=14 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+2 RETURN line=14 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/NamespaceReopen.php
+Function: App\\delta
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 3
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 2
+Return type: int
+Lines: 18-21
+
+Compiled variables:
+(none)
+
+Literals:
+0 int(4)
+1 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 RETURN line=20 op1=CONST(int(4)) op2=UNUSED result=UNUSED ext=-
+1 VERIFY_RETURN_TYPE line=21 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+2 RETURN line=21 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/NamespaceReopen.php
+Function: <main>
+Class: -
+Kind: main
+Property: -
+Hook: -
+Opcodes: 4
+Arguments: 0
+Required arguments: 0
+Compiled variables: 1
+Temporary variables: 2
+Literals: 4
+Return type: -
+Lines: 1-25
+
+Compiled variables:
+0 $value
+
+Literals:
+0 string("App\\delta")
+1 string("app\\delta")
+2 string("delta")
+3 int(1)
+
+Argument details:
+(none)
+
+Opcodes:
+0 INIT_NS_FCALL_BY_NAME line=23 op1=UNUSED op2=CONST(string("App\\delta")) result=UNUSED ext=-
+1 DO_FCALL_BY_NAME line=23 op1=UNUSED op2=UNUSED result=VAR(0) ext=-
+2 ASSIGN line=23 op1=CV(0:$value) op2=VAR(0) result=UNUSED ext=-
+3 RETURN line=25 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+

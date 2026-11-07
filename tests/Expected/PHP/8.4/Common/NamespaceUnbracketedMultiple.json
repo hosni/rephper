@@ -1,0 +1,143 @@
+{
+  "ir_version": 1,
+  "php": {
+    "version": "PHP_VERSION",
+    "version_id": 0,
+    "api": 20240924,
+    "zend_module_api": 20240924,
+    "zend_extension_api": 420240924,
+    "zts": false,
+    "debug": false
+  },
+  "compilation": {
+    "stage": "pre_pass_two",
+    "jumps": "absolute_opline"
+  },
+  "op_arrays": [
+    {
+      "id": 0,
+      "kind": "main",
+      "name": null,
+      "namespace": "Other",
+      "filename": "tests/Fixtures/Common/NamespaceUnbracketedMultiple.php",
+      "line_start": 1,
+      "line_end": 10,
+      "scope": null,
+      "property_hook": null,
+      "flags": [],
+      "num_args": 0,
+      "required_num_args": 0,
+      "return_type": null,
+      "arguments": [],
+      "variables": [
+        "first",
+        "second"
+      ],
+      "temporary_variables": 2,
+      "literals": [
+        {
+          "type": "int",
+          "value": 1
+        },
+        {
+          "type": "int",
+          "value": 2
+        },
+        {
+          "type": "int",
+          "value": 1
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 5,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "first"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 9,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "second"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 1
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 10,
+          "op1": {
+            "kind": "const",
+            "index": 2
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    }
+  ],
+  "namespaces": [
+    {
+      "name": "App",
+      "line_start": 3,
+      "line_end": 5,
+      "functions": [],
+      "statements": [
+        [
+          5
+        ]
+      ]
+    },
+    {
+      "name": "Other",
+      "line_start": 7,
+      "line_end": 9,
+      "functions": [],
+      "statements": [
+        [
+          9
+        ]
+      ]
+    }
+  ],
+  "classes": []
+}

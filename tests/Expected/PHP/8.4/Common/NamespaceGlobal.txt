@@ -1,0 +1,111 @@
+Rephper: Compiled op array
+File: tests/Fixtures/Common/NamespaceGlobal.php
+Function: alpha
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 6
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 1
+Literals: 2
+Return type: int
+Lines: 4-7
+
+Compiled variables:
+0 $value
+
+Literals:
+0 int(1)
+1 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=4 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 ADD line=6 op1=CV(0:$value) op2=CONST(int(1)) result=TMP(0) ext=-
+2 VERIFY_RETURN_TYPE line=6 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+3 RETURN line=6 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+4 VERIFY_RETURN_TYPE line=7 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+5 RETURN line=7 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/NamespaceGlobal.php
+Function: App\\beta
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 6
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 1
+Literals: 2
+Return type: int
+Lines: 13-16
+
+Compiled variables:
+0 $value
+
+Literals:
+0 int(2)
+1 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=13 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 ADD line=15 op1=CV(0:$value) op2=CONST(int(2)) result=TMP(0) ext=-
+2 VERIFY_RETURN_TYPE line=15 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+3 RETURN line=15 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+4 VERIFY_RETURN_TYPE line=16 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+5 RETURN line=16 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/NamespaceGlobal.php
+Function: <main>
+Class: -
+Kind: main
+Property: -
+Hook: -
+Opcodes: 9
+Arguments: 0
+Required arguments: 0
+Compiled variables: 2
+Temporary variables: 4
+Literals: 7
+Return type: -
+Lines: 1-20
+
+Compiled variables:
+0 $global
+1 $named
+
+Literals:
+0 string("alpha")
+1 int(1)
+2 string("App\\beta")
+3 string("app\\beta")
+4 string("beta")
+5 int(1)
+6 int(1)
+
+Argument details:
+(none)
+
+Opcodes:
+0 INIT_FCALL line=9 op1=UNUSED(112) op2=CONST(string("alpha")) result=UNUSED ext=1
+1 SEND_VAL line=9 op1=CONST(int(1)) op2=UNUSED(1) result=UNUSED(80) ext=-
+2 DO_UCALL line=9 op1=UNUSED op2=UNUSED result=VAR(0) ext=-
+3 ASSIGN line=9 op1=CV(0:$global) op2=VAR(0) result=UNUSED ext=-
+4 INIT_NS_FCALL_BY_NAME line=18 op1=UNUSED op2=CONST(string("App\\beta")) result=UNUSED(8) ext=1
+5 SEND_VAL_EX line=18 op1=CONST(int(1)) op2=UNUSED(1) result=UNUSED(80) ext=-
+6 DO_FCALL_BY_NAME line=18 op1=UNUSED op2=UNUSED result=VAR(2) ext=-
+7 ASSIGN line=18 op1=CV(1:$named) op2=VAR(2) result=UNUSED ext=-
+8 RETURN line=20 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+

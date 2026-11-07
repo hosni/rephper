@@ -1,0 +1,65 @@
+Rephper: Compiled op array
+File: tests/Fixtures/Common/NamespaceStaticCall.php
+Function: App\\calculate
+Class: -
+Kind: function
+Property: -
+Hook: -
+Opcodes: 6
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 1
+Literals: 5
+Return type: int
+Lines: 7-10
+
+Compiled variables:
+(none)
+
+Literals:
+0 string("App\\Services\\Calculator")
+1 string("app\\services\\calculator")
+2 string("value")
+3 string("value")
+4 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 INIT_STATIC_METHOD_CALL line=9 op1=CONST(string("App\\Services\\Calculator")) op2=CONST(string("value")) result=UNUSED ext=-
+1 DO_FCALL line=9 op1=UNUSED op2=UNUSED result=VAR(0) ext=-
+2 VERIFY_RETURN_TYPE line=9 op1=VAR(0) op2=UNUSED result=UNUSED ext=-
+3 RETURN line=9 op1=VAR(0) op2=UNUSED result=UNUSED ext=-
+4 VERIFY_RETURN_TYPE line=10 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+5 RETURN line=10 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/NamespaceStaticCall.php
+Function: <main>
+Class: -
+Kind: main
+Property: -
+Hook: -
+Opcodes: 1
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 1
+Return type: -
+Lines: 1-11
+
+Compiled variables:
+(none)
+
+Literals:
+0 int(1)
+
+Argument details:
+(none)
+
+Opcodes:
+0 RETURN line=11 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+

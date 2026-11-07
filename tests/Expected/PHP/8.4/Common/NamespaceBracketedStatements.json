@@ -1,0 +1,201 @@
+{
+  "ir_version": 1,
+  "php": {
+    "version": "PHP_VERSION",
+    "version_id": 0,
+    "api": 20240924,
+    "zend_module_api": 20240924,
+    "zend_extension_api": 420240924,
+    "zts": false,
+    "debug": false
+  },
+  "compilation": {
+    "stage": "pre_pass_two",
+    "jumps": "absolute_opline"
+  },
+  "op_arrays": [
+    {
+      "id": 0,
+      "kind": "main",
+      "name": null,
+      "filename": "tests/Fixtures/Common/NamespaceBracketedStatements.php",
+      "line_start": 1,
+      "line_end": 10,
+      "scope": null,
+      "property_hook": null,
+      "flags": [],
+      "num_args": 0,
+      "required_num_args": 0,
+      "return_type": null,
+      "arguments": [],
+      "variables": [
+        "x",
+        "y",
+        "z"
+      ],
+      "temporary_variables": 4,
+      "literals": [
+        {
+          "type": "int",
+          "value": 1
+        },
+        {
+          "type": "int",
+          "value": 2
+        },
+        {
+          "type": "int",
+          "value": 1
+        },
+        {
+          "type": "int",
+          "value": 1
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 4,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "x"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "JMPZ",
+          "opcode_number": 43,
+          "line": 5,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "x"
+          },
+          "op2": {
+            "kind": "jump",
+            "target": 3
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 6,
+          "op1": {
+            "kind": "cv",
+            "index": 1,
+            "name": "y"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 1
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "ADD",
+          "opcode_number": 1,
+          "line": 8,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "x"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 2
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 2
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 4,
+          "opcode": "ASSIGN",
+          "opcode_number": 22,
+          "line": 8,
+          "op1": {
+            "kind": "cv",
+            "index": 2,
+            "name": "z"
+          },
+          "op2": {
+            "kind": "tmp",
+            "index": 2
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 5,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 10,
+          "op1": {
+            "kind": "const",
+            "index": 3
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    }
+  ],
+  "namespaces": [
+    {
+      "name": "App",
+      "line_start": 3,
+      "line_end": 8,
+      "functions": [],
+      "statements": [
+        [
+          4
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          8
+        ]
+      ]
+    }
+  ],
+  "classes": []
+}
