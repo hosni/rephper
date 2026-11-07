@@ -95,7 +95,7 @@ final class Reader
             if (!$this->isObject($class)) {
                 throw new IrException('classes[' . $index . '] must be an object');
             }
-            $classRows[] = $class;
+            $classRows[] = $this->classDeclaration($class, 'classes[' . $index . ']');
         }
 
         return new Document(
@@ -316,18 +316,7 @@ final class Reader
             }
         }
 
-        $returnType = $data['return_type'] ?? null;
-        if (!array_key_exists('return_type', $data)) {
-            throw new IrException($path . '.return_type is missing');
-        }
-        if ($returnType !== null) {
-            if (!$this->isObject($returnType)) {
-                throw new IrException($path . '.return_type must be an object or null');
-            }
-            $this->nullableString($returnType, 'display', $path . '.return_type.display');
-            $this->bool($returnType, 'nullable', $path . '.return_type.nullable');
-            $this->string($returnType, 'kind', $path . '.return_type.kind');
-        }
+        $returnType = $this->typeOrNull($data, 'return_type', $path . '.return_type');
 
         $namespace = null;
         if (array_key_exists('namespace', $data)) {
@@ -603,6 +592,168 @@ final class Reader
         }
 
         return new Literal($type, $value, $binary, $recursive, $elements, $ast, $this->extra($data, $known));
+    }
+
+    /**
+     * @param array<mixed> $data
+     */
+    private function classDeclaration(array $data, string $path): ClassDeclaration
+    {
+        $kind = $this->string($data, 'kind', $path . '.kind');
+        if (!in_array($kind, ['class', 'interface', 'trait', 'enum'], true)) {
+            throw new IrException($path . '.kind is not a class, interface, trait, or enum');
+        }
+        $name = $this->string($data, 'name', $path . '.name');
+        if ($name === '') {
+            throw new IrException($path . '.name must not be empty');
+        }
+        $parent = $this->nullableString($data, 'parent', $path . '.parent');
+        if ($parent === '') {
+            throw new IrException($path . '.parent must not be empty');
+        }
+        $lineStart = $this->int($data, 'line_start', $path . '.line_start');
+        $lineEnd = $this->int($data, 'line_end', $path . '.line_end');
+        if ($lineStart < 1 || $lineEnd < $lineStart) {
+            throw new IrException($path . ' has an invalid line range');
+        }
+        $backing = $this->nullableString($data, 'enum_backing', $path . '.enum_backing');
+        if ($backing === '') {
+            throw new IrException($path . '.enum_backing must not be empty');
+        }
+        $filename = $this->string($data, 'filename', $path . '.filename');
+        if ($filename === '') {
+            throw new IrException($path . '.filename must not be empty');
+        }
+
+        $properties = [];
+        foreach ($this->list($data, 'properties', $path . '.properties') as $index => $property) {
+            if (!$this->isObject($property)) {
+                throw new IrException($path . '.properties[' . $index . '] must be an object');
+            }
+            $properties[] = $this->classProperty($property, $path . '.properties[' . $index . ']');
+        }
+        $constants = [];
+        foreach ($this->list($data, 'constants', $path . '.constants') as $index => $constant) {
+            if (!$this->isObject($constant)) {
+                throw new IrException($path . '.constants[' . $index . '] must be an object');
+            }
+            $constants[] = $this->classConstant($constant, $path . '.constants[' . $index . ']');
+        }
+
+        return new ClassDeclaration(
+            $name,
+            $kind,
+            $this->strings($data, 'flags', $path . '.flags'),
+            $parent,
+            $this->strings($data, 'interfaces', $path . '.interfaces'),
+            $this->strings($data, 'traits', $path . '.traits'),
+            $filename,
+            $lineStart,
+            $lineEnd,
+            $backing,
+            $properties,
+            $constants,
+            $this->objectList($data, 'attributes', $path . '.attributes'),
+            $this->extra($data, [
+                'name', 'kind', 'flags', 'parent', 'interfaces', 'traits', 'filename',
+                'line_start', 'line_end', 'enum_backing', 'properties', 'constants', 'attributes',
+            ]),
+        );
+    }
+
+    /**
+     * @param array<mixed> $data
+     */
+    private function classProperty(array $data, string $path): ClassProperty
+    {
+        $name = $this->string($data, 'name', $path . '.name');
+        if ($name === '') {
+            throw new IrException($path . '.name must not be empty');
+        }
+        if (!array_key_exists('default', $data)) {
+            throw new IrException($path . '.default is missing');
+        }
+        $default = null;
+        if ($data['default'] !== null) {
+            if (!$this->isObject($data['default'])) {
+                throw new IrException($path . '.default must be an object or null');
+            }
+            $default = $this->literal($data['default'], $path . '.default');
+        }
+
+        return new ClassProperty(
+            $name,
+            $this->strings($data, 'flags', $path . '.flags'),
+            $this->typeOrNull($data, 'type', $path . '.type'),
+            $default,
+            $this->strings($data, 'hooks', $path . '.hooks'),
+            $this->extra($data, ['name', 'flags', 'type', 'default', 'hooks']),
+        );
+    }
+
+    /**
+     * @param array<mixed> $data
+     */
+    private function classConstant(array $data, string $path): ClassConstant
+    {
+        $name = $this->string($data, 'name', $path . '.name');
+        if ($name === '') {
+            throw new IrException($path . '.name must not be empty');
+        }
+        if (!array_key_exists('value', $data)) {
+            throw new IrException($path . '.value is missing');
+        }
+        if (!$this->isObject($data['value'])) {
+            throw new IrException($path . '.value must be an object');
+        }
+
+        return new ClassConstant(
+            $name,
+            $this->strings($data, 'flags', $path . '.flags'),
+            $this->typeOrNull($data, 'type', $path . '.type'),
+            $this->literal($data['value'], $path . '.value'),
+            $this->extra($data, ['name', 'flags', 'type', 'value']),
+        );
+    }
+
+    /**
+     * @param array<mixed> $data
+     * @return list<string>
+     */
+    private function strings(array $data, string $key, string $path): array
+    {
+        $values = [];
+        foreach ($this->list($data, $key, $path) as $index => $value) {
+            if (!is_string($value) || $value === '') {
+                throw new IrException($path . '[' . $index . '] must be a non-empty string');
+            }
+            $values[] = $value;
+        }
+
+        return $values;
+    }
+
+    /**
+     * @param array<mixed> $data
+     * @return array<mixed>|null
+     */
+    private function typeOrNull(array $data, string $key, string $path): ?array
+    {
+        if (!array_key_exists($key, $data)) {
+            throw new IrException($path . ' is missing');
+        }
+        $type = $data[$key];
+        if ($type === null) {
+            return null;
+        }
+        if (!$this->isObject($type)) {
+            throw new IrException($path . ' must be an object or null');
+        }
+        $this->nullableString($type, 'display', $path . '.display');
+        $this->bool($type, 'nullable', $path . '.nullable');
+        $this->string($type, 'kind', $path . '.kind');
+
+        return $type;
     }
 
     private function isObject(mixed $value): bool

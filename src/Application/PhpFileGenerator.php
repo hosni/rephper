@@ -78,9 +78,7 @@ final class PhpFileGenerator
     {
         if ($document->classes !== []) {
             $class = $document->classes[0];
-            $kind = is_array($class) && is_string($class['kind'] ?? null) ? $class['kind'] : 'class';
-            $name = is_array($class) && is_string($class['name'] ?? null) ? $class['name'] : '(unknown)';
-            $this->fail($kind . ' ' . $name . ' is not supported');
+            $this->fail($class->kind . ' ' . $class->name . ' is not supported');
         }
 
         [$functions, $main] = $this->partition($document);

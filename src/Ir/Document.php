@@ -8,7 +8,7 @@ final class Document
 {
     /**
      * @param list<OpArray> $opArrays
-     * @param list<array<string, mixed>> $classes
+     * @param list<ClassDeclaration> $classes
      * @param list<NamespaceRegion> $namespaces
      * @param array<string, mixed> $extra
      */
