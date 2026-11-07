@@ -72,6 +72,35 @@ static uint32_t g_seen_count = 0;
 static uint32_t g_seen_cap = 0;
 static uint32_t g_next_id = 0;
 
+/*
+ * Namespace regions are recorded from the compiler AST, before opcodes exist.
+ * CG(file_context).current_namespace is only the namespace still active when an
+ * op array reaches pass_two(). A bracketed block clears it before the main
+ * script gets there, and several unbracketed namespaces leave only the last
+ * name. The AST walk is the compiler's own tree, not a source parse.
+ */
+typedef struct {
+	uint32_t *lines;
+	uint32_t count;
+	uint32_t cap;
+} rephper_lines;
+
+typedef struct {
+	char *name;
+	uint32_t line_start;
+	uint32_t line_end;
+	char **functions;
+	uint32_t function_count;
+	uint32_t function_cap;
+	rephper_lines *statements;
+	uint32_t statement_count;
+	uint32_t statement_cap;
+} rephper_region;
+
+static rephper_region *g_regions = NULL;
+static uint32_t g_region_count = 0;
+static uint32_t g_region_cap = 0;
+
 static void rephper_export_ensure(void)
 {
 	if (g_ready) {
@@ -109,6 +138,28 @@ static bool rephper_export_enabled(void)
 	return true;
 }
 
+static void rephper_regions_free(void)
+{
+	uint32_t i;
+	uint32_t j;
+
+	for (i = 0; i < g_region_count; i++) {
+		free(g_regions[i].name);
+		for (j = 0; j < g_regions[i].function_count; j++) {
+			free(g_regions[i].functions[j]);
+		}
+		free(g_regions[i].functions);
+		for (j = 0; j < g_regions[i].statement_count; j++) {
+			free(g_regions[i].statements[j].lines);
+		}
+		free(g_regions[i].statements);
+	}
+	free(g_regions);
+	g_regions = NULL;
+	g_region_count = 0;
+	g_region_cap = 0;
+}
+
 void rephper_export_reset(void)
 {
 	rephper_export_ensure();
@@ -124,6 +175,7 @@ void rephper_export_reset(void)
 	g_classes_captured = false;
 	g_mode = 0;
 	g_next_id = 0;
+	rephper_regions_free();
 }
 
 static bool rephper_walk_contains(const rephper_walk *walk, const HashTable *table)
@@ -1096,7 +1148,9 @@ static void rephper_write_op_array(const zend_op_array *op_array, uint32_t id)
 	}
 	/*
 	 * Omitted for the global namespace so an IR 1 file without this key stays
-	 * valid. pass_two() still sees the file context for this op array.
+	 * valid. This is only the namespace still current at pass_two(). Bracketed
+	 * blocks clear it before the main script, and several unbracketed
+	 * namespaces leave the last name. Document namespaces[] records every region.
 	 */
 	if (CG(file_context).current_namespace != NULL && ZSTR_LEN(CG(file_context).current_namespace) > 0) {
 		rephper_json_key(json, "namespace");
@@ -1511,6 +1565,351 @@ static int rephper_write_file(const char *path, const char *data, size_t length)
 	return 0;
 }
 
+static char *rephper_copy_chars(const char *value, size_t length)
+{
+	char *copy = malloc(length + 1);
+
+	if (copy == NULL) {
+		g_doc.failed = true;
+		return NULL;
+	}
+	memcpy(copy, value, length);
+	copy[length] = '\0';
+
+	return copy;
+}
+
+static void rephper_note_line(rephper_region *region, uint32_t line)
+{
+	if (region == NULL || line == 0) {
+		return;
+	}
+	if (line < region->line_start) {
+		region->line_start = line;
+	}
+	if (line > region->line_end) {
+		region->line_end = line;
+	}
+}
+
+static int rephper_u32_cmp(const void *left, const void *right)
+{
+	uint32_t a = *(const uint32_t *) left;
+	uint32_t b = *(const uint32_t *) right;
+
+	return (a > b) - (a < b);
+}
+
+static void rephper_lines_push(rephper_lines *lines, uint32_t line)
+{
+	uint32_t *grown;
+
+	if (line == 0 || g_doc.failed) {
+		return;
+	}
+	if (lines->count == lines->cap) {
+		uint32_t cap = lines->cap == 0 ? 8 : lines->cap * 2;
+
+		grown = realloc(lines->lines, cap * sizeof(*grown));
+		if (grown == NULL) {
+			g_doc.failed = true;
+			return;
+		}
+		lines->lines = grown;
+		lines->cap = cap;
+	}
+	lines->lines[lines->count++] = line;
+}
+
+static void rephper_lines_unique(rephper_lines *lines)
+{
+	uint32_t i;
+	uint32_t kept;
+
+	if (lines->count < 2) {
+		return;
+	}
+	qsort(lines->lines, lines->count, sizeof(uint32_t), rephper_u32_cmp);
+	kept = 1;
+	for (i = 1; i < lines->count; i++) {
+		if (lines->lines[i] != lines->lines[kept - 1]) {
+			lines->lines[kept++] = lines->lines[i];
+		}
+	}
+	lines->count = kept;
+}
+
+static uint32_t rephper_begin_region(const char *name, size_t length, uint32_t line)
+{
+	rephper_region *grown;
+	rephper_region *region;
+
+	if (g_region_count == g_region_cap) {
+		uint32_t cap = g_region_cap == 0 ? 4 : g_region_cap * 2;
+
+		grown = realloc(g_regions, cap * sizeof(*g_regions));
+		if (grown == NULL) {
+			g_doc.failed = true;
+			return UINT32_MAX;
+		}
+		g_regions = grown;
+		g_region_cap = cap;
+	}
+	region = &g_regions[g_region_count];
+	memset(region, 0, sizeof(*region));
+	region->line_start = line == 0 ? 1 : line;
+	region->line_end = region->line_start;
+	if (name != NULL && length > 0) {
+		region->name = rephper_copy_chars(name, length);
+		if (region->name == NULL) {
+			return UINT32_MAX;
+		}
+	}
+	g_region_count++;
+
+	return g_region_count - 1;
+}
+
+static void rephper_add_function(uint32_t index, zend_string *name, uint32_t start, uint32_t end)
+{
+	rephper_region *region;
+	char *copy;
+	char **grown;
+
+	if (index >= g_region_count || name == NULL) {
+		g_doc.failed = true;
+		return;
+	}
+	region = &g_regions[index];
+	copy = rephper_copy_chars(ZSTR_VAL(name), ZSTR_LEN(name));
+	if (copy == NULL) {
+		return;
+	}
+	if (region->function_count == region->function_cap) {
+		uint32_t cap = region->function_cap == 0 ? 4 : region->function_cap * 2;
+
+		grown = realloc(region->functions, cap * sizeof(*grown));
+		if (grown == NULL) {
+			free(copy);
+			g_doc.failed = true;
+			return;
+		}
+		region->functions = grown;
+		region->function_cap = cap;
+	}
+	region->functions[region->function_count++] = copy;
+	rephper_note_line(region, start);
+	rephper_note_line(region, end);
+}
+
+static void rephper_collect_lines(zend_ast *ast, rephper_lines *lines, int depth)
+{
+	uint32_t i;
+
+	if (ast == NULL || depth > 64 || g_doc.failed) {
+		return;
+	}
+	rephper_lines_push(lines, zend_ast_get_lineno(ast));
+	if (ast->kind == ZEND_AST_CLOSURE || ast->kind == ZEND_AST_ARROW_FUNC
+		|| ast->kind == ZEND_AST_FUNC_DECL || ast->kind == ZEND_AST_METHOD
+		|| ast->kind == ZEND_AST_CLASS || ast->kind == ZEND_AST_PROPERTY_HOOK) {
+		return;
+	}
+	if (zend_ast_is_special(ast)) {
+		return;
+	}
+	if (zend_ast_is_list(ast)) {
+		zend_ast_list *list = zend_ast_get_list(ast);
+
+		for (i = 0; i < list->children; i++) {
+			rephper_collect_lines(list->child[i], lines, depth + 1);
+		}
+		return;
+	}
+	for (i = 0; i < zend_ast_get_num_children(ast); i++) {
+		rephper_collect_lines(ast->child[i], lines, depth + 1);
+	}
+}
+
+static void rephper_add_statement(uint32_t index, zend_ast *stmt)
+{
+	rephper_region *region;
+	rephper_lines *grown;
+	rephper_lines *statement;
+
+	if (index >= g_region_count || stmt == NULL) {
+		g_doc.failed = true;
+		return;
+	}
+	region = &g_regions[index];
+	if (region->statement_count == region->statement_cap) {
+		uint32_t cap = region->statement_cap == 0 ? 4 : region->statement_cap * 2;
+
+		grown = realloc(region->statements, cap * sizeof(*grown));
+		if (grown == NULL) {
+			g_doc.failed = true;
+			return;
+		}
+		region->statements = grown;
+		region->statement_cap = cap;
+	}
+	statement = &region->statements[region->statement_count];
+	memset(statement, 0, sizeof(*statement));
+	rephper_collect_lines(stmt, statement, 0);
+	rephper_lines_unique(statement);
+	if (statement->count == 0) {
+		rephper_lines_push(statement, zend_ast_get_lineno(stmt));
+	}
+	if (g_doc.failed) {
+		free(statement->lines);
+		return;
+	}
+	region->statement_count++;
+	if (statement->count > 0) {
+		rephper_note_line(region, statement->lines[0]);
+		rephper_note_line(region, statement->lines[statement->count - 1]);
+	}
+}
+
+static uint32_t rephper_walk_stmt(zend_ast *stmt, uint32_t open);
+
+static void rephper_walk_list(zend_ast *ast, uint32_t *open)
+{
+	uint32_t i;
+	zend_ast_list *list;
+
+	if (ast == NULL || g_doc.failed || open == NULL) {
+		return;
+	}
+	if (ast->kind != ZEND_AST_STMT_LIST) {
+		*open = rephper_walk_stmt(ast, *open);
+		return;
+	}
+	list = zend_ast_get_list(ast);
+	for (i = 0; i < list->children; i++) {
+		*open = rephper_walk_stmt(list->child[i], *open);
+		if (g_doc.failed) {
+			return;
+		}
+	}
+}
+
+static uint32_t rephper_walk_stmt(zend_ast *stmt, uint32_t open)
+{
+	if (stmt == NULL || g_doc.failed) {
+		return open;
+	}
+	if (stmt->kind == ZEND_AST_STMT_LIST) {
+		rephper_walk_list(stmt, &open);
+		return open;
+	}
+	if (stmt->kind == ZEND_AST_NAMESPACE) {
+		zend_ast *name_ast = stmt->child[0];
+		zend_ast *body = stmt->child[1];
+		const char *name = NULL;
+		size_t length = 0;
+		uint32_t region;
+
+		if (name_ast != NULL) {
+			zend_string *ns = zend_ast_get_str(name_ast);
+
+			name = ZSTR_VAL(ns);
+			length = ZSTR_LEN(ns);
+		}
+		region = rephper_begin_region(name, length, zend_ast_get_lineno(stmt));
+		if (region == UINT32_MAX) {
+			return UINT32_MAX;
+		}
+		if (body != NULL) {
+			rephper_walk_list(body, &region);
+			return UINT32_MAX;
+		}
+
+		return region;
+	}
+	if (open == UINT32_MAX) {
+		return UINT32_MAX;
+	}
+	if (stmt->kind == ZEND_AST_FUNC_DECL) {
+		zend_ast_decl *decl = (zend_ast_decl *) stmt;
+
+		rephper_add_function(open, decl->name, decl->start_lineno, decl->end_lineno);
+		return open;
+	}
+	if (stmt->kind == ZEND_AST_CLASS || stmt->kind == ZEND_AST_USE
+		|| stmt->kind == ZEND_AST_GROUP_USE || stmt->kind == ZEND_AST_HALT_COMPILER
+		|| stmt->kind == ZEND_AST_DECLARE) {
+		rephper_note_line(&g_regions[open], zend_ast_get_lineno(stmt));
+		if (stmt->kind == ZEND_AST_CLASS) {
+			rephper_note_line(&g_regions[open], ((zend_ast_decl *) stmt)->end_lineno);
+		}
+		return open;
+	}
+	rephper_add_statement(open, stmt);
+
+	return open;
+}
+
+static void rephper_write_namespaces(rephper_json *json)
+{
+	uint32_t i;
+	uint32_t j;
+	uint32_t k;
+
+	if (g_region_count == 0) {
+		return;
+	}
+	rephper_json_key(json, "namespaces");
+	rephper_json_array_begin(json);
+	for (i = 0; i < g_region_count; i++) {
+		rephper_region *region = &g_regions[i];
+
+		rephper_json_element(json);
+		rephper_json_object_begin(json);
+		rephper_json_key(json, "name");
+		if (region->name == NULL) {
+			rephper_json_null(json);
+		} else {
+			(void) rephper_json_bytes(json, region->name, strlen(region->name));
+		}
+		rephper_json_key(json, "line_start");
+		rephper_json_u32(json, region->line_start);
+		rephper_json_key(json, "line_end");
+		rephper_json_u32(json, region->line_end);
+		rephper_json_key(json, "functions");
+		rephper_json_array_begin(json);
+		for (j = 0; j < region->function_count; j++) {
+			rephper_json_element(json);
+			(void) rephper_json_bytes(json, region->functions[j], strlen(region->functions[j]));
+		}
+		rephper_json_array_end(json);
+		rephper_json_key(json, "statements");
+		rephper_json_array_begin(json);
+		for (j = 0; j < region->statement_count; j++) {
+			rephper_json_element(json);
+			rephper_json_array_begin(json);
+			for (k = 0; k < region->statements[j].count; k++) {
+				rephper_json_element(json);
+				rephper_json_u32(json, region->statements[j].lines[k]);
+			}
+			rephper_json_array_end(json);
+		}
+		rephper_json_array_end(json);
+		rephper_json_object_end(json);
+	}
+	rephper_json_array_end(json);
+}
+
+void rephper_export_namespaces(zend_ast *ast)
+{
+	uint32_t open = UINT32_MAX;
+
+	if (ast == NULL || !rephper_export_enabled() || g_doc.failed) {
+		return;
+	}
+	rephper_walk_list(ast, &open);
+}
+
 void rephper_export_finish(void)
 {
 	char *path;
@@ -1523,6 +1922,7 @@ void rephper_export_finish(void)
 
 	if (!g_doc.failed) {
 		rephper_json_array_end(&g_doc);
+		rephper_write_namespaces(&g_doc);
 		rephper_json_key(&g_doc, "classes");
 		if (g_classes_captured && g_classes.data != NULL) {
 			rephper_json_splice(&g_doc, g_classes.data, g_classes.length);

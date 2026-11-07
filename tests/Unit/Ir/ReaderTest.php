@@ -78,6 +78,34 @@ final class ReaderTest extends TestCase
         $this->assertNotNull($function);
         $this->assertNull($function->namespace);
         $this->assertArrayNotHasKey('namespace', $function->extra);
+        $this->assertSame([], $document->namespaces);
+        $this->assertArrayNotHasKey('namespaces', $document->extra);
+    }
+
+    public function testNamespaceRegionsAreReadWithoutBecomingExtra(): void
+    {
+        $document = $this->reader->readFile(dirname(__DIR__, 3) . '/tests/Expected/PHP/8.4/Common/FunctionNamespace.json');
+        $function = $document->opArrayNamed('App\\calculator');
+
+        $this->assertNotNull($function);
+        $this->assertSame('App', $function->namespace);
+        $this->assertCount(1, $document->namespaces);
+        $this->assertSame('App', $document->namespaces[0]->name);
+        $this->assertSame(['calculator'], $document->namespaces[0]->functions);
+        $this->assertSame([], $document->namespaces[0]->statements);
+        $this->assertArrayNotHasKey('namespaces', $document->extra);
+        $this->assertSame([], $document->namespaces[0]->extra);
+    }
+
+    public function testAnEmptyNamespaceRegionNameIsRejected(): void
+    {
+        $json = (string) file_get_contents(dirname(__DIR__, 3) . '/tests/Expected/PHP/8.4/Common/FunctionNamespace.json');
+        $json = preg_replace('/"name": "App"/', '"name": ""', $json, 1);
+        $this->assertIsString($json);
+        $this->expectException(IrException::class);
+        $this->expectExceptionMessage('namespaces');
+
+        $this->reader->readString($json);
     }
 
     public function testANamespaceIsReadWithoutBecomingExtra(): void

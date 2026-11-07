@@ -356,6 +356,10 @@ final class ExporterTest extends TestCase
             return $opArray;
         };
 
+        if (str_contains($relative, 'Namespace')) {
+            $this->assertNamespaceFixture($relative, $document, $find);
+        }
+
         switch ($relative) {
             case 'Common/Arithmetic.php':
                 $calculate = $find('function', 'calculate');
@@ -591,5 +595,123 @@ final class ExporterTest extends TestCase
         }
 
         return false;
+    }
+
+    /**
+     * @param array<string, mixed> $document
+     * @param callable(string, ?string): array<string, mixed> $find
+     */
+    private function assertNamespaceFixture(string $relative, array $document, callable $find): void
+    {
+        $regions = $document['namespaces'] ?? null;
+        $this->assertIsArray($regions, $relative);
+        $this->assertNotEmpty($regions, $relative);
+        $names = array_map(static fn (array $region): ?string => $region['name'] ?? null, $regions);
+        $functions = array_map(static fn (array $region): array => $region['functions'] ?? [], $regions);
+
+        switch ($relative) {
+            case 'Common/FunctionNamespace.php':
+            case 'Common/NamespaceBracketed.php':
+            case 'Common/NamespaceStrict.php':
+                $this->assertSame(['App'], $names);
+                $this->assertSame([['calculator']], $functions);
+                $this->assertSame([], $regions[0]['statements']);
+                if ($relative === 'Common/NamespaceStrict.php') {
+                    $this->assertContains('strict_types', $find('function', 'App\\calculator')['flags'] ?? []);
+                    $this->assertContains('strict_types', $find('main', null)['flags'] ?? []);
+                }
+                break;
+            case 'Common/NamespaceStatement.php':
+            case 'Common/NamespaceBracketedStatements.php':
+                $this->assertSame(['App'], $names);
+                $this->assertSame([[]], $functions);
+                $this->assertNotEmpty($regions[0]['statements']);
+                if ($relative === 'Common/NamespaceBracketedStatements.php') {
+                    $this->assertArrayNotHasKey('namespace', $find('main', null));
+                }
+                break;
+            case 'Common/NamespaceEmpty.php':
+                $this->assertSame(['App'], $names);
+                $this->assertSame([[]], $functions);
+                $this->assertSame([], $regions[0]['statements']);
+                $this->assertSame('App', $find('main', null)['namespace'] ?? null);
+                break;
+            case 'Common/NamespaceMultiple.php':
+                $this->assertSame(['App', 'Other'], $names);
+                $this->assertSame([['alpha'], ['beta']], $functions);
+                $this->assertArrayNotHasKey('namespace', $find('main', null));
+                break;
+            case 'Common/NamespaceGlobal.php':
+                $this->assertSame([null, 'App'], $names);
+                $this->assertSame([['alpha'], ['beta']], $functions);
+                $this->assertArrayNotHasKey('namespace', $find('main', null));
+                $this->assertNotEmpty($regions[0]['statements']);
+                $this->assertNotEmpty($regions[1]['statements']);
+                break;
+            case 'Common/NamespaceReopen.php':
+                $this->assertSame(['App', 'Other', 'App'], $names);
+                $this->assertSame([['alpha'], ['beta'], ['delta']], $functions);
+                $this->assertNotEmpty($regions[2]['statements']);
+                $this->assertArrayNotHasKey('namespace', $find('main', null));
+                break;
+            case 'Common/NamespaceMixed.php':
+                $this->assertSame(['App'], $names);
+                $this->assertSame([['calculator']], $functions);
+                $this->assertTrue($this->hasOpcode($find('main', null), 'INIT_NS_FCALL_BY_NAME'));
+                break;
+            case 'Common/NamespaceCalls.php':
+                $this->assertSame(['App'], $names);
+                $this->assertSame([['add', 'calculate', 'absolute', 'aliased']], $functions);
+                $this->assertTrue($this->hasOpcode($find('function', 'App\\calculate'), 'INIT_NS_FCALL_BY_NAME'));
+                $this->assertTrue($this->hasOpcode($find('function', 'App\\absolute'), 'INIT_FCALL'));
+                $this->assertSame('app\\add', $this->literalString($find('function', 'App\\absolute'), 'app\\add'));
+                break;
+            case 'Common/NamespaceAlias.php':
+                $this->assertSame('App\\Services\\Calculator', $find('function', 'App\\calculate')['arguments'][0]['type']['name'] ?? null);
+                break;
+            case 'Common/NamespaceStaticCall.php':
+                $this->assertSame('App\\Services\\Calculator', $this->literalString($find('function', 'App\\calculate'), 'App\\Services\\Calculator'));
+                $this->assertTrue($this->hasOpcode($find('function', 'App\\calculate'), 'INIT_STATIC_METHOD_CALL'));
+                break;
+            case 'Common/NamespaceTypes.php':
+                $this->assertSame('RuntimeException', $find('function', 'App\\take')['return_type']['name'] ?? null);
+                $this->assertSame('stdClass', $find('function', 'App\\take')['arguments'][0]['type']['name'] ?? null);
+                $this->assertSame('App\\Widget', $find('function', 'App\\local')['return_type']['name'] ?? null);
+                $this->assertSame('App\\Widget', $find('function', 'App\\local')['arguments'][0]['type']['name'] ?? null);
+                break;
+            case 'Common/NamespaceSignature.php':
+                $marked = $find('function', 'App\\ref');
+                $this->assertContains('return_reference', $marked['flags'] ?? []);
+                $this->assertSame('Deprecated', $marked['attributes'][0]['name'] ?? null);
+                $this->assertSame('SensitiveParameter', $marked['attributes'][1]['name'] ?? null);
+                break;
+            case 'Common/NamespaceUnbracketedMultiple.php':
+                $this->assertSame(['App', 'Other'], $names);
+                $this->assertSame('Other', $find('main', null)['namespace'] ?? null);
+                $this->assertNotEmpty($regions[0]['statements']);
+                $this->assertNotEmpty($regions[1]['statements']);
+                break;
+            case 'Common/NamespaceSameLine.php':
+                $this->assertSame(['A', 'B'], $names);
+                $this->assertSame($regions[0]['statements'][0], $regions[1]['statements'][0]);
+                $this->assertArrayNotHasKey('namespace', $find('main', null));
+                break;
+        }
+    }
+
+    /**
+     * @param array<string, mixed> $opArray
+     */
+    private function literalString(array $opArray, string $value): string
+    {
+        foreach ($opArray['literals'] as $literal) {
+            if (($literal['type'] ?? null) === 'string' && ($literal['value'] ?? null) === $value) {
+                return $literal['value'];
+            }
+        }
+
+        $this->fail('Missing literal ' . $value);
+
+        return '';
     }
 }

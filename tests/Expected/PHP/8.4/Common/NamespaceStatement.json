@@ -91,5 +91,18 @@
       ]
     }
   ],
+  "namespaces": [
+    {
+      "name": "App",
+      "line_start": 3,
+      "line_end": 5,
+      "functions": [],
+      "statements": [
+        [
+          5
+        ]
+      ]
+    }
+  ],
   "classes": []
 }

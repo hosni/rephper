@@ -9,6 +9,7 @@ final class Document
     /**
      * @param list<OpArray> $opArrays
      * @param list<array<string, mixed>> $classes
+     * @param list<NamespaceRegion> $namespaces
      * @param array<string, mixed> $extra
      */
     public function __construct(
@@ -17,6 +18,7 @@ final class Document
         public readonly Compilation $compilation,
         public readonly array $opArrays,
         public readonly array $classes,
+        public readonly array $namespaces,
         public readonly array $extra,
     ) {
     }

@@ -263,5 +263,16 @@
       ]
     }
   ],
+  "namespaces": [
+    {
+      "name": "App",
+      "line_start": 3,
+      "line_end": 8,
+      "functions": [
+        "calculator"
+      ],
+      "statements": []
+    }
+  ],
   "classes": []
 }

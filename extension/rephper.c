@@ -48,6 +48,25 @@
 
 ZEND_EXTENSION();
 
+static zend_ast_process_t rephper_previous_ast_process = NULL;
+
+static void rephper_ast_process(zend_ast *ast)
+{
+	if (rephper_previous_ast_process != NULL) {
+		rephper_previous_ast_process(ast);
+	}
+	rephper_export_namespaces(ast);
+}
+
+static int rephper_startup(zend_extension *extension)
+{
+	(void) extension;
+	rephper_previous_ast_process = zend_ast_process;
+	zend_ast_process = rephper_ast_process;
+
+	return SUCCESS;
+}
+
 static void rephper_activate(void)
 {
 	rephper_export_reset();
@@ -74,7 +93,7 @@ ZEND_EXT_API zend_extension zend_extension_entry = {
 	"Rephper",
 	"",
 	"Copyright (c) Rephper",
-	NULL, /* startup */
+	rephper_startup,
 	NULL, /* shutdown */
 	rephper_activate,
 	rephper_deactivate,

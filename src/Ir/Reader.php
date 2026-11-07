@@ -115,7 +115,82 @@ final class Reader
             ),
             $parsed,
             $classRows,
-            $this->extra($data, ['ir_version', 'php', 'compilation', 'op_arrays', 'classes']),
+            $this->namespaces($data),
+            $this->extra($data, ['ir_version', 'php', 'compilation', 'op_arrays', 'classes', 'namespaces']),
+        );
+    }
+
+    /**
+     * @param array<mixed> $data
+     * @return list<NamespaceRegion>
+     */
+    private function namespaces(array $data): array
+    {
+        if (!array_key_exists('namespaces', $data)) {
+            return [];
+        }
+        $regions = [];
+        foreach ($this->list($data, 'namespaces', 'namespaces') as $index => $region) {
+            if (!$this->isObject($region)) {
+                throw new IrException('namespaces[' . $index . '] must be an object');
+            }
+            $regions[] = $this->namespaceRegion($region, 'namespaces[' . $index . ']');
+        }
+
+        return $regions;
+    }
+
+    /**
+     * @param array<mixed> $data
+     */
+    private function namespaceRegion(array $data, string $path): NamespaceRegion
+    {
+        $name = null;
+        if (!array_key_exists('name', $data)) {
+            throw new IrException($path . '.name is missing');
+        }
+        if ($data['name'] !== null) {
+            $name = $this->string($data, 'name', $path . '.name');
+            if ($name === '') {
+                throw new IrException($path . '.name must not be empty');
+            }
+        }
+        $lineStart = $this->int($data, 'line_start', $path . '.line_start');
+        $lineEnd = $this->int($data, 'line_end', $path . '.line_end');
+        if ($lineStart < 1 || $lineEnd < $lineStart) {
+            throw new IrException($path . ' has an invalid line range');
+        }
+
+        $functions = [];
+        foreach ($this->list($data, 'functions', $path . '.functions') as $index => $function) {
+            if (!is_string($function) || $function === '') {
+                throw new IrException($path . '.functions[' . $index . '] must be a non-empty string');
+            }
+            $functions[] = $function;
+        }
+
+        $statements = [];
+        foreach ($this->list($data, 'statements', $path . '.statements') as $index => $lines) {
+            if (!is_array($lines) || !array_is_list($lines) || $lines === []) {
+                throw new IrException($path . '.statements[' . $index . '] must be a non-empty array');
+            }
+            $statement = [];
+            foreach ($lines as $lineIndex => $line) {
+                if (!is_int($line) || $line < 1) {
+                    throw new IrException($path . '.statements[' . $index . '][' . $lineIndex . '] must be a positive integer');
+                }
+                $statement[] = $line;
+            }
+            $statements[] = $statement;
+        }
+
+        return new NamespaceRegion(
+            $name,
+            $lineStart,
+            $lineEnd,
+            $functions,
+            $statements,
+            $this->extra($data, ['name', 'line_start', 'line_end', 'functions', 'statements']),
         );
     }
 
