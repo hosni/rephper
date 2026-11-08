@@ -8,13 +8,17 @@ use Rephper\Ir\ClassConstant;
 use Rephper\Ir\ClassDeclaration;
 use Rephper\Ir\ClassProperty;
 use Rephper\Ir\OpArray;
+use Rephper\Ir\TraitAlias;
+use Rephper\Ir\TraitPrecedence;
 
 /**
- * Renders one class or interface from its IR declaration and method bodies.
+ * Renders one class, interface, or trait from its IR declaration and method bodies.
  *
- * Constants, then properties, then methods. Promoted properties are parameters
- * of the constructor, not a second declaration. A member the IR cannot spell
- * fails the class.
+ * A trait use comes first. Constants, then properties, then methods. Promoted
+ * properties are parameters of the constructor, not a second declaration.
+ * Precedences and aliases are separate IR lists, so every precedence is printed
+ * before any alias, and each list keeps its own order. A member the IR cannot
+ * spell fails the declaration.
  */
 final class ClassRenderer
 {
@@ -65,7 +69,7 @@ final class ClassRenderer
         string $declaredName,
         ?NameQualifier $names,
     ): string {
-        if ($class->kind !== 'class' && $class->kind !== 'interface') {
+        if ($class->kind !== 'class' && $class->kind !== 'interface' && $class->kind !== 'trait') {
             $this->fail($class, $class->kind . ' is not supported');
         }
         if (preg_match(self::IDENTIFIER, $declaredName) !== 1) {
@@ -77,12 +81,16 @@ final class ClassRenderer
         $promoted = $this->promotedParameters($class, $constructor);
 
         $pad = str_repeat('    ', $indent);
-        $lines = [];
+        $lines = $this->commentLines($class->docComment, $class, $class->kind, $indent);
         foreach ($this->classAttributes($class, $names) as $attribute) {
             $lines[] = $pad . $attribute;
         }
         $lines[] = $pad . $this->header($class, $declaredName, $names);
         $members = [];
+        $use = $this->traitUse($class, $indent + 1, $names);
+        if ($use !== null) {
+            $members[] = $use;
+        }
         foreach ($class->constants as $constant) {
             $members[] = $this->constantDeclaration($class, $constant, $indent + 1, $names);
         }
@@ -138,8 +146,20 @@ final class ClassRenderer
         if ($class->enumBacking !== null) {
             $this->fail($class, 'enum backing is not supported');
         }
-        if ($class->traits !== []) {
-            $this->fail($class, 'traits are not supported');
+        if ($class->kind === 'trait') {
+            if ($class->parent !== null || $class->interfaces !== []) {
+                $this->fail($class, 'cannot extend or implement another type');
+            }
+            if (
+                in_array('final', $class->flags, true)
+                || in_array('abstract', $class->flags, true)
+                || in_array('readonly', $class->flags, true)
+            ) {
+                $this->fail($class, 'modifier is not supported');
+            }
+        }
+        if ($class->kind === 'interface' && $class->traits !== []) {
+            $this->fail($class, 'cannot use traits');
         }
         $final = in_array('final', $class->flags, true);
         $explicitAbstract = in_array('abstract', $class->flags, true);
@@ -326,6 +346,9 @@ final class ClassRenderer
 
     private function header(ClassDeclaration $class, string $declaredName, ?NameQualifier $names): string
     {
+        if ($class->kind === 'trait') {
+            return 'trait ' . $declaredName;
+        }
         $abstract = $class->kind === 'class' && (
             in_array('abstract', $class->flags, true) || in_array('implicit_abstract', $class->flags, true)
         );
@@ -387,7 +410,7 @@ final class ClassRenderer
         if (in_array('enum_case', $constant->flags, true)) {
             $this->fail($class, 'constant ' . $constant->name . ' is an enum case');
         }
-        if (in_array('deprecated', $constant->flags, true)) {
+        if (in_array('deprecated', $constant->flags, true) && !$this->hasAttribute($constant->attributes, 'Deprecated')) {
             $this->fail($class, 'constant ' . $constant->name . ' is deprecated, but the attribute is not in the IR');
         }
         if (preg_match(self::IDENTIFIER, $constant->name) !== 1) {
@@ -418,8 +441,13 @@ final class ClassRenderer
         } catch (SourceGenerationException $exception) {
             $this->fail($class, 'constant ' . $constant->name . ' cannot be rendered: ' . $exception->getMessage());
         }
+        $lines = $this->commentLines($constant->docComment, $class, 'constant ' . $constant->name, $indent);
+        foreach ($this->memberAttributes($class, $constant->attributes, 'constant ' . $constant->name, $indent, $names) as $attribute) {
+            $lines[] = $attribute;
+        }
+        $lines[] = str_repeat('    ', $indent) . implode(' ', $parts) . ' = ' . $value . ';';
 
-        return str_repeat('    ', $indent) . implode(' ', $parts) . ' = ' . $value . ';';
+        return implode("\n", $lines);
     }
 
     private function propertyDeclaration(
@@ -444,8 +472,13 @@ final class ClassRenderer
             }
             $text .= ' = ' . $value;
         }
+        $lines = $this->commentLines($property->docComment, $class, 'property $' . $property->name, $indent);
+        foreach ($this->memberAttributes($class, $property->attributes, 'property $' . $property->name, $indent, $names) as $attribute) {
+            $lines[] = $attribute;
+        }
+        $lines[] = str_repeat('    ', $indent) . $text . ';';
 
-        return str_repeat('    ', $indent) . $text . ';';
+        return implode("\n", $lines);
     }
 
     private function propertyModifiers(ClassDeclaration $class, ClassProperty $property): string
@@ -501,6 +534,158 @@ final class ClassRenderer
         }
 
         return implode(' ', $parts);
+    }
+
+    private function traitUse(ClassDeclaration $class, int $indent, ?NameQualifier $names): ?string
+    {
+        if ($class->traits === [] && $class->traitAliases === [] && $class->traitPrecedences === []) {
+            return null;
+        }
+        if ($class->traits === []) {
+            $this->fail($class, 'trait adaptations are not attached to a used trait');
+        }
+        $traits = [];
+        foreach ($class->traits as $trait) {
+            $traits[] = $this->qualified($class, $trait, $names);
+        }
+        $rules = [];
+        foreach ($class->traitPrecedences as $precedence) {
+            if (!$precedence instanceof TraitPrecedence) {
+                $this->fail($class, 'trait precedence metadata is incomplete');
+            }
+            $rules[] = $this->precedenceRule($class, $precedence, $names);
+        }
+        foreach ($class->traitAliases as $alias) {
+            if (!$alias instanceof TraitAlias) {
+                $this->fail($class, 'trait alias metadata is incomplete');
+            }
+            $rules[] = $this->aliasRule($class, $alias, $names);
+        }
+        $pad = str_repeat('    ', $indent);
+        if ($rules === []) {
+            return $pad . 'use ' . implode(', ', $traits) . ';';
+        }
+        $lines = [$pad . 'use ' . implode(', ', $traits) . ' {'];
+        foreach ($rules as $rule) {
+            $lines[] = $pad . '    ' . $rule . ';';
+        }
+        $lines[] = $pad . '}';
+
+        return implode("\n", $lines);
+    }
+
+    private function precedenceRule(ClassDeclaration $class, TraitPrecedence $precedence, ?NameQualifier $names): string
+    {
+        $this->assertUsedTrait($class, $precedence->trait, 'precedence for ' . $precedence->trait . '::' . $precedence->method);
+        if (preg_match(self::IDENTIFIER, $precedence->method) !== 1) {
+            $this->fail($class, 'precedence method ' . $precedence->method . ' cannot be rendered');
+        }
+        if ($precedence->insteadOf === []) {
+            $this->fail($class, 'precedence for ' . $precedence->method . ' excludes nothing');
+        }
+        $excluded = [];
+        foreach ($precedence->insteadOf as $trait) {
+            $this->assertUsedTrait($class, $trait, 'precedence for ' . $precedence->method);
+            $excluded[] = $this->qualified($class, $trait, $names);
+        }
+
+        return $this->qualified($class, $precedence->trait, $names)
+            . '::' . $precedence->method
+            . ' insteadof ' . implode(', ', $excluded);
+    }
+
+    private function aliasRule(ClassDeclaration $class, TraitAlias $alias, ?NameQualifier $names): string
+    {
+        if (preg_match(self::IDENTIFIER, $alias->method) !== 1) {
+            $this->fail($class, 'alias method ' . $alias->method . ' cannot be rendered');
+        }
+        if ($alias->trait !== null) {
+            $this->assertUsedTrait($class, $alias->trait, 'alias for ' . $alias->trait . '::' . $alias->method);
+        }
+        if (count($alias->modifiers) > 1) {
+            $this->fail($class, 'alias for ' . $alias->method . ' has more than one modifier');
+        }
+        $modifier = $alias->modifiers[0] ?? null;
+        if ($modifier !== null && !in_array($modifier, ['public', 'protected', 'private', 'final'], true)) {
+            $this->fail($class, 'alias for ' . $alias->method . ' has modifier ' . $modifier . ', which is not supported');
+        }
+        if ($alias->alias !== null && preg_match(self::IDENTIFIER, $alias->alias) !== 1) {
+            $this->fail($class, 'alias ' . $alias->alias . ' cannot be rendered');
+        }
+        if ($alias->alias === null && $modifier === null) {
+            $this->fail($class, 'alias for ' . $alias->method . ' does not change the method');
+        }
+        $target = $alias->trait === null
+            ? $alias->method
+            : $this->qualified($class, $alias->trait, $names) . '::' . $alias->method;
+        $tail = 'as';
+        if ($modifier !== null) {
+            $tail .= ' ' . $modifier;
+        }
+        if ($alias->alias !== null) {
+            $tail .= ' ' . $alias->alias;
+        }
+
+        return $target . ' ' . $tail;
+    }
+
+    private function assertUsedTrait(ClassDeclaration $class, string $name, string $owner): void
+    {
+        foreach ($class->traits as $trait) {
+            if (strcasecmp($trait, $name) === 0) {
+                return;
+            }
+        }
+        $this->fail($class, $owner . ' is not a used trait');
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function commentLines(?string $comment, ClassDeclaration $class, string $owner, int $indent): array
+    {
+        if ($comment === null) {
+            return [];
+        }
+        $normalized = str_replace("\r\n", "\n", $comment);
+        if (str_contains($normalized, "\r") || preg_match('/\A\/\*\*(?:[^*]|\*(?!\/))*\*\/\z/s', $normalized) !== 1) {
+            $this->fail($class, $owner . ' doc comment cannot be rendered');
+        }
+        $pad = str_repeat('    ', $indent);
+        $lines = [];
+        foreach (explode("\n", $normalized) as $line) {
+            $lines[] = $pad . $line;
+        }
+
+        return $lines;
+    }
+
+    /**
+     * @param list<mixed> $attributes
+     * @return list<string>
+     */
+    private function memberAttributes(
+        ClassDeclaration $class,
+        array $attributes,
+        string $owner,
+        int $indent,
+        ?NameQualifier $names,
+    ): array {
+        foreach ($attributes as $attribute) {
+            if (!is_array($attribute) || !array_key_exists('offset', $attribute) || !is_int($attribute['offset'])) {
+                $this->fail($class, $owner . ' attribute target is not in the IR');
+            }
+            if ($attribute['offset'] !== 0) {
+                $this->fail($class, $owner . ' attribute target is not on this declaration');
+            }
+        }
+        $pad = str_repeat('    ', $indent);
+        $lines = [];
+        foreach ($this->attributes->render($attributes, 0, $class->name, $class->kind, $class->lineStart, $names) as $attribute) {
+            $lines[] = $pad . $attribute;
+        }
+
+        return $lines;
     }
 
     private function qualified(ClassDeclaration $class, string $name, ?NameQualifier $names): string
