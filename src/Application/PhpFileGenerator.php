@@ -13,6 +13,7 @@ use Rephper\CodeGen\SourceGenerationException;
 use Rephper\Expr\Diagnostic;
 use Rephper\Ir\ClassDeclaration;
 use Rephper\Ir\Document;
+use Rephper\Ir\Instruction;
 use Rephper\Ir\NamespaceRegion;
 use Rephper\Ir\OpArray;
 use Rephper\Stmt\OpaqueStatement;
@@ -34,10 +35,18 @@ use Rephper\Stmt\StructuredStatements;
  * unbracketed namespace. Several regions use bracketed blocks, including a
  * global region beside a named one. Import aliases are not in the IR.
  *
- * Ordinary classes and interfaces are emitted from the class rows. Their
- * methods reuse function rendering. Traits, enums, anonymous classes, property
+ * Ordinary classes, interfaces, and traits are emitted from the class rows.
+ * Their methods reuse function rendering. Enums, anonymous classes, property
  * hooks, closures, conditional classes, and other unsupported declarations
  * fail the file. Nothing from that document is returned as a partial file.
+ *
+ * PHP 8.4 does not emit ADD_TRAIT or BIND_TRAITS. Those opcodes were removed
+ * when trait binding moved into DECLARE_CLASS. Trait names and adaptations
+ * live on the class row. If an IR still contains either opcode, it is compiler
+ * registration only when the main script has no branch and the opcode line
+ * sits inside one class or trait that lists traits. The instruction is then
+ * dropped. A branch, a nested op array, or a line that is not in such a
+ * declaration fails the file.
  */
 final class PhpFileGenerator
 {
@@ -48,14 +57,23 @@ final class PhpFileGenerator
         'DECLARE_LAMBDA_FUNCTION' => 'closure',
         'DECLARE_CONST' => 'const declaration',
         'ADD_INTERFACE' => 'interface declaration',
-        'ADD_TRAIT' => 'trait use',
-        'BIND_TRAITS' => 'trait use',
     ];
 
     /** @var array<string, string> */
     private const CLASS_REGISTRATION = [
         'DECLARE_CLASS' => 'class declaration',
         'DECLARE_CLASS_DELAYED' => 'class declaration',
+    ];
+
+    /**
+     * Removed from the PHP 8.4 VM. Kept so an IR that still names them is not
+     * treated as an executable statement.
+     *
+     * @var array<string, string>
+     */
+    private const TRAIT_REGISTRATION = [
+        'ADD_TRAIT' => 'trait use',
+        'BIND_TRAITS' => 'trait use',
     ];
 
     /** @var list<string> */
@@ -86,6 +104,13 @@ final class PhpFileGenerator
 
     private const IDENTIFIER = '/\A[A-Za-z_\x80-\xff][A-Za-z0-9_\x80-\xff]*\z/';
 
+    /**
+     * Oplines rewritten from trait registration to NOP, keyed by op array id.
+     *
+     * @var array<int, array<int, true>>
+     */
+    private array $ignoredRegistrations = [];
+
     public function __construct(
         private readonly OpArrayPipeline $pipeline = new OpArrayPipeline(),
         private readonly PhpSourceGenerator $source = new PhpSourceGenerator(),
@@ -96,6 +121,8 @@ final class PhpFileGenerator
 
     public function generate(Document $document): string
     {
+        $this->ignoredRegistrations = [];
+        $document = $this->acceptTraitRegistration($document);
         [$functions, $main, $methods] = $this->partition($document);
         $classes = $this->classGroups($document, $methods);
         if ($this->usesNamespaces($document)) {
@@ -417,17 +444,11 @@ final class PhpFileGenerator
         if (in_array('anonymous', $class->flags, true) || str_contains($class->name, "\0")) {
             $this->fail('anonymous class at line ' . $class->lineStart . ' is not supported');
         }
-        if ($class->kind === 'trait') {
-            $this->fail('trait ' . $class->name . ' is not supported');
-        }
         if ($class->kind === 'enum') {
             $this->fail('enum ' . $class->name . ' is not supported');
         }
-        if ($class->kind !== 'class' && $class->kind !== 'interface') {
+        if ($class->kind !== 'class' && $class->kind !== 'interface' && $class->kind !== 'trait') {
             $this->fail($class->kind . ' ' . $class->name . ' is not supported');
-        }
-        if ($class->traits !== []) {
-            $this->fail($class->kind . ' ' . $class->name . ' uses traits, which are not supported');
         }
     }
 
@@ -502,9 +523,125 @@ final class PhpFileGenerator
         $this->rejectDeclarations($main);
         $this->assertClassRegistration($main, $classes);
         $structured = $this->pipeline->structure($document, $main);
-        $this->assertReconstructed($structured, 'the main script', true);
+        $this->assertReconstructed($structured, 'the main script', true, $main->id);
 
-        return $this->withoutRegistration($structured->statements);
+        return $this->withoutRegistration($structured->statements, $main->id);
+    }
+
+    /**
+     * PHP 8.4 binds traits inside DECLARE_CLASS and does not emit these opcodes.
+     * A document that still contains them keeps them only as registration for a
+     * recorded trait use. Anything else fails before a statement is rendered.
+     */
+    private function acceptTraitRegistration(Document $document): Document
+    {
+        $main = null;
+        $registrations = [];
+        $branches = false;
+        foreach ($document->opArrays as $opArray) {
+            $mine = [];
+            $branched = false;
+            foreach ($opArray->instructions as $instruction) {
+                if (isset(self::TRAIT_REGISTRATION[$instruction->opcode])) {
+                    $mine[] = $instruction;
+                    continue;
+                }
+                if (in_array($instruction->opcode, self::BRANCHES, true)) {
+                    $branched = true;
+                }
+            }
+            if ($mine === []) {
+                continue;
+            }
+            if ($opArray->kind !== 'main') {
+                $this->fail('trait use in ' . $this->location($opArray) . ' is not supported');
+            }
+            if ($main instanceof OpArray) {
+                $this->fail('the document has more than one main op array');
+            }
+            $main = $opArray;
+            $registrations = $mine;
+            $branches = $branched;
+        }
+        if (!$main instanceof OpArray) {
+            return $document;
+        }
+        if ($branches) {
+            $this->fail('conditional trait use is not supported');
+        }
+        $indexes = [];
+        foreach ($registrations as $instruction) {
+            if (!$this->traitHost($document->classes, $instruction->line) instanceof ClassDeclaration) {
+                $this->fail('trait use at line ' . $instruction->line . ' cannot be associated with a class declaration');
+            }
+            $indexes[$instruction->index] = true;
+        }
+        $this->ignoredRegistrations[$main->id] = $indexes;
+        $instructions = [];
+        foreach ($main->instructions as $instruction) {
+            if (!isset($indexes[$instruction->index])) {
+                $instructions[] = $instruction;
+                continue;
+            }
+            $instructions[] = new Instruction(
+                $instruction->index,
+                'NOP',
+                0,
+                $instruction->line,
+                $instruction->op1,
+                $instruction->op2,
+                $instruction->result,
+                $instruction->extendedValue,
+                $instruction->jumpTarget,
+                $instruction->extra,
+            );
+        }
+        $opArrays = [];
+        foreach ($document->opArrays as $opArray) {
+            $opArrays[] = $opArray === $main ? $main->withInstructions($instructions) : $opArray;
+        }
+
+        return $document->withOpArrays($opArrays);
+    }
+
+    /**
+     * @param list<ClassDeclaration> $classes
+     */
+    private function traitHost(array $classes, int $line): ?ClassDeclaration
+    {
+        $matches = [];
+        foreach ($classes as $class) {
+            if ($line >= $class->lineStart && $line <= $class->lineEnd) {
+                $matches[] = $class;
+            }
+        }
+        if (count($matches) !== 1) {
+            return null;
+        }
+        $class = $matches[0];
+        if (($class->kind !== 'class' && $class->kind !== 'trait') || $class->traits === []) {
+            return null;
+        }
+
+        return $class;
+    }
+
+    private function location(OpArray $opArray): string
+    {
+        $name = is_string($opArray->name) && $opArray->name !== '' ? $opArray->name : '(unknown)';
+        if ($opArray->kind === 'method') {
+            $scope = $opArray->scope === null ? '(unknown)' : $opArray->scope->name;
+
+            return 'method ' . $scope . '::' . $name;
+        }
+        if ($opArray->kind === 'function') {
+            return 'function ' . $name;
+        }
+        if ($opArray->kind === 'main') {
+            return 'the main script';
+        }
+
+        return $opArray->kind . ' ' . $name;
     }
 
     /**
@@ -544,11 +681,15 @@ final class PhpFileGenerator
      * @param list<Statement> $statements
      * @return list<Statement>
      */
-    private function withoutRegistration(array $statements): array
+    private function withoutRegistration(array $statements, int $opArrayId): array
     {
+        $ignored = $this->ignoredRegistrations[$opArrayId] ?? [];
         $kept = [];
         foreach ($statements as $statement) {
             if ($statement instanceof OpaqueStatement && isset(self::CLASS_REGISTRATION[$statement->instruction->opcode])) {
+                continue;
+            }
+            if (isset($ignored[$statement->opline])) {
                 continue;
             }
             $kept[] = $statement;
@@ -765,6 +906,12 @@ final class PhpFileGenerator
                 }
                 continue;
             }
+            if (isset(self::TRAIT_REGISTRATION[$instruction->opcode])) {
+                $where = $opArray->kind === 'main' ? 'the main script' : ($opArray->kind === 'method'
+                    ? 'method ' . ($opArray->scope === null ? '(unknown)' : $opArray->scope->name) . '::' . $opArray->name
+                    : ($opArray->kind === 'function' ? 'function ' . $opArray->name : $opArray->kind . ' ' . $opArray->id));
+                $this->fail(self::TRAIT_REGISTRATION[$instruction->opcode] . ' in ' . $where . ' is not supported');
+            }
             $reason = self::DECLARATIONS[$instruction->opcode] ?? null;
             if ($reason === null) {
                 continue;
@@ -793,10 +940,18 @@ final class PhpFileGenerator
         return $flags[0];
     }
 
-    private function assertReconstructed(StructuredStatements $structured, string $where, bool $classRegistration = false): void
-    {
+    private function assertReconstructed(
+        StructuredStatements $structured,
+        string $where,
+        bool $classRegistration = false,
+        ?int $opArrayId = null,
+    ): void {
+        $ignored = $opArrayId === null ? [] : ($this->ignoredRegistrations[$opArrayId] ?? []);
         foreach ($structured->diagnostics as $diagnostic) {
             if ($classRegistration && isset(self::CLASS_REGISTRATION[$diagnostic->opcode])) {
+                continue;
+            }
+            if (isset($ignored[$diagnostic->opline])) {
                 continue;
             }
             if (!$diagnostic instanceof Diagnostic) {

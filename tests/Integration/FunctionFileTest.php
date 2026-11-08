@@ -67,6 +67,11 @@ final class FunctionFileTest extends TestCase
             'constructor promotion' => ['Common/ClassPromotion.json'],
             'class attribute' => ['Common/ClassAttribute.json'],
             'readonly class' => ['PHP/8.2/Readonly.json'],
+            'trait declaration' => ['Common/TraitDeclaration.json'],
+            'multiple traits' => ['Common/TraitMultiple.json'],
+            'trait adaptations' => ['Common/TraitAlias.json'],
+            'trait namespace' => ['Common/TraitNamespace.json'],
+            'trait metadata' => ['Common/ClassTraitMetadata.json'],
         ];
     }
 

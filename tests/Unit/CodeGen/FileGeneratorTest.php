@@ -225,7 +225,7 @@ PHP, $this->generate('Common/Functions.json'));
     public static function rejectedFiles(): array
     {
         return [
-            'trait' => ['Common/Oop.json', 'trait Label is not supported'],
+            'object property fetch' => ['Common/Oop.json', 'FETCH_OBJ_R'],
             'enum' => ['PHP/8.1/Enums.json', 'enum Status is not supported'],
             'anonymous class' => ['Common/AnonymousClass.json', 'anonymous class at line 3 is not supported'],
             'property hook' => ['PHP/8.4/PropertyHooks.json', 'property hook value::get is not supported'],
@@ -760,6 +760,235 @@ class Measured
 }
 
 PHP],
+            'trait declaration' => ['Common/TraitDeclaration.json', <<<'PHP'
+<?php
+
+#[Attribute]
+class Mark
+{
+    public function __construct(public string $message)
+    {
+    }
+}
+
+/** Records a label. */
+#[Mark('trait')]
+trait Label
+{
+    /** The scale. */
+    #[Mark('constant')]
+    public const int SCALE = 2;
+
+    /** The stored label. */
+    #[Mark('property')]
+    public string $label = 'label';
+
+    public function text(): string
+    {
+        return 'label';
+    }
+}
+
+class Speaker
+{
+    use Label;
+}
+
+PHP],
+            'multiple traits' => ['Common/TraitMultiple.json', <<<'PHP'
+<?php
+
+trait One
+{
+    public function one(): string
+    {
+        return 'one';
+    }
+}
+
+trait Two
+{
+    public function two(): string
+    {
+        return 'two';
+    }
+}
+
+class Pair
+{
+    use One, Two;
+}
+
+class Box
+{
+    use One;
+
+    public string $name = 'box';
+
+    public function label(): string
+    {
+        return 'box';
+    }
+}
+
+PHP],
+            'trait adaptations' => ['Common/TraitAlias.json', <<<'PHP'
+<?php
+
+trait Alpha
+{
+    public function label(): string
+    {
+        return 'alpha';
+    }
+
+    public function name(): string
+    {
+        return 'alpha';
+    }
+}
+
+trait Beta
+{
+    public function name(): string
+    {
+        return 'beta';
+    }
+
+    public function id(): int
+    {
+        return 2;
+    }
+}
+
+trait Gamma
+{
+    public function name(): string
+    {
+        return 'gamma';
+    }
+}
+
+class Item
+{
+    use Alpha, Beta, Gamma {
+        Alpha::name insteadof Beta, Gamma;
+        label as title;
+        Beta::id as private;
+        Alpha::label as heading;
+    }
+
+    public string $caption = 'item';
+
+    public function caption(): string
+    {
+        return 'item';
+    }
+}
+
+PHP],
+            'trait namespace' => ['Common/TraitNamespace.json', <<<'PHP'
+<?php
+
+namespace App\Tools;
+
+trait Marker
+{
+    public function mark(): string
+    {
+        return 'mark';
+    }
+}
+
+class Noted
+{
+    use \App\Tools\Marker;
+
+    public int $count = 1;
+
+    public function extra(): int
+    {
+        return 4;
+    }
+}
+
+PHP],
+            'trait metadata' => ['Common/ClassTraitMetadata.json', <<<'PHP'
+<?php
+
+#[Attribute]
+class Note
+{
+    public function __construct(public string $message)
+    {
+    }
+}
+
+class Base
+{
+    public int $id = 1;
+}
+
+trait Alpha
+{
+    public string $fromTrait = 'alpha';
+
+    public function label(): string
+    {
+        return 'alpha';
+    }
+
+    public function name(): string
+    {
+        return 'alpha';
+    }
+}
+
+trait Beta
+{
+    public function name(): string
+    {
+        return 'beta';
+    }
+
+    public function id(): int
+    {
+        return 2;
+    }
+}
+
+trait Gamma
+{
+    public function name(): string
+    {
+        return 'gamma';
+    }
+}
+
+/** The composed item. */
+class Item extends Base
+{
+    use Alpha, Beta, Gamma {
+        Alpha::name insteadof Beta, Gamma;
+        label as title;
+        Beta::id as private;
+    }
+
+    /** The scale. */
+    #[Note('unused')]
+    public const int SCALE = 1;
+
+    /** The item title. */
+    #[Note('use name()')]
+    public string $title = 'item';
+
+    public function name(): string
+    {
+        return 'item';
+    }
+}
+
+PHP],
         ];
     }
 
@@ -793,6 +1022,29 @@ PHP],
         );
         $this->assertSameBehavior('Common/ClassAttribute.php', '$bag = new Bag(); $bag->extra = 5; echo $bag->extra, " ", $bag->size(2);');
         $this->assertSame('3 4 8', $this->execute('PHP/8.2/Readonly.json', '$point = new Point(3, 4); $measured = new Measured(8); echo $point->x, " ", $point->y, " ", $measured->width;'));
+        $this->assertSameBehavior(
+            'Common/TraitDeclaration.php',
+            '$speaker = new Speaker(); $label = new ReflectionClass(Label::class); echo $speaker->text(), " ", $speaker->label, " ", Speaker::SCALE, " ", $label->getDocComment(), " ", $label->getProperty("label")->getDocComment(), " ", $label->getReflectionConstant("SCALE")->getDocComment(), " ", $label->getAttributes()[0]->getName(), " ", $label->getAttributes()[0]->getArguments()[0], " ", $label->getProperty("label")->getAttributes()[0]->getArguments()[0], " ", $label->getReflectionConstant("SCALE")->getAttributes()[0]->getArguments()[0];',
+        );
+        $this->assertSameBehavior(
+            'Common/TraitMultiple.php',
+            '$pair = new Pair(); $box = new Box(); echo $pair->one(), " ", $pair->two(), " ", $box->one(), " ", $box->label(), " ", $box->name;',
+        );
+        $this->assertSameBehavior(
+            'Common/TraitAlias.php',
+            '$item = new Item(); $mirror = new ReflectionClass(Item::class); echo $item->name(), " ", $item->title(), " ", $item->heading(), " ", $item->label(), " ", $item->caption(), " ", $item->caption, " ", ($mirror->getMethod("id")->isPrivate() ? "private" : "public"), " ", $mirror->getMethod("id")->invoke($item);',
+        );
+        $this->assertSameBehavior(
+            'Common/TraitNamespace.php',
+            '$noted = new \\App\\Tools\\Noted(); echo $noted->mark(), " ", $noted->extra(), " ", $noted->count;',
+        );
+        $this->assertSameBehavior(
+            'Common/ClassTraitMetadata.php',
+            '$item = new Item(); $mirror = new ReflectionClass(Item::class); echo $item->name(), " ", $item->title(), " ", $item->fromTrait, " ", $item->title, " ", Item::SCALE, " ", ($mirror->getMethod("id")->isPrivate() ? "p" : "o"), " ", $mirror->getMethod("id")->invoke($item), " ", $mirror->getDocComment(), " ", $mirror->getProperty("title")->getDocComment(), " ", $mirror->getReflectionConstant("SCALE")->getDocComment();',
+        );
+        $namespaced = $this->generate('Common/TraitNamespace.json');
+        $this->assertStringContainsString('use \\App\\Tools\\Marker;', $namespaced);
+        $this->assertStringNotContainsString(' as ', $namespaced);
     }
 
     public function testIncompleteClassMetadataFails(): void
@@ -806,8 +1058,37 @@ PHP],
                 'hooks' => ['get'],
             ];
         });
-        $traits = $this->mutate('Common/Classes.json', static function (array &$data): void {
+        $adaptations = $this->mutate('Common/Classes.json', static function (array &$data): void {
             $data['classes'][0]['traits'][] = 'Label';
+            $data['classes'][0]['trait_aliases'][] = [
+                'trait' => null,
+                'method' => 'add',
+                'alias' => null,
+                'modifiers' => [],
+            ];
+        });
+        $interfaceTraits = $this->mutate('Common/ClassInheritance.json', static function (array &$data): void {
+            foreach ($data['classes'] as &$class) {
+                if (($class['name'] ?? null) === 'Named') {
+                    $class['traits'][] = 'Label';
+                }
+            }
+        });
+        $traitParent = $this->mutate('Common/Classes.json', static function (array &$data): void {
+            $data['classes'][0]['kind'] = 'trait';
+            $data['classes'][0]['parent'] = 'Base';
+            $data['op_arrays'][0]['scope']['kind'] = 'trait';
+        });
+        $docComment = $this->mutate('Common/Classes.json', static function (array &$data): void {
+            $data['classes'][0]['doc_comment'] = 'not a comment';
+        });
+        $propertyAttribute = $this->mutate('Common/ClassProperties.json', static function (array &$data): void {
+            $data['classes'][0]['properties'][0]['attributes'] = [[
+                'name' => 'Note',
+                'line' => 3,
+                'offset' => 1,
+                'arguments' => [],
+            ]];
         });
         $conditional = $this->mutate('Common/ClassInheritance.json', static function (array &$data): void {
             foreach ($data['op_arrays'] as &$opArray) {
@@ -818,8 +1099,79 @@ PHP],
         });
 
         $this->assertGenerationFails($hooks, 'property $value has hooks');
-        $this->assertGenerationFails($traits, 'uses traits');
+        $this->assertGenerationFails($adaptations, 'does not change the method');
+        $this->assertGenerationFails($interfaceTraits, 'cannot use traits');
+        $this->assertGenerationFails($traitParent, 'cannot extend or implement');
+        $this->assertGenerationFails($docComment, 'doc comment cannot be rendered');
+        $this->assertGenerationFails($propertyAttribute, 'attribute target is not on this declaration');
         $this->assertGenerationFails($conditional, 'conditional class declaration is not supported');
+    }
+
+    public function testTraitRegistrationIsNotAnExecutableStatement(): void
+    {
+        $associated = $this->mutate('Common/Classes.json', function (array &$data): void {
+            $data['classes'][0]['traits'][] = 'Label';
+            $this->prefixMain($data, [
+                $this->registration('ADD_TRAIT', 0, 4),
+                $this->registration('BIND_TRAITS', 1, 5),
+            ]);
+        });
+        $conditional = $this->mutate('Common/Classes.json', function (array &$data): void {
+            $data['classes'][0]['traits'][] = 'Label';
+            $this->prefixMain($data, [
+                $this->registration('JMPZ', 0, 2),
+                $this->registration('ADD_TRAIT', 1, 4),
+            ]);
+        });
+        $method = $this->mutate('Common/Classes.json', function (array &$data): void {
+            foreach ($data['op_arrays'] as &$opArray) {
+                if (($opArray['kind'] ?? null) === 'method') {
+                    $opArray['instructions'][] = $this->registration('ADD_TRAIT', count($opArray['instructions']), 6);
+                }
+            }
+        });
+        $function = $this->mutate('Common/Calculator.json', function (array &$data): void {
+            foreach ($data['op_arrays'] as &$opArray) {
+                if (($opArray['kind'] ?? null) === 'function') {
+                    $opArray['instructions'][] = $this->registration('BIND_TRAITS', count($opArray['instructions']), 3);
+                }
+            }
+        });
+        $outside = $this->mutate('Common/Classes.json', function (array &$data): void {
+            $data['classes'][0]['traits'][] = 'Label';
+            $this->prefixMain($data, [$this->registration('ADD_TRAIT', 0, 1)]);
+        });
+        $unused = $this->mutate('Common/Classes.json', function (array &$data): void {
+            $this->prefixMain($data, [$this->registration('BIND_TRAITS', 0, 4)]);
+        });
+        $partial = $this->mutate('Common/Classes.json', function (array &$data): void {
+            $data['classes'][0]['traits'][] = 'Label';
+            $this->prefixMain($data, [
+                $this->registration('ADD_TRAIT', 0, 4),
+                $this->registration('BIND_TRAITS', 1, 1),
+            ]);
+        });
+
+        $this->assertSame(<<<'PHP'
+<?php
+
+class Calculator
+{
+    use Label;
+
+    public function add(int $a, int $b): int
+    {
+        return $a + $b;
+    }
+}
+
+PHP, (new PhpFileGenerator())->generate($associated));
+        $this->assertGenerationFails($conditional, 'conditional trait use is not supported');
+        $this->assertGenerationFails($method, 'trait use in method Calculator::add is not supported');
+        $this->assertGenerationFails($function, 'trait use in function calculator is not supported');
+        $this->assertGenerationFails($outside, 'cannot be associated with a class declaration');
+        $this->assertGenerationFails($unused, 'cannot be associated with a class declaration');
+        $this->assertGenerationFails($partial, 'cannot be associated with a class declaration');
     }
 
     public function testNamespaceMetadataMustAgree(): void
@@ -924,6 +1276,47 @@ PHP],
         } finally {
             unlink($file);
         }
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     * @param list<array<string, mixed>> $prefix
+     */
+    private function prefixMain(array &$data, array $prefix): void
+    {
+        foreach ($data['op_arrays'] as &$opArray) {
+            if (($opArray['kind'] ?? null) !== 'main') {
+                continue;
+            }
+            $existing = $opArray['instructions'];
+            $this->assertIsArray($existing);
+            foreach ($existing as $offset => &$instruction) {
+                $this->assertIsArray($instruction);
+                $instruction['index'] = count($prefix) + $offset;
+            }
+            unset($instruction);
+            $opArray['instructions'] = [...$prefix, ...$existing];
+
+            return;
+        }
+        $this->fail('the fixture has no main op array');
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function registration(string $opcode, int $index, int $line): array
+    {
+        return [
+            'index' => $index,
+            'opcode' => $opcode,
+            'opcode_number' => 0,
+            'line' => $line,
+            'op1' => ['kind' => 'unused'],
+            'op2' => ['kind' => 'unused'],
+            'result' => ['kind' => 'unused'],
+            'extended_value' => 0,
+        ];
     }
 
     private function temporaryPhp(string $source): string
