@@ -33,4 +33,20 @@ final class Document
 
         return null;
     }
+
+    /**
+     * @param list<OpArray> $opArrays
+     */
+    public function withOpArrays(array $opArrays): self
+    {
+        return new self(
+            $this->irVersion,
+            $this->php,
+            $this->compilation,
+            $opArrays,
+            $this->classes,
+            $this->namespaces,
+            $this->extra,
+        );
+    }
 }

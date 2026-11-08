@@ -66,4 +66,40 @@ final class OpArray
     {
         return $this->literals[$index] ?? null;
     }
+
+    /**
+     * @param list<Instruction> $instructions
+     */
+    public function withInstructions(array $instructions): self
+    {
+        return new self(
+            $this->id,
+            $this->kind,
+            $this->name,
+            $this->namespace,
+            $this->filename,
+            $this->lineStart,
+            $this->lineEnd,
+            $this->scope,
+            $this->propertyHook,
+            $this->flags,
+            $this->numArgs,
+            $this->requiredNumArgs,
+            $this->returnType,
+            $this->arguments,
+            $this->variables,
+            $this->temporaryVariables,
+            $this->literals,
+            $this->staticVariables,
+            $this->tryCatch,
+            $this->liveRanges,
+            $this->breaks,
+            $this->labels,
+            $this->dynamicFunctions,
+            $this->attributes,
+            $this->docComment,
+            $instructions,
+            $this->extra,
+        );
+    }
 }
