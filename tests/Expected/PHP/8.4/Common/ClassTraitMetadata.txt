@@ -94,7 +94,7 @@ Opcodes:
 
 Rephper: Compiled op array
 File: tests/Fixtures/Common/ClassTraitMetadata.php
-Function: label
+Function: name
 Class: Beta
 Kind: method
 Property: -
@@ -125,37 +125,6 @@ Opcodes:
 
 Rephper: Compiled op array
 File: tests/Fixtures/Common/ClassTraitMetadata.php
-Function: name
-Class: Beta
-Kind: method
-Property: -
-Hook: -
-Opcodes: 3
-Arguments: 0
-Required arguments: 0
-Compiled variables: 0
-Temporary variables: 0
-Literals: 2
-Return type: string
-Lines: 38-41
-
-Compiled variables:
-(none)
-
-Literals:
-0 string("beta")
-1 null
-
-Argument details:
-(none)
-
-Opcodes:
-0 RETURN line=40 op1=CONST(string("beta")) op2=UNUSED result=UNUSED ext=-
-1 VERIFY_RETURN_TYPE line=41 op1=UNUSED op2=UNUSED result=UNUSED ext=-
-2 RETURN line=41 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
-
-Rephper: Compiled op array
-File: tests/Fixtures/Common/ClassTraitMetadata.php
 Function: id
 Class: Beta
 Kind: method
@@ -168,7 +137,7 @@ Compiled variables: 0
 Temporary variables: 0
 Literals: 2
 Return type: int
-Lines: 43-46
+Lines: 38-41
 
 Compiled variables:
 (none)
@@ -181,9 +150,40 @@ Argument details:
 (none)
 
 Opcodes:
-0 RETURN line=45 op1=CONST(int(2)) op2=UNUSED result=UNUSED ext=-
-1 VERIFY_RETURN_TYPE line=46 op1=UNUSED op2=UNUSED result=UNUSED ext=-
-2 RETURN line=46 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+0 RETURN line=40 op1=CONST(int(2)) op2=UNUSED result=UNUSED ext=-
+1 VERIFY_RETURN_TYPE line=41 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+2 RETURN line=41 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/ClassTraitMetadata.php
+Function: name
+Class: Gamma
+Kind: method
+Property: -
+Hook: -
+Opcodes: 3
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 2
+Return type: string
+Lines: 46-49
+
+Compiled variables:
+(none)
+
+Literals:
+0 string("gamma")
+1 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 RETURN line=48 op1=CONST(string("gamma")) op2=UNUSED result=UNUSED ext=-
+1 VERIFY_RETURN_TYPE line=49 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+2 RETURN line=49 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
 
 Rephper: Compiled op array
 File: tests/Fixtures/Common/ClassTraitMetadata.php
@@ -192,31 +192,29 @@ Class: Item
 Kind: method
 Property: -
 Hook: -
-Opcodes: 5
+Opcodes: 3
 Arguments: 0
 Required arguments: 0
 Compiled variables: 0
-Temporary variables: 1
+Temporary variables: 0
 Literals: 2
 Return type: string
-Lines: 66-69
+Lines: 69-72
 
 Compiled variables:
 (none)
 
 Literals:
-0 string("title")
+0 string("item")
 1 null
 
 Argument details:
 (none)
 
 Opcodes:
-0 FETCH_OBJ_R line=68 op1=THIS op2=CONST(string("title")) result=TMP(0) ext=-
-1 VERIFY_RETURN_TYPE line=68 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
-2 RETURN line=68 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
-3 VERIFY_RETURN_TYPE line=69 op1=UNUSED op2=UNUSED result=UNUSED ext=-
-4 RETURN line=69 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+0 RETURN line=71 op1=CONST(string("item")) op2=UNUSED result=UNUSED ext=-
+1 VERIFY_RETURN_TYPE line=72 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+2 RETURN line=72 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
 
 Rephper: Compiled op array
 File: tests/Fixtures/Common/ClassTraitMetadata.php
@@ -232,7 +230,7 @@ Compiled variables: 0
 Temporary variables: 0
 Literals: 4
 Return type: -
-Lines: 1-71
+Lines: 1-74
 
 Compiled variables:
 (none)
@@ -240,13 +238,13 @@ Compiled variables:
 Literals:
 0 string("base")
 1 string("item")
-2 string("\0itemtests/Fixtures/Common/ClassTraitMetadata.php:50$0")
+2 string("\0itemtests/Fixtures/Common/ClassTraitMetadata.php:53$0")
 3 int(1)
 
 Argument details:
 (none)
 
 Opcodes:
-0 DECLARE_CLASS line=50 op1=CONST(string("item")) op2=CONST(string("base")) result=UNUSED ext=-
-1 RETURN line=71 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+0 DECLARE_CLASS line=53 op1=CONST(string("item")) op2=CONST(string("base")) result=UNUSED ext=-
+1 RETURN line=74 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
 

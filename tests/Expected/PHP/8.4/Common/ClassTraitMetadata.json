@@ -339,7 +339,7 @@
     {
       "id": 3,
       "kind": "method",
-      "name": "label",
+      "name": "name",
       "filename": "tests/Fixtures/Common/ClassTraitMetadata.php",
       "line_start": 33,
       "line_end": 36,
@@ -435,7 +435,7 @@
     {
       "id": 4,
       "kind": "method",
-      "name": "name",
+      "name": "id",
       "filename": "tests/Fixtures/Common/ClassTraitMetadata.php",
       "line_start": 38,
       "line_end": 41,
@@ -451,7 +451,7 @@
       "num_args": 0,
       "required_num_args": 0,
       "return_type": {
-        "display": "string",
+        "display": "int",
         "nullable": false,
         "kind": "builtin"
       },
@@ -460,8 +460,8 @@
       "temporary_variables": 0,
       "literals": [
         {
-          "type": "string",
-          "value": "beta"
+          "type": "int",
+          "value": 2
         },
         {
           "type": "null"
@@ -531,12 +531,12 @@
     {
       "id": 5,
       "kind": "method",
-      "name": "id",
+      "name": "name",
       "filename": "tests/Fixtures/Common/ClassTraitMetadata.php",
-      "line_start": 43,
-      "line_end": 46,
+      "line_start": 46,
+      "line_end": 49,
       "scope": {
-        "name": "Beta",
+        "name": "Gamma",
         "kind": "trait"
       },
       "property_hook": null,
@@ -547,7 +547,7 @@
       "num_args": 0,
       "required_num_args": 0,
       "return_type": {
-        "display": "int",
+        "display": "string",
         "nullable": false,
         "kind": "builtin"
       },
@@ -556,8 +556,8 @@
       "temporary_variables": 0,
       "literals": [
         {
-          "type": "int",
-          "value": 2
+          "type": "string",
+          "value": "gamma"
         },
         {
           "type": "null"
@@ -576,7 +576,7 @@
           "index": 0,
           "opcode": "RETURN",
           "opcode_number": 62,
-          "line": 45,
+          "line": 48,
           "op1": {
             "kind": "const",
             "index": 0
@@ -593,7 +593,7 @@
           "index": 1,
           "opcode": "VERIFY_RETURN_TYPE",
           "opcode_number": 124,
-          "line": 46,
+          "line": 49,
           "op1": {
             "kind": "unused"
           },
@@ -609,7 +609,7 @@
           "index": 2,
           "opcode": "RETURN",
           "opcode_number": 62,
-          "line": 46,
+          "line": 49,
           "op1": {
             "kind": "const",
             "index": 1
@@ -629,8 +629,8 @@
       "kind": "method",
       "name": "name",
       "filename": "tests/Fixtures/Common/ClassTraitMetadata.php",
-      "line_start": 66,
-      "line_end": 69,
+      "line_start": 69,
+      "line_end": 72,
       "scope": {
         "name": "Item",
         "kind": "class"
@@ -638,8 +638,7 @@
       "property_hook": null,
       "flags": [
         "public",
-        "has_return_type",
-        "uses_this"
+        "has_return_type"
       ],
       "num_args": 0,
       "required_num_args": 0,
@@ -650,11 +649,11 @@
       },
       "arguments": [],
       "variables": [],
-      "temporary_variables": 1,
+      "temporary_variables": 0,
       "literals": [
         {
           "type": "string",
-          "value": "title"
+          "value": "item"
         },
         {
           "type": "null"
@@ -671,19 +670,18 @@
       "instructions": [
         {
           "index": 0,
-          "opcode": "FETCH_OBJ_R",
-          "opcode_number": 82,
-          "line": 68,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 71,
           "op1": {
-            "kind": "this"
-          },
-          "op2": {
             "kind": "const",
             "index": 0
           },
+          "op2": {
+            "kind": "unused"
+          },
           "result": {
-            "kind": "tmp",
-            "index": 0
+            "kind": "unused"
           },
           "extended_value": 0
         },
@@ -691,10 +689,9 @@
           "index": 1,
           "opcode": "VERIFY_RETURN_TYPE",
           "opcode_number": 124,
-          "line": 68,
+          "line": 72,
           "op1": {
-            "kind": "tmp",
-            "index": 0
+            "kind": "unused"
           },
           "op2": {
             "kind": "unused"
@@ -708,40 +705,7 @@
           "index": 2,
           "opcode": "RETURN",
           "opcode_number": 62,
-          "line": 68,
-          "op1": {
-            "kind": "tmp",
-            "index": 0
-          },
-          "op2": {
-            "kind": "unused"
-          },
-          "result": {
-            "kind": "unused"
-          },
-          "extended_value": 0
-        },
-        {
-          "index": 3,
-          "opcode": "VERIFY_RETURN_TYPE",
-          "opcode_number": 124,
-          "line": 69,
-          "op1": {
-            "kind": "unused"
-          },
-          "op2": {
-            "kind": "unused"
-          },
-          "result": {
-            "kind": "unused"
-          },
-          "extended_value": 0
-        },
-        {
-          "index": 4,
-          "opcode": "RETURN",
-          "opcode_number": 62,
-          "line": 69,
+          "line": 72,
           "op1": {
             "kind": "const",
             "index": 1
@@ -762,7 +726,7 @@
       "name": null,
       "filename": "tests/Fixtures/Common/ClassTraitMetadata.php",
       "line_start": 1,
-      "line_end": 71,
+      "line_end": 74,
       "scope": null,
       "property_hook": null,
       "flags": [],
@@ -783,7 +747,7 @@
         },
         {
           "type": "string",
-          "value": "\u0000itemtests/Fixtures/Common/ClassTraitMetadata.php:50$0"
+          "value": "\u0000itemtests/Fixtures/Common/ClassTraitMetadata.php:53$0"
         },
         {
           "type": "int",
@@ -803,7 +767,7 @@
           "index": 0,
           "opcode": "DECLARE_CLASS",
           "opcode_number": 144,
-          "line": 50,
+          "line": 53,
           "op1": {
             "kind": "const",
             "index": 1
@@ -821,7 +785,7 @@
           "index": 1,
           "opcode": "RETURN",
           "opcode_number": 62,
-          "line": 71,
+          "line": 74,
           "op1": {
             "kind": "const",
             "index": 3
@@ -973,7 +937,27 @@
     "trait_precedences": [],
     "filename": "tests/Fixtures/Common/ClassTraitMetadata.php",
     "line_start": 31,
-    "line_end": 47,
+    "line_end": 42,
+    "enum_backing": null,
+    "properties": [],
+    "constants": [],
+    "attributes": [],
+    "doc_comment": null
+  },
+  {
+    "name": "Gamma",
+    "kind": "trait",
+    "flags": [
+      "linked"
+    ],
+    "parent": null,
+    "interfaces": [],
+    "traits": [],
+    "trait_aliases": [],
+    "trait_precedences": [],
+    "filename": "tests/Fixtures/Common/ClassTraitMetadata.php",
+    "line_start": 44,
+    "line_end": 50,
     "enum_backing": null,
     "properties": [],
     "constants": [],
@@ -988,7 +972,8 @@
     "interfaces": [],
     "traits": [
       "Alpha",
-      "Beta"
+      "Beta",
+      "Gamma"
     ],
     "trait_aliases": [
       {
@@ -1012,13 +997,13 @@
         "method": "name",
         "instead_of": [
           "Beta",
-          "Alpha"
+          "Gamma"
         ]
       }
     ],
     "filename": "tests/Fixtures/Common/ClassTraitMetadata.php",
-    "line_start": 50,
-    "line_end": 70,
+    "line_start": 53,
+    "line_end": 73,
     "enum_backing": null,
     "properties": [
       {
@@ -1039,7 +1024,7 @@
         "attributes": [
           {
             "name": "Note",
-            "line": 59,
+            "line": 62,
             "offset": 0,
             "arguments": [
               {
@@ -1073,7 +1058,7 @@
         "attributes": [
           {
             "name": "Note",
-            "line": 63,
+            "line": 66,
             "offset": 0,
             "arguments": [
               {

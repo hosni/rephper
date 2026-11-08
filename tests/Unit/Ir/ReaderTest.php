@@ -297,7 +297,7 @@ final class ReaderTest extends TestCase
 
         $this->assertSame([], $item->flags);
         $this->assertSame('Base', $item->parent);
-        $this->assertSame(['Alpha', 'Beta'], $item->traits);
+        $this->assertSame(['Alpha', 'Beta', 'Gamma'], $item->traits);
         $this->assertSame('/** The composed item. */', $item->docComment);
         $this->assertNull($item->traitAliases[0]->trait);
         $this->assertSame('title', $item->traitAliases[0]->alias);
@@ -306,7 +306,7 @@ final class ReaderTest extends TestCase
         $this->assertSame('id', $item->traitAliases[1]->method);
         $this->assertNull($item->traitAliases[1]->alias);
         $this->assertSame(['private'], $item->traitAliases[1]->modifiers);
-        $this->assertSame(['Beta', 'Alpha'], $item->traitPrecedences[0]->insteadOf);
+        $this->assertSame(['Beta', 'Gamma'], $item->traitPrecedences[0]->insteadOf);
         $this->assertSame('Alpha', $item->traitPrecedences[0]->trait);
         $this->assertSame('name', $item->traitPrecedences[0]->method);
         $this->assertSame(

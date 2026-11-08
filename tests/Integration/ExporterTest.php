@@ -560,13 +560,13 @@ final class ExporterTest extends TestCase
                 $this->assertIsArray($base);
                 $this->assertSame([], $item['flags']);
                 $this->assertSame('Base', $item['parent']);
-                $this->assertSame(['Alpha', 'Beta'], $item['traits']);
+                $this->assertSame(['Alpha', 'Beta', 'Gamma'], $item['traits']);
                 $this->assertSame([
                     ['trait' => null, 'method' => 'label', 'alias' => 'title', 'modifiers' => []],
                     ['trait' => 'Beta', 'method' => 'id', 'alias' => null, 'modifiers' => ['private']],
                 ], $item['trait_aliases']);
                 $this->assertSame([
-                    ['trait' => 'Alpha', 'method' => 'name', 'instead_of' => ['Beta', 'Alpha']],
+                    ['trait' => 'Alpha', 'method' => 'name', 'instead_of' => ['Beta', 'Gamma']],
                 ], $item['trait_precedences']);
                 $this->assertSame('/** The composed item. */', $item['doc_comment']);
                 $this->assertSame(['title'], array_column($item['properties'], 'name'));

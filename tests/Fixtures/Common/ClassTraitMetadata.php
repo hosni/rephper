@@ -30,11 +30,6 @@ trait Alpha
 
 trait Beta
 {
-    public function label(): string
-    {
-        return 'beta';
-    }
-
     public function name(): string
     {
         return 'beta';
@@ -46,13 +41,21 @@ trait Beta
     }
 }
 
+trait Gamma
+{
+    public function name(): string
+    {
+        return 'gamma';
+    }
+}
+
 /** The composed item. */
 class Item extends Base
 {
-    use Alpha, Beta {
+    use Alpha, Beta, Gamma {
         label as title;
         Beta::id as private;
-        Alpha::name insteadof Beta, Alpha;
+        Alpha::name insteadof Beta, Gamma;
     }
 
     /** The item title. */
@@ -65,6 +68,6 @@ class Item extends Base
 
     public function name(): string
     {
-        return $this->title;
+        return 'item';
     }
 }
