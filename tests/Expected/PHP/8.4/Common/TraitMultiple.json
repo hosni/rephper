@@ -1,0 +1,508 @@
+{
+  "ir_version": 1,
+  "php": {
+    "version": "PHP_VERSION",
+    "version_id": 0,
+    "api": 20240924,
+    "zend_module_api": 20240924,
+    "zend_extension_api": 420240924,
+    "zts": false,
+    "debug": false
+  },
+  "compilation": {
+    "stage": "pre_pass_two",
+    "jumps": "absolute_opline"
+  },
+  "op_arrays": [
+    {
+      "id": 0,
+      "kind": "method",
+      "name": "one",
+      "filename": "tests/Fixtures/Common/TraitMultiple.php",
+      "line_start": 5,
+      "line_end": 8,
+      "scope": {
+        "name": "One",
+        "kind": "trait"
+      },
+      "property_hook": null,
+      "flags": [
+        "public",
+        "has_return_type"
+      ],
+      "num_args": 0,
+      "required_num_args": 0,
+      "return_type": {
+        "display": "string",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [],
+      "variables": [],
+      "temporary_variables": 0,
+      "literals": [
+        {
+          "type": "string",
+          "value": "one"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 7,
+          "op1": {
+            "kind": "const",
+            "index": 0
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 8,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 8,
+          "op1": {
+            "kind": "const",
+            "index": 1
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "kind": "method",
+      "name": "two",
+      "filename": "tests/Fixtures/Common/TraitMultiple.php",
+      "line_start": 13,
+      "line_end": 16,
+      "scope": {
+        "name": "Two",
+        "kind": "trait"
+      },
+      "property_hook": null,
+      "flags": [
+        "public",
+        "has_return_type"
+      ],
+      "num_args": 0,
+      "required_num_args": 0,
+      "return_type": {
+        "display": "string",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [],
+      "variables": [],
+      "temporary_variables": 0,
+      "literals": [
+        {
+          "type": "string",
+          "value": "two"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 15,
+          "op1": {
+            "kind": "const",
+            "index": 0
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 16,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 16,
+          "op1": {
+            "kind": "const",
+            "index": 1
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "kind": "method",
+      "name": "label",
+      "filename": "tests/Fixtures/Common/TraitMultiple.php",
+      "line_start": 30,
+      "line_end": 33,
+      "scope": {
+        "name": "Box",
+        "kind": "class"
+      },
+      "property_hook": null,
+      "flags": [
+        "public",
+        "has_return_type"
+      ],
+      "num_args": 0,
+      "required_num_args": 0,
+      "return_type": {
+        "display": "string",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [],
+      "variables": [],
+      "temporary_variables": 0,
+      "literals": [
+        {
+          "type": "string",
+          "value": "box"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 32,
+          "op1": {
+            "kind": "const",
+            "index": 0
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 33,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 33,
+          "op1": {
+            "kind": "const",
+            "index": 1
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "kind": "main",
+      "name": null,
+      "filename": "tests/Fixtures/Common/TraitMultiple.php",
+      "line_start": 1,
+      "line_end": 35,
+      "scope": null,
+      "property_hook": null,
+      "flags": [],
+      "num_args": 0,
+      "required_num_args": 0,
+      "return_type": null,
+      "arguments": [],
+      "variables": [],
+      "temporary_variables": 0,
+      "literals": [
+        {
+          "type": "string",
+          "value": "pair"
+        },
+        {
+          "type": "string",
+          "value": "\u0000pairtests/Fixtures/Common/TraitMultiple.php:19$0"
+        },
+        {
+          "type": "string",
+          "value": "box"
+        },
+        {
+          "type": "string",
+          "value": "\u0000boxtests/Fixtures/Common/TraitMultiple.php:24$1"
+        },
+        {
+          "type": "int",
+          "value": 1
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "DECLARE_CLASS",
+          "opcode_number": 144,
+          "line": 19,
+          "op1": {
+            "kind": "const",
+            "index": 0
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "DECLARE_CLASS",
+          "opcode_number": 144,
+          "line": 24,
+          "op1": {
+            "kind": "const",
+            "index": 2
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 35,
+          "op1": {
+            "kind": "const",
+            "index": 4
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    }
+  ],
+  "classes": [
+  {
+    "name": "One",
+    "kind": "trait",
+    "flags": [
+      "linked"
+    ],
+    "parent": null,
+    "interfaces": [],
+    "traits": [],
+    "trait_aliases": [],
+    "trait_precedences": [],
+    "filename": "tests/Fixtures/Common/TraitMultiple.php",
+    "line_start": 3,
+    "line_end": 9,
+    "enum_backing": null,
+    "properties": [],
+    "constants": [],
+    "attributes": [],
+    "doc_comment": null
+  },
+  {
+    "name": "Two",
+    "kind": "trait",
+    "flags": [
+      "linked"
+    ],
+    "parent": null,
+    "interfaces": [],
+    "traits": [],
+    "trait_aliases": [],
+    "trait_precedences": [],
+    "filename": "tests/Fixtures/Common/TraitMultiple.php",
+    "line_start": 11,
+    "line_end": 17,
+    "enum_backing": null,
+    "properties": [],
+    "constants": [],
+    "attributes": [],
+    "doc_comment": null
+  },
+  {
+    "name": "Pair",
+    "kind": "class",
+    "flags": [],
+    "parent": null,
+    "interfaces": [],
+    "traits": [
+      "One",
+      "Two"
+    ],
+    "trait_aliases": [],
+    "trait_precedences": [],
+    "filename": "tests/Fixtures/Common/TraitMultiple.php",
+    "line_start": 19,
+    "line_end": 22,
+    "enum_backing": null,
+    "properties": [],
+    "constants": [],
+    "attributes": [],
+    "doc_comment": null
+  },
+  {
+    "name": "Box",
+    "kind": "class",
+    "flags": [],
+    "parent": null,
+    "interfaces": [],
+    "traits": [
+      "One"
+    ],
+    "trait_aliases": [],
+    "trait_precedences": [],
+    "filename": "tests/Fixtures/Common/TraitMultiple.php",
+    "line_start": 24,
+    "line_end": 34,
+    "enum_backing": null,
+    "properties": [
+      {
+        "name": "name",
+        "flags": [
+          "public"
+        ],
+        "type": {
+          "display": "string",
+          "nullable": false,
+          "kind": "builtin"
+        },
+        "default": {
+          "type": "string",
+          "value": "box"
+        },
+        "hooks": [],
+        "attributes": [],
+        "doc_comment": null
+      }
+    ],
+    "constants": [],
+    "attributes": [],
+    "doc_comment": null
+  }
+]
+}

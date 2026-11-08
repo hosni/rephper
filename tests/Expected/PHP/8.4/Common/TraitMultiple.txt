@@ -1,0 +1,127 @@
+Rephper: Compiled op array
+File: tests/Fixtures/Common/TraitMultiple.php
+Function: one
+Class: One
+Kind: method
+Property: -
+Hook: -
+Opcodes: 3
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 2
+Return type: string
+Lines: 5-8
+
+Compiled variables:
+(none)
+
+Literals:
+0 string("one")
+1 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 RETURN line=7 op1=CONST(string("one")) op2=UNUSED result=UNUSED ext=-
+1 VERIFY_RETURN_TYPE line=8 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+2 RETURN line=8 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/TraitMultiple.php
+Function: two
+Class: Two
+Kind: method
+Property: -
+Hook: -
+Opcodes: 3
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 2
+Return type: string
+Lines: 13-16
+
+Compiled variables:
+(none)
+
+Literals:
+0 string("two")
+1 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 RETURN line=15 op1=CONST(string("two")) op2=UNUSED result=UNUSED ext=-
+1 VERIFY_RETURN_TYPE line=16 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+2 RETURN line=16 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/TraitMultiple.php
+Function: label
+Class: Box
+Kind: method
+Property: -
+Hook: -
+Opcodes: 3
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 2
+Return type: string
+Lines: 30-33
+
+Compiled variables:
+(none)
+
+Literals:
+0 string("box")
+1 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 RETURN line=32 op1=CONST(string("box")) op2=UNUSED result=UNUSED ext=-
+1 VERIFY_RETURN_TYPE line=33 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+2 RETURN line=33 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/Common/TraitMultiple.php
+Function: <main>
+Class: -
+Kind: main
+Property: -
+Hook: -
+Opcodes: 3
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 5
+Return type: -
+Lines: 1-35
+
+Compiled variables:
+(none)
+
+Literals:
+0 string("pair")
+1 string("\0pairtests/Fixtures/Common/TraitMultiple.php:19$0")
+2 string("box")
+3 string("\0boxtests/Fixtures/Common/TraitMultiple.php:24$1")
+4 int(1)
+
+Argument details:
+(none)
+
+Opcodes:
+0 DECLARE_CLASS line=19 op1=CONST(string("pair")) op2=UNUSED result=UNUSED ext=-
+1 DECLARE_CLASS line=24 op1=CONST(string("box")) op2=UNUSED result=UNUSED ext=-
+2 RETURN line=35 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+
