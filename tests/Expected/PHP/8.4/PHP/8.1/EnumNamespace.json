@@ -1,0 +1,230 @@
+{
+  "ir_version": 1,
+  "php": {
+    "version": "PHP_VERSION",
+    "version_id": 0,
+    "api": 20240924,
+    "zend_module_api": 20240924,
+    "zend_extension_api": 420240924,
+    "zts": false,
+    "debug": false
+  },
+  "compilation": {
+    "stage": "pre_pass_two",
+    "jumps": "absolute_opline"
+  },
+  "op_arrays": [
+    {
+      "id": 0,
+      "kind": "main",
+      "name": null,
+      "namespace": "App\\Domain",
+      "filename": "tests/Fixtures/PHP/8.1/EnumNamespace.php",
+      "line_start": 1,
+      "line_end": 11,
+      "scope": null,
+      "property_hook": null,
+      "flags": [],
+      "num_args": 0,
+      "required_num_args": 0,
+      "return_type": null,
+      "arguments": [],
+      "variables": [],
+      "temporary_variables": 0,
+      "literals": [
+        {
+          "type": "string",
+          "value": "app\\domain\\status"
+        },
+        {
+          "type": "string",
+          "value": "\u0000app\\domain\\statustests/Fixtures/PHP/8.1/EnumNamespace.php:5$0"
+        },
+        {
+          "type": "int",
+          "value": 1
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "DECLARE_CLASS",
+          "opcode_number": 144,
+          "line": 5,
+          "op1": {
+            "kind": "const",
+            "index": 0
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 11,
+          "op1": {
+            "kind": "const",
+            "index": 2
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    }
+  ],
+  "namespaces": [
+    {
+      "name": "App\\Domain",
+      "line_start": 3,
+      "line_end": 10,
+      "functions": [],
+      "statements": []
+    }
+  ],
+  "classes": [
+  {
+    "name": "App\\Domain\\Status",
+    "kind": "enum",
+    "flags": [
+      "final"
+    ],
+    "parent": null,
+    "interfaces": [
+      "UnitEnum"
+    ],
+    "traits": [],
+    "trait_aliases": [],
+    "trait_precedences": [],
+    "filename": "tests/Fixtures/PHP/8.1/EnumNamespace.php",
+    "line_start": 5,
+    "line_end": 10,
+    "enum_backing": null,
+    "properties": [
+      {
+        "name": "name",
+        "flags": [
+          "public",
+          "readonly",
+          "protected_set"
+        ],
+        "type": {
+          "display": "string",
+          "nullable": false,
+          "kind": "builtin"
+        },
+        "default": null,
+        "hooks": [],
+        "attributes": [],
+        "doc_comment": null
+      }
+    ],
+    "constants": [
+      {
+        "name": "Open",
+        "flags": [
+          "public",
+          "enum_case"
+        ],
+        "type": null,
+        "value": {
+          "type": "constant_ast",
+          "ast": {
+            "kind": "CONST_ENUM_INIT",
+            "kind_number": 777,
+            "line": 7,
+            "attr": 0,
+            "children": [
+              {
+                "kind": "ZVAL",
+                "kind_number": 64,
+                "line": 7,
+                "attr": 0,
+                "value": {
+                  "type": "string",
+                  "value": "App\\Domain\\Status"
+                }
+              },
+              {
+                "kind": "ZVAL",
+                "kind_number": 64,
+                "line": 7,
+                "attr": 0,
+                "value": {
+                  "type": "string",
+                  "value": "Open"
+                }
+              },
+              null
+            ]
+          }
+        },
+        "attributes": [],
+        "doc_comment": null
+      },
+      {
+        "name": "Closed",
+        "flags": [
+          "public",
+          "enum_case"
+        ],
+        "type": null,
+        "value": {
+          "type": "constant_ast",
+          "ast": {
+            "kind": "CONST_ENUM_INIT",
+            "kind_number": 777,
+            "line": 9,
+            "attr": 0,
+            "children": [
+              {
+                "kind": "ZVAL",
+                "kind_number": 64,
+                "line": 9,
+                "attr": 0,
+                "value": {
+                  "type": "string",
+                  "value": "App\\Domain\\Status"
+                }
+              },
+              {
+                "kind": "ZVAL",
+                "kind_number": 64,
+                "line": 9,
+                "attr": 0,
+                "value": {
+                  "type": "string",
+                  "value": "Closed"
+                }
+              },
+              null
+            ]
+          }
+        },
+        "attributes": [],
+        "doc_comment": null
+      }
+    ],
+    "attributes": [],
+    "doc_comment": null
+  }
+]
+}

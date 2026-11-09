@@ -1,0 +1,34 @@
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.1/EnumFetch.php
+Function: <main>
+Class: -
+Kind: main
+Property: -
+Hook: -
+Opcodes: 3
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 5
+Return type: -
+Lines: 1-12
+
+Compiled variables:
+(none)
+
+Literals:
+0 string("source")
+1 string("\0sourcetests/Fixtures/PHP/8.1/EnumFetch.php:3$0")
+2 string("copy")
+3 string("\0copytests/Fixtures/PHP/8.1/EnumFetch.php:8$1")
+4 int(1)
+
+Argument details:
+(none)
+
+Opcodes:
+0 DECLARE_CLASS line=3 op1=CONST(string("source")) op2=UNUSED result=UNUSED ext=-
+1 DECLARE_CLASS line=8 op1=CONST(string("copy")) op2=UNUSED result=UNUSED ext=-
+2 RETURN line=12 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+

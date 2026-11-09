@@ -1,0 +1,486 @@
+{
+  "ir_version": 1,
+  "php": {
+    "version": "PHP_VERSION",
+    "version_id": 0,
+    "api": 20240924,
+    "zend_module_api": 20240924,
+    "zend_extension_api": 420240924,
+    "zts": false,
+    "debug": false
+  },
+  "compilation": {
+    "stage": "pre_pass_two",
+    "jumps": "absolute_opline"
+  },
+  "op_arrays": [
+    {
+      "id": 0,
+      "kind": "method",
+      "name": "__construct",
+      "filename": "tests/Fixtures/PHP/8.1/EnumString.php",
+      "line_start": 6,
+      "line_end": 8,
+      "scope": {
+        "name": "Mark",
+        "kind": "class"
+      },
+      "property_hook": null,
+      "flags": [
+        "public",
+        "has_type_hints",
+        "constructor"
+      ],
+      "num_args": 1,
+      "required_num_args": 0,
+      "return_type": null,
+      "arguments": [
+        {
+          "name": "note",
+          "type": {
+            "display": "string",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": true,
+          "default_literal": 0
+        }
+      ],
+      "variables": [
+        "note"
+      ],
+      "temporary_variables": 0,
+      "literals": [
+        {
+          "type": "string",
+          "value": "n"
+        },
+        {
+          "type": "string",
+          "value": "note"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV_INIT",
+          "opcode_number": 64,
+          "line": 6,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "note"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "ASSIGN_OBJ",
+          "opcode_number": 24,
+          "line": 6,
+          "op1": {
+            "kind": "this"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 1
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "OP_DATA",
+          "opcode_number": 137,
+          "line": 6,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "note"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 8,
+          "op1": {
+            "kind": "const",
+            "index": 2
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "kind": "main",
+      "name": null,
+      "filename": "tests/Fixtures/PHP/8.1/EnumString.php",
+      "line_start": 1,
+      "line_end": 22,
+      "scope": null,
+      "property_hook": null,
+      "flags": [],
+      "num_args": 0,
+      "required_num_args": 0,
+      "return_type": null,
+      "arguments": [],
+      "variables": [],
+      "temporary_variables": 0,
+      "literals": [
+        {
+          "type": "string",
+          "value": "status"
+        },
+        {
+          "type": "string",
+          "value": "\u0000statustests/Fixtures/PHP/8.1/EnumString.php:13$0"
+        },
+        {
+          "type": "int",
+          "value": 1
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "DECLARE_CLASS",
+          "opcode_number": 144,
+          "line": 13,
+          "op1": {
+            "kind": "const",
+            "index": 0
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 22,
+          "op1": {
+            "kind": "const",
+            "index": 2
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    }
+  ],
+  "classes": [
+  {
+    "name": "Mark",
+    "kind": "class",
+    "flags": [
+      "linked"
+    ],
+    "parent": null,
+    "interfaces": [],
+    "traits": [],
+    "trait_aliases": [],
+    "trait_precedences": [],
+    "filename": "tests/Fixtures/PHP/8.1/EnumString.php",
+    "line_start": 4,
+    "line_end": 9,
+    "enum_backing": null,
+    "properties": [
+      {
+        "name": "note",
+        "flags": [
+          "public",
+          "promoted"
+        ],
+        "type": {
+          "display": "string",
+          "nullable": false,
+          "kind": "builtin"
+        },
+        "default": null,
+        "hooks": [],
+        "attributes": [],
+        "doc_comment": null
+      }
+    ],
+    "constants": [],
+    "attributes": [
+      {
+        "name": "Attribute",
+        "line": 3,
+        "offset": 0,
+        "arguments": []
+      }
+    ],
+    "doc_comment": null
+  },
+  {
+    "name": "Status",
+    "kind": "enum",
+    "flags": [
+      "final"
+    ],
+    "parent": null,
+    "interfaces": [
+      "UnitEnum",
+      "BackedEnum"
+    ],
+    "traits": [],
+    "trait_aliases": [],
+    "trait_precedences": [],
+    "filename": "tests/Fixtures/PHP/8.1/EnumString.php",
+    "line_start": 13,
+    "line_end": 21,
+    "enum_backing": "string",
+    "properties": [
+      {
+        "name": "name",
+        "flags": [
+          "public",
+          "readonly",
+          "protected_set"
+        ],
+        "type": {
+          "display": "string",
+          "nullable": false,
+          "kind": "builtin"
+        },
+        "default": null,
+        "hooks": [],
+        "attributes": [],
+        "doc_comment": null
+      },
+      {
+        "name": "value",
+        "flags": [
+          "public",
+          "readonly",
+          "protected_set"
+        ],
+        "type": {
+          "display": "string",
+          "nullable": false,
+          "kind": "builtin"
+        },
+        "default": null,
+        "hooks": [],
+        "attributes": [],
+        "doc_comment": null
+      }
+    ],
+    "constants": [
+      {
+        "name": "Open",
+        "flags": [
+          "public",
+          "enum_case",
+          "deprecated"
+        ],
+        "type": null,
+        "value": {
+          "type": "constant_ast",
+          "ast": {
+            "kind": "CONST_ENUM_INIT",
+            "kind_number": 777,
+            "line": 18,
+            "attr": 0,
+            "children": [
+              {
+                "kind": "ZVAL",
+                "kind_number": 64,
+                "line": 18,
+                "attr": 0,
+                "value": {
+                  "type": "string",
+                  "value": "Status"
+                }
+              },
+              {
+                "kind": "ZVAL",
+                "kind_number": 64,
+                "line": 18,
+                "attr": 0,
+                "value": {
+                  "type": "string",
+                  "value": "Open"
+                }
+              },
+              {
+                "kind": "ZVAL",
+                "kind_number": 64,
+                "line": 18,
+                "attr": 0,
+                "value": {
+                  "type": "string",
+                  "value": "open"
+                }
+              }
+            ]
+          }
+        },
+        "attributes": [
+          {
+            "name": "Deprecated",
+            "line": 16,
+            "offset": 0,
+            "arguments": [
+              {
+                "name": "message",
+                "value": {
+                  "type": "string",
+                  "value": "old"
+                }
+              },
+              {
+                "name": "since",
+                "value": {
+                  "type": "string",
+                  "value": "1.0"
+                }
+              }
+            ]
+          },
+          {
+            "name": "Mark",
+            "line": 17,
+            "offset": 0,
+            "arguments": [
+              {
+                "name": null,
+                "value": {
+                  "type": "string",
+                  "value": "open"
+                }
+              }
+            ]
+          }
+        ],
+        "doc_comment": "/** Open case. */"
+      },
+      {
+        "name": "Closed",
+        "flags": [
+          "public",
+          "enum_case"
+        ],
+        "type": null,
+        "value": {
+          "type": "constant_ast",
+          "ast": {
+            "kind": "CONST_ENUM_INIT",
+            "kind_number": 777,
+            "line": 20,
+            "attr": 0,
+            "children": [
+              {
+                "kind": "ZVAL",
+                "kind_number": 64,
+                "line": 20,
+                "attr": 0,
+                "value": {
+                  "type": "string",
+                  "value": "Status"
+                }
+              },
+              {
+                "kind": "ZVAL",
+                "kind_number": 64,
+                "line": 20,
+                "attr": 0,
+                "value": {
+                  "type": "string",
+                  "value": "Closed"
+                }
+              },
+              {
+                "kind": "ZVAL",
+                "kind_number": 64,
+                "line": 20,
+                "attr": 0,
+                "value": {
+                  "type": "string",
+                  "value": "closed"
+                }
+              }
+            ]
+          }
+        },
+        "attributes": [],
+        "doc_comment": null
+      }
+    ],
+    "attributes": [
+      {
+        "name": "Mark",
+        "line": 12,
+        "offset": 0,
+        "arguments": [
+          {
+            "name": null,
+            "value": {
+              "type": "string",
+              "value": "status"
+            }
+          }
+        ]
+      }
+    ],
+    "doc_comment": "/** Status values. */"
+  }
+]
+}

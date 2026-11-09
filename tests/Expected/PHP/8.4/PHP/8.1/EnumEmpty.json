@@ -1,0 +1,135 @@
+{
+  "ir_version": 1,
+  "php": {
+    "version": "PHP_VERSION",
+    "version_id": 0,
+    "api": 20240924,
+    "zend_module_api": 20240924,
+    "zend_extension_api": 420240924,
+    "zts": false,
+    "debug": false
+  },
+  "compilation": {
+    "stage": "pre_pass_two",
+    "jumps": "absolute_opline"
+  },
+  "op_arrays": [
+    {
+      "id": 0,
+      "kind": "main",
+      "name": null,
+      "filename": "tests/Fixtures/PHP/8.1/EnumEmpty.php",
+      "line_start": 1,
+      "line_end": 6,
+      "scope": null,
+      "property_hook": null,
+      "flags": [],
+      "num_args": 0,
+      "required_num_args": 0,
+      "return_type": null,
+      "arguments": [],
+      "variables": [],
+      "temporary_variables": 0,
+      "literals": [
+        {
+          "type": "string",
+          "value": "emptysuit"
+        },
+        {
+          "type": "string",
+          "value": "\u0000emptysuittests/Fixtures/PHP/8.1/EnumEmpty.php:3$0"
+        },
+        {
+          "type": "int",
+          "value": 1
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "DECLARE_CLASS",
+          "opcode_number": 144,
+          "line": 3,
+          "op1": {
+            "kind": "const",
+            "index": 0
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 6,
+          "op1": {
+            "kind": "const",
+            "index": 2
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    }
+  ],
+  "classes": [
+  {
+    "name": "EmptySuit",
+    "kind": "enum",
+    "flags": [
+      "final"
+    ],
+    "parent": null,
+    "interfaces": [
+      "UnitEnum"
+    ],
+    "traits": [],
+    "trait_aliases": [],
+    "trait_precedences": [],
+    "filename": "tests/Fixtures/PHP/8.1/EnumEmpty.php",
+    "line_start": 3,
+    "line_end": 5,
+    "enum_backing": null,
+    "properties": [
+      {
+        "name": "name",
+        "flags": [
+          "public",
+          "readonly",
+          "protected_set"
+        ],
+        "type": {
+          "display": "string",
+          "nullable": false,
+          "kind": "builtin"
+        },
+        "default": null,
+        "hooks": [],
+        "attributes": [],
+        "doc_comment": null
+      }
+    ],
+    "constants": [],
+    "attributes": [],
+    "doc_comment": null
+  }
+]
+}

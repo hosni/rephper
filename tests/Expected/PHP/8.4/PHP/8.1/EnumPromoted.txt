@@ -1,0 +1,63 @@
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.1/EnumPromoted.php
+Function: __construct
+Class: Token
+Kind: method
+Property: -
+Hook: -
+Opcodes: 4
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 0
+Literals: 2
+Return type: -
+Lines: 7-9
+
+Compiled variables:
+0 $value
+
+Literals:
+0 string("value")
+1 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=7 op1=UNUSED(1) op2=UNUSED(268435472) result=CV(0:$value) ext=-
+1 ASSIGN_OBJ line=7 op1=THIS op2=CONST(string("value")) result=UNUSED ext=-
+2 OP_DATA line=7 op1=CV(0:$value) op2=UNUSED result=UNUSED ext=-
+3 RETURN line=9 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.1/EnumPromoted.php
+Function: <main>
+Class: -
+Kind: main
+Property: -
+Hook: -
+Opcodes: 2
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 3
+Return type: -
+Lines: 1-11
+
+Compiled variables:
+(none)
+
+Literals:
+0 string("token")
+1 string("\0tokentests/Fixtures/PHP/8.1/EnumPromoted.php:3$0")
+2 int(1)
+
+Argument details:
+(none)
+
+Opcodes:
+0 DECLARE_CLASS line=3 op1=CONST(string("token")) op2=UNUSED result=UNUSED ext=-
+1 RETURN line=11 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+

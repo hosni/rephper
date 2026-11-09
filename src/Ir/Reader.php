@@ -664,11 +664,13 @@ final class Reader
             }
             $traitPrecedences[] = $this->traitPrecedence($precedence, $path . '.trait_precedences[' . $index . ']');
         }
+        $flags = $this->strings($data, 'flags', $path . '.flags');
+        $this->validateEnum($kind, $name, $flags, $parent, $backing, $constants, $path);
 
         return new ClassDeclaration(
             $name,
             $kind,
-            $this->strings($data, 'flags', $path . '.flags'),
+            $flags,
             $parent,
             $this->strings($data, 'interfaces', $path . '.interfaces'),
             $this->strings($data, 'traits', $path . '.traits'),
@@ -688,6 +690,121 @@ final class Reader
                 'properties', 'constants', 'attributes', 'doc_comment',
             ]),
         );
+    }
+
+    /**
+     * Enum rows from this exporter have a closed shape. Older class, interface,
+     * and trait documents stay valid: their backing type is null and their
+     * constants are not cases.
+     *
+     * @param list<string> $flags
+     * @param list<ClassConstant> $constants
+     */
+    private function validateEnum(
+        string $kind,
+        string $name,
+        array $flags,
+        ?string $parent,
+        ?string $backing,
+        array $constants,
+        string $path,
+    ): void {
+        if ($kind !== 'enum') {
+            if ($backing !== null) {
+                throw new IrException($path . '.enum_backing must be null');
+            }
+            foreach ($constants as $index => $constant) {
+                if (in_array('enum_case', $constant->flags, true)) {
+                    throw new IrException($path . '.constants[' . $index . '] is an enum case');
+                }
+            }
+
+            return;
+        }
+        if ($backing !== null && $backing !== 'int' && $backing !== 'string') {
+            throw new IrException($path . '.enum_backing must be null, int, or string');
+        }
+        if ($parent !== null) {
+            throw new IrException($path . '.parent must be null');
+        }
+        if (!in_array('final', $flags, true)) {
+            throw new IrException($path . '.flags must include final');
+        }
+        foreach (['linked', 'abstract', 'implicit_abstract', 'readonly', 'anonymous', 'allow_dynamic_properties'] as $flag) {
+            if (in_array($flag, $flags, true)) {
+                throw new IrException($path . '.flags must not include ' . $flag);
+            }
+        }
+        foreach ($constants as $index => $constant) {
+            $case = in_array('enum_case', $constant->flags, true);
+            $init = $this->enumInit($constant);
+            $constantPath = $path . '.constants[' . $index . ']';
+            if (!$case) {
+                if ($init !== null) {
+                    throw new IrException($constantPath . ' is an ordinary constant and must not be a CONST_ENUM_INIT');
+                }
+                continue;
+            }
+            if ($init === null) {
+                throw new IrException($constantPath . '.value must be a CONST_ENUM_INIT constant expression');
+            }
+            $this->validateEnumInit($init, $name, $constant->name, $backing, $constantPath . '.value.ast');
+        }
+    }
+
+    /**
+     * @return array<mixed>|null
+     */
+    private function enumInit(ClassConstant $constant): ?array
+    {
+        $ast = $constant->value->ast;
+        if ($constant->value->type !== 'constant_ast' || !is_array($ast) || array_is_list($ast)) {
+            return null;
+        }
+        if (($ast['kind'] ?? null) !== 'CONST_ENUM_INIT') {
+            return null;
+        }
+
+        return $ast;
+    }
+
+    /**
+     * @param array<mixed> $ast
+     */
+    private function validateEnumInit(array $ast, string $enum, string $case, ?string $backing, string $path): void
+    {
+        $children = $ast['children'] ?? null;
+        if (!is_array($children) || !array_is_list($children) || count($children) !== 3) {
+            throw new IrException($path . '.children must contain three nodes');
+        }
+        $this->assertEnumZval($children[0], $enum, $path . '.children[0]', 'must name the enum');
+        $this->assertEnumZval($children[1], $case, $path . '.children[1]', 'must name the case');
+        if ($backing === null) {
+            if ($children[2] !== null) {
+                throw new IrException($path . '.children[2] must be null');
+            }
+
+            return;
+        }
+        if (!is_array($children[2]) || array_is_list($children[2]) || !is_string($children[2]['kind'] ?? null) || $children[2]['kind'] === '') {
+            throw new IrException($path . '.children[2] must be an AST node');
+        }
+    }
+
+    private function assertEnumZval(mixed $node, string $expected, string $path, string $reason): void
+    {
+        $value = is_array($node) && !array_is_list($node) ? ($node['value'] ?? null) : null;
+        if (
+            !is_array($node)
+            || array_is_list($node)
+            || ($node['kind'] ?? null) !== 'ZVAL'
+            || !is_array($value)
+            || array_is_list($value)
+            || ($value['type'] ?? null) !== 'string'
+            || ($value['value'] ?? null) !== $expected
+        ) {
+            throw new IrException($path . ' ' . $reason);
+        }
     }
 
     /**

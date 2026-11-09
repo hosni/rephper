@@ -389,6 +389,48 @@ final class ReaderTest extends TestCase
             'enum backing is empty' => ['PHP/8.1/Enums.json', 'classes[1].enum_backing must not be empty', static function (array &$data): void {
                 $data['classes'][1]['enum_backing'] = '';
             }],
+            'enum backing is unknown' => ['PHP/8.1/Enums.json', 'classes[1].enum_backing must be null, int, or string', static function (array &$data): void {
+                $data['classes'][1]['enum_backing'] = 'unknown';
+            }],
+            'class has a backing type' => ['Common/Classes.json', 'classes[0].enum_backing must be null', static function (array &$data): void {
+                $data['classes'][0]['enum_backing'] = 'int';
+            }],
+            'class constant is an enum case' => ['Common/ClassConstants.json', 'classes[0].constants[0] is an enum case', static function (array &$data): void {
+                $data['classes'][0]['constants'][0]['flags'][] = 'enum_case';
+            }],
+            'enum case has no init node' => ['PHP/8.1/Enums.json', 'classes[1].constants[0].value must be a CONST_ENUM_INIT constant expression', static function (array &$data): void {
+                $data['classes'][1]['constants'][0]['value'] = ['type' => 'string', 'value' => 'open'];
+            }],
+            'ordinary enum constant is an init node' => ['PHP/8.1/Enums.json', 'classes[1].constants[0] is an ordinary constant and must not be a CONST_ENUM_INIT', static function (array &$data): void {
+                $data['classes'][1]['constants'][0]['flags'] = ['public'];
+            }],
+            'enum case has four children' => ['PHP/8.1/Enums.json', 'classes[1].constants[0].value.ast.children must contain three nodes', static function (array &$data): void {
+                $data['classes'][1]['constants'][0]['value']['ast']['children'][] = null;
+            }],
+            'unit case has a value' => ['PHP/8.1/Enums.json', 'classes[1].constants[0].value.ast.children[2] must be null', static function (array &$data): void {
+                $data['classes'][1]['enum_backing'] = null;
+            }],
+            'backed case value is null' => ['PHP/8.1/Enums.json', 'classes[1].constants[0].value.ast.children[2] must be an AST node', static function (array &$data): void {
+                $data['classes'][1]['constants'][0]['value']['ast']['children'][2] = null;
+            }],
+            'enum has a parent' => ['PHP/8.1/Enums.json', 'classes[1].parent must be null', static function (array &$data): void {
+                $data['classes'][1]['parent'] = 'Base';
+            }],
+            'enum is not final' => ['PHP/8.1/Enums.json', 'classes[1].flags must include final', static function (array &$data): void {
+                $data['classes'][1]['flags'] = [];
+            }],
+            'enum is abstract' => ['PHP/8.1/Enums.json', 'classes[1].flags must not include abstract', static function (array &$data): void {
+                $data['classes'][1]['flags'][] = 'abstract';
+            }],
+            'enum is linked' => ['PHP/8.1/Enums.json', 'classes[1].flags must not include linked', static function (array &$data): void {
+                $data['classes'][1]['flags'][] = 'linked';
+            }],
+            'enum case names another enum' => ['PHP/8.1/Enums.json', 'classes[1].constants[0].value.ast.children[0] must name the enum', static function (array &$data): void {
+                $data['classes'][1]['constants'][0]['value']['ast']['children'][0]['value']['value'] = 'Other';
+            }],
+            'enum case names another case' => ['PHP/8.1/Enums.json', 'classes[1].constants[0].value.ast.children[1] must name the case', static function (array &$data): void {
+                $data['classes'][1]['constants'][0]['value']['ast']['children'][1]['value']['value'] = 'Shut';
+            }],
             'trait aliases is null' => ['Common/Classes.json', 'classes[0].trait_aliases must be an array', static function (array &$data): void {
                 $data['classes'][0]['trait_aliases'] = null;
             }],
@@ -498,6 +540,20 @@ final class ReaderTest extends TestCase
         }
 
         $this->fail('Missing class ' . $name);
+    }
+
+    public function testExistingDocumentsStillLoad(): void
+    {
+        $root = dirname(__DIR__, 3) . '/tests/Expected/PHP/8.4';
+        $files = glob($root . '/*/*.json') ?: [];
+        $nested = glob($root . '/*/*/*.json') ?: [];
+        $files = [...$files, ...$nested];
+        sort($files, SORT_STRING);
+        $this->assertNotEmpty($files);
+        foreach ($files as $file) {
+            $document = $this->reader->readFile($file);
+            $this->assertSame(1, $document->irVersion, $file);
+        }
     }
 
     public function testUnsupportedIrVersionIsDistinct(): void

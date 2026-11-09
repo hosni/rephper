@@ -1,0 +1,400 @@
+{
+  "ir_version": 1,
+  "php": {
+    "version": "PHP_VERSION",
+    "version_id": 0,
+    "api": 20240924,
+    "zend_module_api": 20240924,
+    "zend_extension_api": 420240924,
+    "zts": false,
+    "debug": false
+  },
+  "compilation": {
+    "stage": "pre_pass_two",
+    "jumps": "absolute_opline"
+  },
+  "op_arrays": [
+    {
+      "id": 0,
+      "kind": "method",
+      "name": "color",
+      "filename": "tests/Fixtures/PHP/8.1/EnumInterfaces.php",
+      "line_start": 5,
+      "line_end": 5,
+      "scope": {
+        "name": "Colorful",
+        "kind": "interface"
+      },
+      "property_hook": null,
+      "flags": [
+        "public",
+        "abstract",
+        "has_return_type"
+      ],
+      "num_args": 0,
+      "required_num_args": 0,
+      "return_type": {
+        "display": "string",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [],
+      "variables": [],
+      "temporary_variables": 0,
+      "literals": [
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 5,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 5,
+          "op1": {
+            "kind": "const",
+            "index": 0
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "kind": "method",
+      "name": "color",
+      "filename": "tests/Fixtures/PHP/8.1/EnumInterfaces.php",
+      "line_start": 12,
+      "line_end": 15,
+      "scope": {
+        "name": "Paint",
+        "kind": "enum"
+      },
+      "property_hook": null,
+      "flags": [
+        "public",
+        "has_return_type"
+      ],
+      "num_args": 0,
+      "required_num_args": 0,
+      "return_type": {
+        "display": "string",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [],
+      "variables": [],
+      "temporary_variables": 0,
+      "literals": [
+        {
+          "type": "string",
+          "value": "red"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 14,
+          "op1": {
+            "kind": "const",
+            "index": 0
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 15,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 15,
+          "op1": {
+            "kind": "const",
+            "index": 1
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "kind": "main",
+      "name": null,
+      "filename": "tests/Fixtures/PHP/8.1/EnumInterfaces.php",
+      "line_start": 1,
+      "line_end": 17,
+      "scope": null,
+      "property_hook": null,
+      "flags": [],
+      "num_args": 0,
+      "required_num_args": 0,
+      "return_type": null,
+      "arguments": [],
+      "variables": [],
+      "temporary_variables": 0,
+      "literals": [
+        {
+          "type": "string",
+          "value": "paint"
+        },
+        {
+          "type": "string",
+          "value": "\u0000painttests/Fixtures/PHP/8.1/EnumInterfaces.php:8$0"
+        },
+        {
+          "type": "int",
+          "value": 1
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "DECLARE_CLASS",
+          "opcode_number": 144,
+          "line": 8,
+          "op1": {
+            "kind": "const",
+            "index": 0
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 17,
+          "op1": {
+            "kind": "const",
+            "index": 2
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    }
+  ],
+  "classes": [
+  {
+    "name": "Colorful",
+    "kind": "interface",
+    "flags": [
+      "implicit_abstract",
+      "linked"
+    ],
+    "parent": null,
+    "interfaces": [],
+    "traits": [],
+    "trait_aliases": [],
+    "trait_precedences": [],
+    "filename": "tests/Fixtures/PHP/8.1/EnumInterfaces.php",
+    "line_start": 3,
+    "line_end": 6,
+    "enum_backing": null,
+    "properties": [],
+    "constants": [],
+    "attributes": [],
+    "doc_comment": null
+  },
+  {
+    "name": "Paint",
+    "kind": "enum",
+    "flags": [
+      "final"
+    ],
+    "parent": null,
+    "interfaces": [
+      "Colorful",
+      "UnitEnum",
+      "UnitEnum",
+      "BackedEnum"
+    ],
+    "traits": [],
+    "trait_aliases": [],
+    "trait_precedences": [],
+    "filename": "tests/Fixtures/PHP/8.1/EnumInterfaces.php",
+    "line_start": 8,
+    "line_end": 16,
+    "enum_backing": "string",
+    "properties": [
+      {
+        "name": "name",
+        "flags": [
+          "public",
+          "readonly",
+          "protected_set"
+        ],
+        "type": {
+          "display": "string",
+          "nullable": false,
+          "kind": "builtin"
+        },
+        "default": null,
+        "hooks": [],
+        "attributes": [],
+        "doc_comment": null
+      },
+      {
+        "name": "value",
+        "flags": [
+          "public",
+          "readonly",
+          "protected_set"
+        ],
+        "type": {
+          "display": "string",
+          "nullable": false,
+          "kind": "builtin"
+        },
+        "default": null,
+        "hooks": [],
+        "attributes": [],
+        "doc_comment": null
+      }
+    ],
+    "constants": [
+      {
+        "name": "Red",
+        "flags": [
+          "public",
+          "enum_case"
+        ],
+        "type": null,
+        "value": {
+          "type": "constant_ast",
+          "ast": {
+            "kind": "CONST_ENUM_INIT",
+            "kind_number": 777,
+            "line": 10,
+            "attr": 0,
+            "children": [
+              {
+                "kind": "ZVAL",
+                "kind_number": 64,
+                "line": 10,
+                "attr": 0,
+                "value": {
+                  "type": "string",
+                  "value": "Paint"
+                }
+              },
+              {
+                "kind": "ZVAL",
+                "kind_number": 64,
+                "line": 10,
+                "attr": 0,
+                "value": {
+                  "type": "string",
+                  "value": "Red"
+                }
+              },
+              {
+                "kind": "ZVAL",
+                "kind_number": 64,
+                "line": 10,
+                "attr": 0,
+                "value": {
+                  "type": "string",
+                  "value": "red"
+                }
+              }
+            ]
+          }
+        },
+        "attributes": [],
+        "doc_comment": null
+      }
+    ],
+    "attributes": [],
+    "doc_comment": null
+  }
+]
+}

@@ -1,0 +1,31 @@
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.1/EnumEmpty.php
+Function: <main>
+Class: -
+Kind: main
+Property: -
+Hook: -
+Opcodes: 2
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 3
+Return type: -
+Lines: 1-6
+
+Compiled variables:
+(none)
+
+Literals:
+0 string("emptysuit")
+1 string("\0emptysuittests/Fixtures/PHP/8.1/EnumEmpty.php:3$0")
+2 int(1)
+
+Argument details:
+(none)
+
+Opcodes:
+0 DECLARE_CLASS line=3 op1=CONST(string("emptysuit")) op2=UNUSED result=UNUSED ext=-
+1 RETURN line=6 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+

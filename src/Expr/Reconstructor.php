@@ -215,6 +215,7 @@ final class Reconstructor
             'ASSIGN' => $this->assign($opArray, $instruction, null),
             'ASSIGN_OP' => $this->assignOp($opArray, $instruction),
             'ASSIGN_OBJ' => $this->assignObject($opArray, $instruction),
+            'FETCH_OBJ_R' => $this->fetchObject($opArray, $instruction),
             'RETURN', 'RETURN_BY_REF' => $this->roots[] = new ReturnValue(
                 $instruction->index,
                 $instruction->line,
@@ -283,6 +284,32 @@ final class Reconstructor
             $instruction->line,
             $name,
             $this->value($opArray, $next, $next->op1),
+        ));
+    }
+
+    private function fetchObject(OpArray $opArray, Instruction $instruction): void
+    {
+        if ($instruction->extendedValue !== 0 || $instruction->op1->kind !== 'this') {
+            $this->opaque($opArray, $instruction, 'object property fetch is not a read of $this');
+
+            return;
+        }
+        if ($instruction->result->kind !== 'tmp' && $instruction->result->kind !== 'var') {
+            $this->opaque($opArray, $instruction, 'object property fetch has no result');
+
+            return;
+        }
+        $name = $this->literalString($opArray, $instruction, $instruction->op2);
+        if (!is_string($name) || preg_match(self::IDENTIFIER, $name) !== 1) {
+            $this->opaque($opArray, $instruction, 'object property name cannot be reconstructed');
+
+            return;
+        }
+
+        $this->store($instruction, new PropertyFetch(
+            $instruction->index,
+            $instruction->line,
+            $name,
         ));
     }
 

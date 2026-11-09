@@ -451,6 +451,42 @@ final class ExporterTest extends TestCase
                 }
                 $this->assertTrue($table);
                 break;
+            case 'PHP/8.1/EnumFetch.php':
+                $copy = null;
+                foreach ($document['classes'] as $class) {
+                    if (($class['kind'] ?? null) === 'enum' && ($class['name'] ?? null) === 'Copy') {
+                        $copy = $class;
+                    }
+                }
+                $this->assertIsArray($copy);
+                $this->assertSame('int', $copy['enum_backing'] ?? null);
+                $fetch = null;
+                foreach ($copy['constants'] as $constant) {
+                    if (($constant['name'] ?? null) === 'Y') {
+                        $fetch = $constant['value']['ast']['children'][2] ?? null;
+                    }
+                }
+                $this->assertIsArray($fetch);
+                $this->assertSame('PROP', $fetch['kind'] ?? null);
+                $this->assertSame('CLASS_CONST', $fetch['children'][0]['kind'] ?? null);
+                $this->assertSame('value', $fetch['children'][1]['value']['value'] ?? null);
+                break;
+            case 'PHP/8.1/EnumPromoted.php':
+                $token = null;
+                foreach ($document['classes'] as $class) {
+                    if (($class['name'] ?? null) === 'Token') {
+                        $token = $class;
+                    }
+                }
+                $this->assertIsArray($token);
+                $this->assertArrayHasKey('enum_backing', $token);
+                $this->assertNull($token['enum_backing']);
+                $names = array_column($token['properties'], 'name');
+                $this->assertSame(['name', 'value'], $names);
+                $value = $token['properties'][1];
+                $this->assertContains('promoted', $value['flags'] ?? []);
+                $this->assertNotContains('readonly', $value['flags'] ?? []);
+                break;
             case 'PHP/8.1/Enums.php':
                 $status = null;
                 foreach ($document['classes'] as $class) {

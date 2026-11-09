@@ -35,8 +35,8 @@ use Rephper\Stmt\StructuredStatements;
  * unbracketed namespace. Several regions use bracketed blocks, including a
  * global region beside a named one. Import aliases are not in the IR.
  *
- * Ordinary classes, interfaces, and traits are emitted from the class rows.
- * Their methods reuse function rendering. Enums, anonymous classes, property
+ * Ordinary classes, interfaces, traits, and enums are emitted from the class
+ * rows. Their methods reuse function rendering. Anonymous classes, property
  * hooks, closures, conditional classes, and other unsupported declarations
  * fail the file. Nothing from that document is returned as a partial file.
  *
@@ -444,10 +444,7 @@ final class PhpFileGenerator
         if (in_array('anonymous', $class->flags, true) || str_contains($class->name, "\0")) {
             $this->fail('anonymous class at line ' . $class->lineStart . ' is not supported');
         }
-        if ($class->kind === 'enum') {
-            $this->fail('enum ' . $class->name . ' is not supported');
-        }
-        if ($class->kind !== 'class' && $class->kind !== 'interface' && $class->kind !== 'trait') {
+        if (!in_array($class->kind, ['class', 'interface', 'trait', 'enum'], true)) {
             $this->fail($class->kind . ' ' . $class->name . ' is not supported');
         }
     }

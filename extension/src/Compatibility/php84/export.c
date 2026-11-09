@@ -236,6 +236,10 @@ static const char *rephper_ast_kind_name(zend_ast_kind kind)
 			return "CONST";
 		case ZEND_AST_CLASS_CONST:
 			return "CLASS_CONST";
+		case ZEND_AST_PROP:
+			return "PROP";
+		case ZEND_AST_NULLSAFE_PROP:
+			return "NULLSAFE_PROP";
 		case ZEND_AST_AND:
 			return "AND";
 		case ZEND_AST_OR:

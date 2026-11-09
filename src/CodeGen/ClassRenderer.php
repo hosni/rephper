@@ -7,18 +7,20 @@ namespace Rephper\CodeGen;
 use Rephper\Ir\ClassConstant;
 use Rephper\Ir\ClassDeclaration;
 use Rephper\Ir\ClassProperty;
+use Rephper\Ir\Literal as IrLiteral;
 use Rephper\Ir\OpArray;
 use Rephper\Ir\TraitAlias;
 use Rephper\Ir\TraitPrecedence;
 
 /**
- * Renders one class, interface, or trait from its IR declaration and method bodies.
+ * Renders one class, interface, trait, or enum from its IR declaration and method bodies.
  *
  * A trait use comes first. Constants, then properties, then methods. Promoted
  * properties are parameters of the constructor, not a second declaration.
  * Precedences and aliases are separate IR lists, so every precedence is printed
- * before any alias, and each list keeps its own order. A member the IR cannot
- * spell fails the declaration.
+ * before any alias, and each list keeps its own order. An enum walks that same
+ * constant list, printing cases and ordinary constants in their relative order.
+ * A member the IR cannot spell fails the declaration.
  */
 final class ClassRenderer
 {
@@ -69,7 +71,7 @@ final class ClassRenderer
         string $declaredName,
         ?NameQualifier $names,
     ): string {
-        if ($class->kind !== 'class' && $class->kind !== 'interface' && $class->kind !== 'trait') {
+        if (!in_array($class->kind, ['class', 'interface', 'trait', 'enum'], true)) {
             $this->fail($class, $class->kind . ' is not supported');
         }
         if (preg_match(self::IDENTIFIER, $declaredName) !== 1) {
@@ -92,11 +94,22 @@ final class ClassRenderer
             $members[] = $use;
         }
         foreach ($class->constants as $constant) {
-            $members[] = $this->constantDeclaration($class, $constant, $indent + 1, $names);
+            $members[] = in_array('enum_case', $constant->flags, true)
+                ? $this->enumCase($class, $constant, $indent + 1, $names)
+                : $this->constantDeclaration($class, $constant, $indent + 1, $names);
         }
         foreach ($class->properties as $property) {
+            if ($class->kind === 'enum' && $this->namedEngineProperty($class, $property)) {
+                if (!$this->engineEnumProperty($class, $property)) {
+                    $this->fail($class, 'property $' . $property->name . ' does not match the engine property');
+                }
+                continue;
+            }
             if (in_array('promoted', $property->flags, true)) {
                 continue;
+            }
+            if ($class->kind === 'enum') {
+                $this->fail($class, 'property $' . $property->name . ' cannot be declared on an enum');
             }
             $members[] = $this->propertyDeclaration($class, $property, $indent + 1, $names);
         }
@@ -143,7 +156,9 @@ final class ClassRenderer
         if (in_array('not_serializable', $class->flags, true)) {
             $this->fail($class, 'not_serializable is not supported');
         }
-        if ($class->enumBacking !== null) {
+        if ($class->kind === 'enum') {
+            $this->assertEnum($class);
+        } elseif ($class->enumBacking !== null) {
             $this->fail($class, 'enum backing is not supported');
         }
         if ($class->kind === 'trait') {
@@ -329,6 +344,9 @@ final class ClassRenderer
         if ($class->kind === 'interface' && !$isAbstract) {
             $this->fail($class, 'method ' . $name . ' is not abstract');
         }
+        if ($class->kind === 'enum' && $isAbstract) {
+            $this->fail($class, 'method ' . $name . ' is abstract');
+        }
         if ($class->kind === 'class' && $isAbstract && !$classIsAbstract) {
             $this->fail($class, 'method ' . $name . ' is abstract, but the class is not');
         }
@@ -348,6 +366,9 @@ final class ClassRenderer
     {
         if ($class->kind === 'trait') {
             return 'trait ' . $declaredName;
+        }
+        if ($class->kind === 'enum') {
+            return $this->enumHeader($class, $declaredName, $names);
         }
         $abstract = $class->kind === 'class' && (
             in_array('abstract', $class->flags, true) || in_array('implicit_abstract', $class->flags, true)
@@ -394,6 +415,204 @@ final class ClassRenderer
         }
 
         return $this->attributes->render($class->attributes, 0, $class->name, $class->kind, $class->lineStart, $names);
+    }
+
+    private function assertEnum(ClassDeclaration $class): void
+    {
+        if ($class->enumBacking !== null && $class->enumBacking !== 'int' && $class->enumBacking !== 'string') {
+            $this->fail($class, 'enum backing is not supported');
+        }
+        if ($class->parent !== null) {
+            $this->fail($class, 'cannot extend another type');
+        }
+        if (!in_array('final', $class->flags, true)) {
+            $this->fail($class, 'final flag is missing');
+        }
+        foreach (['abstract', 'implicit_abstract', 'readonly', 'linked', 'allow_dynamic_properties'] as $flag) {
+            if (in_array($flag, $class->flags, true)) {
+                $this->fail($class, 'flag ' . $flag . ' is not supported');
+            }
+        }
+    }
+
+    private function enumHeader(ClassDeclaration $class, string $declaredName, ?NameQualifier $names): string
+    {
+        $header = 'enum ' . $declaredName;
+        if ($class->enumBacking !== null) {
+            $header .= ': ' . $class->enumBacking;
+        }
+        $interfaces = $this->declaredEnumInterfaces($class);
+        if ($interfaces === []) {
+            return $header;
+        }
+        $rendered = [];
+        foreach ($interfaces as $interface) {
+            $rendered[] = $this->qualified($class, $interface, $names);
+        }
+
+        return $header . ' implements ' . implode(', ', $rendered);
+    }
+
+    /**
+     * The engine appends `UnitEnum`, and `BackedEnum` after it for a backed
+     * enum. An earlier copy was written in the source and stays.
+     *
+     * @return list<string>
+     */
+    private function declaredEnumInterfaces(ClassDeclaration $class): array
+    {
+        $interfaces = $class->interfaces;
+        if ($class->enumBacking === null) {
+            $last = $interfaces === [] ? null : $interfaces[array_key_last($interfaces)];
+            if ($last !== 'UnitEnum') {
+                $this->fail($class, 'engine interface UnitEnum is missing');
+            }
+            array_pop($interfaces);
+
+            return $interfaces;
+        }
+        $count = count($interfaces);
+        if ($count < 2 || $interfaces[$count - 2] !== 'UnitEnum' || $interfaces[$count - 1] !== 'BackedEnum') {
+            $this->fail($class, 'engine interfaces UnitEnum and BackedEnum are missing');
+        }
+
+        return array_slice($interfaces, 0, -2);
+    }
+
+    private function namedEngineProperty(ClassDeclaration $class, ClassProperty $property): bool
+    {
+        if ($property->name === 'name') {
+            return true;
+        }
+
+        return $property->name === 'value' && $class->enumBacking !== null;
+    }
+
+    private function engineEnumProperty(ClassDeclaration $class, ClassProperty $property): bool
+    {
+        $display = $property->name === 'name' ? 'string' : $class->enumBacking;
+        if ($display !== 'string' && $display !== 'int') {
+            return false;
+        }
+        $flags = $property->flags;
+        sort($flags);
+
+        return $flags === ['protected_set', 'public', 'readonly']
+            && $property->defaultValue === null
+            && $property->hooks === []
+            && $property->attributes === []
+            && $property->docComment === null
+            && $property->extra === []
+            && $this->builtinType($property->type, $display);
+    }
+
+    /**
+     * @param array<string, mixed>|null $type
+     */
+    private function builtinType(?array $type, string $display): bool
+    {
+        return is_array($type)
+            && !array_is_list($type)
+            && count($type) === 3
+            && ($type['display'] ?? null) === $display
+            && ($type['nullable'] ?? null) === false
+            && ($type['kind'] ?? null) === 'builtin';
+    }
+
+    private function enumCase(
+        ClassDeclaration $class,
+        ClassConstant $constant,
+        int $indent,
+        ?NameQualifier $names,
+    ): string {
+        if ($class->kind !== 'enum') {
+            $this->fail($class, 'constant ' . $constant->name . ' is an enum case');
+        }
+        foreach ($constant->flags as $flag) {
+            if (!in_array($flag, ['public', 'enum_case', 'deprecated'], true)) {
+                $this->fail($class, 'case ' . $constant->name . ' has flag ' . $flag . ', which is not supported');
+            }
+        }
+        if (!in_array('public', $constant->flags, true) || !in_array('enum_case', $constant->flags, true)) {
+            $this->fail($class, 'case ' . $constant->name . ' metadata is incomplete');
+        }
+        if (count(array_intersect($constant->flags, ['public', 'protected', 'private'])) !== 1) {
+            $this->fail($class, 'case ' . $constant->name . ' has a visibility modifier');
+        }
+        if (in_array('deprecated', $constant->flags, true) && !$this->hasAttribute($constant->attributes, 'Deprecated')) {
+            $this->fail($class, 'case ' . $constant->name . ' is deprecated, but the attribute is not in the IR');
+        }
+        if ($constant->type !== null) {
+            $this->fail($class, 'case ' . $constant->name . ' has a type');
+        }
+        if (preg_match(self::IDENTIFIER, $constant->name) !== 1) {
+            $this->fail($class, 'case ' . $constant->name . ' cannot be rendered');
+        }
+        $value = $this->enumCaseValue($class, $constant);
+        $text = 'case ' . $constant->name;
+        if ($value !== null) {
+            try {
+                $rendered = $this->literals->renderLiteral(
+                    new IrLiteral('constant_ast', null, false, false, [], $value, []),
+                    $class->lineStart,
+                    $names,
+                );
+            } catch (SourceGenerationException $exception) {
+                $this->fail($class, 'case ' . $constant->name . ' cannot be rendered: ' . $exception->getMessage());
+            }
+            $text .= ' = ' . $rendered;
+        }
+        $lines = $this->commentLines($constant->docComment, $class, 'case ' . $constant->name, $indent);
+        foreach ($this->memberAttributes($class, $constant->attributes, 'case ' . $constant->name, $indent, $names) as $attribute) {
+            $lines[] = $attribute;
+        }
+        $lines[] = str_repeat('    ', $indent) . $text . ';';
+
+        return implode("\n", $lines);
+    }
+
+    /**
+     * @return array<mixed>|null
+     */
+    private function enumCaseValue(ClassDeclaration $class, ClassConstant $constant): ?array
+    {
+        $ast = $constant->value->ast;
+        if ($constant->value->type !== 'constant_ast' || !is_array($ast) || array_is_list($ast) || ($ast['kind'] ?? null) !== 'CONST_ENUM_INIT') {
+            $this->fail($class, 'case ' . $constant->name . ' is not an enum case value');
+        }
+        $children = $ast['children'] ?? null;
+        if (!is_array($children) || !array_is_list($children) || count($children) !== 3) {
+            $this->fail($class, 'case ' . $constant->name . ' value cannot be rendered');
+        }
+        $this->assertCaseZval($class, $children[0], $class->name, $constant->name, 'enum');
+        $this->assertCaseZval($class, $children[1], $constant->name, $constant->name, 'case');
+        if ($class->enumBacking === null) {
+            if ($children[2] !== null) {
+                $this->fail($class, 'case ' . $constant->name . ' has a value');
+            }
+
+            return null;
+        }
+        if (!is_array($children[2]) || array_is_list($children[2])) {
+            $this->fail($class, 'case ' . $constant->name . ' value cannot be rendered');
+        }
+
+        return $children[2];
+    }
+
+    private function assertCaseZval(ClassDeclaration $class, mixed $node, string $expected, string $case, string $role): void
+    {
+        $value = is_array($node) ? ($node['value'] ?? null) : null;
+        if (
+            !is_array($node)
+            || array_is_list($node)
+            || ($node['kind'] ?? null) !== 'ZVAL'
+            || !is_array($value)
+            || ($value['type'] ?? null) !== 'string'
+            || ($value['value'] ?? null) !== $expected
+        ) {
+            $this->fail($class, 'case ' . $case . ' does not name its ' . $role);
+        }
     }
 
     private function constantDeclaration(

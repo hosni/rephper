@@ -225,8 +225,6 @@ PHP, $this->generate('Common/Functions.json'));
     public static function rejectedFiles(): array
     {
         return [
-            'object property fetch' => ['Common/Oop.json', 'FETCH_OBJ_R'],
-            'enum' => ['PHP/8.1/Enums.json', 'enum Status is not supported'],
             'anonymous class' => ['Common/AnonymousClass.json', 'anonymous class at line 3 is not supported'],
             'property hook' => ['PHP/8.4/PropertyHooks.json', 'property hook value::get is not supported'],
             'closure' => ['Common/Closures.json', 'closure '],
@@ -989,6 +987,272 @@ class Item extends Base
 }
 
 PHP],
+            'object properties' => ['Common/Oop.json', <<<'PHP'
+<?php
+
+interface Named
+{
+    public function name(): string;
+}
+
+trait Label
+{
+    public function label(): string
+    {
+        return 'label';
+    }
+}
+
+class Base
+{
+    public int $id = 1;
+
+    public function id(): int
+    {
+        return $this->id;
+    }
+}
+
+class Item extends Base implements Named
+{
+    use Label;
+
+    public string $title = 'item';
+
+    public function name(): string
+    {
+        return $this->title;
+    }
+}
+
+PHP],
+            'enum' => ['PHP/8.1/Enums.json', <<<'PHP'
+<?php
+
+interface Colorful
+{
+    public function color(): string;
+}
+
+enum Status: string implements Colorful
+{
+    case Open = 'open';
+
+    case Closed = 'closed';
+
+    public function color(): string
+    {
+        return $this->value;
+    }
+}
+
+PHP],
+            'unit enum' => ['PHP/8.1/EnumUnit.json', <<<'PHP'
+<?php
+
+enum Suit
+{
+    /** Hearts. */
+    case Hearts;
+
+    case Diamonds;
+
+    case Clubs;
+
+    case Spades;
+}
+
+PHP],
+            'empty enum' => ['PHP/8.1/EnumEmpty.json', <<<'PHP'
+<?php
+
+enum EmptySuit
+{
+}
+
+PHP],
+            'string enum' => ['PHP/8.1/EnumString.json', <<<'PHP'
+<?php
+
+#[Attribute]
+class Mark
+{
+    public function __construct(public string $note = 'n')
+    {
+    }
+}
+
+/** Status values. */
+#[Mark('status')]
+enum Status: string
+{
+    /** Open case. */
+    #[Deprecated(message: 'old', since: '1.0')]
+    #[Mark('open')]
+    case Open = 'open';
+
+    case Closed = 'closed';
+}
+
+PHP],
+            'int enum' => ['PHP/8.1/EnumInt.json', <<<'PHP'
+<?php
+
+enum Scale: int
+{
+    case X = 1;
+
+    public const int N = 2;
+}
+
+enum Bits: int
+{
+    case Zero = 0;
+
+    case Negative = -4;
+
+    case Shifted = 8;
+
+    case Computed = 1 + Scale::N;
+}
+
+PHP],
+            'enum constants' => ['PHP/8.1/EnumConstants.json', <<<'PHP'
+<?php
+
+enum Mix: int
+{
+    case A = 1;
+
+    public const int N = 2;
+
+    case B = 3;
+
+    final protected const string LABEL = 'mix';
+
+    case C = 4;
+}
+
+PHP],
+            'enum interfaces' => ['PHP/8.1/EnumInterfaces.json', <<<'PHP'
+<?php
+
+interface Colorful
+{
+    public function color(): string;
+}
+
+enum Paint: string implements Colorful, UnitEnum
+{
+    case Red = 'red';
+
+    public function color(): string
+    {
+        return 'red';
+    }
+}
+
+PHP],
+            'enum methods' => ['PHP/8.1/EnumMethods.json', <<<'PHP'
+<?php
+
+enum Counter
+{
+    case One;
+
+    case Two;
+
+    public function next(int $n): int
+    {
+        return $n + 1;
+    }
+
+    private static function code(): int
+    {
+        return 7;
+    }
+}
+
+PHP],
+            'enum trait' => ['PHP/8.1/EnumTrait.json', <<<'PHP'
+<?php
+
+trait Label
+{
+    public function label(): string
+    {
+        return $this->name;
+    }
+}
+
+trait Title
+{
+    public function label(): string
+    {
+        return 'title';
+    }
+}
+
+enum Item
+{
+    use Label, Title {
+        Label::label insteadof Title;
+        Title::label as heading;
+    }
+
+    case Only;
+}
+
+PHP],
+            'namespaced enum' => ['PHP/8.1/EnumNamespace.json', <<<'PHP'
+<?php
+
+namespace App\Domain;
+
+enum Status
+{
+    case Open;
+
+    case Closed;
+}
+
+PHP],
+            'enum property fetch' => ['PHP/8.1/EnumFetch.json', <<<'PHP'
+<?php
+
+enum Source: int
+{
+    case X = 4;
+}
+
+enum Copy: int
+{
+    case Y = Source::X->value;
+}
+
+PHP],
+            'promoted enum property' => ['PHP/8.1/EnumPromoted.json', <<<'PHP'
+<?php
+
+enum Token
+{
+    case One;
+
+    public function __construct(public int $value)
+    {
+    }
+}
+
+PHP],
+            'enum scalar mismatch' => ['PHP/8.1/EnumScalar.json', <<<'PHP'
+<?php
+
+enum Bad: int
+{
+    case A = 'no';
+}
+
+PHP],
         ];
     }
 
@@ -1045,6 +1309,121 @@ PHP],
         $namespaced = $this->generate('Common/TraitNamespace.json');
         $this->assertStringContainsString('use \\App\\Tools\\Marker;', $namespaced);
         $this->assertStringNotContainsString(' as ', $namespaced);
+        $this->assertSameBehavior(
+            'Common/Oop.php',
+            '$item = new Item(); echo $item->id(), " ", $item->name(), " ", $item->label(), " ", $item->title, " ", $item->id;',
+        );
+        $this->assertSameEnumBehavior(
+            'PHP/8.1/Enums.php',
+            'echo Status::Open->color(), " ", Status::Closed->value, " ", Status::Open->name, " ", (Status::Open instanceof Colorful ? "y" : "n");',
+        );
+        $this->assertSameEnumBehavior(
+            'PHP/8.1/EnumUnit.php',
+            'echo Suit::Hearts->name, " ", count(Suit::cases()), " ", (new ReflectionEnum(Suit::class))->getCase("Hearts")->getDocComment();',
+        );
+        $this->assertSameEnumBehavior(
+            'PHP/8.1/EnumEmpty.php',
+            'echo count(EmptySuit::cases()), " ", ((new ReflectionClass(EmptySuit::class))->hasProperty("name") ? "y" : "n");',
+        );
+        $this->assertSameEnumBehavior(
+            'PHP/8.1/EnumString.php',
+            '$mirror = new ReflectionEnum(Status::class); $open = $mirror->getCase("Open"); echo Status::Open->value, " ", Status::Closed->value, " ", $mirror->getDocComment(), " ", $open->getDocComment(), " ", $mirror->getAttributes()[0]->getName(), " ", $mirror->getAttributes()[0]->getArguments()[0], " ", $open->getAttributes()[0]->getName(), " ", $open->getAttributes()[1]->getArguments()[0];',
+        );
+        $this->assertSameEnumBehavior(
+            'PHP/8.1/EnumInt.php',
+            'echo Bits::Zero->value, " ", Bits::Negative->value, " ", Bits::Shifted->value, " ", Bits::Computed->value;',
+        );
+        $this->assertSameEnumBehavior(
+            'PHP/8.1/EnumConstants.php',
+            '$mirror = new ReflectionClass(Mix::class); $label = $mirror->getReflectionConstant("LABEL"); echo Mix::A->value, " ", Mix::N, " ", Mix::B->value, " ", Mix::C->value, " ", $label->getValue(), " ", ($label->isFinal() ? "f" : "o"), " ", ($label->isProtected() ? "p" : "o");',
+        );
+        $this->assertSameEnumBehavior(
+            'PHP/8.1/EnumMethods.php',
+            '$mirror = new ReflectionClass(Counter::class); echo Counter::One->next(3), " ", Counter::Two->name, " ", $mirror->getMethod("code")->invoke(null);',
+        );
+        $this->assertSameEnumBehavior(
+            'PHP/8.1/EnumTrait.php',
+            'echo Item::Only->label(), " ", Item::Only->heading(), " ", Item::Only->name;',
+        );
+        $this->assertSameEnumBehavior(
+            'PHP/8.1/EnumNamespace.php',
+            'echo \\App\\Domain\\Status::Open->name, " ", \\App\\Domain\\Status::Closed->name;',
+        );
+        $this->assertSameEnumBehavior(
+            'PHP/8.1/EnumFetch.php',
+            'echo Copy::Y->value, " ", Source::X->value;',
+        );
+    }
+
+    public function testRuntimeInvalidEnumsKeepTheirFailure(): void
+    {
+        $this->assertSameFailure(
+            'PHP/8.1/EnumInterfaces.php',
+            'echo "ran";',
+            'previously implemented interface UnitEnum',
+        );
+        $this->assertSameFailure(
+            'PHP/8.1/EnumPromoted.php',
+            'echo "ran";',
+            'cannot include properties',
+        );
+        $this->assertSameEnumBehavior('PHP/8.1/EnumScalar.php', 'echo "loaded";');
+        $this->assertSameFailure(
+            'PHP/8.1/EnumScalar.php',
+            'echo Bad::A->value;',
+            'does not match enum backing type',
+        );
+    }
+
+    public function testMalformedEnumMetadataFails(): void
+    {
+        $suffix = $this->mutate('PHP/8.1/Enums.json', static function (array &$data): void {
+            $data['classes'][1]['interfaces'] = ['Colorful'];
+        });
+        $unitSuffix = $this->mutate('PHP/8.1/EnumEmpty.json', static function (array &$data): void {
+            foreach ($data['classes'] as &$class) {
+                if (($class['name'] ?? null) === 'EmptySuit') {
+                    $class['interfaces'] = [];
+                }
+            }
+        });
+        $property = $this->mutate('PHP/8.1/Enums.json', static function (array &$data): void {
+            $extra = $data['classes'][1]['properties'][0];
+            $extra['name'] = 'extra';
+            $extra['flags'] = ['public'];
+            $data['classes'][1]['properties'][] = $extra;
+        });
+        $engine = $this->mutate('PHP/8.1/Enums.json', static function (array &$data): void {
+            $data['classes'][1]['properties'][0]['flags'] = ['public', 'readonly'];
+        });
+        $value = $this->mutate('PHP/8.1/EnumFetch.json', static function (array &$data): void {
+            foreach ($data['classes'] as &$class) {
+                if (($class['name'] ?? null) === 'Copy') {
+                    $class['constants'][0]['value']['ast']['children'][2]['kind'] = 'NEW';
+                }
+            }
+        });
+        $nullsafe = $this->mutate('PHP/8.1/EnumFetch.json', static function (array &$data): void {
+            foreach ($data['classes'] as &$class) {
+                if (($class['name'] ?? null) === 'Copy') {
+                    $class['constants'][0]['value']['ast']['children'][2]['kind'] = 'NULLSAFE_PROP';
+                }
+            }
+        });
+        $explicit = $this->mutate('PHP/8.1/Enums.json', static function (array &$data): void {
+            array_unshift($data['classes'][1]['interfaces'], 'BackedEnum');
+        });
+
+        $this->assertGenerationFails($suffix, 'engine interfaces UnitEnum and BackedEnum are missing');
+        $this->assertGenerationFails($unitSuffix, 'engine interface UnitEnum is missing');
+        $this->assertGenerationFails($property, 'property $extra cannot be declared on an enum');
+        $this->assertGenerationFails($engine, 'property $name does not match the engine property');
+        $this->assertGenerationFails($value, 'case Y cannot be rendered');
+        $source = (new PhpFileGenerator())->generate($nullsafe);
+        $this->assertStringContainsString('case Y = Source::X?->value;', $source);
+        $kept = (new PhpFileGenerator())->generate($explicit);
+        $this->assertStringContainsString('enum Status: string implements BackedEnum, Colorful', $kept);
+        $this->assertStringNotContainsString('final enum', $kept);
     }
 
     public function testIncompleteClassMetadataFails(): void
@@ -1240,6 +1619,47 @@ PHP, (new PhpFileGenerator())->generate($associated));
         $generated = preg_replace('/\.php$/', '.json', 'Common/' . basename($fixture));
         $this->assertIsString($generated);
         $this->assertSame($this->executePath($original, $code), $this->execute($generated, $code));
+    }
+
+    private function assertSameEnumBehavior(string $fixture, string $code): void
+    {
+        $original = dirname(__DIR__, 3) . '/tests/Fixtures/' . $fixture;
+        $generated = preg_replace('/\.php$/', '.json', $fixture);
+        $this->assertIsString($generated);
+        $this->assertSame($this->executePath($original, $code), $this->execute($generated, $code));
+    }
+
+    private function assertSameFailure(string $fixture, string $code, string $message): void
+    {
+        $original = dirname(__DIR__, 3) . '/tests/Fixtures/' . $fixture;
+        $generated = preg_replace('/\.php$/', '.json', $fixture);
+        $this->assertIsString($generated);
+        $copy = $this->temporaryPhp($this->generate($generated));
+        try {
+            $left = $this->runFile($original, $code);
+            $right = $this->runFile($copy, $code);
+        } finally {
+            unlink($copy);
+        }
+        $this->assertNotSame(0, $left['exit'], $left['stdout'] . $left['stderr']);
+        $this->assertNotSame(0, $right['exit'], $right['stdout'] . $right['stderr']);
+        $this->assertStringContainsString($message, $left['stdout'] . $left['stderr']);
+        $this->assertStringContainsString($message, $right['stdout'] . $right['stderr']);
+    }
+
+    /**
+     * @return array{exit: int, stdout: string, stderr: string}
+     */
+    private function runFile(string $path, string $code): array
+    {
+        return Process::run([
+            'php8.4',
+            '-n',
+            '-d',
+            'display_errors=1',
+            '-r',
+            'require ' . var_export($path, true) . '; ' . $code,
+        ]);
     }
 
     private function execute(string $fixture, string $code): string

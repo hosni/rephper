@@ -14,6 +14,7 @@ use Rephper\Expr\MatchArm;
 use Rephper\Expr\MatchExpression;
 use Rephper\Expr\Opaque;
 use Rephper\Expr\PropertyAssignment;
+use Rephper\Expr\PropertyFetch;
 use Rephper\Expr\ReturnValue;
 use Rephper\Expr\Unary;
 use Rephper\Expr\Unresolved;
@@ -111,6 +112,9 @@ final class ExpressionRenderer
         }
         if ($expression instanceof PropertyAssignment) {
             return $this->propertyAssignment($expression);
+        }
+        if ($expression instanceof PropertyFetch) {
+            return $this->propertyFetch($expression);
         }
         if ($expression instanceof Binary) {
             return $this->binary($expression);
@@ -662,6 +666,19 @@ final class ExpressionRenderer
         $value = $this->render($expression->value, self::PREC_ASSIGN, 'right', 'right');
 
         return '$this->' . $expression->property . ' = ' . $value;
+    }
+
+    private function propertyFetch(PropertyFetch $expression): string
+    {
+        if (preg_match(self::IDENTIFIER, $expression->property) !== 1) {
+            throw SourceGenerationException::at(
+                'property name cannot be rendered',
+                $expression->opline,
+                $expression->line,
+            );
+        }
+
+        return '$this->' . $expression->property;
     }
 
     private function compound(Assignment $expression): string

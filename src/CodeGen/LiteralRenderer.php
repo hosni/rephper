@@ -24,6 +24,11 @@ final class LiteralRenderer
     private const PRIMARY = 100;
 
     /**
+     * `->` and `?->` bind tighter than unary operators and looser than a name.
+     */
+    private const PROPERTY = 90;
+
+    /**
      * @var array<string, array{0: string, 1: int, 2: string}>
      */
     private const OPERATORS = [
@@ -105,6 +110,8 @@ final class LiteralRenderer
             'UNARY_MINUS' => $this->unary($node, $line, 'UNARY_MINUS'),
             'ARRAY' => $this->arrayNode($node, $line),
             'CLASS_CONST' => $this->classConstant($node, $line),
+            'PROP' => $this->propertyFetch($node, $line, '->'),
+            'NULLSAFE_PROP' => $this->propertyFetch($node, $line, '?->'),
             'AND' => $this->infix($node, $line, '&&', 20, 'left'),
             'OR' => $this->infix($node, $line, '||', 18, 'left'),
             'COALESCE' => $this->infix($node, $line, '??', 12, 'right'),
@@ -266,6 +273,53 @@ final class LiteralRenderer
         }
 
         return [$class . '::' . $this->nameValue($children[1], $line, false), self::PRIMARY];
+    }
+
+    /**
+     * PHP 8.4.27 stores `->` and `?->` as two children: the object expression,
+     * then the property name. A bare identifier is `->name`. Any other name
+     * is the braced form `->{expr}`.
+     *
+     * @param array<mixed> $node
+     * @return array{0: string, 1: int}
+     */
+    private function propertyFetch(array $node, int $line, string $operator): array
+    {
+        if (array_key_exists('attr', $node) && $node['attr'] !== 0) {
+            throw SourceGenerationException::at('property fetch cannot be rendered', 0, $line);
+        }
+        $children = $this->children($node, $line);
+        if (count($children) !== 2 || !is_array($children[0]) || !is_array($children[1])) {
+            throw SourceGenerationException::at('property fetch cannot be rendered', 0, $line);
+        }
+        [$object, $precedence] = $this->node($children[0], $line);
+
+        return [
+            $this->wrap($object, $precedence, self::PROPERTY, 'left', 'left')
+                . $operator
+                . $this->propertyName($children[1], $line),
+            self::PROPERTY,
+        ];
+    }
+
+    /**
+     * @param array<mixed> $node
+     */
+    private function propertyName(array $node, int $line): string
+    {
+        if (($node['kind'] ?? null) === 'ZVAL') {
+            $value = $node['value'] ?? null;
+            if (
+                is_array($value)
+                && ($value['type'] ?? null) === 'string'
+                && is_string($value['value'] ?? null)
+                && preg_match(self::IDENTIFIER, $value['value']) === 1
+            ) {
+                return $value['value'];
+            }
+        }
+
+        return '{' . $this->node($node, $line)[0] . '}';
     }
 
     /**
