@@ -1,0 +1,125 @@
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.4/PropertyHookControl.php
+Function: $value::get
+Class: Control
+Kind: property-hook
+Property: value
+Hook: get
+Opcodes: 24
+Arguments: 0
+Required arguments: 0
+Compiled variables: 1
+Temporary variables: 9
+Literals: 10
+Return type: int
+Lines: 6-18
+
+Compiled variables:
+0 $extra
+
+Literals:
+0 string("plain")
+1 int(0)
+2 string("value")
+3 string("value")
+4 array(3: [0=>int(10), 1=>int(12), 2=>int(14)])
+5 int(1)
+6 int(2)
+7 int(3)
+8 string("value")
+9 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 FETCH_OBJ_R line=7 op1=THIS op2=CONST(string("plain")) result=TMP(0) ext=-
+1 ASSIGN line=7 op1=CV(0:$extra) op2=TMP(0) result=UNUSED ext=-
+2 IS_SMALLER line=8 op1=CONST(int(0)) op2=CV(0:$extra) result=TMP(2)|SMART_JMPZ ext=-
+3 JMPZ line=8 op1=TMP(2) op2=JMP(8) result=UNUSED ext=-
+4 FETCH_OBJ_R line=9 op1=THIS op2=CONST(string("value")) result=TMP(3) ext=24
+5 ADD line=9 op1=TMP(3) op2=CV(0:$extra) result=TMP(4) ext=-
+6 VERIFY_RETURN_TYPE line=9 op1=TMP(4) op2=UNUSED result=UNUSED ext=-
+7 RETURN line=9 op1=TMP(4) op2=UNUSED result=UNUSED ext=-
+8 FETCH_OBJ_R line=12 op1=THIS op2=CONST(string("value")) result=TMP(5) ext=48
+9 MATCH line=12 op1=TMP(5) op2=CONST(array(3: [0=>int(10), 1=>int(12), 2=>int(14)])) result=UNUSED ext=jmp:16
+10 QM_ASSIGN line=13 op1=CONST(int(1)) op2=UNUSED result=TMP(7) ext=-
+11 JMP line=13 op1=JMP(19) op2=UNUSED result=UNUSED ext=-
+12 QM_ASSIGN line=14 op1=CONST(int(2)) op2=UNUSED result=TMP(7) ext=-
+13 JMP line=14 op1=JMP(19) op2=UNUSED result=UNUSED ext=-
+14 QM_ASSIGN line=15 op1=CONST(int(3)) op2=UNUSED result=TMP(7) ext=-
+15 JMP line=15 op1=JMP(19) op2=UNUSED result=UNUSED ext=-
+16 FETCH_OBJ_R line=16 op1=THIS op2=CONST(string("value")) result=TMP(8) ext=72
+17 QM_ASSIGN line=16 op1=TMP(8) op2=UNUSED result=TMP(7) ext=-
+18 JMP line=16 op1=JMP(19) op2=UNUSED result=UNUSED ext=-
+19 FREE line=16 op1=TMP(5) op2=UNUSED result=UNUSED ext=2
+20 VERIFY_RETURN_TYPE line=16 op1=TMP(7) op2=UNUSED result=UNUSED ext=-
+21 RETURN line=16 op1=TMP(7) op2=UNUSED result=UNUSED ext=-
+22 VERIFY_RETURN_TYPE line=18 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+23 RETURN line=18 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.4/PropertyHookControl.php
+Function: $value::set
+Class: Control
+Kind: property-hook
+Property: value
+Hook: set
+Opcodes: 7
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 3
+Literals: 4
+Return type: void
+Lines: 19-24
+
+Compiled variables:
+0 $value
+
+Literals:
+0 int(0)
+1 int(0)
+2 string("value")
+3 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=19 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 IS_SMALLER line=20 op1=CV(0:$value) op2=CONST(int(0)) result=TMP(0)|SMART_JMPZ ext=-
+2 JMPZ line=20 op1=TMP(0) op2=JMP(4) result=UNUSED ext=-
+3 ASSIGN line=21 op1=CV(0:$value) op2=CONST(int(0)) result=UNUSED ext=-
+4 ASSIGN_OBJ line=23 op1=THIS op2=CONST(string("value")) result=UNUSED ext=-
+5 OP_DATA line=23 op1=CV(0:$value) op2=UNUSED result=UNUSED ext=-
+6 RETURN line=24 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.4/PropertyHookControl.php
+Function: <main>
+Class: -
+Kind: main
+Property: -
+Hook: -
+Opcodes: 1
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 1
+Return type: -
+Lines: 1-29
+
+Compiled variables:
+(none)
+
+Literals:
+0 int(1)
+
+Argument details:
+(none)
+
+Opcodes:
+0 RETURN line=29 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+

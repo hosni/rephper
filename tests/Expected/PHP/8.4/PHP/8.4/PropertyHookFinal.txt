@@ -1,0 +1,162 @@
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.4/PropertyHookFinal.php
+Function: $value::get
+Class: FinalHook
+Kind: property-hook
+Property: value
+Hook: get
+Opcodes: 6
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 2
+Literals: 3
+Return type: int
+Lines: 6-6
+
+Compiled variables:
+(none)
+
+Literals:
+0 string("value")
+1 int(1)
+2 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 FETCH_OBJ_R line=6 op1=THIS op2=CONST(string("value")) result=TMP(0) ext=-
+1 ADD line=6 op1=TMP(0) op2=CONST(int(1)) result=TMP(1) ext=-
+2 VERIFY_RETURN_TYPE line=6 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+3 RETURN line=6 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+4 VERIFY_RETURN_TYPE line=6 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+5 RETURN line=6 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.4/PropertyHookFinal.php
+Function: $value::set
+Class: FinalHook
+Kind: property-hook
+Property: value
+Hook: set
+Opcodes: 4
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 1
+Literals: 2
+Return type: void
+Lines: 7-7
+
+Compiled variables:
+0 $value
+
+Literals:
+0 string("value")
+1 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=7 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 ASSIGN_OBJ line=7 op1=THIS op2=CONST(string("value")) result=UNUSED ext=-
+2 OP_DATA line=7 op1=CV(0:$value) op2=UNUSED result=UNUSED ext=-
+3 RETURN line=7 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.4/PropertyHookFinal.php
+Function: $value::set
+Class: FinalHookChild
+Kind: property-hook
+Property: value
+Hook: set
+Opcodes: 5
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 2
+Literals: 3
+Return type: void
+Lines: 14-14
+
+Compiled variables:
+0 $value
+
+Literals:
+0 string("value")
+1 int(2)
+2 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=14 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 ADD line=14 op1=CV(0:$value) op2=CONST(int(2)) result=TMP(1) ext=-
+2 ASSIGN_OBJ line=14 op1=THIS op2=CONST(string("value")) result=UNUSED ext=-
+3 OP_DATA line=14 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+4 RETURN line=14 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.4/PropertyHookFinal.php
+Function: $value::get
+Class: FinalProperty
+Kind: property-hook
+Property: value
+Hook: get
+Opcodes: 5
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 1
+Literals: 2
+Return type: int
+Lines: 21-21
+
+Compiled variables:
+(none)
+
+Literals:
+0 string("value")
+1 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 FETCH_OBJ_R line=21 op1=THIS op2=CONST(string("value")) result=TMP(0) ext=-
+1 VERIFY_RETURN_TYPE line=21 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+2 RETURN line=21 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+3 VERIFY_RETURN_TYPE line=21 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 RETURN line=21 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.4/PropertyHookFinal.php
+Function: <main>
+Class: -
+Kind: main
+Property: -
+Hook: -
+Opcodes: 1
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 1
+Return type: -
+Lines: 1-24
+
+Compiled variables:
+(none)
+
+Literals:
+0 int(1)
+
+Argument details:
+(none)
+
+Opcodes:
+0 RETURN line=24 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+

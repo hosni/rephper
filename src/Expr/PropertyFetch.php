@@ -8,7 +8,8 @@ namespace Rephper\Expr;
  * A read of a property of `$this`.
  *
  * The object operand is the `this` kind. The property name is a string
- * literal. Other object fetches stay unresolved.
+ * literal. A by-reference fetch uses the same spelling; the `&` belongs to
+ * the hook or the function. Other object fetches stay unresolved.
  */
 final class PropertyFetch extends Expression
 {

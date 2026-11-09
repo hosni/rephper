@@ -226,7 +226,6 @@ PHP, $this->generate('Common/Functions.json'));
     {
         return [
             'anonymous class' => ['Common/AnonymousClass.json', 'anonymous class at line 3 is not supported'],
-            'property hook' => ['PHP/8.4/PropertyHooks.json', 'property hook value::get is not supported'],
             'closure' => ['Common/Closures.json', 'closure '],
             'arrow' => ['Common/ArrowFunctions.json', 'closure '],
             'generator' => ['Common/Generators.json', 'generator function sequence is not supported'],
@@ -1477,7 +1476,7 @@ PHP],
             }
         });
 
-        $this->assertGenerationFails($hooks, 'property $value has hooks');
+        $this->assertGenerationFails($hooks, 'property $value lists hook get, which is not declared in this class');
         $this->assertGenerationFails($adaptations, 'does not change the method');
         $this->assertGenerationFails($interfaceTraits, 'cannot use traits');
         $this->assertGenerationFails($traitParent, 'cannot extend or implement');

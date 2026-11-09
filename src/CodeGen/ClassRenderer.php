@@ -17,6 +17,8 @@ use Rephper\Ir\TraitPrecedence;
  *
  * A trait use comes first. Constants, then properties, then methods. Promoted
  * properties are parameters of the constructor, not a second declaration.
+ * Hooks declared in this class are part of that property or parameter. A hook
+ * the property lists but this class does not declare is left to the parent.
  * Precedences and aliases are separate IR lists, so every precedence is printed
  * before any alias, and each list keeps its own order. An enum walks that same
  * constant list, printing cases and ordinary constants in their relative order.
@@ -58,11 +60,13 @@ final class ClassRenderer
         private readonly TypeRenderer $types = new TypeRenderer(),
         private readonly LiteralRenderer $literals = new LiteralRenderer(),
         private readonly AttributeRenderer $attributes = new AttributeRenderer(),
+        private readonly PropertyHookRenderer $hookRenderer = new PropertyHookRenderer(),
     ) {
     }
 
     /**
      * @param list<FunctionDeclaration> $methods
+     * @param list<PropertyHookDeclaration> $propertyHooks op-array order
      */
     public function render(
         ClassDeclaration $class,
@@ -70,6 +74,7 @@ final class ClassRenderer
         int $indent,
         string $declaredName,
         ?NameQualifier $names,
+        array $propertyHooks = [],
     ): string {
         if (!in_array($class->kind, ['class', 'interface', 'trait', 'enum'], true)) {
             $this->fail($class, $class->kind . ' is not supported');
@@ -79,8 +84,9 @@ final class ClassRenderer
         }
         $this->assertFlags($class);
         $this->assertMembers($class);
+        $groupedHooks = $this->groupHooks($class, $propertyHooks);
         $constructor = $this->constructor($class, $methods);
-        $promoted = $this->promotedParameters($class, $constructor);
+        $promoted = $this->promotedParameters($class, $constructor, $groupedHooks, $indent + 1, $names);
 
         $pad = str_repeat('    ', $indent);
         $lines = $this->commentLines($class->docComment, $class, $class->kind, $indent);
@@ -111,7 +117,13 @@ final class ClassRenderer
             if ($class->kind === 'enum') {
                 $this->fail($class, 'property $' . $property->name . ' cannot be declared on an enum');
             }
-            $members[] = $this->propertyDeclaration($class, $property, $indent + 1, $names);
+            $members[] = $this->propertyDeclaration(
+                $class,
+                $property,
+                $groupedHooks[$property->name] ?? [],
+                $indent + 1,
+                $names,
+            );
         }
         $seen = [];
         foreach ($methods as $declaration) {
@@ -204,9 +216,6 @@ final class ClassRenderer
 
     private function assertMembers(ClassDeclaration $class): void
     {
-        if ($class->kind === 'interface' && $class->properties !== []) {
-            $this->fail($class, 'interface properties are not supported');
-        }
         $properties = [];
         foreach ($class->properties as $property) {
             if (isset($properties[$property->name])) {
@@ -249,10 +258,16 @@ final class ClassRenderer
     }
 
     /**
+     * @param array<string, list<PropertyHookDeclaration>> $groupedHooks
      * @return array{order: list<string>, map: array<string, PromotedProperty>}
      */
-    private function promotedParameters(ClassDeclaration $class, ?OpArray $constructor): array
-    {
+    private function promotedParameters(
+        ClassDeclaration $class,
+        ?OpArray $constructor,
+        array $groupedHooks,
+        int $indent,
+        ?NameQualifier $names,
+    ): array {
         $declared = [];
         foreach ($class->properties as $property) {
             if (in_array('promoted', $property->flags, true)) {
@@ -289,7 +304,10 @@ final class ClassRenderer
             if (!$this->sameType($property->type, $argument['type'] ?? null)) {
                 $this->fail($class, 'promoted parameter $' . $name . ' does not match its property');
             }
-            $map[$name] = new PromotedProperty($this->propertyModifiers($class, $property));
+            $map[$name] = new PromotedProperty(
+                $this->propertyModifiers($class, $property),
+                $this->hookBlock($class, $property, $groupedHooks[$name] ?? [], $indent, $names),
+            );
             $order[] = $name;
             unset($declared[$name]);
         }
@@ -669,9 +687,13 @@ final class ClassRenderer
         return implode("\n", $lines);
     }
 
+    /**
+     * @param list<PropertyHookDeclaration> $hooks
+     */
     private function propertyDeclaration(
         ClassDeclaration $class,
         ClassProperty $property,
+        array $hooks,
         int $indent,
         ?NameQualifier $names,
     ): string {
@@ -695,9 +717,147 @@ final class ClassRenderer
         foreach ($this->memberAttributes($class, $property->attributes, 'property $' . $property->name, $indent, $names) as $attribute) {
             $lines[] = $attribute;
         }
-        $lines[] = str_repeat('    ', $indent) . $text . ';';
+        $block = $this->hookBlock($class, $property, $hooks, $indent, $names);
+        $lines[] = str_repeat('    ', $indent) . $text . ($block === null ? ';' : ' ' . $block);
 
         return implode("\n", $lines);
+    }
+
+    /**
+     * @param list<PropertyHookDeclaration> $hooks op-array order for this class
+     * @return array<string, list<PropertyHookDeclaration>>
+     */
+    private function groupHooks(ClassDeclaration $class, array $hooks): array
+    {
+        $properties = [];
+        foreach ($class->properties as $property) {
+            $properties[$property->name] = $property;
+        }
+        $grouped = [];
+        $seen = [];
+        foreach ($hooks as $hook) {
+            if (!$hook instanceof PropertyHookDeclaration) {
+                $this->fail($class, 'property hook metadata is incomplete');
+            }
+            $meta = $hook->opArray->propertyHook;
+            $scope = $hook->opArray->scope;
+            $kind = $meta === null ? '' : $meta->hook;
+            $name = $meta === null ? '' : $meta->property;
+            if (
+                $meta === null
+                || $scope === null
+                || ($kind !== 'get' && $kind !== 'set')
+                || $scope->name !== $class->name
+                || $scope->kind !== $class->kind
+            ) {
+                $label = $name === '' ? '(unknown)' : $name . '::' . $kind;
+                $this->fail($class, 'property hook ' . $label . ' metadata is inconsistent');
+            }
+            $property = $properties[$name] ?? null;
+            if (!$property instanceof ClassProperty) {
+                $this->fail($class, 'property hook ' . $name . '::' . $kind . ' does not match a property');
+            }
+            if (isset($seen[$name][$kind])) {
+                $this->fail($class, 'property $' . $name . ' declares hook ' . $kind . ' more than once');
+            }
+            $seen[$name][$kind] = true;
+            $grouped[$name][] = $hook;
+        }
+        foreach ($class->properties as $property) {
+            $this->assertHookList($class, $property, $grouped[$property->name] ?? []);
+        }
+
+        return $grouped;
+    }
+
+    /**
+     * @param list<PropertyHookDeclaration> $hooks
+     */
+    private function assertHookList(ClassDeclaration $class, ClassProperty $property, array $hooks): void
+    {
+        $present = [];
+        foreach ($hooks as $hook) {
+            $kind = $hook->opArray->propertyHook === null ? '' : $hook->opArray->propertyHook->hook;
+            $present[$kind] = true;
+        }
+        $listed = [];
+        foreach ($property->hooks as $hook) {
+            if ($hook !== 'get' && $hook !== 'set') {
+                $this->fail($class, 'property $' . $property->name . ' has hook ' . $hook . ', which is not supported');
+            }
+            if (isset($listed[$hook])) {
+                $this->fail($class, 'property $' . $property->name . ' lists hook ' . $hook . ' more than once');
+            }
+            $listed[$hook] = true;
+            if (!isset($present[$hook]) && !($class->kind === 'class' && $class->parent !== null)) {
+                $this->fail($class, 'property $' . $property->name . ' lists hook ' . $hook . ', which is not declared in this class');
+            }
+        }
+        foreach (array_keys($present) as $hook) {
+            if (!isset($listed[$hook])) {
+                $this->fail($class, 'property $' . $property->name . ' declares hook ' . $hook . ', which is not listed on the property');
+            }
+        }
+        $abstract = in_array('abstract', $property->flags, true);
+        $final = in_array('final', $property->flags, true);
+        $virtual = in_array('virtual', $property->flags, true);
+        $hooked = $property->hooks !== [] || $hooks !== [];
+        if ($virtual && $property->defaultValue !== null) {
+            $this->fail($class, 'property $' . $property->name . ' is virtual and has a default value');
+        }
+        if ($abstract && $final) {
+            $this->fail($class, 'property $' . $property->name . ' is final and abstract');
+        }
+        if (in_array('readonly', $property->flags, true) && $hooked) {
+            $this->fail($class, 'property $' . $property->name . ' is readonly and has hooks');
+        }
+        if (in_array('static', $property->flags, true) && $hooked) {
+            $this->fail($class, 'property $' . $property->name . ' is static and has hooks');
+        }
+        if (in_array('promoted', $property->flags, true) && $abstract) {
+            $this->fail($class, 'property $' . $property->name . ' is promoted and abstract');
+        }
+        if (in_array('promoted', $property->flags, true) && $virtual) {
+            $this->fail($class, 'property $' . $property->name . ' is promoted and virtual');
+        }
+        if ($class->kind === 'interface' && $property->hooks === []) {
+            $this->fail($class, 'interface property $' . $property->name . ' has no hooks');
+        }
+        if ($abstract) {
+            $found = false;
+            foreach ($hooks as $hook) {
+                if (in_array('abstract', $hook->opArray->flags, true)) {
+                    $found = true;
+                }
+            }
+            if (!$found) {
+                $this->fail($class, 'property $' . $property->name . ' is abstract and has no abstract hook');
+            }
+            if (
+                $class->kind === 'class'
+                && !in_array('abstract', $class->flags, true)
+                && !in_array('implicit_abstract', $class->flags, true)
+            ) {
+                $this->fail($class, 'property $' . $property->name . ' is abstract, but the class is not');
+            }
+        }
+    }
+
+    /**
+     * @param list<PropertyHookDeclaration> $hooks
+     */
+    private function hookBlock(
+        ClassDeclaration $class,
+        ClassProperty $property,
+        array $hooks,
+        int $indent,
+        ?NameQualifier $names,
+    ): ?string {
+        if ($hooks === []) {
+            return null;
+        }
+
+        return $this->hookRenderer->renderBlock($class, $property, $hooks, $indent, $names);
     }
 
     private function propertyModifiers(ClassDeclaration $class, ClassProperty $property): string
@@ -709,15 +869,6 @@ final class ClassRenderer
         }
         if (preg_match(self::IDENTIFIER, $property->name) !== 1) {
             $this->fail($class, 'property $' . $property->name . ' cannot be rendered');
-        }
-        if ($property->hooks !== []) {
-            $this->fail($class, 'property $' . $property->name . ' has hooks, which are not supported');
-        }
-        if (in_array('abstract', $property->flags, true)) {
-            $this->fail($class, 'property $' . $property->name . ' is abstract, which is not supported');
-        }
-        if (in_array('virtual', $property->flags, true)) {
-            $this->fail($class, 'property $' . $property->name . ' is virtual, which is not supported');
         }
         $visibility = array_values(array_intersect($property->flags, ['public', 'protected', 'private']));
         if (count($visibility) !== 1) {
@@ -733,10 +884,15 @@ final class ClassRenderer
             $this->fail($class, 'property $' . $property->name . ' is static and readonly');
         }
         $privateSet = in_array('private_set', $property->flags, true);
+        $abstract = in_array('abstract', $property->flags, true);
+        $parts = [];
         if (in_array('final', $property->flags, true) && !$privateSet) {
-            $this->fail($class, 'property $' . $property->name . ' is final, which has no declaration spelling');
+            $parts[] = 'final';
         }
-        $parts = [$visibility[0]];
+        if ($abstract && $class->kind !== 'interface') {
+            $parts[] = 'abstract';
+        }
+        $parts[] = $visibility[0];
         if ($set !== [] && !($readonly && $set[0] === 'protected_set')) {
             $parts[] = match ($set[0]) {
                 'public_set' => 'public(set)',

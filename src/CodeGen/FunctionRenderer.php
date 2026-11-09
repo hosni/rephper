@@ -296,6 +296,9 @@ final class FunctionRenderer
             }
             $text .= ' = ' . $value;
         }
+        if ($promotion instanceof PromotedProperty && $promotion->hooks !== null) {
+            $text .= ' ' . $promotion->hooks;
+        }
 
         return $text;
     }

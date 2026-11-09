@@ -9,6 +9,7 @@ use Rephper\CodeGen\FunctionDeclaration;
 use Rephper\CodeGen\FunctionRenderer;
 use Rephper\CodeGen\NameQualifier;
 use Rephper\CodeGen\PhpSourceGenerator;
+use Rephper\CodeGen\PropertyHookDeclaration;
 use Rephper\CodeGen\SourceGenerationException;
 use Rephper\Expr\Diagnostic;
 use Rephper\Ir\ClassDeclaration;
@@ -36,9 +37,11 @@ use Rephper\Stmt\StructuredStatements;
  * global region beside a named one. Import aliases are not in the IR.
  *
  * Ordinary classes, interfaces, traits, and enums are emitted from the class
- * rows. Their methods reuse function rendering. Anonymous classes, property
- * hooks, closures, conditional classes, and other unsupported declarations
- * fail the file. Nothing from that document is returned as a partial file.
+ * rows. Their methods reuse function rendering. A property hook is attached to
+ * the property it names and rendered with that property, in op-array order.
+ * Anonymous classes, closures, conditional classes, and other unsupported
+ * declarations fail the file. Nothing from that document is returned as a
+ * partial file.
  *
  * PHP 8.4 does not emit ADD_TRAIT or BIND_TRAITS. Those opcodes were removed
  * when trait binding moved into DECLARE_CLASS. Trait names and adaptations
@@ -123,8 +126,8 @@ final class PhpFileGenerator
     {
         $this->ignoredRegistrations = [];
         $document = $this->acceptTraitRegistration($document);
-        [$functions, $main, $methods] = $this->partition($document);
-        $classes = $this->classGroups($document, $methods);
+        [$functions, $main, $methods, $hooks] = $this->partition($document);
+        $classes = $this->classGroups($document, $methods, $hooks);
         if ($this->usesNamespaces($document)) {
             return $this->file($this->namespaceParts($document, $functions, $main, $classes));
         }
@@ -134,12 +137,12 @@ final class PhpFileGenerator
 
     /**
      * @param list<OpArray> $functions
-     * @param list<array{ClassDeclaration, list<OpArray>}> $classes
+     * @param list<array{ClassDeclaration, list<OpArray>, list<OpArray>}> $classes
      * @return list<string>
      */
     private function globalParts(Document $document, array $functions, OpArray $main, array $classes): array
     {
-        $strict = $this->strictTypes($main, $functions, $this->flatMethods($classes));
+        $strict = $this->strictTypes($main, $functions, $this->flatMethods($classes), $this->flatHooks($classes));
         $chunks = [];
         foreach ($functions as $opArray) {
             $chunks[] = $this->renderFunction($document, $opArray, 0, null, null);
@@ -156,7 +159,7 @@ final class PhpFileGenerator
 
     /**
      * @param list<OpArray> $functions
-     * @param list<array{ClassDeclaration, list<OpArray>}> $classes
+     * @param list<array{ClassDeclaration, list<OpArray>, list<OpArray>}> $classes
      * @return list<string>
      */
     private function namespaceParts(Document $document, array $functions, OpArray $main, array $classes): array
@@ -174,7 +177,7 @@ final class PhpFileGenerator
         $grouped = $this->assignFunctions($document, $functions);
         $groupedClasses = $this->assignClasses($document, $classes);
         $statements = $this->assignStatements($document->namespaces, $this->mainStatements($document, $main, $classes));
-        $strict = $this->strictTypes($main, $functions, $this->flatMethods($classes));
+        $strict = $this->strictTypes($main, $functions, $this->flatMethods($classes), $this->flatHooks($classes));
         $braced = count($document->namespaces) > 1;
         $parts = [];
         if ($strict) {
@@ -206,12 +209,13 @@ final class PhpFileGenerator
     }
 
     /**
-     * @return array{list<OpArray>, OpArray, list<OpArray>}
+     * @return array{list<OpArray>, OpArray, list<OpArray>, list<OpArray>}
      */
     private function partition(Document $document): array
     {
         $functions = [];
         $methods = [];
+        $hooks = [];
         $main = null;
         $seen = [];
         foreach ($document->opArrays as $opArray) {
@@ -222,10 +226,11 @@ final class PhpFileGenerator
                 $main = $opArray;
                 continue;
             }
+            if ($opArray->kind === 'property-hook' || $opArray->propertyHook !== null) {
+                $hooks[] = $this->acceptHook($opArray);
+                continue;
+            }
             if ($opArray->kind === 'method') {
-                if ($opArray->propertyHook !== null) {
-                    $this->rejectKind($opArray);
-                }
                 $methods[] = $opArray;
                 continue;
             }
@@ -238,7 +243,7 @@ final class PhpFileGenerator
             $this->fail('the document has no main op array');
         }
 
-        return [$functions, $main, $methods];
+        return [$functions, $main, $methods, $hooks];
     }
 
     private function usesNamespaces(Document $document): bool
@@ -400,9 +405,10 @@ final class PhpFileGenerator
 
     /**
      * @param list<OpArray> $methods
-     * @return list<array{ClassDeclaration, list<OpArray>}>
+     * @param list<OpArray> $hooks
+     * @return list<array{ClassDeclaration, list<OpArray>, list<OpArray>}>
      */
-    private function classGroups(Document $document, array $methods): array
+    private function classGroups(Document $document, array $methods, array $hooks): array
     {
         $groups = [];
         $used = [];
@@ -425,7 +431,7 @@ final class PhpFileGenerator
                     $used[$index] = true;
                 }
             }
-            $groups[] = [$class, $mine];
+            $groups[] = [$class, $mine, []];
         }
         foreach ($methods as $index => $method) {
             if (isset($used[$index])) {
@@ -434,6 +440,39 @@ final class PhpFileGenerator
             $scope = $method->scope === null ? '(unknown)' : $method->scope->name;
             $name = is_string($method->name) ? $method->name : '(unknown)';
             $this->fail('method ' . $scope . '::' . $name . ' does not belong to a class in this file');
+        }
+
+        return $this->attachHooks($groups, $hooks);
+    }
+
+    /**
+     * Anonymous classes have already been rejected. A hook whose scope is not
+     * one of the remaining classes cannot be placed, so the file fails.
+     *
+     * @param list<array{ClassDeclaration, list<OpArray>, list<OpArray>}> $groups
+     * @param list<OpArray> $hooks
+     * @return list<array{ClassDeclaration, list<OpArray>, list<OpArray>}>
+     */
+    private function attachHooks(array $groups, array $hooks): array
+    {
+        $used = [];
+        foreach ($groups as $index => $group) {
+            $class = $group[0];
+            $mine = [];
+            foreach ($hooks as $hookIndex => $hook) {
+                $scope = $hook->scope;
+                if ($scope !== null && $scope->name === $class->name && $scope->kind === $class->kind) {
+                    $mine[] = $hook;
+                    $used[$hookIndex] = true;
+                }
+            }
+            $groups[$index][2] = $mine;
+        }
+        foreach ($hooks as $hookIndex => $hook) {
+            if (isset($used[$hookIndex])) {
+                continue;
+            }
+            $this->fail('property hook ' . $this->hookLabel($hook) . ' does not belong to a class in this file');
         }
 
         return $groups;
@@ -450,7 +489,7 @@ final class PhpFileGenerator
     }
 
     /**
-     * @param list<array{ClassDeclaration, list<OpArray>}> $classes
+     * @param list<array{ClassDeclaration, list<OpArray>, list<OpArray>}> $classes
      * @return list<OpArray>
      */
     private function flatMethods(array $classes): array
@@ -466,8 +505,24 @@ final class PhpFileGenerator
     }
 
     /**
-     * @param list<array{ClassDeclaration, list<OpArray>}> $classes
-     * @return list<array{ClassDeclaration, list<OpArray>}>
+     * @param list<array{ClassDeclaration, list<OpArray>, list<OpArray>}> $classes
+     * @return list<OpArray>
+     */
+    private function flatHooks(array $classes): array
+    {
+        $hooks = [];
+        foreach ($classes as $group) {
+            foreach ($group[2] as $hook) {
+                $hooks[] = $hook;
+            }
+        }
+
+        return $hooks;
+    }
+
+    /**
+     * @param list<array{ClassDeclaration, list<OpArray>, list<OpArray>}> $classes
+     * @return list<array{ClassDeclaration, list<OpArray>, list<OpArray>}>
      */
     private function ordered(array $classes): array
     {
@@ -485,8 +540,8 @@ final class PhpFileGenerator
     }
 
     /**
-     * @param list<array{ClassDeclaration, list<OpArray>}> $classes
-     * @return list<array{ClassDeclaration, list<OpArray>}>
+     * @param list<array{ClassDeclaration, list<OpArray>, list<OpArray>}> $classes
+     * @return list<array{ClassDeclaration, list<OpArray>, list<OpArray>}>
      */
     private function assignClasses(Document $document, array $classes): array
     {
@@ -512,7 +567,7 @@ final class PhpFileGenerator
     }
 
     /**
-     * @param list<array{ClassDeclaration, list<OpArray>}> $classes
+     * @param list<array{ClassDeclaration, list<OpArray>, list<OpArray>}> $classes
      * @return list<Statement>
      */
     private function mainStatements(Document $document, OpArray $main, array $classes): array
@@ -626,6 +681,9 @@ final class PhpFileGenerator
     private function location(OpArray $opArray): string
     {
         $name = is_string($opArray->name) && $opArray->name !== '' ? $opArray->name : '(unknown)';
+        if ($opArray->kind === 'property-hook' || $opArray->propertyHook !== null) {
+            return 'property hook ' . $this->hookLabel($opArray);
+        }
         if ($opArray->kind === 'method') {
             $scope = $opArray->scope === null ? '(unknown)' : $opArray->scope->name;
 
@@ -642,7 +700,7 @@ final class PhpFileGenerator
     }
 
     /**
-     * @param list<array{ClassDeclaration, list<OpArray>}> $classes
+     * @param list<array{ClassDeclaration, list<OpArray>, list<OpArray>}> $classes
      */
     private function assertClassRegistration(OpArray $main, array $classes): void
     {
@@ -696,7 +754,7 @@ final class PhpFileGenerator
     }
 
     /**
-     * @param list<array{ClassDeclaration, list<OpArray>}> $classes
+     * @param list<array{ClassDeclaration, list<OpArray>, list<OpArray>}> $classes
      * @param list<Statement> $statements
      * @return list<string>
      */
@@ -722,11 +780,12 @@ final class PhpFileGenerator
                 $this->fail($classes[$classIndex][0]->kind . ' ' . $classes[$classIndex][0]->name . ' and a statement share line ' . $classLine);
             }
             if ($classLine < $statementLine) {
-                [$class, $methods] = $classes[$classIndex];
+                [$class, $methods, $hooks] = $classes[$classIndex];
                 $chunks[] = $this->renderClass(
                     $document,
                     $class,
                     $methods,
+                    $hooks,
                     $indent,
                     $this->declaredClassName($class, $region),
                     $names,
@@ -751,11 +810,13 @@ final class PhpFileGenerator
 
     /**
      * @param list<OpArray> $methods
+     * @param list<OpArray> $hooks
      */
     private function renderClass(
         Document $document,
         ClassDeclaration $class,
         array $methods,
+        array $hooks,
         int $indent,
         string $declaredName,
         ?NameQualifier $names,
@@ -774,8 +835,22 @@ final class PhpFileGenerator
             $this->assertReconstructed($structured, 'method ' . $class->name . '::' . $opArray->name);
             $rendered[] = new FunctionDeclaration($opArray, $structured);
         }
+        $renderedHooks = [];
+        foreach ($hooks as $opArray) {
+            $label = $this->hookLabel($opArray);
+            $this->rejectHookBody($opArray, $label);
+            $this->rejectDeclarations($opArray);
+            if ($opArray->namespace !== $expected) {
+                $recorded = $opArray->namespace === null ? 'the global namespace' : 'namespace ' . $opArray->namespace;
+                $where = $region === null ? 'the file has no namespace region' : $this->regionLabel($region);
+                $this->fail('property hook ' . $label . ' records ' . $recorded . ', which does not match ' . $where);
+            }
+            $structured = $this->pipeline->structure($document, $opArray);
+            $this->assertReconstructed($structured, 'property hook ' . $class->name . '::$' . $label);
+            $renderedHooks[] = new PropertyHookDeclaration($opArray, $structured);
+        }
 
-        return $this->classes->render($class, $rendered, $indent, $declaredName, $names);
+        return $this->classes->render($class, $rendered, $indent, $declaredName, $names, $renderedHooks);
     }
 
     private function declaredClassName(ClassDeclaration $class, ?NamespaceRegion $region): string
@@ -869,6 +944,60 @@ final class PhpFileGenerator
         return $opArray;
     }
 
+    private function acceptHook(OpArray $opArray): OpArray
+    {
+        $hook = $opArray->propertyHook;
+        if ($opArray->kind !== 'property-hook' || $hook === null) {
+            if ($hook === null) {
+                $name = is_string($opArray->name) && $opArray->name !== '' ? $opArray->name : '(unknown)';
+                $this->fail('property hook ' . $name . ' has no hook kind');
+            }
+            $this->fail('property hook ' . $this->hookLabel($opArray) . ' metadata is inconsistent');
+        }
+        if ($opArray->scope === null) {
+            $this->fail('property hook ' . $this->hookLabel($opArray) . ' has no class scope');
+        }
+        if ($hook->hook !== 'get' && $hook->hook !== 'set') {
+            $name = $hook->property === '' ? '(unknown)' : $hook->property;
+            $detail = $hook->hook === '' ? 'has no hook kind' : 'has hook kind ' . $hook->hook . ', which is not supported';
+            $this->fail('property hook ' . $name . ' ' . $detail);
+        }
+        if ($hook->property === '' || preg_match(self::IDENTIFIER, $hook->property) !== 1) {
+            $this->fail('property hook ' . $this->hookLabel($opArray) . ' metadata is inconsistent');
+        }
+        if (!in_array($opArray->scope->kind, ['class', 'interface', 'trait', 'enum'], true)) {
+            $this->fail('property hook ' . $this->hookLabel($opArray) . ' metadata is inconsistent');
+        }
+        if ($opArray->name !== '$' . $hook->property . '::' . $hook->hook) {
+            $this->fail('property hook ' . $this->hookLabel($opArray) . ' metadata is inconsistent');
+        }
+
+        return $opArray;
+    }
+
+    private function hookLabel(OpArray $opArray): string
+    {
+        $hook = $opArray->propertyHook;
+        if ($hook !== null && $hook->property !== '' && $hook->hook !== '') {
+            return $hook->property . '::' . $hook->hook;
+        }
+        if (is_string($opArray->name) && $opArray->name !== '') {
+            return $opArray->name;
+        }
+
+        return '(unknown)';
+    }
+
+    private function rejectHookBody(OpArray $opArray, string $label): void
+    {
+        if (in_array('generator', $opArray->flags, true)) {
+            $this->fail('property hook ' . $label . ' contains a generator, which is not supported');
+        }
+        if (in_array('closure', $opArray->flags, true) || in_array('fake_closure', $opArray->flags, true)) {
+            $this->fail('property hook ' . $label . ' contains a closure, which is not supported');
+        }
+    }
+
     private function rejectKind(OpArray $opArray): never
     {
         $name = is_string($opArray->name) ? $opArray->name : '(unknown)';
@@ -896,26 +1025,18 @@ final class PhpFileGenerator
         foreach ($opArray->instructions as $instruction) {
             if (isset(self::CLASS_REGISTRATION[$instruction->opcode])) {
                 if ($opArray->kind !== 'main') {
-                    $where = $opArray->kind === 'method'
-                        ? 'method ' . ($opArray->scope === null ? '(unknown)' : $opArray->scope->name) . '::' . $opArray->name
-                        : 'function ' . $opArray->name;
-                    $this->fail(self::CLASS_REGISTRATION[$instruction->opcode] . ' in ' . $where . ' is not supported');
+                    $this->fail(self::CLASS_REGISTRATION[$instruction->opcode] . ' in ' . $this->location($opArray) . ' is not supported');
                 }
                 continue;
             }
             if (isset(self::TRAIT_REGISTRATION[$instruction->opcode])) {
-                $where = $opArray->kind === 'main' ? 'the main script' : ($opArray->kind === 'method'
-                    ? 'method ' . ($opArray->scope === null ? '(unknown)' : $opArray->scope->name) . '::' . $opArray->name
-                    : ($opArray->kind === 'function' ? 'function ' . $opArray->name : $opArray->kind . ' ' . $opArray->id));
-                $this->fail(self::TRAIT_REGISTRATION[$instruction->opcode] . ' in ' . $where . ' is not supported');
+                $this->fail(self::TRAIT_REGISTRATION[$instruction->opcode] . ' in ' . $this->location($opArray) . ' is not supported');
             }
             $reason = self::DECLARATIONS[$instruction->opcode] ?? null;
             if ($reason === null) {
                 continue;
             }
-            $where = $opArray->kind === 'main' ? 'the main script' : ($opArray->kind === 'method'
-                ? 'method ' . ($opArray->scope === null ? '(unknown)' : $opArray->scope->name) . '::' . $opArray->name
-                : 'function ' . $opArray->name);
+            $where = $opArray->kind === 'main' ? 'the main script' : $this->location($opArray);
             $this->fail($reason . ' in ' . $where . ' is not supported');
         }
     }
@@ -923,11 +1044,12 @@ final class PhpFileGenerator
     /**
      * @param list<OpArray> $functions
      * @param list<OpArray> $methods
+     * @param list<OpArray> $hooks
      */
-    private function strictTypes(OpArray $main, array $functions, array $methods): bool
+    private function strictTypes(OpArray $main, array $functions, array $methods, array $hooks): bool
     {
         $flags = [in_array('strict_types', $main->flags, true)];
-        foreach ([...$functions, ...$methods] as $opArray) {
+        foreach ([...$functions, ...$methods, ...$hooks] as $opArray) {
             $flags[] = in_array('strict_types', $opArray->flags, true);
         }
         if (in_array(true, $flags, true) && in_array(false, $flags, true)) {

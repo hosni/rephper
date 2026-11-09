@@ -215,7 +215,7 @@ final class Reconstructor
             'ASSIGN' => $this->assign($opArray, $instruction, null),
             'ASSIGN_OP' => $this->assignOp($opArray, $instruction),
             'ASSIGN_OBJ' => $this->assignObject($opArray, $instruction),
-            'FETCH_OBJ_R' => $this->fetchObject($opArray, $instruction),
+            'FETCH_OBJ_R', 'FETCH_OBJ_W' => $this->fetchObject($opArray, $instruction),
             'RETURN', 'RETURN_BY_REF' => $this->roots[] = new ReturnValue(
                 $instruction->index,
                 $instruction->line,
@@ -289,7 +289,12 @@ final class Reconstructor
 
     private function fetchObject(OpArray $opArray, Instruction $instruction): void
     {
-        if ($instruction->extendedValue !== 0 || $instruction->op1->kind !== 'this') {
+        // extended_value is a runtime-cache byte offset. The low bits are fetch
+        // flags: ZEND_FETCH_REF is 1 and ZEND_FETCH_DIM_WRITE is 2. A later
+        // property in the same op array has a non-zero cache slot and is still
+        // `$this->name`. A by-reference read, including `&get`, is FETCH_OBJ_W
+        // with only the reference flag. A dimension write is a different expression.
+        if ($instruction->op1->kind !== 'this' || !$this->plainPropertyFetch($instruction)) {
             $this->opaque($opArray, $instruction, 'object property fetch is not a read of $this');
 
             return;
@@ -311,6 +316,15 @@ final class Reconstructor
             $instruction->line,
             $name,
         ));
+    }
+
+    private function plainPropertyFetch(Instruction $instruction): bool
+    {
+        if ($instruction->opcode === 'FETCH_OBJ_R') {
+            return ($instruction->extendedValue & 1) === 0;
+        }
+
+        return $instruction->opcode === 'FETCH_OBJ_W' && ($instruction->extendedValue & 3) === 1;
     }
 
     private function isInitiator(string $opcode): bool
