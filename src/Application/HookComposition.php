@@ -25,9 +25,17 @@ use Rephper\Ir\OpArray;
  * still collide. An adaptation whose method is a hook name is rejected
  * because this pass does not model it.
  *
- * A parent or trait that is not in the file leaves a hooked property
- * unresolved, and generation fails. A property with no hooks and an external
- * parent is left alone: this file records no hook to compose.
+ * An unresolved trait is fail-closed. Its property hooks are not in this
+ * file, so the trait is rejected after local properties, traits that are
+ * present, and parent properties have been considered. An empty property
+ * list does not make that trait harmless: it may declare a hooked property
+ * of its own, or a set hook on a backed by-reference get inherited from a
+ * parent. A linked class keeps the properties already stored on its row.
+ * Lint does not mark a class linked while its trait members are still absent.
+ *
+ * A parent that is not in the file leaves a hooked property unresolved, and
+ * generation fails. A property with no hooks and an external parent is left
+ * alone: this file records no hook to compose.
  */
 final class HookComposition
 {
@@ -44,7 +52,7 @@ final class HookComposition
     private array $facts = [];
 
     /**
-     * @var array<string, array{properties: array<string, array{virtual: bool, private: bool, hooks: array<string, bool|null>}>, missing: ?string}>
+     * @var array<string, array{properties: array<string, array{virtual: bool, private: bool, hooks: array<string, bool|null>}>}>
      */
     private array $cache = [];
 
@@ -76,7 +84,7 @@ final class HookComposition
 
     /**
      * @param array<string, true> $stack
-     * @return array{properties: array<string, array{virtual: bool, private: bool, hooks: array<string, bool|null>}>, missing: ?string}
+     * @return array{properties: array<string, array{virtual: bool, private: bool, hooks: array<string, bool|null>}>}
      */
     private function compose(string $key, array $stack): array
     {
@@ -94,26 +102,22 @@ final class HookComposition
         foreach ($class->properties as $property) {
             $properties[$property->name] = $this->declared($class, $property);
         }
-        $missing = null;
+        $unresolved = [];
         if (!in_array('linked', $class->flags, true)) {
             foreach ($class->traits as $traitName) {
                 $traitKey = $this->key($traitName);
                 $trait = $this->symbols[$traitKey][0] ?? null;
                 if (!$trait instanceof ClassDeclaration) {
-                    $missing = $traitName;
+                    if (!in_array($traitName, $unresolved, true)) {
+                        $unresolved[] = $traitName;
+                    }
                     continue;
                 }
                 if ($trait->kind !== 'trait') {
                     $this->fail($this->label($class) . ' uses ' . $traitName . ', which is not a trait, so its hook composition cannot be validated');
                 }
                 $composed = $this->compose($traitKey, $stack);
-                if ($composed['missing'] !== null) {
-                    $missing = $composed['missing'];
-                }
                 $properties = $this->addTraitProperties($class, $properties, $composed['properties'], $trait->name);
-            }
-            if ($missing !== null && $properties !== []) {
-                $this->fail($this->label($class) . ' uses trait ' . $missing . ', which is not in this file, so the composition of its properties cannot be validated');
             }
         }
         $parentName = $class->parent;
@@ -129,17 +133,33 @@ final class HookComposition
                 }
             } else {
                 $composed = $this->compose($parentKey, $stack);
-                if ($composed['missing'] !== null && $class->properties !== []) {
-                    $this->fail($this->label($class) . ' extends ' . $parent->name . ', which depends on ' . $composed['missing'] . ', so its hook composition cannot be validated');
-                }
                 $properties = $this->inheritProperties($properties, $composed['properties']);
             }
         }
+        $this->rejectUnresolvedTraits($class, $unresolved);
         foreach ($properties as $name => $property) {
             $this->assertResolved($class, $name, $property);
         }
 
-        return $this->cache[$key] = ['properties' => $properties, 'missing' => $missing];
+        return $this->cache[$key] = ['properties' => $properties];
+    }
+
+    /**
+     * The trait rows are absent, so their hooks cannot be composed. This does
+     * not depend on the property list: an empty list can still inherit a
+     * by-reference get, or the trait can contribute a property of its own.
+     *
+     * @param list<string> $traits
+     */
+    private function rejectUnresolvedTraits(ClassDeclaration $class, array $traits): void
+    {
+        if ($traits === []) {
+            return;
+        }
+        if (count($traits) === 1) {
+            $this->fail($this->label($class) . ' uses trait ' . $traits[0] . ', which is not in this file, so its property hooks are unavailable and the composition of its properties cannot be validated');
+        }
+        $this->fail($this->label($class) . ' uses traits ' . implode(' and ', $traits) . ', which are not in this file, so their property hooks are unavailable and the composition of its properties cannot be validated');
     }
 
     /**

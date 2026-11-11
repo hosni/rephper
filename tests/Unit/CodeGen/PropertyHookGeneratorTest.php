@@ -954,6 +954,146 @@ PHP;
         $this->assertGenerationFails($missingParent, 'extends MissingParent, which is not in this file');
     }
 
+    public function testUnresolvedTraitsFailClosedWhenTheClassDeclaresNoProperties(): void
+    {
+        $one = $this->mutate('PHP/8.4/PropertyHookTraitReferenceOnly.json', static function (array &$data): void {
+            foreach ($data['classes'] as &$class) {
+                if (($class['name'] ?? null) !== 'UsesReference') {
+                    continue;
+                }
+                $class['traits'] = ['MissingTrait'];
+                $class['properties'] = [];
+            }
+        });
+        $this->assertGenerationFails($one, 'class UsesReference uses trait MissingTrait, which is not in this file, so its property hooks are unavailable');
+
+        $two = $this->mutate('PHP/8.4/PropertyHookTraitReferenceOnly.json', static function (array &$data): void {
+            foreach ($data['classes'] as &$class) {
+                if (($class['name'] ?? null) !== 'UsesReference') {
+                    continue;
+                }
+                $class['traits'] = ['MissingOne', 'MissingTwo'];
+                $class['properties'] = [];
+            }
+        });
+        $this->assertGenerationFails($two, 'class UsesReference uses traits MissingOne and MissingTwo, which are not in this file, so their property hooks are unavailable');
+
+        $child = $this->mutate('PHP/8.4/PropertyHookTraitReferenceOnly.json', static function (array &$data): void {
+            foreach ($data['classes'] as &$class) {
+                if (($class['name'] ?? null) !== 'UsesReference') {
+                    continue;
+                }
+                $class['traits'] = ['MissingTrait'];
+                $class['properties'] = [];
+            }
+            $parent = $data['classes'][1];
+            $data['classes'][] = [
+                'name' => 'EmptyChild',
+                'kind' => 'class',
+                'flags' => [],
+                'parent' => 'UsesReference',
+                'interfaces' => [],
+                'traits' => [],
+                'trait_aliases' => [],
+                'trait_precedences' => [],
+                'filename' => $parent['filename'],
+                'line_start' => 16,
+                'line_end' => 18,
+                'enum_backing' => null,
+                'properties' => [],
+                'constants' => [],
+                'attributes' => [],
+                'doc_comment' => null,
+            ];
+        });
+        $this->assertGenerationFails($child, 'class UsesReference uses trait MissingTrait, which is not in this file, so its property hooks are unavailable');
+    }
+
+    public function testInheritedReferenceGetWithAnUnresolvedTraitFailsClosed(): void
+    {
+        $version = Process::run(['php8.4', '-n', '-r', 'echo PHP_VERSION;']);
+        $this->assertSame(0, $version['exit'], $version['stderr']);
+        $this->assertSame('8.4.27', $version['stdout']);
+
+        $source = <<<'PHP'
+<?php
+
+class ByRef
+{
+    public int $value = 1 {
+        &get => $this->value;
+    }
+}
+
+trait AddsSet
+{
+    public int $value = 1 {
+        set => $value;
+    }
+}
+
+class ReferenceChild extends ByRef
+{
+    use AddsSet;
+}
+PHP;
+        $file = $this->temporaryPhp($source);
+        try {
+            $lint = Process::run(['php8.4', '-n', '-l', $file]);
+            $run = Process::run(['php8.4', '-n', $file]);
+        } finally {
+            unlink($file);
+        }
+        $this->assertSame(0, $lint['exit'], $lint['stdout'] . $lint['stderr']);
+        $this->assertNotSame(0, $run['exit']);
+        $output = $run['stdout'] . $run['stderr'];
+        $this->assertStringContainsString('ByRef and AddsSet define the same hooked property ($value)', $output);
+        $this->assertStringContainsString('Conflict resolution between hooked properties is currently not supported', $output);
+
+        $missingTrait = $this->mutate('PHP/8.4/PropertyHookReference.json', function (array &$data): void {
+            $parent = $data['classes'][0];
+            $this->assertIsArray($parent);
+            $this->assertSame('ByRef', $parent['name'] ?? null);
+            $reference = false;
+            foreach ($data['op_arrays'] as $opArray) {
+                if (!is_array($opArray)) {
+                    continue;
+                }
+                $scope = $opArray['scope'] ?? null;
+                $hook = $opArray['property_hook'] ?? null;
+                if (
+                    is_array($scope)
+                    && ($scope['name'] ?? null) === 'ByRef'
+                    && is_array($hook)
+                    && ($hook['hook'] ?? null) === 'get'
+                    && in_array('return_reference', $opArray['flags'], true)
+                ) {
+                    $reference = true;
+                }
+            }
+            $this->assertTrue($reference);
+            $data['classes'][] = [
+                'name' => 'ReferenceChild',
+                'kind' => 'class',
+                'flags' => [],
+                'parent' => 'ByRef',
+                'interfaces' => [],
+                'traits' => ['AddsSet'],
+                'trait_aliases' => [],
+                'trait_precedences' => [],
+                'filename' => $parent['filename'],
+                'line_start' => 17,
+                'line_end' => 20,
+                'enum_backing' => null,
+                'properties' => [],
+                'constants' => [],
+                'attributes' => [],
+                'doc_comment' => null,
+            ];
+        });
+        $this->assertGenerationFails($missingTrait, 'class ReferenceChild uses trait AddsSet, which is not in this file, so its property hooks are unavailable');
+    }
+
     private function assertGenerationFails(Document $document, string $message): void
     {
         try {
