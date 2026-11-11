@@ -835,6 +835,125 @@ PHP],
         $this->assertStringContainsString('public public(set) int $value', $symmetricSource);
     }
 
+    public function testTraitCompositionsThatPhpRejectsWhenLoadedAreRejected(): void
+    {
+        $fixtures = [
+            'PHP/8.4/PropertyHookTraitBacked.php' => 'class ReferenceChild property $value combines a by-reference get with a set hook',
+            'PHP/8.4/PropertyHookTraitSplit.php' => 'class SplitHooks property $value combines a by-reference get with a set hook',
+            'PHP/8.4/PropertyHookTraitAndClass.php' => 'class AddsSet property $value combines a by-reference get with a set hook',
+            'PHP/8.4/PropertyHookTraitUsesTrait.php' => 'trait AddsSet property $value combines a by-reference get with a set hook',
+            'PHP/8.4/PropertyHookTraitAdapted.php' => 'class Adapted property $value combines a by-reference get with a set hook',
+        ];
+        foreach ($fixtures as $php => $message) {
+            $path = dirname(__DIR__, 3) . '/tests/Fixtures/' . $php;
+            $lint = Process::run(['php8.4', '-n', '-l', $path]);
+            $this->assertSame(0, $lint['exit'], $php . "\n" . $lint['stdout'] . $lint['stderr']);
+            $run = Process::run(['php8.4', '-n', $path]);
+            $this->assertNotSame(0, $run['exit'], $php . ' loaded, but PHP 8.4.27 should reject it');
+            $json = substr($php, 0, -4) . '.json';
+            $this->assertGenerationFails($this->document($json), $message);
+        }
+    }
+
+    public function testValidTraitHookCompositionsLoad(): void
+    {
+        $ordinary = $this->execute('PHP/8.4/PropertyHookTraitOrdinary.json', '$item = new UsesOrdinary(); $item->value = 3; echo $item->value;');
+        $this->assertSame('3', $ordinary);
+
+        $reference = $this->execute('PHP/8.4/PropertyHookTraitReferenceOnly.json', 'echo (new UsesReference())->value;');
+        $this->assertSame('1', $reference);
+
+        $virtual = $this->execute('PHP/8.4/PropertyHookTraitVirtual.json', '$child = new VirtualChild(); $child->value = 4; echo $child->value;');
+        $this->assertSame('4', $virtual);
+
+        $private = $this->execute('PHP/8.4/PropertyHookTraitPrivate.json', '$child = new PublicChild(); $child->value = 5; echo $child->value;');
+        $this->assertSame('5', $private);
+    }
+
+    public function testTheSameTraitCannotCombineABackedReferenceGetWithSet(): void
+    {
+        $source = <<<'PHP'
+<?php
+
+trait BothHooks
+{
+    public int $value = 1 {
+        &get => $this->value;
+        set => $value;
+    }
+}
+PHP;
+        $file = tempnam(sys_get_temp_dir(), 'rephper-same-trait-');
+        $this->assertNotFalse($file);
+        $php = $file . '.php';
+        rename($file, $php);
+        file_put_contents($php, $source);
+        try {
+            $lint = Process::run(['php8.4', '-n', '-l', $php]);
+            $run = Process::run(['php8.4', '-n', $php]);
+        } finally {
+            unlink($php);
+        }
+        $this->assertNotSame(0, $lint['exit']);
+        $this->assertNotSame(0, $run['exit']);
+        $this->assertStringContainsString('may not return by reference', $lint['stdout'] . $lint['stderr'] . $run['stdout'] . $run['stderr']);
+
+        $combined = $this->mutate('PHP/8.4/PropertyHookTraitReferenceOnly.json', function (array &$data): void {
+            foreach ($data['classes'] as &$class) {
+                if (($class['name'] ?? null) !== 'ReferenceOnly') {
+                    continue;
+                }
+                $class['properties'][0]['hooks'][] = 'set';
+            }
+            $set = null;
+            foreach ($data['op_arrays'] as $opArray) {
+                if (($opArray['name'] ?? null) === '$value::get') {
+                    $set = $opArray;
+                    break;
+                }
+            }
+            $this->assertIsArray($set);
+            $set['name'] = '$value::set';
+            $set['property_hook']['hook'] = 'set';
+            $set['flags'] = array_values(array_filter(
+                $set['flags'],
+                static fn (string $flag): bool => $flag !== 'return_reference',
+            ));
+            $data['op_arrays'][] = $set;
+        });
+        $this->assertGenerationFails($combined, 'trait ReferenceOnly property $value combines a by-reference get with a set hook');
+    }
+
+    public function testAMissingTraitOrParentFailsClosed(): void
+    {
+        $missingTrait = $this->mutate('PHP/8.4/PropertyHookTraitReferenceOnly.json', static function (array &$data): void {
+            foreach ($data['classes'] as &$class) {
+                if (($class['name'] ?? null) === 'UsesReference') {
+                    $class['traits'] = ['MissingTrait'];
+                    $class['properties'][] = [
+                        'name' => 'value',
+                        'flags' => ['public'],
+                        'type' => ['display' => 'int', 'nullable' => false, 'kind' => 'builtin'],
+                        'default' => ['type' => 'int', 'value' => 1],
+                        'hooks' => ['set'],
+                        'attributes' => [],
+                        'doc_comment' => null,
+                    ];
+                }
+            }
+        });
+        $this->assertGenerationFails($missingTrait, 'uses trait MissingTrait, which is not in this file');
+
+        $missingParent = $this->mutate('PHP/8.4/PropertyHookInheritance.json', static function (array &$data): void {
+            foreach ($data['classes'] as &$class) {
+                if (($class['name'] ?? null) === 'ChildSet') {
+                    $class['parent'] = 'MissingParent';
+                }
+            }
+        });
+        $this->assertGenerationFails($missingParent, 'extends MissingParent, which is not in this file');
+    }
+
     private function assertGenerationFails(Document $document, string $message): void
     {
         try {

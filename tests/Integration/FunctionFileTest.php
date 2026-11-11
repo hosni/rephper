@@ -103,6 +103,10 @@ final class FunctionFileTest extends TestCase
             'hook visibility' => ['PHP/8.4/PropertyHookVisibility.json'],
             'reference hook' => ['PHP/8.4/PropertyHookReference.json'],
             'promoted hook' => ['PHP/8.4/PropertyHookPromoted.json'],
+            'trait ordinary hooks' => ['PHP/8.4/PropertyHookTraitOrdinary.json'],
+            'trait reference get' => ['PHP/8.4/PropertyHookTraitReferenceOnly.json'],
+            'trait virtual reference' => ['PHP/8.4/PropertyHookTraitVirtual.json'],
+            'private reference get' => ['PHP/8.4/PropertyHookTraitPrivate.json'],
         ];
     }
 
