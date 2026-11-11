@@ -128,6 +128,7 @@ final class PhpFileGenerator
         $document = $this->acceptTraitRegistration($document);
         [$functions, $main, $methods, $hooks] = $this->partition($document);
         $classes = $this->classGroups($document, $methods, $hooks);
+        $this->rejectInheritedReferenceGet($classes);
         if ($this->usesNamespaces($document)) {
             return $this->file($this->namespaceParts($document, $functions, $main, $classes));
         }
@@ -443,6 +444,79 @@ final class PhpFileGenerator
         }
 
         return $this->attachHooks($groups, $hooks);
+    }
+
+    /**
+     * A child that does not redeclare get still has that hook. PHP rejects the
+     * child when the inherited get returns by reference and the property also
+     * has a set hook. The parent class has to be in this file; an external
+     * parent does not carry the hook flags.
+     *
+     * @param list<array{ClassDeclaration, list<OpArray>, list<OpArray>}> $groups
+     */
+    private function rejectInheritedReferenceGet(array $groups): void
+    {
+        $classes = [];
+        $getReference = [];
+        foreach ($groups as $group) {
+            $class = $group[0];
+            $key = strtolower($class->name);
+            $classes[$key] = $class;
+            foreach ($group[2] as $hook) {
+                $meta = $hook->propertyHook;
+                if ($meta === null || $meta->hook !== 'get') {
+                    continue;
+                }
+                $referenced = isset($getReference[$key][$meta->property]) && $getReference[$key][$meta->property];
+                $getReference[$key][$meta->property] = $referenced || in_array('return_reference', $hook->flags, true);
+            }
+        }
+        foreach ($groups as $group) {
+            $class = $group[0];
+            $key = strtolower($class->name);
+            foreach ($class->properties as $property) {
+                if (in_array('virtual', $property->flags, true)) {
+                    continue;
+                }
+                if (!in_array('get', $property->hooks, true) || !in_array('set', $property->hooks, true)) {
+                    continue;
+                }
+                if (array_key_exists($property->name, $getReference[$key] ?? [])) {
+                    continue;
+                }
+                if ($this->inheritedGetReturnsReference($class, $property->name, $classes, $getReference, [])) {
+                    $this->fail($class->kind . ' ' . $class->name . ' property $' . $property->name . ' combines a by-reference get with a set hook');
+                }
+            }
+        }
+    }
+
+    /**
+     * @param array<string, ClassDeclaration> $classes
+     * @param array<string, array<string, bool>> $getReference
+     * @param array<string, true> $seen
+     */
+    private function inheritedGetReturnsReference(
+        ClassDeclaration $class,
+        string $property,
+        array $classes,
+        array $getReference,
+        array $seen,
+    ): bool {
+        $parent = $class->parent;
+        if ($parent === null) {
+            return false;
+        }
+        $key = strtolower($parent);
+        if (isset($seen[$key]) || !isset($classes[$key])) {
+            return false;
+        }
+        $seen[$key] = true;
+        if (array_key_exists($property, $getReference[$key] ?? [])) {
+            return $getReference[$key][$property];
+        }
+
+        return $this->inheritedGetReturnsReference($classes[$key], $property, $classes, $getReference, $seen);
     }
 
     /**

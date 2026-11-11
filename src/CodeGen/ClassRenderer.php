@@ -823,6 +823,22 @@ final class ClassRenderer
         if ($class->kind === 'interface' && $property->hooks === []) {
             $this->fail($class, 'interface property $' . $property->name . ' has no hooks');
         }
+        // PHP 8.4 rejects these shapes. Equivalent set visibility is not
+        // asymmetric; the engine removes that flag before the check.
+        if ($virtual && $property->hooks === []) {
+            $this->fail($class, 'property $' . $property->name . ' is virtual and has no hooks');
+        }
+        if (!$virtual && $this->getReturnsByReference($hooks) && in_array('set', $property->hooks, true)) {
+            $this->fail($class, 'property $' . $property->name . ' combines a by-reference get with a set hook');
+        }
+        if (
+            $virtual
+            && $this->hasAsymmetricSetVisibility($property)
+            && !(in_array('get', $property->hooks, true) && in_array('set', $property->hooks, true))
+        ) {
+            $side = in_array('set', $property->hooks, true) ? 'write-only' : 'read-only';
+            $this->fail($class, $side . ' virtual property $' . $property->name . ' must not specify asymmetric visibility');
+        }
         if ($abstract) {
             $found = false;
             foreach ($hooks as $hook) {
@@ -841,6 +857,37 @@ final class ClassRenderer
                 $this->fail($class, 'property $' . $property->name . ' is abstract, but the class is not');
             }
         }
+    }
+
+    /**
+     * @param list<PropertyHookDeclaration> $hooks
+     */
+    private function getReturnsByReference(array $hooks): bool
+    {
+        foreach ($hooks as $hook) {
+            $meta = $hook->opArray->propertyHook;
+            if ($meta !== null && $meta->hook === 'get' && in_array('return_reference', $hook->opArray->flags, true)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function hasAsymmetricSetVisibility(ClassProperty $property): bool
+    {
+        $get = array_values(array_intersect($property->flags, ['public', 'protected', 'private']));
+        $set = array_values(array_intersect($property->flags, ['public_set', 'protected_set', 'private_set']));
+        if (count($get) !== 1 || count($set) !== 1) {
+            return false;
+        }
+        $same = [
+            'public' => 'public_set',
+            'protected' => 'protected_set',
+            'private' => 'private_set',
+        ];
+
+        return $set[0] !== $same[$get[0]];
     }
 
     /**

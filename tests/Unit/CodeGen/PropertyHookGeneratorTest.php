@@ -711,6 +711,50 @@ PHP],
         $functionKind = $this->mutate('PHP/8.4/PropertyHooks.json', static function (array &$data): void {
             $data['op_arrays'][0]['kind'] = 'function';
         });
+        $virtualNone = $this->mutate('PHP/8.4/PropertyHookVirtual.json', static function (array &$data): void {
+            $data['classes'][0]['properties'][0]['hooks'] = [];
+            $data['op_arrays'] = array_values(array_filter(
+                $data['op_arrays'],
+                static fn (array $opArray): bool => ($opArray['kind'] ?? null) !== 'property-hook',
+            ));
+        });
+        $finalPrivate = $this->mutate('PHP/8.4/PropertyHookVisibility.json', static function (array &$data): void {
+            foreach ($data['op_arrays'] as &$opArray) {
+                if (($opArray['name'] ?? null) === '$pri::get') {
+                    $opArray['flags'][] = 'final';
+                }
+            }
+        });
+        $finalOnPrivateProperty = $this->mutate('PHP/8.4/PropertyHooks.json', static function (array &$data): void {
+            $data['classes'][0]['properties'][0]['flags'] = array_values(array_filter(
+                $data['classes'][0]['properties'][0]['flags'],
+                static fn (string $flag): bool => $flag !== 'public',
+            ));
+            $data['classes'][0]['properties'][0]['flags'][] = 'private';
+            $data['op_arrays'][0]['flags'][] = 'final';
+        });
+        $backedReference = $this->mutate('PHP/8.4/PropertyHooks.json', static function (array &$data): void {
+            $data['op_arrays'][0]['flags'][] = 'return_reference';
+        });
+        $inheritedReference = $this->mutate('PHP/8.4/PropertyHookInheritance.json', static function (array &$data): void {
+            $data['op_arrays'][0]['flags'][] = 'return_reference';
+            $data['classes'][0]['properties'][0]['hooks'] = ['get'];
+            $data['op_arrays'] = array_values(array_filter(
+                $data['op_arrays'],
+                static function (array $opArray): bool {
+                    return ($opArray['name'] ?? null) !== '$value::set'
+                        || ($opArray['scope']['name'] ?? null) !== 'ParentBox';
+                },
+            ));
+        });
+        $readOnlyAsymmetric = $this->mutate('PHP/8.4/PropertyHookVirtual.json', static function (array &$data): void {
+            $data['classes'][0]['properties'][0]['flags'][] = 'protected_set';
+        });
+        $writeOnlyAsymmetric = $this->mutate('PHP/8.4/PropertyHookSet.json', static function (array &$data): void {
+            $data['classes'][0]['properties'][0]['flags'][] = 'virtual';
+            $data['classes'][0]['properties'][0]['flags'][] = 'private_set';
+            $data['classes'][0]['properties'][0]['default'] = null;
+        });
 
         $this->assertGenerationFails($missingScope, 'property hook value::get has no class scope');
         $this->assertGenerationFails($missingKind, 'property hook $value::get has no hook kind');
@@ -744,6 +788,51 @@ PHP],
         $this->assertGenerationFails($static, 'property $value is static and has hooks');
         $this->assertGenerationFails($orphan, 'property hook value::get does not belong to a class in this file');
         $this->assertGenerationFails($functionKind, 'property hook value::get metadata is inconsistent');
+        $this->assertGenerationFails($virtualNone, 'property $value is virtual and has no hooks');
+        $this->assertGenerationFails($finalPrivate, 'property hook Visibilities::$pri::get: is final and private');
+        $this->assertGenerationFails($finalOnPrivateProperty, 'property hook Box::$value::get: is final and private');
+        $this->assertGenerationFails($backedReference, 'property $value combines a by-reference get with a set hook');
+        $this->assertGenerationFails($inheritedReference, 'class ChildSet property $value combines a by-reference get with a set hook');
+        $this->assertGenerationFails($readOnlyAsymmetric, 'read-only virtual property $value must not specify asymmetric visibility');
+        $this->assertGenerationFails($writeOnlyAsymmetric, 'write-only virtual property $value must not specify asymmetric visibility');
+    }
+
+    public function testLegalHookCombinationsStillGenerate(): void
+    {
+        $virtualReference = $this->mutate('PHP/8.4/PropertyHookVirtual.json', static function (array &$data): void {
+            $data['op_arrays'][0]['flags'][] = 'return_reference';
+        });
+        $virtualReferenceSource = (new PhpFileGenerator())->generate($virtualReference);
+        $this->assertStringContainsString('&get', $virtualReferenceSource);
+        $this->assertStringNotContainsString('set(', $virtualReferenceSource);
+
+        $virtualBoth = $this->mutate('PHP/8.4/PropertyHooks.json', static function (array &$data): void {
+            $data['classes'][0]['properties'][0]['flags'][] = 'virtual';
+            $data['classes'][0]['properties'][0]['flags'][] = 'private_set';
+            $data['classes'][0]['properties'][0]['default'] = null;
+            $data['op_arrays'][0]['flags'][] = 'return_reference';
+        });
+        $virtualBothSource = (new PhpFileGenerator())->generate($virtualBoth);
+        $this->assertStringContainsString('private(set)', $virtualBothSource);
+        $this->assertStringContainsString('&get', $virtualBothSource);
+        $this->assertStringContainsString('set(int $value)', $virtualBothSource);
+
+        $finalProtected = $this->mutate('PHP/8.4/PropertyHookVisibility.json', static function (array &$data): void {
+            foreach ($data['op_arrays'] as &$opArray) {
+                if (($opArray['name'] ?? null) === '$pro::get') {
+                    $opArray['flags'][] = 'final';
+                }
+            }
+        });
+        $finalProtectedSource = (new PhpFileGenerator())->generate($finalProtected);
+        $this->assertStringContainsString('protected int $pro', $finalProtectedSource);
+        $this->assertStringContainsString('final get', $finalProtectedSource);
+
+        $symmetricSet = $this->mutate('PHP/8.4/PropertyHookVirtual.json', static function (array &$data): void {
+            $data['classes'][0]['properties'][0]['flags'][] = 'public_set';
+        });
+        $symmetricSource = (new PhpFileGenerator())->generate($symmetricSet);
+        $this->assertStringContainsString('public public(set) int $value', $symmetricSource);
     }
 
     private function assertGenerationFails(Document $document, string $message): void

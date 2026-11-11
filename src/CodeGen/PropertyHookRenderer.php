@@ -80,6 +80,9 @@ final class PropertyHookRenderer
         if ($abstract && $final) {
             $this->fail($class, $property->name, $kind, 'is final and abstract');
         }
+        if ($final && (in_array('private', $opArray->flags, true) || in_array('private', $property->flags, true))) {
+            $this->fail($class, $property->name, $kind, 'is final and private');
+        }
         if ($class->kind === 'interface' && !$abstract) {
             $this->fail($class, $property->name, $kind, 'is not abstract');
         }
