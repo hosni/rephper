@@ -1,0 +1,130 @@
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.4/PropertyHookParentNamespace.php
+Function: $value::get
+Class: App\\Domain\\ParentBox
+Kind: property-hook
+Property: value
+Hook: get
+Opcodes: 5
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 1
+Literals: 2
+Return type: int
+Lines: 8-8
+
+Compiled variables:
+(none)
+
+Literals:
+0 string("value")
+1 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 FETCH_OBJ_R line=8 op1=THIS op2=CONST(string("value")) result=TMP(0) ext=-
+1 VERIFY_RETURN_TYPE line=8 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+2 RETURN line=8 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+3 VERIFY_RETURN_TYPE line=8 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 RETURN line=8 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.4/PropertyHookParentNamespace.php
+Function: $value::get
+Class: App\\Domain\\ChildBox
+Kind: property-hook
+Property: value
+Hook: get
+Opcodes: 7
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 2
+Literals: 3
+Return type: int
+Lines: 15-15
+
+Compiled variables:
+(none)
+
+Literals:
+0 string("value")
+1 int(4)
+2 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 INIT_PARENT_PROPERTY_HOOK_CALL line=15 op1=CONST(string("value")) op2=UNUSED result=UNUSED ext=-
+1 DO_FCALL line=15 op1=UNUSED op2=UNUSED result=VAR(0) ext=-
+2 ADD line=15 op1=VAR(0) op2=CONST(int(4)) result=TMP(1) ext=-
+3 VERIFY_RETURN_TYPE line=15 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+4 RETURN line=15 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+5 VERIFY_RETURN_TYPE line=15 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+6 RETURN line=15 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.4/PropertyHookParentNamespace.php
+Function: read
+Class: App\\Domain\\ChildBox
+Kind: method
+Property: -
+Hook: -
+Opcodes: 5
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 1
+Literals: 2
+Return type: int
+Lines: 18-21
+
+Compiled variables:
+(none)
+
+Literals:
+0 string("value")
+1 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 FETCH_OBJ_R line=20 op1=THIS op2=CONST(string("value")) result=TMP(0) ext=-
+1 VERIFY_RETURN_TYPE line=20 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+2 RETURN line=20 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+3 VERIFY_RETURN_TYPE line=21 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 RETURN line=21 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.4/PropertyHookParentNamespace.php
+Function: <main>
+Class: -
+Kind: main
+Property: -
+Hook: -
+Opcodes: 1
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 1
+Return type: -
+Lines: 1-23
+
+Compiled variables:
+(none)
+
+Literals:
+0 int(1)
+
+Argument details:
+(none)
+
+Opcodes:
+0 RETURN line=23 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+

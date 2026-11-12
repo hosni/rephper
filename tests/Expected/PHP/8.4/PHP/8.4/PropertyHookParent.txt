@@ -1,0 +1,881 @@
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.4/PropertyHookParent.php
+Function: $value::get
+Class: BackedParent
+Kind: property-hook
+Property: value
+Hook: get
+Opcodes: 6
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 2
+Literals: 3
+Return type: int
+Lines: 6-6
+
+Compiled variables:
+(none)
+
+Literals:
+0 string("value")
+1 int(1)
+2 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 FETCH_OBJ_R line=6 op1=THIS op2=CONST(string("value")) result=TMP(0) ext=-
+1 ADD line=6 op1=TMP(0) op2=CONST(int(1)) result=TMP(1) ext=-
+2 VERIFY_RETURN_TYPE line=6 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+3 RETURN line=6 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+4 VERIFY_RETURN_TYPE line=6 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+5 RETURN line=6 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.4/PropertyHookParent.php
+Function: $value::set
+Class: BackedParent
+Kind: property-hook
+Property: value
+Hook: set
+Opcodes: 5
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 2
+Literals: 3
+Return type: void
+Lines: 7-7
+
+Compiled variables:
+0 $value
+
+Literals:
+0 string("value")
+1 int(2)
+2 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=7 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 MUL line=7 op1=CV(0:$value) op2=CONST(int(2)) result=TMP(1) ext=-
+2 ASSIGN_OBJ line=7 op1=THIS op2=CONST(string("value")) result=UNUSED ext=-
+3 OP_DATA line=7 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+4 RETURN line=7 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.4/PropertyHookParent.php
+Function: $value::get
+Class: BackedChild
+Kind: property-hook
+Property: value
+Hook: get
+Opcodes: 7
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 2
+Literals: 3
+Return type: int
+Lines: 14-14
+
+Compiled variables:
+(none)
+
+Literals:
+0 string("value")
+1 int(3)
+2 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 INIT_PARENT_PROPERTY_HOOK_CALL line=14 op1=CONST(string("value")) op2=UNUSED result=UNUSED ext=-
+1 DO_FCALL line=14 op1=UNUSED op2=UNUSED result=VAR(0) ext=-
+2 ADD line=14 op1=VAR(0) op2=CONST(int(3)) result=TMP(1) ext=-
+3 VERIFY_RETURN_TYPE line=14 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+4 RETURN line=14 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+5 VERIFY_RETURN_TYPE line=14 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+6 RETURN line=14 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.4/PropertyHookParent.php
+Function: $value::set
+Class: BackedChild
+Kind: property-hook
+Property: value
+Hook: set
+Opcodes: 6
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 2
+Literals: 3
+Return type: void
+Lines: 15-17
+
+Compiled variables:
+0 $value
+
+Literals:
+0 string("value")
+1 int(4)
+2 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=15 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 INIT_PARENT_PROPERTY_HOOK_CALL line=16 op1=CONST(string("value")) op2=UNUSED(1) result=UNUSED ext=1
+2 ADD line=16 op1=CV(0:$value) op2=CONST(int(4)) result=TMP(0) ext=-
+3 SEND_VAL_EX line=16 op1=TMP(0) op2=UNUSED(1) result=UNUSED(80) ext=-
+4 DO_FCALL line=16 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+5 RETURN line=17 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.4/PropertyHookParent.php
+Function: read
+Class: BackedChild
+Kind: method
+Property: -
+Hook: -
+Opcodes: 5
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 1
+Literals: 2
+Return type: int
+Lines: 20-23
+
+Compiled variables:
+(none)
+
+Literals:
+0 string("value")
+1 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 FETCH_OBJ_R line=22 op1=THIS op2=CONST(string("value")) result=TMP(0) ext=-
+1 VERIFY_RETURN_TYPE line=22 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+2 RETURN line=22 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+3 VERIFY_RETURN_TYPE line=23 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 RETURN line=23 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.4/PropertyHookParent.php
+Function: write
+Class: BackedChild
+Kind: method
+Property: -
+Hook: -
+Opcodes: 4
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 1
+Literals: 2
+Return type: void
+Lines: 25-28
+
+Compiled variables:
+0 $next
+
+Literals:
+0 string("value")
+1 null
+
+Argument details:
+0 $next int
+
+Opcodes:
+0 RECV line=25 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$next) ext=-
+1 ASSIGN_OBJ line=27 op1=THIS op2=CONST(string("value")) result=UNUSED ext=-
+2 OP_DATA line=27 op1=CV(0:$next) op2=UNUSED result=UNUSED ext=-
+3 RETURN line=28 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.4/PropertyHookParent.php
+Function: $value::get
+Class: VirtualParent
+Kind: property-hook
+Property: value
+Hook: get
+Opcodes: 5
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 1
+Literals: 2
+Return type: int
+Lines: 36-36
+
+Compiled variables:
+(none)
+
+Literals:
+0 string("store")
+1 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 FETCH_OBJ_R line=36 op1=THIS op2=CONST(string("store")) result=TMP(0) ext=-
+1 VERIFY_RETURN_TYPE line=36 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+2 RETURN line=36 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+3 VERIFY_RETURN_TYPE line=36 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 RETURN line=36 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.4/PropertyHookParent.php
+Function: $value::set
+Class: VirtualParent
+Kind: property-hook
+Property: value
+Hook: set
+Opcodes: 4
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 1
+Literals: 2
+Return type: void
+Lines: 37-39
+
+Compiled variables:
+0 $value
+
+Literals:
+0 string("store")
+1 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=37 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 ASSIGN_OBJ line=38 op1=THIS op2=CONST(string("store")) result=UNUSED ext=-
+2 OP_DATA line=38 op1=CV(0:$value) op2=UNUSED result=UNUSED ext=-
+3 RETURN line=39 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.4/PropertyHookParent.php
+Function: $value::get
+Class: VirtualChild
+Kind: property-hook
+Property: value
+Hook: get
+Opcodes: 7
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 2
+Literals: 3
+Return type: int
+Lines: 46-46
+
+Compiled variables:
+(none)
+
+Literals:
+0 string("value")
+1 int(1)
+2 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 INIT_PARENT_PROPERTY_HOOK_CALL line=46 op1=CONST(string("value")) op2=UNUSED result=UNUSED ext=-
+1 DO_FCALL line=46 op1=UNUSED op2=UNUSED result=VAR(0) ext=-
+2 ADD line=46 op1=VAR(0) op2=CONST(int(1)) result=TMP(1) ext=-
+3 VERIFY_RETURN_TYPE line=46 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+4 RETURN line=46 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+5 VERIFY_RETURN_TYPE line=46 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+6 RETURN line=46 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.4/PropertyHookParent.php
+Function: $value::set
+Class: VirtualChild
+Kind: property-hook
+Property: value
+Hook: set
+Opcodes: 6
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 2
+Literals: 3
+Return type: void
+Lines: 47-49
+
+Compiled variables:
+0 $value
+
+Literals:
+0 string("value")
+1 int(1)
+2 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=47 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 INIT_PARENT_PROPERTY_HOOK_CALL line=48 op1=CONST(string("value")) op2=UNUSED(1) result=UNUSED ext=1
+2 ADD line=48 op1=CV(0:$value) op2=CONST(int(1)) result=TMP(0) ext=-
+3 SEND_VAL_EX line=48 op1=TMP(0) op2=UNUSED(1) result=UNUSED(80) ext=-
+4 DO_FCALL line=48 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+5 RETURN line=49 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.4/PropertyHookParent.php
+Function: $value::get
+Class: UntypedParent
+Kind: property-hook
+Property: value
+Hook: get
+Opcodes: 3
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 1
+Literals: 2
+Return type: -
+Lines: 56-56
+
+Compiled variables:
+(none)
+
+Literals:
+0 string("value")
+1 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 FETCH_OBJ_R line=56 op1=THIS op2=CONST(string("value")) result=TMP(0) ext=-
+1 RETURN line=56 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+2 RETURN line=56 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.4/PropertyHookParent.php
+Function: $value::set
+Class: UntypedParent
+Kind: property-hook
+Property: value
+Hook: set
+Opcodes: 4
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 1
+Literals: 2
+Return type: void
+Lines: 57-59
+
+Compiled variables:
+0 $value
+
+Literals:
+0 string("value")
+1 null
+
+Argument details:
+0 $value -
+
+Opcodes:
+0 RECV line=57 op1=UNUSED(1) op2=UNUSED(1022) result=CV(0:$value) ext=-
+1 ASSIGN_OBJ line=58 op1=THIS op2=CONST(string("value")) result=UNUSED ext=-
+2 OP_DATA line=58 op1=CV(0:$value) op2=UNUSED result=UNUSED ext=-
+3 RETURN line=59 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.4/PropertyHookParent.php
+Function: $value::get
+Class: UntypedChild
+Kind: property-hook
+Property: value
+Hook: get
+Opcodes: 4
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 1
+Literals: 2
+Return type: -
+Lines: 66-66
+
+Compiled variables:
+(none)
+
+Literals:
+0 string("value")
+1 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 INIT_PARENT_PROPERTY_HOOK_CALL line=66 op1=CONST(string("value")) op2=UNUSED result=UNUSED ext=-
+1 DO_FCALL line=66 op1=UNUSED op2=UNUSED result=VAR(0) ext=-
+2 RETURN line=66 op1=VAR(0) op2=UNUSED result=UNUSED ext=-
+3 RETURN line=66 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.4/PropertyHookParent.php
+Function: $value::set
+Class: UntypedChild
+Kind: property-hook
+Property: value
+Hook: set
+Opcodes: 6
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 2
+Literals: 3
+Return type: void
+Lines: 67-69
+
+Compiled variables:
+0 $value
+
+Literals:
+0 string("value")
+1 string("b")
+2 null
+
+Argument details:
+0 $value -
+
+Opcodes:
+0 RECV line=67 op1=UNUSED(1) op2=UNUSED(1022) result=CV(0:$value) ext=-
+1 INIT_PARENT_PROPERTY_HOOK_CALL line=68 op1=CONST(string("value")) op2=UNUSED(1) result=UNUSED ext=1
+2 CONCAT line=68 op1=CV(0:$value) op2=CONST(string("b")) result=TMP(0) ext=-
+3 SEND_VAL_EX line=68 op1=TMP(0) op2=UNUSED(1) result=UNUSED(80) ext=-
+4 DO_FCALL line=68 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+5 RETURN line=69 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.4/PropertyHookParent.php
+Function: $value::get
+Class: LevelOne
+Kind: property-hook
+Property: value
+Hook: get
+Opcodes: 5
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 1
+Literals: 2
+Return type: int
+Lines: 76-76
+
+Compiled variables:
+(none)
+
+Literals:
+0 string("value")
+1 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 FETCH_OBJ_R line=76 op1=THIS op2=CONST(string("value")) result=TMP(0) ext=-
+1 VERIFY_RETURN_TYPE line=76 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+2 RETURN line=76 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+3 VERIFY_RETURN_TYPE line=76 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 RETURN line=76 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.4/PropertyHookParent.php
+Function: $value::get
+Class: LevelTwo
+Kind: property-hook
+Property: value
+Hook: get
+Opcodes: 7
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 2
+Literals: 3
+Return type: int
+Lines: 83-83
+
+Compiled variables:
+(none)
+
+Literals:
+0 string("value")
+1 int(1)
+2 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 INIT_PARENT_PROPERTY_HOOK_CALL line=83 op1=CONST(string("value")) op2=UNUSED result=UNUSED ext=-
+1 DO_FCALL line=83 op1=UNUSED op2=UNUSED result=VAR(0) ext=-
+2 ADD line=83 op1=VAR(0) op2=CONST(int(1)) result=TMP(1) ext=-
+3 VERIFY_RETURN_TYPE line=83 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+4 RETURN line=83 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+5 VERIFY_RETURN_TYPE line=83 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+6 RETURN line=83 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.4/PropertyHookParent.php
+Function: $value::get
+Class: LevelThree
+Kind: property-hook
+Property: value
+Hook: get
+Opcodes: 7
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 2
+Literals: 3
+Return type: int
+Lines: 90-90
+
+Compiled variables:
+(none)
+
+Literals:
+0 string("value")
+1 int(2)
+2 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 INIT_PARENT_PROPERTY_HOOK_CALL line=90 op1=CONST(string("value")) op2=UNUSED result=UNUSED ext=-
+1 DO_FCALL line=90 op1=UNUSED op2=UNUSED result=VAR(0) ext=-
+2 ADD line=90 op1=VAR(0) op2=CONST(int(2)) result=TMP(1) ext=-
+3 VERIFY_RETURN_TYPE line=90 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+4 RETURN line=90 op1=TMP(1) op2=UNUSED result=UNUSED ext=-
+5 VERIFY_RETURN_TYPE line=90 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+6 RETURN line=90 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.4/PropertyHookParent.php
+Function: $value::get
+Class: MultiParent
+Kind: property-hook
+Property: value
+Hook: get
+Opcodes: 5
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 1
+Literals: 2
+Return type: int
+Lines: 97-97
+
+Compiled variables:
+(none)
+
+Literals:
+0 string("value")
+1 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 FETCH_OBJ_R line=97 op1=THIS op2=CONST(string("value")) result=TMP(0) ext=-
+1 VERIFY_RETURN_TYPE line=97 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+2 RETURN line=97 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+3 VERIFY_RETURN_TYPE line=97 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 RETURN line=97 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.4/PropertyHookParent.php
+Function: $value::get
+Class: MultiChild
+Kind: property-hook
+Property: value
+Hook: get
+Opcodes: 9
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 3
+Literals: 3
+Return type: int
+Lines: 104-104
+
+Compiled variables:
+(none)
+
+Literals:
+0 string("value")
+1 string("value")
+2 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 INIT_PARENT_PROPERTY_HOOK_CALL line=104 op1=CONST(string("value")) op2=UNUSED result=UNUSED ext=-
+1 DO_FCALL line=104 op1=UNUSED op2=UNUSED result=VAR(0) ext=-
+2 INIT_PARENT_PROPERTY_HOOK_CALL line=104 op1=CONST(string("value")) op2=UNUSED result=UNUSED ext=-
+3 DO_FCALL line=104 op1=UNUSED op2=UNUSED result=VAR(1) ext=-
+4 ADD line=104 op1=VAR(0) op2=VAR(1) result=TMP(2) ext=-
+5 VERIFY_RETURN_TYPE line=104 op1=TMP(2) op2=UNUSED result=UNUSED ext=-
+6 RETURN line=104 op1=TMP(2) op2=UNUSED result=UNUSED ext=-
+7 VERIFY_RETURN_TYPE line=104 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+8 RETURN line=104 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.4/PropertyHookParent.php
+Function: $value::get
+Class: AssignParent
+Kind: property-hook
+Property: value
+Hook: get
+Opcodes: 5
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 1
+Literals: 2
+Return type: int
+Lines: 111-111
+
+Compiled variables:
+(none)
+
+Literals:
+0 string("value")
+1 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 FETCH_OBJ_R line=111 op1=THIS op2=CONST(string("value")) result=TMP(0) ext=-
+1 VERIFY_RETURN_TYPE line=111 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+2 RETURN line=111 op1=TMP(0) op2=UNUSED result=UNUSED ext=-
+3 VERIFY_RETURN_TYPE line=111 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 RETURN line=111 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.4/PropertyHookParent.php
+Function: $value::get
+Class: AssignChild
+Kind: property-hook
+Property: value
+Hook: get
+Opcodes: 8
+Arguments: 0
+Required arguments: 0
+Compiled variables: 1
+Temporary variables: 3
+Literals: 3
+Return type: int
+Lines: 118-121
+
+Compiled variables:
+0 $n
+
+Literals:
+0 string("value")
+1 int(1)
+2 null
+
+Argument details:
+(none)
+
+Opcodes:
+0 INIT_PARENT_PROPERTY_HOOK_CALL line=119 op1=CONST(string("value")) op2=UNUSED result=UNUSED ext=-
+1 DO_FCALL line=119 op1=UNUSED op2=UNUSED result=VAR(0) ext=-
+2 ASSIGN line=119 op1=CV(0:$n) op2=VAR(0) result=UNUSED ext=-
+3 ADD line=120 op1=CV(0:$n) op2=CONST(int(1)) result=TMP(2) ext=-
+4 VERIFY_RETURN_TYPE line=120 op1=TMP(2) op2=UNUSED result=UNUSED ext=-
+5 RETURN line=120 op1=TMP(2) op2=UNUSED result=UNUSED ext=-
+6 VERIFY_RETURN_TYPE line=121 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+7 RETURN line=121 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.4/PropertyHookParent.php
+Function: $value::set
+Class: CallParent
+Kind: property-hook
+Property: value
+Hook: set
+Opcodes: 4
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 1
+Literals: 2
+Return type: void
+Lines: 128-130
+
+Compiled variables:
+0 $value
+
+Literals:
+0 string("value")
+1 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=128 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 ASSIGN_OBJ line=129 op1=THIS op2=CONST(string("value")) result=UNUSED ext=-
+2 OP_DATA line=129 op1=CV(0:$value) op2=UNUSED result=UNUSED ext=-
+3 RETURN line=130 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.4/PropertyHookParent.php
+Function: $value::set
+Class: CallChild
+Kind: property-hook
+Property: value
+Hook: set
+Opcodes: 8
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 2
+Literals: 3
+Return type: void
+Lines: 137-139
+
+Compiled variables:
+0 $value
+
+Literals:
+0 string("value")
+1 string("abs")
+2 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=137 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 INIT_PARENT_PROPERTY_HOOK_CALL line=138 op1=CONST(string("value")) op2=UNUSED(1) result=UNUSED ext=1
+2 INIT_FCALL line=138 op1=UNUSED(96) op2=CONST(string("abs")) result=UNUSED ext=1
+3 SEND_VAR line=138 op1=CV(0:$value) op2=UNUSED(1) result=UNUSED(80) ext=-
+4 DO_ICALL line=138 op1=UNUSED op2=UNUSED result=VAR(0) ext=-
+5 SEND_VAR_NO_REF_EX line=138 op1=VAR(0) op2=UNUSED(1) result=UNUSED(80) ext=-
+6 DO_FCALL line=138 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+7 RETURN line=139 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.4/PropertyHookParent.php
+Function: $value::set
+Class: NamedParent
+Kind: property-hook
+Property: value
+Hook: set
+Opcodes: 4
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 1
+Literals: 2
+Return type: void
+Lines: 146-148
+
+Compiled variables:
+0 $value
+
+Literals:
+0 string("value")
+1 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=146 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 ASSIGN_OBJ line=147 op1=THIS op2=CONST(string("value")) result=UNUSED ext=-
+2 OP_DATA line=147 op1=CV(0:$value) op2=UNUSED result=UNUSED ext=-
+3 RETURN line=148 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.4/PropertyHookParent.php
+Function: $value::set
+Class: NamedChild
+Kind: property-hook
+Property: value
+Hook: set
+Opcodes: 6
+Arguments: 1
+Required arguments: 1
+Compiled variables: 1
+Temporary variables: 1
+Literals: 3
+Return type: void
+Lines: 155-157
+
+Compiled variables:
+0 $value
+
+Literals:
+0 string("value")
+1 string("value")
+2 null
+
+Argument details:
+0 $value int
+
+Opcodes:
+0 RECV line=155 op1=UNUSED(1) op2=UNUSED(16) result=CV(0:$value) ext=-
+1 INIT_PARENT_PROPERTY_HOOK_CALL line=156 op1=CONST(string("value")) op2=UNUSED(1) result=UNUSED ext=-
+2 SEND_VAR_EX line=156 op1=CV(0:$value) op2=CONST(string("value")) result=UNUSED ext=-
+3 CHECK_UNDEF_ARGS line=156 op1=UNUSED op2=UNUSED result=UNUSED ext=-
+4 DO_FCALL line=156 op1=UNUSED op2=UNUSED result=UNUSED ext=1
+5 RETURN line=157 op1=CONST(null) op2=UNUSED result=UNUSED ext=-
+
+Rephper: Compiled op array
+File: tests/Fixtures/PHP/8.4/PropertyHookParent.php
+Function: <main>
+Class: -
+Kind: main
+Property: -
+Hook: -
+Opcodes: 1
+Arguments: 0
+Required arguments: 0
+Compiled variables: 0
+Temporary variables: 0
+Literals: 1
+Return type: -
+Lines: 1-160
+
+Compiled variables:
+(none)
+
+Literals:
+0 int(1)
+
+Argument details:
+(none)
+
+Opcodes:
+0 RETURN line=160 op1=CONST(int(1)) op2=UNUSED result=UNUSED ext=-
+

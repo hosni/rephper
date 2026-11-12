@@ -107,6 +107,8 @@ final class FunctionFileTest extends TestCase
             'trait reference get' => ['PHP/8.4/PropertyHookTraitReferenceOnly.json'],
             'trait virtual reference' => ['PHP/8.4/PropertyHookTraitVirtual.json'],
             'private reference get' => ['PHP/8.4/PropertyHookTraitPrivate.json'],
+            'parent property hook' => ['PHP/8.4/PropertyHookParent.json'],
+            'namespaced parent property hook' => ['PHP/8.4/PropertyHookParentNamespace.json'],
         ];
     }
 

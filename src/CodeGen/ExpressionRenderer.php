@@ -9,6 +9,7 @@ use Rephper\Expr\Assignment;
 use Rephper\Expr\Binary;
 use Rephper\Expr\Expression;
 use Rephper\Expr\FunctionCall;
+use Rephper\Expr\ParentPropertyHookCall;
 use Rephper\Expr\Literal;
 use Rephper\Expr\MatchArm;
 use Rephper\Expr\MatchExpression;
@@ -124,6 +125,9 @@ final class ExpressionRenderer
         }
         if ($expression instanceof FunctionCall) {
             return $this->call($expression);
+        }
+        if ($expression instanceof ParentPropertyHookCall) {
+            return $this->parentHook($expression);
         }
         if ($expression instanceof MatchExpression) {
             return $this->match($expression);
@@ -765,6 +769,44 @@ final class ExpressionRenderer
         }
 
         return $name . '(' . implode(', ', $arguments) . ')';
+    }
+
+    private function parentHook(ParentPropertyHookCall $expression): string
+    {
+        if ($expression->hook !== 'get' && $expression->hook !== 'set') {
+            throw SourceGenerationException::at(
+                'parent property hook kind cannot be rendered',
+                $expression->opline,
+                $expression->line,
+            );
+        }
+        if (preg_match(self::IDENTIFIER, $expression->property) !== 1) {
+            throw SourceGenerationException::at(
+                'parent property hook name cannot be rendered',
+                $expression->opline,
+                $expression->line,
+            );
+        }
+        if ($expression->hook === 'get' && $expression->arguments !== []) {
+            throw SourceGenerationException::at(
+                'parent property get hook has arguments',
+                $expression->opline,
+                $expression->line,
+            );
+        }
+        $arguments = [];
+        foreach ($expression->arguments as $argument) {
+            if (!$argument instanceof Argument) {
+                throw SourceGenerationException::at(
+                    'parent property hook argument cannot be rendered',
+                    $expression->opline,
+                    $expression->line,
+                );
+            }
+            $arguments[] = $this->argument($argument);
+        }
+
+        return 'parent::$' . $expression->property . '::' . $expression->hook . '(' . implode(', ', $arguments) . ')';
     }
 
     private function argument(Argument $argument): string

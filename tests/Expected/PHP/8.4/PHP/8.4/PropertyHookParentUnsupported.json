@@ -1,0 +1,2080 @@
+{
+  "ir_version": 1,
+  "php": {
+    "version": "PHP_VERSION",
+    "version_id": 0,
+    "api": 20240924,
+    "zend_module_api": 20240924,
+    "zend_extension_api": 420240924,
+    "zts": false,
+    "debug": false
+  },
+  "compilation": {
+    "stage": "pre_pass_two",
+    "jumps": "absolute_opline"
+  },
+  "op_arrays": [
+    {
+      "id": 0,
+      "kind": "property-hook",
+      "name": "$value::set",
+      "filename": "tests/Fixtures/PHP/8.4/PropertyHookParentUnsupported.php",
+      "line_start": 6,
+      "line_end": 8,
+      "scope": {
+        "name": "AndParent",
+        "kind": "class"
+      },
+      "property_hook": {
+        "property": "value",
+        "hook": "set"
+      },
+      "flags": [
+        "public",
+        "has_type_hints",
+        "has_return_type",
+        "uses_this"
+      ],
+      "num_args": 1,
+      "required_num_args": 1,
+      "return_type": {
+        "display": "void",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [
+        {
+          "name": "value",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        }
+      ],
+      "variables": [
+        "value"
+      ],
+      "temporary_variables": 1,
+      "literals": [
+        {
+          "type": "string",
+          "value": "value"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 6,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "value"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "ASSIGN_OBJ",
+          "opcode_number": 24,
+          "line": 7,
+          "op1": {
+            "kind": "this"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "OP_DATA",
+          "opcode_number": 137,
+          "line": 7,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "value"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 8,
+          "op1": {
+            "kind": "const",
+            "index": 1
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "kind": "property-hook",
+      "name": "$value::set",
+      "filename": "tests/Fixtures/PHP/8.4/PropertyHookParentUnsupported.php",
+      "line_start": 15,
+      "line_end": 15,
+      "scope": {
+        "name": "AndChild",
+        "kind": "class"
+      },
+      "property_hook": {
+        "property": "value",
+        "hook": "set"
+      },
+      "flags": [
+        "public",
+        "has_type_hints",
+        "has_return_type",
+        "uses_this"
+      ],
+      "num_args": 1,
+      "required_num_args": 1,
+      "return_type": {
+        "display": "void",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [
+        {
+          "name": "value",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        }
+      ],
+      "variables": [
+        "value"
+      ],
+      "temporary_variables": 3,
+      "literals": [
+        {
+          "type": "string",
+          "value": "value"
+        },
+        {
+          "type": "string",
+          "value": "value"
+        },
+        {
+          "type": "int",
+          "value": 1
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 15,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "value"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "INIT_PARENT_PROPERTY_HOOK_CALL",
+          "opcode_number": 209,
+          "line": 15,
+          "op1": {
+            "kind": "const",
+            "index": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 1
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 1
+        },
+        {
+          "index": 2,
+          "opcode": "JMPZ_EX",
+          "opcode_number": 46,
+          "line": 15,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "value"
+          },
+          "op2": {
+            "kind": "jump",
+            "target": 4
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 1
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "BOOL",
+          "opcode_number": 52,
+          "line": 15,
+          "op1": {
+            "kind": "const",
+            "index": 2
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 1
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 4,
+          "opcode": "SEND_VAL_EX",
+          "opcode_number": 116,
+          "line": 15,
+          "op1": {
+            "kind": "tmp",
+            "index": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 1
+          },
+          "result": {
+            "kind": "unused",
+            "value": 80
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 5,
+          "opcode": "DO_FCALL",
+          "opcode_number": 60,
+          "line": 15,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "var",
+            "index": 2
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 6,
+          "opcode": "ASSIGN_OBJ",
+          "opcode_number": 24,
+          "line": 15,
+          "op1": {
+            "kind": "this"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 7,
+          "opcode": "OP_DATA",
+          "opcode_number": 137,
+          "line": 15,
+          "op1": {
+            "kind": "var",
+            "index": 2
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 8,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 15,
+          "op1": {
+            "kind": "const",
+            "index": 3
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "kind": "property-hook",
+      "name": "$value::set",
+      "filename": "tests/Fixtures/PHP/8.4/PropertyHookParentUnsupported.php",
+      "line_start": 22,
+      "line_end": 24,
+      "scope": {
+        "name": "NullParent",
+        "kind": "class"
+      },
+      "property_hook": {
+        "property": "value",
+        "hook": "set"
+      },
+      "flags": [
+        "public",
+        "has_type_hints",
+        "has_return_type",
+        "uses_this"
+      ],
+      "num_args": 1,
+      "required_num_args": 1,
+      "return_type": {
+        "display": "void",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [
+        {
+          "name": "value",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        }
+      ],
+      "variables": [
+        "value"
+      ],
+      "temporary_variables": 1,
+      "literals": [
+        {
+          "type": "string",
+          "value": "value"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 22,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "value"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "ASSIGN_OBJ",
+          "opcode_number": 24,
+          "line": 23,
+          "op1": {
+            "kind": "this"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "OP_DATA",
+          "opcode_number": 137,
+          "line": 23,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "value"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 24,
+          "op1": {
+            "kind": "const",
+            "index": 1
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "kind": "property-hook",
+      "name": "$value::set",
+      "filename": "tests/Fixtures/PHP/8.4/PropertyHookParentUnsupported.php",
+      "line_start": 31,
+      "line_end": 31,
+      "scope": {
+        "name": "NullChild",
+        "kind": "class"
+      },
+      "property_hook": {
+        "property": "value",
+        "hook": "set"
+      },
+      "flags": [
+        "public",
+        "has_type_hints",
+        "has_return_type",
+        "uses_this"
+      ],
+      "num_args": 1,
+      "required_num_args": 1,
+      "return_type": {
+        "display": "void",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [
+        {
+          "name": "value",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        }
+      ],
+      "variables": [
+        "value"
+      ],
+      "temporary_variables": 3,
+      "literals": [
+        {
+          "type": "string",
+          "value": "value"
+        },
+        {
+          "type": "string",
+          "value": "value"
+        },
+        {
+          "type": "int",
+          "value": 1
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 31,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "value"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "INIT_PARENT_PROPERTY_HOOK_CALL",
+          "opcode_number": 209,
+          "line": 31,
+          "op1": {
+            "kind": "const",
+            "index": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 1
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 1
+        },
+        {
+          "index": 2,
+          "opcode": "COALESCE",
+          "opcode_number": 169,
+          "line": 31,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "value"
+          },
+          "op2": {
+            "kind": "jump",
+            "target": 4
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 1
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "QM_ASSIGN",
+          "opcode_number": 31,
+          "line": 31,
+          "op1": {
+            "kind": "const",
+            "index": 2
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 1
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 4,
+          "opcode": "SEND_VAL_EX",
+          "opcode_number": 116,
+          "line": 31,
+          "op1": {
+            "kind": "tmp",
+            "index": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 1
+          },
+          "result": {
+            "kind": "unused",
+            "value": 80
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 5,
+          "opcode": "DO_FCALL",
+          "opcode_number": 60,
+          "line": 31,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "var",
+            "index": 2
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 6,
+          "opcode": "ASSIGN_OBJ",
+          "opcode_number": 24,
+          "line": 31,
+          "op1": {
+            "kind": "this"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 7,
+          "opcode": "OP_DATA",
+          "opcode_number": 137,
+          "line": 31,
+          "op1": {
+            "kind": "var",
+            "index": 2
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 8,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 31,
+          "op1": {
+            "kind": "const",
+            "index": 3
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "kind": "property-hook",
+      "name": "$value::set",
+      "filename": "tests/Fixtures/PHP/8.4/PropertyHookParentUnsupported.php",
+      "line_start": 38,
+      "line_end": 40,
+      "scope": {
+        "name": "MatchParent",
+        "kind": "class"
+      },
+      "property_hook": {
+        "property": "value",
+        "hook": "set"
+      },
+      "flags": [
+        "public",
+        "has_type_hints",
+        "has_return_type",
+        "uses_this"
+      ],
+      "num_args": 1,
+      "required_num_args": 1,
+      "return_type": {
+        "display": "void",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [
+        {
+          "name": "value",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        }
+      ],
+      "variables": [
+        "value"
+      ],
+      "temporary_variables": 1,
+      "literals": [
+        {
+          "type": "string",
+          "value": "value"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 38,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "value"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "ASSIGN_OBJ",
+          "opcode_number": 24,
+          "line": 39,
+          "op1": {
+            "kind": "this"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "OP_DATA",
+          "opcode_number": 137,
+          "line": 39,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "value"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 40,
+          "op1": {
+            "kind": "const",
+            "index": 1
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "kind": "property-hook",
+      "name": "$value::set",
+      "filename": "tests/Fixtures/PHP/8.4/PropertyHookParentUnsupported.php",
+      "line_start": 47,
+      "line_end": 47,
+      "scope": {
+        "name": "MatchChild",
+        "kind": "class"
+      },
+      "property_hook": {
+        "property": "value",
+        "hook": "set"
+      },
+      "flags": [
+        "public",
+        "has_type_hints",
+        "has_return_type",
+        "uses_this"
+      ],
+      "num_args": 1,
+      "required_num_args": 1,
+      "return_type": {
+        "display": "void",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [
+        {
+          "name": "value",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        }
+      ],
+      "variables": [
+        "value"
+      ],
+      "temporary_variables": 4,
+      "literals": [
+        {
+          "type": "string",
+          "value": "value"
+        },
+        {
+          "type": "string",
+          "value": "value"
+        },
+        {
+          "type": "array",
+          "elements": [
+            {
+              "key": {
+                "type": "int",
+                "value": 0
+              },
+              "value": {
+                "type": "int",
+                "value": 3
+              }
+            },
+            {
+              "key": {
+                "type": "int",
+                "value": 1
+              },
+              "value": {
+                "type": "int",
+                "value": 5
+              }
+            },
+            {
+              "key": {
+                "type": "int",
+                "value": 2
+              },
+              "value": {
+                "type": "int",
+                "value": 7
+              }
+            }
+          ]
+        },
+        {
+          "type": "int",
+          "value": 1
+        },
+        {
+          "type": "int",
+          "value": 2
+        },
+        {
+          "type": "int",
+          "value": 3
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 47,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "value"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "INIT_PARENT_PROPERTY_HOOK_CALL",
+          "opcode_number": 209,
+          "line": 47,
+          "op1": {
+            "kind": "const",
+            "index": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 1
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 1
+        },
+        {
+          "index": 2,
+          "opcode": "MATCH",
+          "opcode_number": 195,
+          "line": 47,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "value"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 2,
+            "jump_table": true
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 9,
+          "jump_target": 9
+        },
+        {
+          "index": 3,
+          "opcode": "QM_ASSIGN",
+          "opcode_number": 31,
+          "line": 47,
+          "op1": {
+            "kind": "const",
+            "index": 3
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 2
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 4,
+          "opcode": "JMP",
+          "opcode_number": 42,
+          "line": 47,
+          "op1": {
+            "kind": "jump",
+            "target": 11
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 5,
+          "opcode": "QM_ASSIGN",
+          "opcode_number": 31,
+          "line": 47,
+          "op1": {
+            "kind": "const",
+            "index": 4
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 2
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 6,
+          "opcode": "JMP",
+          "opcode_number": 42,
+          "line": 47,
+          "op1": {
+            "kind": "jump",
+            "target": 11
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 7,
+          "opcode": "QM_ASSIGN",
+          "opcode_number": 31,
+          "line": 47,
+          "op1": {
+            "kind": "const",
+            "index": 5
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 2
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 8,
+          "opcode": "JMP",
+          "opcode_number": 42,
+          "line": 47,
+          "op1": {
+            "kind": "jump",
+            "target": 11
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 9,
+          "opcode": "QM_ASSIGN",
+          "opcode_number": 31,
+          "line": 47,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "value"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 2
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 10,
+          "opcode": "JMP",
+          "opcode_number": 42,
+          "line": 47,
+          "op1": {
+            "kind": "jump",
+            "target": 11
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 11,
+          "opcode": "SEND_VAL_EX",
+          "opcode_number": 116,
+          "line": 47,
+          "op1": {
+            "kind": "tmp",
+            "index": 2
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 1
+          },
+          "result": {
+            "kind": "unused",
+            "value": 80
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 12,
+          "opcode": "DO_FCALL",
+          "opcode_number": 60,
+          "line": 47,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "var",
+            "index": 3
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 13,
+          "opcode": "ASSIGN_OBJ",
+          "opcode_number": 24,
+          "line": 47,
+          "op1": {
+            "kind": "this"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 14,
+          "opcode": "OP_DATA",
+          "opcode_number": 137,
+          "line": 47,
+          "op1": {
+            "kind": "var",
+            "index": 3
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 15,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 47,
+          "op1": {
+            "kind": "const",
+            "index": 6
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "kind": "property-hook",
+      "name": "$value::set",
+      "filename": "tests/Fixtures/PHP/8.4/PropertyHookParentUnsupported.php",
+      "line_start": 54,
+      "line_end": 56,
+      "scope": {
+        "name": "OtherParent",
+        "kind": "class"
+      },
+      "property_hook": {
+        "property": "value",
+        "hook": "set"
+      },
+      "flags": [
+        "public",
+        "has_type_hints",
+        "has_return_type",
+        "uses_this"
+      ],
+      "num_args": 1,
+      "required_num_args": 1,
+      "return_type": {
+        "display": "void",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [
+        {
+          "name": "value",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        }
+      ],
+      "variables": [
+        "value"
+      ],
+      "temporary_variables": 1,
+      "literals": [
+        {
+          "type": "string",
+          "value": "value"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 54,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "value"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "ASSIGN_OBJ",
+          "opcode_number": 24,
+          "line": 55,
+          "op1": {
+            "kind": "this"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "OP_DATA",
+          "opcode_number": 137,
+          "line": 55,
+          "op1": {
+            "kind": "cv",
+            "index": 0,
+            "name": "value"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 56,
+          "op1": {
+            "kind": "const",
+            "index": 1
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "kind": "property-hook",
+      "name": "$value::set",
+      "filename": "tests/Fixtures/PHP/8.4/PropertyHookParentUnsupported.php",
+      "line_start": 65,
+      "line_end": 65,
+      "scope": {
+        "name": "OtherChild",
+        "kind": "class"
+      },
+      "property_hook": {
+        "property": "value",
+        "hook": "set"
+      },
+      "flags": [
+        "public",
+        "has_type_hints",
+        "has_return_type",
+        "uses_this"
+      ],
+      "num_args": 1,
+      "required_num_args": 1,
+      "return_type": {
+        "display": "void",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [
+        {
+          "name": "value",
+          "type": {
+            "display": "int",
+            "nullable": false,
+            "kind": "builtin"
+          },
+          "send": "value",
+          "variadic": false,
+          "promoted": false,
+          "default_literal": null
+        }
+      ],
+      "variables": [
+        "value"
+      ],
+      "temporary_variables": 3,
+      "literals": [
+        {
+          "type": "string",
+          "value": "value"
+        },
+        {
+          "type": "string",
+          "value": "value"
+        },
+        {
+          "type": "string",
+          "value": "other"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RECV",
+          "opcode_number": 63,
+          "line": 65,
+          "op1": {
+            "kind": "unused",
+            "value": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 16
+          },
+          "result": {
+            "kind": "cv",
+            "index": 0,
+            "name": "value"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "INIT_PARENT_PROPERTY_HOOK_CALL",
+          "opcode_number": 209,
+          "line": 65,
+          "op1": {
+            "kind": "const",
+            "index": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 1
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 1
+        },
+        {
+          "index": 2,
+          "opcode": "CHECK_FUNC_ARG",
+          "opcode_number": 100,
+          "line": 65,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 1
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "FETCH_OBJ_FUNC_ARG",
+          "opcode_number": 94,
+          "line": 65,
+          "op1": {
+            "kind": "this"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 2
+          },
+          "result": {
+            "kind": "var",
+            "index": 1
+          },
+          "extended_value": 25
+        },
+        {
+          "index": 4,
+          "opcode": "SEND_FUNC_ARG",
+          "opcode_number": 185,
+          "line": 65,
+          "op1": {
+            "kind": "var",
+            "index": 1
+          },
+          "op2": {
+            "kind": "unused",
+            "value": 1
+          },
+          "result": {
+            "kind": "unused",
+            "value": 80
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 5,
+          "opcode": "DO_FCALL",
+          "opcode_number": 60,
+          "line": 65,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "var",
+            "index": 2
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 6,
+          "opcode": "ASSIGN_OBJ",
+          "opcode_number": 24,
+          "line": 65,
+          "op1": {
+            "kind": "this"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 7,
+          "opcode": "OP_DATA",
+          "opcode_number": 137,
+          "line": 65,
+          "op1": {
+            "kind": "var",
+            "index": 2
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 8,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 65,
+          "op1": {
+            "kind": "const",
+            "index": 3
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "kind": "main",
+      "name": null,
+      "filename": "tests/Fixtures/PHP/8.4/PropertyHookParentUnsupported.php",
+      "line_start": 1,
+      "line_end": 68,
+      "scope": null,
+      "property_hook": null,
+      "flags": [],
+      "num_args": 0,
+      "required_num_args": 0,
+      "return_type": null,
+      "arguments": [],
+      "variables": [],
+      "temporary_variables": 0,
+      "literals": [
+        {
+          "type": "int",
+          "value": 1
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 68,
+          "op1": {
+            "kind": "const",
+            "index": 0
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    }
+  ],
+  "classes": [
+  {
+    "name": "AndParent",
+    "kind": "class",
+    "flags": [
+      "linked"
+    ],
+    "parent": null,
+    "interfaces": [],
+    "traits": [],
+    "trait_aliases": [],
+    "trait_precedences": [],
+    "filename": "tests/Fixtures/PHP/8.4/PropertyHookParentUnsupported.php",
+    "line_start": 3,
+    "line_end": 10,
+    "enum_backing": null,
+    "properties": [
+      {
+        "name": "value",
+        "flags": [
+          "public"
+        ],
+        "type": {
+          "display": "int",
+          "nullable": false,
+          "kind": "builtin"
+        },
+        "default": {
+          "type": "int",
+          "value": 1
+        },
+        "hooks": [
+          "set"
+        ],
+        "attributes": [],
+        "doc_comment": null
+      }
+    ],
+    "constants": [],
+    "attributes": [],
+    "doc_comment": null
+  },
+  {
+    "name": "AndChild",
+    "kind": "class",
+    "flags": [
+      "linked"
+    ],
+    "parent": "AndParent",
+    "interfaces": [],
+    "traits": [],
+    "trait_aliases": [],
+    "trait_precedences": [],
+    "filename": "tests/Fixtures/PHP/8.4/PropertyHookParentUnsupported.php",
+    "line_start": 12,
+    "line_end": 17,
+    "enum_backing": null,
+    "properties": [
+      {
+        "name": "value",
+        "flags": [
+          "public"
+        ],
+        "type": {
+          "display": "int",
+          "nullable": false,
+          "kind": "builtin"
+        },
+        "default": {
+          "type": "int",
+          "value": 1
+        },
+        "hooks": [
+          "set"
+        ],
+        "attributes": [],
+        "doc_comment": null
+      }
+    ],
+    "constants": [],
+    "attributes": [],
+    "doc_comment": null
+  },
+  {
+    "name": "NullParent",
+    "kind": "class",
+    "flags": [
+      "linked"
+    ],
+    "parent": null,
+    "interfaces": [],
+    "traits": [],
+    "trait_aliases": [],
+    "trait_precedences": [],
+    "filename": "tests/Fixtures/PHP/8.4/PropertyHookParentUnsupported.php",
+    "line_start": 19,
+    "line_end": 26,
+    "enum_backing": null,
+    "properties": [
+      {
+        "name": "value",
+        "flags": [
+          "public"
+        ],
+        "type": {
+          "display": "int",
+          "nullable": false,
+          "kind": "builtin"
+        },
+        "default": {
+          "type": "int",
+          "value": 1
+        },
+        "hooks": [
+          "set"
+        ],
+        "attributes": [],
+        "doc_comment": null
+      }
+    ],
+    "constants": [],
+    "attributes": [],
+    "doc_comment": null
+  },
+  {
+    "name": "NullChild",
+    "kind": "class",
+    "flags": [
+      "linked"
+    ],
+    "parent": "NullParent",
+    "interfaces": [],
+    "traits": [],
+    "trait_aliases": [],
+    "trait_precedences": [],
+    "filename": "tests/Fixtures/PHP/8.4/PropertyHookParentUnsupported.php",
+    "line_start": 28,
+    "line_end": 33,
+    "enum_backing": null,
+    "properties": [
+      {
+        "name": "value",
+        "flags": [
+          "public"
+        ],
+        "type": {
+          "display": "int",
+          "nullable": false,
+          "kind": "builtin"
+        },
+        "default": {
+          "type": "int",
+          "value": 1
+        },
+        "hooks": [
+          "set"
+        ],
+        "attributes": [],
+        "doc_comment": null
+      }
+    ],
+    "constants": [],
+    "attributes": [],
+    "doc_comment": null
+  },
+  {
+    "name": "MatchParent",
+    "kind": "class",
+    "flags": [
+      "linked"
+    ],
+    "parent": null,
+    "interfaces": [],
+    "traits": [],
+    "trait_aliases": [],
+    "trait_precedences": [],
+    "filename": "tests/Fixtures/PHP/8.4/PropertyHookParentUnsupported.php",
+    "line_start": 35,
+    "line_end": 42,
+    "enum_backing": null,
+    "properties": [
+      {
+        "name": "value",
+        "flags": [
+          "public"
+        ],
+        "type": {
+          "display": "int",
+          "nullable": false,
+          "kind": "builtin"
+        },
+        "default": {
+          "type": "int",
+          "value": 1
+        },
+        "hooks": [
+          "set"
+        ],
+        "attributes": [],
+        "doc_comment": null
+      }
+    ],
+    "constants": [],
+    "attributes": [],
+    "doc_comment": null
+  },
+  {
+    "name": "MatchChild",
+    "kind": "class",
+    "flags": [
+      "linked"
+    ],
+    "parent": "MatchParent",
+    "interfaces": [],
+    "traits": [],
+    "trait_aliases": [],
+    "trait_precedences": [],
+    "filename": "tests/Fixtures/PHP/8.4/PropertyHookParentUnsupported.php",
+    "line_start": 44,
+    "line_end": 49,
+    "enum_backing": null,
+    "properties": [
+      {
+        "name": "value",
+        "flags": [
+          "public"
+        ],
+        "type": {
+          "display": "int",
+          "nullable": false,
+          "kind": "builtin"
+        },
+        "default": {
+          "type": "int",
+          "value": 1
+        },
+        "hooks": [
+          "set"
+        ],
+        "attributes": [],
+        "doc_comment": null
+      }
+    ],
+    "constants": [],
+    "attributes": [],
+    "doc_comment": null
+  },
+  {
+    "name": "OtherParent",
+    "kind": "class",
+    "flags": [
+      "linked"
+    ],
+    "parent": null,
+    "interfaces": [],
+    "traits": [],
+    "trait_aliases": [],
+    "trait_precedences": [],
+    "filename": "tests/Fixtures/PHP/8.4/PropertyHookParentUnsupported.php",
+    "line_start": 51,
+    "line_end": 60,
+    "enum_backing": null,
+    "properties": [
+      {
+        "name": "value",
+        "flags": [
+          "public"
+        ],
+        "type": {
+          "display": "int",
+          "nullable": false,
+          "kind": "builtin"
+        },
+        "default": {
+          "type": "int",
+          "value": 1
+        },
+        "hooks": [
+          "set"
+        ],
+        "attributes": [],
+        "doc_comment": null
+      },
+      {
+        "name": "other",
+        "flags": [
+          "public"
+        ],
+        "type": {
+          "display": "int",
+          "nullable": false,
+          "kind": "builtin"
+        },
+        "default": {
+          "type": "int",
+          "value": 2
+        },
+        "hooks": [],
+        "attributes": [],
+        "doc_comment": null
+      }
+    ],
+    "constants": [],
+    "attributes": [],
+    "doc_comment": null
+  },
+  {
+    "name": "OtherChild",
+    "kind": "class",
+    "flags": [
+      "linked"
+    ],
+    "parent": "OtherParent",
+    "interfaces": [],
+    "traits": [],
+    "trait_aliases": [],
+    "trait_precedences": [],
+    "filename": "tests/Fixtures/PHP/8.4/PropertyHookParentUnsupported.php",
+    "line_start": 62,
+    "line_end": 67,
+    "enum_backing": null,
+    "properties": [
+      {
+        "name": "value",
+        "flags": [
+          "public"
+        ],
+        "type": {
+          "display": "int",
+          "nullable": false,
+          "kind": "builtin"
+        },
+        "default": {
+          "type": "int",
+          "value": 1
+        },
+        "hooks": [
+          "set"
+        ],
+        "attributes": [],
+        "doc_comment": null
+      }
+    ],
+    "constants": [],
+    "attributes": [],
+    "doc_comment": null
+  }
+]
+}

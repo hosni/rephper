@@ -1,0 +1,605 @@
+{
+  "ir_version": 1,
+  "php": {
+    "version": "PHP_VERSION",
+    "version_id": 0,
+    "api": 20240924,
+    "zend_module_api": 20240924,
+    "zend_extension_api": 420240924,
+    "zts": false,
+    "debug": false
+  },
+  "compilation": {
+    "stage": "pre_pass_two",
+    "jumps": "absolute_opline"
+  },
+  "op_arrays": [
+    {
+      "id": 0,
+      "kind": "property-hook",
+      "name": "$value::get",
+      "namespace": "App\\Domain",
+      "filename": "tests/Fixtures/PHP/8.4/PropertyHookParentNamespace.php",
+      "line_start": 8,
+      "line_end": 8,
+      "scope": {
+        "name": "App\\Domain\\ParentBox",
+        "kind": "class"
+      },
+      "property_hook": {
+        "property": "value",
+        "hook": "get"
+      },
+      "flags": [
+        "public",
+        "has_return_type",
+        "uses_this"
+      ],
+      "num_args": 0,
+      "required_num_args": 0,
+      "return_type": {
+        "display": "int",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [],
+      "variables": [],
+      "temporary_variables": 1,
+      "literals": [
+        {
+          "type": "string",
+          "value": "value"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "FETCH_OBJ_R",
+          "opcode_number": 82,
+          "line": 8,
+          "op1": {
+            "kind": "this"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 0
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 8,
+          "op1": {
+            "kind": "tmp",
+            "index": 0
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 8,
+          "op1": {
+            "kind": "tmp",
+            "index": 0
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 8,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 4,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 8,
+          "op1": {
+            "kind": "const",
+            "index": 1
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "kind": "property-hook",
+      "name": "$value::get",
+      "namespace": "App\\Domain",
+      "filename": "tests/Fixtures/PHP/8.4/PropertyHookParentNamespace.php",
+      "line_start": 15,
+      "line_end": 15,
+      "scope": {
+        "name": "App\\Domain\\ChildBox",
+        "kind": "class"
+      },
+      "property_hook": {
+        "property": "value",
+        "hook": "get"
+      },
+      "flags": [
+        "public",
+        "has_return_type"
+      ],
+      "num_args": 0,
+      "required_num_args": 0,
+      "return_type": {
+        "display": "int",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [],
+      "variables": [],
+      "temporary_variables": 2,
+      "literals": [
+        {
+          "type": "string",
+          "value": "value"
+        },
+        {
+          "type": "int",
+          "value": 4
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "INIT_PARENT_PROPERTY_HOOK_CALL",
+          "opcode_number": 209,
+          "line": 15,
+          "op1": {
+            "kind": "const",
+            "index": 0
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "DO_FCALL",
+          "opcode_number": 60,
+          "line": 15,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "var",
+            "index": 0
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "ADD",
+          "opcode_number": 1,
+          "line": 15,
+          "op1": {
+            "kind": "var",
+            "index": 0
+          },
+          "op2": {
+            "kind": "const",
+            "index": 1
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 1
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 15,
+          "op1": {
+            "kind": "tmp",
+            "index": 1
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 4,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 15,
+          "op1": {
+            "kind": "tmp",
+            "index": 1
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 5,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 15,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 6,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 15,
+          "op1": {
+            "kind": "const",
+            "index": 2
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "kind": "method",
+      "name": "read",
+      "namespace": "App\\Domain",
+      "filename": "tests/Fixtures/PHP/8.4/PropertyHookParentNamespace.php",
+      "line_start": 18,
+      "line_end": 21,
+      "scope": {
+        "name": "App\\Domain\\ChildBox",
+        "kind": "class"
+      },
+      "property_hook": null,
+      "flags": [
+        "public",
+        "has_return_type",
+        "uses_this"
+      ],
+      "num_args": 0,
+      "required_num_args": 0,
+      "return_type": {
+        "display": "int",
+        "nullable": false,
+        "kind": "builtin"
+      },
+      "arguments": [],
+      "variables": [],
+      "temporary_variables": 1,
+      "literals": [
+        {
+          "type": "string",
+          "value": "value"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "FETCH_OBJ_R",
+          "opcode_number": 82,
+          "line": 20,
+          "op1": {
+            "kind": "this"
+          },
+          "op2": {
+            "kind": "const",
+            "index": 0
+          },
+          "result": {
+            "kind": "tmp",
+            "index": 0
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 1,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 20,
+          "op1": {
+            "kind": "tmp",
+            "index": 0
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 2,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 20,
+          "op1": {
+            "kind": "tmp",
+            "index": 0
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 3,
+          "opcode": "VERIFY_RETURN_TYPE",
+          "opcode_number": 124,
+          "line": 21,
+          "op1": {
+            "kind": "unused"
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 0
+        },
+        {
+          "index": 4,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 21,
+          "op1": {
+            "kind": "const",
+            "index": 1
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "kind": "main",
+      "name": null,
+      "namespace": "App\\Domain",
+      "filename": "tests/Fixtures/PHP/8.4/PropertyHookParentNamespace.php",
+      "line_start": 1,
+      "line_end": 23,
+      "scope": null,
+      "property_hook": null,
+      "flags": [],
+      "num_args": 0,
+      "required_num_args": 0,
+      "return_type": null,
+      "arguments": [],
+      "variables": [],
+      "temporary_variables": 0,
+      "literals": [
+        {
+          "type": "int",
+          "value": 1
+        }
+      ],
+      "static_variables": null,
+      "try_catch": [],
+      "live_ranges": [],
+      "breaks": [],
+      "labels": [],
+      "dynamic_functions": [],
+      "attributes": [],
+      "doc_comment": null,
+      "instructions": [
+        {
+          "index": 0,
+          "opcode": "RETURN",
+          "opcode_number": 62,
+          "line": 23,
+          "op1": {
+            "kind": "const",
+            "index": 0
+          },
+          "op2": {
+            "kind": "unused"
+          },
+          "result": {
+            "kind": "unused"
+          },
+          "extended_value": 4294967295
+        }
+      ]
+    }
+  ],
+  "namespaces": [
+    {
+      "name": "App\\Domain",
+      "line_start": 3,
+      "line_end": 22,
+      "functions": [],
+      "statements": []
+    }
+  ],
+  "classes": [
+  {
+    "name": "App\\Domain\\ParentBox",
+    "kind": "class",
+    "flags": [
+      "linked"
+    ],
+    "parent": null,
+    "interfaces": [],
+    "traits": [],
+    "trait_aliases": [],
+    "trait_precedences": [],
+    "filename": "tests/Fixtures/PHP/8.4/PropertyHookParentNamespace.php",
+    "line_start": 5,
+    "line_end": 10,
+    "enum_backing": null,
+    "properties": [
+      {
+        "name": "value",
+        "flags": [
+          "public"
+        ],
+        "type": {
+          "display": "int",
+          "nullable": false,
+          "kind": "builtin"
+        },
+        "default": {
+          "type": "int",
+          "value": 1
+        },
+        "hooks": [
+          "get"
+        ],
+        "attributes": [],
+        "doc_comment": null
+      }
+    ],
+    "constants": [],
+    "attributes": [],
+    "doc_comment": null
+  },
+  {
+    "name": "App\\Domain\\ChildBox",
+    "kind": "class",
+    "flags": [
+      "linked"
+    ],
+    "parent": "App\\Domain\\ParentBox",
+    "interfaces": [],
+    "traits": [],
+    "trait_aliases": [],
+    "trait_precedences": [],
+    "filename": "tests/Fixtures/PHP/8.4/PropertyHookParentNamespace.php",
+    "line_start": 12,
+    "line_end": 22,
+    "enum_backing": null,
+    "properties": [
+      {
+        "name": "value",
+        "flags": [
+          "public"
+        ],
+        "type": {
+          "display": "int",
+          "nullable": false,
+          "kind": "builtin"
+        },
+        "default": {
+          "type": "int",
+          "value": 1
+        },
+        "hooks": [
+          "get"
+        ],
+        "attributes": [],
+        "doc_comment": null
+      }
+    ],
+    "constants": [],
+    "attributes": [],
+    "doc_comment": null
+  }
+]
+}

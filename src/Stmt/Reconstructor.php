@@ -9,6 +9,7 @@ use Rephper\Expr\Assignment;
 use Rephper\Expr\Diagnostic;
 use Rephper\Expr\Expression;
 use Rephper\Expr\FunctionCall;
+use Rephper\Expr\ParentPropertyHookCall;
 use Rephper\Expr\Opaque;
 use Rephper\Expr\PropertyAssignment;
 use Rephper\Expr\ReturnValue;
@@ -85,7 +86,12 @@ final class Reconstructor
      */
     private function statement(OpArray $opArray, string $blockId, Expression $expression, array &$diagnostics): ?Statement
     {
-        if ($expression instanceof Assignment || $expression instanceof PropertyAssignment || $expression instanceof FunctionCall) {
+        if (
+            $expression instanceof Assignment
+            || $expression instanceof PropertyAssignment
+            || $expression instanceof FunctionCall
+            || $expression instanceof ParentPropertyHookCall
+        ) {
             return new ExpressionStatement($expression->opline, $expression->line, $expression);
         }
         if ($expression instanceof ReturnValue) {
@@ -139,7 +145,10 @@ final class Reconstructor
             return null;
         }
 
-        $diagnostics[] = $this->diagnostic($blockId, $expression, 'opcode is not reconstructed as a statement');
+        $reason = str_starts_with($expression->reason, 'parent property hook ')
+            ? $expression->reason
+            : 'opcode is not reconstructed as a statement';
+        $diagnostics[] = $this->diagnostic($blockId, $expression, $reason);
 
         return new OpaqueStatement($expression->opline, $expression->line, $expression);
     }

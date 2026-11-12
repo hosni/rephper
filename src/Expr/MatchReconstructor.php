@@ -959,6 +959,43 @@ final class MatchReconstructor
                 $expression->checksUndefinedArguments,
             );
         }
+        if ($expression instanceof ParentPropertyHookCall) {
+            $arguments = [];
+            $same = true;
+            foreach ($expression->arguments as $argument) {
+                $value = $this->replaceSlot($argument->value, $kind, $index, $match, $count);
+                if ($value === $argument->value) {
+                    $arguments[] = $argument;
+                    continue;
+                }
+                $same = false;
+                $arguments[] = new Argument(
+                    $argument->opline,
+                    $argument->line,
+                    $argument->opcode,
+                    $value,
+                    $argument->name,
+                    $argument->mode,
+                    $argument->unpack,
+                    $argument->position,
+                );
+            }
+            if ($same) {
+                return $expression;
+            }
+
+            return new ParentPropertyHookCall(
+                $expression->opline,
+                $expression->line,
+                $expression->property,
+                $expression->hook,
+                $arguments,
+                $expression->initOpline,
+                $expression->initExtendedValue,
+                $expression->executeExtendedValue,
+                $expression->checksUndefinedArguments,
+            );
+        }
         if ($expression instanceof MatchExpression) {
             return $this->replaceMatch($expression, $kind, $index, $match, $count);
         }
@@ -1125,6 +1162,43 @@ final class MatchReconstructor
                 $expression->checksUndefinedArguments,
             );
         }
+        if ($expression instanceof ParentPropertyHookCall) {
+            $arguments = [];
+            $same = true;
+            foreach ($expression->arguments as $argument) {
+                $value = $this->replaceObject($argument->value, $from, $to, $count);
+                if ($value === $argument->value) {
+                    $arguments[] = $argument;
+                    continue;
+                }
+                $same = false;
+                $arguments[] = new Argument(
+                    $argument->opline,
+                    $argument->line,
+                    $argument->opcode,
+                    $value,
+                    $argument->name,
+                    $argument->mode,
+                    $argument->unpack,
+                    $argument->position,
+                );
+            }
+            if ($same) {
+                return $expression;
+            }
+
+            return new ParentPropertyHookCall(
+                $expression->opline,
+                $expression->line,
+                $expression->property,
+                $expression->hook,
+                $arguments,
+                $expression->initOpline,
+                $expression->initExtendedValue,
+                $expression->executeExtendedValue,
+                $expression->checksUndefinedArguments,
+            );
+        }
         if ($expression instanceof MatchExpression) {
             $subject = $this->replaceObject($expression->subject, $from, $to, $count);
             $arms = [];
@@ -1220,7 +1294,7 @@ final class MatchReconstructor
         if ($expression instanceof ReturnValue) {
             return $expression->value === null ? [] : [$expression->value];
         }
-        if ($expression instanceof FunctionCall) {
+        if ($expression instanceof FunctionCall || $expression instanceof ParentPropertyHookCall) {
             $children = [];
             foreach ($expression->arguments as $argument) {
                 $children[] = $argument->value;

@@ -497,6 +497,248 @@ class FinalRef
 }
 
 PHP],
+            'parent hook' => ['PHP/8.4/PropertyHookParent.json', <<<'PHP'
+<?php
+
+class BackedParent
+{
+    public int $value = 1 {
+        get
+        {
+            return $this->value + 1;
+        }
+        set(int $value)
+        {
+            $this->value = $value * 2;
+        }
+    }
+}
+
+class BackedChild extends BackedParent
+{
+    public int $value = 1 {
+        get
+        {
+            return parent::$value::get() + 3;
+        }
+        set(int $value)
+        {
+            parent::$value::set($value + 4);
+        }
+    }
+
+    public function read(): int
+    {
+        return $this->value;
+    }
+
+    public function write(int $next): void
+    {
+        $this->value = $next;
+    }
+}
+
+class VirtualParent
+{
+    private int $store = 2;
+
+    public int $value {
+        get
+        {
+            return $this->store;
+        }
+        set(int $value)
+        {
+            $this->store = $value;
+        }
+    }
+}
+
+class VirtualChild extends VirtualParent
+{
+    public int $value {
+        get
+        {
+            return parent::$value::get() + 1;
+        }
+        set(int $value)
+        {
+            parent::$value::set($value + 1);
+        }
+    }
+}
+
+class UntypedParent
+{
+    public $value = 'a' {
+        get
+        {
+            return $this->value;
+        }
+        set($value)
+        {
+            $this->value = $value;
+        }
+    }
+}
+
+class UntypedChild extends UntypedParent
+{
+    public $value = 'a' {
+        get
+        {
+            return parent::$value::get();
+        }
+        set($value)
+        {
+            parent::$value::set($value . 'b');
+        }
+    }
+}
+
+class LevelOne
+{
+    public int $value = 1 {
+        get
+        {
+            return $this->value;
+        }
+    }
+}
+
+class LevelTwo extends LevelOne
+{
+    public int $value = 1 {
+        get
+        {
+            return parent::$value::get() + 1;
+        }
+    }
+}
+
+class LevelThree extends LevelTwo
+{
+    public int $value = 1 {
+        get
+        {
+            return parent::$value::get() + 2;
+        }
+    }
+}
+
+class MultiParent
+{
+    public int $value = 4 {
+        get
+        {
+            return $this->value;
+        }
+    }
+}
+
+class MultiChild extends MultiParent
+{
+    public int $value = 4 {
+        get
+        {
+            return parent::$value::get() + parent::$value::get();
+        }
+    }
+}
+
+class AssignParent
+{
+    public int $value = 5 {
+        get
+        {
+            return $this->value;
+        }
+    }
+}
+
+class AssignChild extends AssignParent
+{
+    public int $value = 5 {
+        get
+        {
+            $n = parent::$value::get();
+            return $n + 1;
+        }
+    }
+}
+
+class CallParent
+{
+    public int $value = 1 {
+        set(int $value)
+        {
+            $this->value = $value;
+        }
+    }
+}
+
+class CallChild extends CallParent
+{
+    public int $value = 1 {
+        set(int $value)
+        {
+            parent::$value::set(abs($value));
+        }
+    }
+}
+
+class NamedParent
+{
+    public int $value = 1 {
+        set(int $value)
+        {
+            $this->value = $value;
+        }
+    }
+}
+
+class NamedChild extends NamedParent
+{
+    public int $value = 1 {
+        set(int $value)
+        {
+            parent::$value::set(value: $value);
+        }
+    }
+}
+
+PHP],
+            'namespaced parent hook' => ['PHP/8.4/PropertyHookParentNamespace.json', <<<'PHP'
+<?php
+
+namespace App\Domain;
+
+class ParentBox
+{
+    public int $value = 1 {
+        get
+        {
+            return $this->value;
+        }
+    }
+}
+
+class ChildBox extends \App\Domain\ParentBox
+{
+    public int $value = 1 {
+        get
+        {
+            return parent::$value::get() + 4;
+        }
+    }
+
+    public function read(): int
+    {
+        return $this->value;
+    }
+}
+
+PHP],
             'promoted' => ['PHP/8.4/PropertyHookPromoted.json', <<<'PHP'
 <?php
 
@@ -554,6 +796,8 @@ PHP],
             'visibility' => ['PHP/8.4/PropertyHookVisibility.php', '$a = new Asymmetric(); echo $a->locked, $a->guarded, $a->marked; try { $a->locked = 9; echo "W"; } catch (Error) { echo "L"; } try { $a->guarded = 9; echo "W"; } catch (Error) { echo "G"; } echo (new ReflectionProperty(Asymmetric::class, "marked"))->isFinal() ? "F" : "f"; $v = new Visibilities(); echo $v->read(), $v->pub; try { $v->pro; echo "O"; } catch (Error) { echo "P"; } try { $v->pri; echo "O"; } catch (Error) { echo "R"; }'],
             'reference' => ['PHP/8.4/PropertyHookReference.php', '$b = new ByRef(); $ref = &$b->value; $ref = 9; echo $b->value; $f = new FinalRef(); $r = &$f->value; $r = 4; echo $f->value; $hooks = (new ReflectionProperty(FinalRef::class, "value"))->getHooks(); echo $hooks["get"]->isFinal() ? "F" : "f"; echo (new ReflectionProperty(ByRef::class, "value"))->getHooks()["get"]->returnsReference() ? "&" : "=";'],
             'promoted' => ['PHP/8.4/PropertyHookPromoted.php', '$p = new Promoted(); echo $p->value, $p->name; $p->value = 4; echo $p->value; $q = new Promoted(3, "z"); echo $q->value, $q->name;'],
+            'parent hook' => ['PHP/8.4/PropertyHookParent.php', '$b = new BackedChild(); echo $b->read(); $b->write(3); echo ",", $b->read(); $v = new VirtualChild(); echo ",", $v->value; $v->value = 4; echo ",", $v->value; $u = new UntypedChild(); echo ",", $u->value; $u->value = "x"; echo ",", $u->value; echo ",", (new LevelThree())->value; echo ",", (new MultiChild())->value; echo ",", (new AssignChild())->value; $c = new CallChild(); $c->value = -6; echo ",", $c->value; $n = new NamedChild(); $n->value = 8; echo ",", $n->value;'],
+            'namespaced parent hook' => ['PHP/8.4/PropertyHookParentNamespace.php', '$c = new App\\Domain\\ChildBox(); echo $c->read(); $c->value = 4; echo ",", $c->read();'],
         ];
     }
 
@@ -952,6 +1196,14 @@ PHP;
             }
         });
         $this->assertGenerationFails($missingParent, 'extends MissingParent, which is not in this file');
+    }
+
+    public function testUnsupportedParentHookArgumentsFailClosed(): void
+    {
+        $this->assertGenerationFails(
+            $this->document('PHP/8.4/PropertyHookParentUnsupported.json'),
+            'property hook AndChild::$value::set: INIT_PARENT_PROPERTY_HOOK_CALL at opline 1, line 15: parent property hook call does not finish in this block',
+        );
     }
 
     public function testUnresolvedTraitsFailClosedWhenTheClassDeclaresNoProperties(): void

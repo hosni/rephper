@@ -83,6 +83,8 @@ final class Reconstructor
     /** @var list<string> */
     private const EXECUTE = ['DO_ICALL', 'DO_UCALL', 'DO_FCALL', 'DO_FCALL_BY_NAME'];
 
+    private const PARENT_HOOK_INIT = 'INIT_PARENT_PROPERTY_HOOK_CALL';
+
     /** @var list<string> */
     private const VALUE_SEND = ['SEND_VAL', 'SEND_VAR', 'SEND_VAL_EX', 'SEND_VAR_EX'];
 
@@ -91,6 +93,7 @@ final class Reconstructor
      *     kind: string,
      *     init: Instruction,
      *     name: string,
+     *     hook: string,
      *     positionalExpected: int,
      *     arguments: list<Argument>,
      *     instructions: list<Instruction>,
@@ -329,7 +332,9 @@ final class Reconstructor
 
     private function isInitiator(string $opcode): bool
     {
-        return in_array($opcode, self::NAMED_INIT, true) || in_array($opcode, self::OPAQUE_INIT, true);
+        return in_array($opcode, self::NAMED_INIT, true)
+            || in_array($opcode, self::OPAQUE_INIT, true)
+            || $opcode === self::PARENT_HOOK_INIT;
     }
 
     private function isCallStep(string $opcode): bool
@@ -341,6 +346,11 @@ final class Reconstructor
 
     private function openCall(OpArray $opArray, Instruction $instruction): void
     {
+        if ($instruction->opcode === self::PARENT_HOOK_INIT) {
+            $this->openParentHook($opArray, $instruction);
+
+            return;
+        }
         $name = null;
         if (in_array($instruction->opcode, self::NAMED_INIT, true)) {
             $name = $this->literalString($opArray, $instruction, $instruction->op2);
@@ -350,12 +360,73 @@ final class Reconstructor
             'kind' => $named ? 'named' : 'opaque',
             'init' => $instruction,
             'name' => $name ?? '',
+            'hook' => '',
             'positionalExpected' => $named ? $instruction->extendedValue : 0,
             'arguments' => [],
             'instructions' => [$instruction],
             'checksUndefinedArguments' => false,
             'sawNamedOrUnpack' => false,
         ];
+    }
+
+    /**
+     * `op2` is the hook kind. The exporter omits the sentinel 0, so a missing
+     * value is get. 1 is set. The parent class name is not an operand.
+     */
+    private function openParentHook(OpArray $opArray, Instruction $instruction): void
+    {
+        $property = $this->literalString($opArray, $instruction, $instruction->op1);
+        $hook = $this->parentHookKind($instruction);
+        $reason = null;
+        if (!is_string($property) || preg_match(self::IDENTIFIER, $property) !== 1) {
+            $reason = 'parent property hook call has no property name';
+        } elseif ($hook === null) {
+            $reason = 'parent property hook kind is not get or set';
+        } elseif ($instruction->result->kind !== 'unused') {
+            $reason = 'parent property hook call init has a result';
+        }
+        if ($reason !== null) {
+            $this->rejectParentInit($opArray, $instruction, $reason);
+
+            return;
+        }
+        $this->calls[] = [
+            'kind' => 'parent-hook',
+            'init' => $instruction,
+            'name' => $property,
+            'hook' => $hook,
+            'positionalExpected' => $instruction->extendedValue,
+            'arguments' => [],
+            'instructions' => [$instruction],
+            'checksUndefinedArguments' => false,
+            'sawNamedOrUnpack' => false,
+        ];
+    }
+
+    private function parentHookKind(Instruction $instruction): ?string
+    {
+        if ($instruction->op2->kind !== 'unused') {
+            return null;
+        }
+        if ($instruction->op2->value === null || $instruction->op2->value === 0) {
+            return 'get';
+        }
+        if ($instruction->op2->value === 1) {
+            return 'set';
+        }
+
+        return null;
+    }
+
+    private function rejectParentInit(OpArray $opArray, Instruction $instruction, string $reason): void
+    {
+        $index = array_key_last($this->calls);
+        if ($index !== null) {
+            $this->failFrame($opArray, $index, $instruction, $reason);
+
+            return;
+        }
+        $this->opaque($opArray, $instruction, $reason);
     }
 
     private function continueCall(OpArray $opArray, Instruction $instruction): void
@@ -372,7 +443,7 @@ final class Reconstructor
 
                 return;
             }
-            $this->namedSend($opArray, $index, $instruction);
+            $this->namedSend($opArray, $index, $instruction, $this->calls[$index]['kind'] === 'parent-hook');
 
             return;
         }
@@ -390,11 +461,14 @@ final class Reconstructor
         $this->finishFrame($opArray, $index, $instruction);
     }
 
-    private function namedSend(OpArray $opArray, int $index, Instruction $instruction): void
+    private function namedSend(OpArray $opArray, int $index, Instruction $instruction, bool $parentHook = false): void
     {
-        $shape = $this->sendShape($opArray, $instruction);
+        $shape = $this->sendShape($opArray, $instruction, $parentHook);
         if ($shape === null || !$this->accepts($this->calls[$index], $shape)) {
-            $this->failFrame($opArray, $index, $instruction, 'function call argument could not be reconstructed');
+            $reason = $parentHook
+                ? 'parent property hook argument could not be reconstructed'
+                : 'function call argument could not be reconstructed';
+            $this->failFrame($opArray, $index, $instruction, $reason);
 
             return;
         }
@@ -418,11 +492,15 @@ final class Reconstructor
     /**
      * @return array{name: ?string, mode: string, unpack: bool, position: ?int}|null
      */
-    private function sendShape(OpArray $opArray, Instruction $instruction): ?array
+    private function sendShape(OpArray $opArray, Instruction $instruction, bool $parentHook = false): ?array
     {
         $unpack = $instruction->opcode === 'SEND_UNPACK';
+        $valueSend = self::VALUE_SEND;
+        if ($parentHook) {
+            $valueSend = [...self::VALUE_SEND, 'SEND_VAR_NO_REF_EX'];
+        }
         $mode = Argument::VALUE;
-        if (in_array($instruction->opcode, self::VALUE_SEND, true)) {
+        if (in_array($instruction->opcode, $valueSend, true)) {
             $mode = Argument::VALUE;
         } elseif ($instruction->opcode === 'SEND_REF') {
             $mode = Argument::REFERENCE;
@@ -455,13 +533,16 @@ final class Reconstructor
     }
 
     /**
-     * @param array{sawNamedOrUnpack: bool, positionalExpected: int, arguments: list<Argument>} $frame
+     * @param array{kind: string, sawNamedOrUnpack: bool, positionalExpected: int, arguments: list<Argument>} $frame
      * @param array{name: ?string, mode: string, unpack: bool, position: ?int} $shape
      */
     private function accepts(array $frame, array $shape): bool
     {
         $namedOrUnpack = $shape['name'] !== null || $shape['unpack'];
         if (!$namedOrUnpack) {
+            if ($frame['kind'] === 'parent-hook' && $frame['positionalExpected'] === 0) {
+                return false;
+            }
             if ($frame['sawNamedOrUnpack'] || $shape['position'] === null) {
                 return false;
             }
@@ -498,6 +579,11 @@ final class Reconstructor
     private function finishFrame(OpArray $opArray, int $index, Instruction $instruction): void
     {
         $frame = $this->calls[$index];
+        if ($frame['kind'] === 'parent-hook') {
+            $this->finishParentHook($opArray, $index, $instruction);
+
+            return;
+        }
         if ($frame['kind'] === 'opaque') {
             $this->failFrame($opArray, $index, $instruction, null);
 
@@ -518,6 +604,33 @@ final class Reconstructor
             $frame['init']->index,
             $frame['init']->extendedValue,
             $instruction->opcode,
+            $instruction->extendedValue,
+            $frame['checksUndefinedArguments'],
+        ));
+    }
+
+    private function finishParentHook(OpArray $opArray, int $index, Instruction $instruction): void
+    {
+        $frame = $this->calls[$index];
+        if ($instruction->opcode !== 'DO_FCALL' || !$this->argumentsComplete($frame)) {
+            $this->failFrame($opArray, $index, $instruction, 'parent property hook call could not be reconstructed');
+
+            return;
+        }
+        if ($instruction->result->kind !== 'unused' && $instruction->result->kind !== 'var' && $instruction->result->kind !== 'tmp') {
+            $this->failFrame($opArray, $index, $instruction, 'parent property hook call result cannot be stored');
+
+            return;
+        }
+        array_splice($this->calls, $index);
+        $this->store($instruction, new ParentPropertyHookCall(
+            $instruction->index,
+            $instruction->line,
+            $frame['name'],
+            $frame['hook'],
+            $frame['arguments'],
+            $frame['init']->index,
+            $frame['init']->extendedValue,
             $instruction->extendedValue,
             $frame['checksUndefinedArguments'],
         ));
@@ -554,7 +667,7 @@ final class Reconstructor
         $frames = $this->calls;
         $this->calls = [];
         foreach ($frames as $frame) {
-            $this->flushFrame($opArray, $frame, null, $reason);
+            $this->flushFrame($opArray, $frame, null, $this->frameReason($frame, $reason));
         }
     }
 
@@ -575,12 +688,32 @@ final class Reconstructor
      */
     private function flushFrame(OpArray $opArray, array $frame, ?Instruction $extra, ?string $reason): void
     {
+        $reason = $this->frameReason($frame, $reason ?? 'function call could not be reconstructed');
         foreach ($frame['instructions'] as $instruction) {
             $this->opaque($opArray, $instruction, $reason);
         }
         if ($extra !== null) {
             $this->opaque($opArray, $extra, $reason);
         }
+    }
+
+    /**
+     * @param array{kind: string} $frame
+     */
+    private function frameReason(array $frame, string $reason): string
+    {
+        if ($frame['kind'] !== 'parent-hook' || str_starts_with($reason, 'parent property hook ')) {
+            return $reason;
+        }
+        $interrupted = 'function call was interrupted by ';
+        if (str_starts_with($reason, $interrupted)) {
+            return 'parent property hook call was interrupted by ' . substr($reason, strlen($interrupted));
+        }
+        if ($reason === 'function call does not finish in this block') {
+            return 'parent property hook call does not finish in this block';
+        }
+
+        return 'parent property hook call could not be reconstructed';
     }
 
     private function literal(int $opline, int $line, IrLiteral $literal): Literal
